@@ -1,20 +1,54 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:xpips/domain/models/login_credentials.dart';
+import 'package:xpips/presentation/controllers/auth_controller.dart';
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends ConsumerState<LoginScreen> {
+  LoginCredentials _loginCredentials =
+      LoginCredentials(username: '', password: '');
+
+  late TextEditingController _usernameController;
+  late TextEditingController _passwordController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _usernameController = TextEditingController()
+      ..addListener(() {
+        setState(() {
+          _loginCredentials =
+              _loginCredentials.copyWith(username: _usernameController.text);
+        });
+      });
+    _passwordController = TextEditingController()
+      ..addListener(() {
+        setState(() {
+          _loginCredentials =
+              _loginCredentials.copyWith(password: _passwordController.text);
+        });
+      });
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+
+    _usernameController.dispose();
+    _passwordController.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Login'),
-        elevation: 0,
-      ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
@@ -28,17 +62,24 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(
               height: 10,
             ),
-            TextFormField(),
+            TextFormField(
+              controller: _usernameController,
+            ),
             const SizedBox(
               height: 10,
             ),
-            TextFormField(),
+            TextFormField(
+              controller: _passwordController,
+            ),
             const SizedBox(
               height: 10,
             ),
             FilledButton(
               onPressed: () {
                 // TODO: handle login
+                final authController = ref.watch(authControllerProvider);
+
+                authController.login(_loginCredentials);
               },
               child: const Text('Login'),
             ),
