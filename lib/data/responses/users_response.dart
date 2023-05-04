@@ -1,0 +1,18 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+import '../../domain/models/meta.dart';
+import '../../domain/models/user.dart';
+
+part 'users_response.freezed.dart';
+part 'users_response.g.dart';
+
+@freezed
+class UsersResponse with _$UsersResponse {
+  factory UsersResponse({
+    required List<User> data,
+    required Meta meta,
+  }) = _UsersResponse;
+
+  factory UsersResponse.fromJson(Map<String, dynamic> json) =>
+      _$UsersResponseFromJson(json);
+}

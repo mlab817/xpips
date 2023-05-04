@@ -1,8 +1,15 @@
+import 'package:auto_route/annotations.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:xpips/application/providers/active_menu_index.dart';
-import 'package:xpips/presentation/controllers/auth_controller.dart';
+import 'package:xpips/application/functions.dart';
+import 'package:xpips/presentation/widgets/loading_dialog.dart';
+import 'package:xpips/presentation/widgets/logout_button.dart';
 
+import '../application/providers/projects_provider.dart';
+import '../domain/models/project.dart';
+
+@RoutePage()
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
@@ -11,154 +18,244 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
-  final List<NavigationRailDestination> _destinations =
-      const <NavigationRailDestination>[
-    NavigationRailDestination(
-      icon: Icon(Icons.home),
-      label: Text('Home'),
-    ),
-    NavigationRailDestination(
-      icon: Icon(Icons.chat_bubble),
-      label: Text('Chat'),
-    ),
-    NavigationRailDestination(
-      icon: Icon(Icons.notifications),
-      label: Text('Notifications'),
-    ),
-    NavigationRailDestination(
-      icon: Icon(Icons.settings),
-      label: Text('Settings'),
-    ),
-  ];
+  @override
+  Widget build(BuildContext context) {
+    var width = MediaQuery.of(context).size.width;
 
-  Future<void> _handleLogout() async {
-    final confirmed = await showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: const Text('Confirm'),
-            content: const Text('Are you sure you want to logout?'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context, false);
-                },
-                child: const Text('Cancel'),
-              ),
-              FilledButton(
-                onPressed: () {
-                  Navigator.pop(context, true);
-                },
-                child: const Text('Confirm'),
-              ),
-            ],
-          );
-        });
+    final valueAsync = ref.watch(projectControllerProvider);
 
-    if (confirmed) {
-      final authController = ref.watch(authControllerProvider);
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
+            // TODO: show search delegate
+            showSearch(context: context, delegate: _HomeSearchDelegate());
+          },
+          icon: const Icon(Icons.search),
+        ),
+        title: const Text('Home'),
+        actions: const [
+          LogoutButton(),
+        ],
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: valueAsync.when(data: (data) {
+          return ListView.builder(
+              physics: const ClampingScrollPhysics(),
+              itemCount: data.data.length + 1,
+              itemBuilder: (context, index) {
+                if (index == data.data.length) {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextButton(
+                      onPressed: () {
+                        ref.read(projectControllerProvider.notifier).nextPage();
+                      },
+                      child: const Text('Load More'),
+                    ),
+                  );
+                }
 
-      authController.logout();
-    } else {
-      print('Cancelled');
-    }
+                final project = data.data[index];
+
+                return ProjectListTile(project: project);
+              });
+        }, error: (error, stackTrace) {
+          return Container();
+        }, loading: () {
+          return const LoadingOverlay();
+        }),
+      ),
+    );
+  }
+}
+
+class _HomeSearchDelegate extends SearchDelegate {
+  @override
+  List<Widget>? buildActions(BuildContext context) {
+    return [
+      IconButton(
+        icon: const Icon(Icons.clear),
+        onPressed: () {
+          query = '';
+        },
+      ),
+    ];
+  }
+
+  @override
+  Widget? buildLeading(BuildContext context) {
+    return IconButton(
+      icon: const Icon(Icons.arrow_back),
+      onPressed: () {
+        close(context, null);
+      },
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    return Container();
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    // TODO: implement buildSuggestions
+    return Container();
+  }
+}
+
+class ProjectListTile extends StatefulWidget {
+  const ProjectListTile({Key? key, required this.project}) : super(key: key);
+
+  final Project project;
+
+  @override
+  State<ProjectListTile> createState() => _ProjectListTileState();
+}
+
+class _ProjectListTileState extends State<ProjectListTile> {
+  late Project _project;
+
+  bool _hovered = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    _project = widget.project;
   }
 
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
-    final currentIndex = ref.watch(activeMenuIndexProvider);
 
-    return Scaffold(
-      appBar: (width < 768)
-          ? AppBar(
-              title: const Text('Home'),
-              actions: [
-                IconButton(
-                  onPressed: () {
-                    // TODO: handle logout
-                    _handleLogout();
-                  },
-                  icon: const Icon(Icons.exit_to_app),
+    return MouseRegion(
+      onHover: (PointerHoverEvent event) {
+        setState(() {
+          _hovered = true;
+        });
+      },
+      onExit: (PointerExitEvent event) {
+        setState(() {
+          _hovered = false;
+        });
+      },
+      child: ListTile(
+        isThreeLine: true,
+        minLeadingWidth: 120,
+        leading: width >= 768 ? Text(_project.user?.fullname ?? 'User') : null,
+        title: RichText(
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          textAlign: TextAlign.start,
+          text: TextSpan(
+            children: [
+              TextSpan(
+                  text: _project.office?.acronym ?? 'OFFICE',
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleSmall
+                      ?.apply(color: Colors.black)),
+              TextSpan(
+                  text: ' - ',
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleSmall
+                      ?.apply(color: Colors.black45)),
+              TextSpan(
+                  text: _project.title,
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleSmall
+                      ?.apply(color: Colors.black)),
+            ],
+          ),
+        ),
+        subtitle: (width < 768)
+            ? Text(
+                'Added by ${_project.user?.fullname ?? 'User'}',
+                textAlign: TextAlign.start,
+                style: const TextStyle(
+                  fontSize: 11,
+                  color: Colors.black54,
                 ),
-              ],
-            )
-          : null,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: const Icon(Icons.add),
+              )
+            : Text(
+                _project.description ?? 'No description',
+                maxLines: 1,
+                style: const TextStyle(fontWeight: FontWeight.w300),
+              ),
+        trailing: _hovered
+            ? _buildControls()
+            : Text(
+                formatDate(_project.updatedAt),
+              ),
+        onTap: () {
+          // add default behavior or create card?
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Text(_project.title),
+                content: Column(
+                  children: [
+                    Text(
+                      _project.description ?? 'No description',
+                    ),
+                  ],
+                ),
+              );
+            },
+          );
+        },
       ),
-      body: Row(
+    );
+  }
+
+  Widget _buildControls() {
+    return SizedBox(
+      width: 150,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          // show navigation rail on larger devices
-          if (width >= 768)
-            NavigationRail(
-              onDestinationSelected: (int index) {
-                // update current index
-                ref.read(activeMenuIndexProvider.notifier).state = index;
-              },
-              leading: ClipOval(
-                child: Image.asset(
-                  'assets/logo.png',
-                  height: 50,
-                  width: 50,
-                ),
-              ),
-              labelType: NavigationRailLabelType.all,
-              destinations: _destinations,
-              selectedIndex: currentIndex,
-              trailing: Column(
-                children: [
-                  IconButton(
-                    onPressed: () {
-                      // TODO: handle logout
-                      _handleLogout();
-                    },
-                    icon: const Icon(Icons.exit_to_app),
-                  ),
-                  Text(
-                    'Logout',
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
-                ],
-              ),
+          IconButton(
+            padding: EdgeInsets.zero,
+            onPressed: () {
+              // TODO: handle action
+            },
+            icon: const Icon(
+              Icons.visibility_outlined,
+              size: 22,
             ),
-          Expanded(
-            child: Center(
-              child: Text("${width.toString()} px"),
+            tooltip: 'View',
+          ),
+          IconButton(
+            padding: EdgeInsets.zero,
+            onPressed: () {
+              // TODO: handle action
+            },
+            icon: const Icon(
+              Icons.edit_outlined,
+              size: 22,
             ),
+            tooltip: 'Edit',
+          ),
+          IconButton(
+            padding: EdgeInsets.zero,
+            onPressed: () {
+              // TODO: handle action
+            },
+            icon: const Icon(
+              Icons.delete_outline,
+              size: 22,
+            ),
+            tooltip: 'Delete',
           ),
         ],
       ),
-      // show bottom navigation bar in smaller devices
-      bottomNavigationBar: width < 768
-          ? BottomNavigationBar(
-              onTap: (int index) {
-                // update current index
-                ref.read(activeMenuIndexProvider.notifier).state = index;
-              },
-              currentIndex: currentIndex,
-              type: BottomNavigationBarType.fixed,
-              items: const <BottomNavigationBarItem>[
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.home),
-                  label: 'Home',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.chat_bubble),
-                  label: 'Chat',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.notifications),
-                  label: 'Notifications',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.settings),
-                  label: 'Settings',
-                ),
-              ],
-            )
-          : null,
     );
   }
 }

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:xpips/application/providers/dio_factory.dart';
 import 'package:xpips/application/providers/sharedpreferences.dart';
 import 'package:xpips/data/data_sources/network.dart';
 import 'package:xpips/domain/models/login_credentials.dart';
@@ -10,8 +11,9 @@ import 'package:xpips/domain/models/login_credentials.dart';
 import '../../domain/models/user.dart';
 
 class AuthController extends ChangeNotifier {
-  AuthController(this.sharedPreferences, this.client);
+  AuthController(this.ref, this.sharedPreferences, this.client);
 
+  final Ref ref;
   final SharedPreferences sharedPreferences;
   final AppServiceClient client;
 
@@ -28,7 +30,10 @@ class AuthController extends ChangeNotifier {
     sharedPreferences.setString('USER', jsonEncode(newUser));
 
     // set token
-    sharedPreferences.setString('TOKEN', accessToken);
+    sharedPreferences.setString('BEARER_TOKEN', accessToken);
+
+    // get dio again after loing to load token
+    ref.read(dioFactoryProvider).getDio();
 
     setUser(newUser);
 
@@ -58,7 +63,7 @@ final authControllerProvider = ChangeNotifierProvider<AuthController>((ref) {
   final sharedPrefs = ref.watch(sharedPreferencesProvider);
   final client = ref.watch(appServiceClientProvider);
 
-  return AuthController(sharedPrefs, client);
+  return AuthController(ref, sharedPrefs, client);
 });
 
 final currentUserProvider = Provider<User?>((ref) {

@@ -1,5 +1,8 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:xpips/presentation/widgets/logout_button.dart';
 
+@RoutePage()
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({Key? key}) : super(key: key);
 
@@ -15,10 +18,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
     'About',
   ];
 
+  final List<AutoRoute> _screens = [];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
+      appBar: AppBar(
+        title: const Text('Settings'),
+        actions: const [
+          LogoutButton(),
+        ],
+      ),
       body: Column(
         children: [
           ListView.builder(

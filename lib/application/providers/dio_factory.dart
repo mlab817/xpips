@@ -17,6 +17,8 @@ class DioFactory {
     // retrieve token from shared_prefs
     String? token = sharedPreferences.getString('BEARER_TOKEN');
 
+    debugPrint("go called and token is $token");
+
     Map<String, String> headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -35,11 +37,11 @@ class DioFactory {
     } else {
       dio.interceptors.add(PrettyDioLogger(
         request: true,
-        // requestHeader: true,
+        requestHeader: true,
         requestBody: true,
         // responseBody: false,
         // responseHeader: true,
-        responseBody: true,
+        // responseBody: true,
         compact: true,
         error: true,
       ));
