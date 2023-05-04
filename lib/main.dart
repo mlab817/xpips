@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:window_size/window_size.dart';
-import 'package:xpips/application/providers/sharedpreferences.dart';
 
+import './application/providers/sharedpreferences.dart';
 import 'application/app.dart';
 
 void main() async {

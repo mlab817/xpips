@@ -2,10 +2,10 @@ import 'package:auto_route/annotations.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:xpips/application/functions.dart';
-import 'package:xpips/presentation/widgets/loading_dialog.dart';
-import 'package:xpips/presentation/widgets/logout_button.dart';
 
+import '../../application/functions.dart';
+import '../../presentation/widgets/loading_dialog.dart';
+import '../../presentation/widgets/logout_button.dart';
 import '../application/providers/projects_provider.dart';
 import '../domain/models/project.dart';
 
@@ -62,7 +62,24 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 return ProjectListTile(project: project);
               });
         }, error: (error, stackTrace) {
-          return Container();
+          return Center(
+              child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('Error!', style: Theme.of(context).textTheme.headlineLarge),
+              const SizedBox(height: 30),
+              Text(error.toString()),
+              const SizedBox(
+                height: 30,
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  ref.read(projectControllerProvider.notifier).getAll();
+                },
+                child: const Text('Try Again'),
+              ),
+            ],
+          ));
         }, loading: () {
           return const LoadingOverlay();
         }),

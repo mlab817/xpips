@@ -1,6 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:xpips/presentation/widgets/logout_button.dart';
+
+import '../../application/app_router.dart';
+import '../../presentation/widgets/logout_button.dart';
 
 @RoutePage()
 class SettingsScreen extends StatefulWidget {
@@ -18,7 +20,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
     'About',
   ];
 
-  final List<AutoRoute> _screens = [];
+  final _screens = [
+    const UpdateProfileRoute(),
+    const UpdatePasswordRoute(),
+    const AccountRecoveryRoute(),
+    const AboutRoute(),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -39,16 +46,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 title: Text(_menu[index]),
                 trailing: const Icon(Icons.chevron_right),
                 onTap: () {
-                  // TODO: add navigation
+                  context.router.push(_screens[index]);
                 },
               );
             },
           ),
-          FilledButton(
-              onPressed: () {
-                // TODO: handle logout
-              },
-              child: const Text('Logout'))
         ],
       ),
     );

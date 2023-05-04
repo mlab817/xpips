@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:xpips/data/data_sources/network.dart';
 
+import '../../data/data_sources/network.dart';
 import '../../domain/models/chatroom.dart';
 import '../../domain/models/message.dart';
 import '../requests/newmessage_request.dart';

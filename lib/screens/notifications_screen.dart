@@ -1,13 +1,12 @@
-import 'dart:convert';
-
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:xpips/application/functions.dart';
-import 'package:xpips/data/responses/notifications_response.dart';
-import 'package:xpips/presentation/controllers/notifications_controller.dart';
-import 'package:xpips/presentation/widgets/loading_dialog.dart';
-import 'package:xpips/presentation/widgets/logout_button.dart';
+
+import '../../application/functions.dart';
+import '../../data/responses/notifications_response.dart';
+import '../../presentation/controllers/notifications_controller.dart';
+import '../../presentation/widgets/loading_dialog.dart';
+import '../../presentation/widgets/logout_button.dart';
 
 @RoutePage()
 class NotificationsScreen extends ConsumerStatefulWidget {
@@ -39,7 +38,21 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
       ),
       body: valueAsync.when(
         data: (data) => _buildList(data, ref),
-        error: (error, stackTrace) => Text(jsonEncode(error)),
+        error: (error, stackTrace) => Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('Error!', style: Theme.of(context).textTheme.headlineLarge),
+              const SizedBox(
+                height: 30,
+              ),
+              Text(error.toString()),
+              const SizedBox(
+                height: 30,
+              ),
+            ],
+          ),
+        ),
         loading: () => const LoadingOverlay(),
       ),
     );

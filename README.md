@@ -1,4 +1,4 @@
-# xpips
+# PIPS Cross-Platform
 
 A new Flutter project.
 

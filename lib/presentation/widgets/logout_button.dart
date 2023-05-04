@@ -1,6 +1,8 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../application/app_router.dart';
 import '../controllers/auth_controller.dart';
 
 class LogoutButton extends ConsumerWidget {
@@ -34,6 +36,8 @@ class LogoutButton extends ConsumerWidget {
       final authController = ref.watch(authControllerProvider);
 
       authController.logout();
+
+      AutoRouter.of(context).replace(const LoginRoute());
     } else {
       print('Cancelled');
     }

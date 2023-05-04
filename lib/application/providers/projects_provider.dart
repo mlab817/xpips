@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:xpips/data/repositories/project_repository.dart';
-import 'package:xpips/domain/models/projects_request.dart';
 
+import '../../data/repositories/project_repository.dart';
+import '../../domain/models/projects_request.dart';
 import '../../domain/models/projects_response.dart';
 
 class ProjectController extends AsyncNotifier<ProjectsResponse> {
@@ -22,8 +22,8 @@ class ProjectController extends AsyncNotifier<ProjectsResponse> {
 
     state = const AsyncLoading();
 
-    final response = repository
-        .getAll(request.copyWith(page: currentPage, q: q));
+    final response =
+        repository.getAll(request.copyWith(page: currentPage, q: q));
 
     // retrieve notifications
     state = await AsyncValue.guard(() => response);
@@ -40,6 +40,6 @@ class ProjectController extends AsyncNotifier<ProjectsResponse> {
 }
 
 final projectControllerProvider =
-AsyncNotifierProvider<ProjectController, ProjectsResponse>(() {
+    AsyncNotifierProvider<ProjectController, ProjectsResponse>(() {
   return ProjectController();
 });

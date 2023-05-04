@@ -3,8 +3,9 @@ import 'dart:async';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:xpips/application/app_router.dart';
-import 'package:xpips/presentation/controllers/auth_controller.dart';
+
+import '../../application/app_router.dart';
+import '../../presentation/controllers/auth_controller.dart';
 
 @RoutePage()
 class SplashScreen extends ConsumerStatefulWidget {
@@ -22,9 +23,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     ref.read(authControllerProvider.notifier).getUser();
 
     // check if user is logged in
-    final loggedIn = ref
-        .watch(authControllerProvider)
-        .isLoggedIn;
+    final loggedIn = ref.watch(authControllerProvider).isLoggedIn;
 
     if (loggedIn) {
       //

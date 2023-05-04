@@ -1,10 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:xpips/application/providers/notifications_provider.dart';
-import 'package:xpips/data/requests/notifications_request.dart';
-import 'package:xpips/data/responses/notifications_response.dart';
-import 'package:xpips/domain/models/notifications.dart';
+
+import '../../application/providers/notifications_provider.dart';
+import '../../data/requests/notifications_request.dart';
+import '../../data/responses/notifications_response.dart';
+import '../../domain/models/notifications.dart';
 
 class NotificationController extends AsyncNotifier<NotificationsResponse> {
   late NotificationsRequest notificationsRequest;
@@ -46,7 +47,7 @@ class NotificationController extends AsyncNotifier<NotificationsResponse> {
     final notificationsRepository = ref.read(notificationsRepositoryProvider);
 
     final response =
-    notificationsRepository.markNotificationAsRead(notification.id);
+        notificationsRepository.markNotificationAsRead(notification.id);
 
     return response;
   }
@@ -67,6 +68,6 @@ class NotificationController extends AsyncNotifier<NotificationsResponse> {
 }
 
 final notificationsControllerProvider =
-AsyncNotifierProvider<NotificationController, NotificationsResponse>(() {
+    AsyncNotifierProvider<NotificationController, NotificationsResponse>(() {
   return NotificationController();
 });

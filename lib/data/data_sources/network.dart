@@ -1,14 +1,14 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:retrofit/http.dart';
-import 'package:xpips/application/providers/dio_factory.dart';
-import 'package:xpips/data/responses/chatrooms_response.dart';
-import 'package:xpips/domain/models/login_credentials.dart';
-import 'package:xpips/domain/models/notifications.dart';
-import 'package:xpips/domain/models/projects_request.dart';
 
 import '../../application/config.dart';
+import '../../application/providers/dio_factory.dart';
+import '../../data/responses/chatrooms_response.dart';
+import '../../domain/models/login_credentials.dart';
 import '../../domain/models/login_response.dart';
+import '../../domain/models/notifications.dart';
+import '../../domain/models/projects_request.dart';
 import '../../domain/models/projects_response.dart';
 import '../requests/notifications_request.dart';
 import '../responses/chatroom_response.dart';

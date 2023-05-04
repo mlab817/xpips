@@ -12,6 +12,12 @@ class AboutScreen extends StatefulWidget {
 class _AboutScreenState extends State<AboutScreen> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text('About'),
+        ),
+        body: const Center(
+          child: Text('About'),
+        ));
   }
 }

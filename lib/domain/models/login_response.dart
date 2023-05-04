@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:xpips/domain/models/user.dart';
+
+import 'user.dart';
 
 part 'login_response.freezed.dart';
 part 'login_response.g.dart';

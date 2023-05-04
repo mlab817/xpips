@@ -2,11 +2,12 @@ import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:xpips/data/responses/chatroom_response.dart';
-import 'package:xpips/domain/models/chatroom.dart';
-import 'package:xpips/presentation/controllers/auth_controller.dart';
-import 'package:xpips/presentation/controllers/chatroom_controller.dart';
-import 'package:xpips/presentation/widgets/loading_dialog.dart';
+
+import '../../data/responses/chatroom_response.dart';
+import '../../domain/models/chatroom.dart';
+import '../../presentation/controllers/auth_controller.dart';
+import '../../presentation/controllers/chatroom_controller.dart';
+import '../../presentation/widgets/loading_dialog.dart';
 
 @RoutePage()
 class ChatRoomScreen extends ConsumerStatefulWidget {

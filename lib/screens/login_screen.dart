@@ -2,10 +2,10 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:xpips/application/app_router.dart';
-import 'package:xpips/domain/models/login_credentials.dart';
-import 'package:xpips/presentation/controllers/auth_controller.dart';
 
+import '../../application/app_router.dart';
+import '../../domain/models/login_credentials.dart';
+import '../../presentation/controllers/auth_controller.dart';
 import '../presentation/widgets/loading_dialog.dart';
 
 @RoutePage()

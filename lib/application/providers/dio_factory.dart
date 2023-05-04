@@ -3,8 +3,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:xpips/application/config.dart';
-import 'package:xpips/application/providers/sharedpreferences.dart';
+
+import '../../application/config.dart';
+import '../../application/providers/sharedpreferences.dart';
 
 class DioFactory {
   final SharedPreferences sharedPreferences;

@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:xpips/data/data_sources/network.dart';
-import 'package:xpips/domain/models/projects_request.dart';
 
+import '../../data/data_sources/network.dart';
+import '../../domain/models/projects_request.dart';
 import '../../domain/models/projects_response.dart';
 
 abstract class ProjectRepository {

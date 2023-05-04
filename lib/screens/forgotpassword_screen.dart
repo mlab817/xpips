@@ -15,7 +15,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Forgot Password'),
-        elevation: 0,
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -23,7 +22,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           children: [
             TextFormField(),
             FilledButton(
-              onPressed: () {},
+              onPressed: () {
+                // TODO: send forgot password reset email
+              },
               child: const Text('Send Password Reset Link'),
             ),
           ],

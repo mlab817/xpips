@@ -3,11 +3,11 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:xpips/application/providers/dio_factory.dart';
-import 'package:xpips/application/providers/sharedpreferences.dart';
-import 'package:xpips/data/data_sources/network.dart';
-import 'package:xpips/domain/models/login_credentials.dart';
 
+import '../../application/providers/dio_factory.dart';
+import '../../application/providers/sharedpreferences.dart';
+import '../../data/data_sources/network.dart';
+import '../../domain/models/login_credentials.dart';
 import '../../domain/models/user.dart';
 
 class AuthController extends ChangeNotifier {

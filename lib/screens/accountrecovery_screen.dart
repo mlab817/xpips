@@ -12,6 +12,14 @@ class AccountRecoveryScreen extends StatefulWidget {
 class _AccountRecoveryScreenState extends State<AccountRecoveryScreen> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Account Recovery'),
+      ),
+      body: Column(children: const [
+        Text(
+            'Help us recover your account by verifying your email. Send a password verification email now.'),
+      ]),
+    );
   }
 }

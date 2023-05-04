@@ -1,8 +1,8 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:xpips/domain/models/user.dart';
 
 import 'office.dart';
 import 'option.dart';
+import 'user.dart';
 
 part 'project.freezed.dart';
 part 'project.g.dart';

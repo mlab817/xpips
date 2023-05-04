@@ -1,12 +1,12 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:xpips/presentation/widgets/logout_button.dart';
-import 'package:xpips/screens/chat_screen.dart';
-import 'package:xpips/screens/home_screen.dart';
-import 'package:xpips/screens/notifications_screen.dart';
-import 'package:xpips/screens/settings_screen.dart';
 
+import '../../presentation/widgets/logout_button.dart';
+import '../../screens/chat_screen.dart';
+import '../../screens/home_screen.dart';
+import '../../screens/notifications_screen.dart';
+import '../../screens/settings_screen.dart';
 import '../application/app_router.dart';
 
 @RoutePage()

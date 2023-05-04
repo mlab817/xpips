@@ -1,12 +1,13 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:xpips/application/app_router.dart';
-import 'package:xpips/application/functions.dart';
-import 'package:xpips/data/responses/chatrooms_response.dart';
-import 'package:xpips/presentation/controllers/chat_controller.dart';
-import 'package:xpips/presentation/widgets/loading_dialog.dart';
-import 'package:xpips/presentation/widgets/logout_button.dart';
+
+import '../../application/app_router.dart';
+import '../../application/functions.dart';
+import '../../data/responses/chatrooms_response.dart';
+import '../../presentation/controllers/chat_controller.dart';
+import '../../presentation/widgets/loading_dialog.dart';
+import '../../presentation/widgets/logout_button.dart';
 
 @RoutePage()
 class ChatScreen extends ConsumerStatefulWidget {

@@ -1,6 +1,5 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:xpips/screens/login_screen.dart';
+import 'package:flutter/material.dart';
 
 import '../domain/models/chatroom.dart';
 import '../screens/about_screen.dart';
@@ -9,6 +8,7 @@ import '../screens/chat_screen.dart';
 import '../screens/chatroom_screen.dart';
 import '../screens/forgotpassword_screen.dart';
 import '../screens/home_screen.dart';
+import '../screens/login_screen.dart';
 import '../screens/main_screen.dart';
 import '../screens/notifications_screen.dart';
 import '../screens/settings_screen.dart';
@@ -34,16 +34,12 @@ class AppRouter extends _$AppRouter {
           AutoRoute(
             path: 'settings',
             page: SettingsRoute.page,
-            children: [
-              AutoRoute(
-                  path: 'update-password', page: UpdatePasswordRoute.page),
-              AutoRoute(path: 'update-profile', page: UpdateProfileRoute.page),
-              AutoRoute(
-                  path: 'account-recovery', page: AccountRecoveryRoute.page),
-              AutoRoute(path: 'about', page: AboutRoute.page),
-            ],
           ),
         ]),
+        AutoRoute(path: '/update-password', page: UpdatePasswordRoute.page),
+        AutoRoute(path: '/update-profile', page: UpdateProfileRoute.page),
+        AutoRoute(path: '/account-recovery', page: AccountRecoveryRoute.page),
+        AutoRoute(path: '/about', page: AboutRoute.page),
         AutoRoute(page: ChatRoomRoute.page),
       ];
 }

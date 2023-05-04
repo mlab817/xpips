@@ -1,6 +1,5 @@
-import 'package:xpips/data/data_sources/network.dart';
-import 'package:xpips/domain/models/notifications.dart';
-
+import '../../data/data_sources/network.dart';
+import '../../domain/models/notifications.dart';
 import '../requests/notifications_request.dart';
 import '../responses/notifications_response.dart';
 
