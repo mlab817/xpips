@@ -20,6 +20,8 @@ class Project with _$Project {
     @JsonKey(name: "spatial_coverage") required Option? spatialCoverage,
     @JsonKey(name: "office") required Office? office,
     @JsonKey(name: "user") required User? user,
+    @JsonKey(name: "is_read") required bool isRead,
+    @JsonKey(name: "contact_information") String? contactInformation,
   }) = _Project;
 
   factory Project.fromJson(Map<String, dynamic> json) =>

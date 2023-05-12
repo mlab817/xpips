@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -9,10 +10,12 @@ import './application/providers/sharedpreferences.dart';
 import 'application/app.dart';
 
 void main() async {
+  // debugPaintSizeEnabled = true;
+
   WidgetsFlutterBinding.ensureInitialized();
 
   // set window size for desktop
-  if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+  if (!kIsWeb && (Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
     setWindowTitle('PIPS');
     setWindowMinSize(const Size(320, 600));
     setWindowMaxSize(Size.infinite);

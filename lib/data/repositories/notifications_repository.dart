@@ -1,10 +1,11 @@
-import '../../data/data_sources/network.dart';
+import 'package:pips/data/requests/pagination_request.dart';
+
 import '../../domain/models/notifications.dart';
-import '../requests/notifications_request.dart';
+import '../data_sources/app_service_client.dart';
 import '../responses/notifications_response.dart';
 
 abstract class NotificationsRepository {
-  Future<NotificationsResponse> getAll(NotificationsRequest input);
+  Future<NotificationsResponse> getAll(PaginationRequest input);
 
   Future<Notification> markNotificationAsRead(String id);
 }
@@ -15,7 +16,7 @@ class NotificationsRepositoryImplementer implements NotificationsRepository {
   NotificationsRepositoryImplementer(this.client);
 
   @override
-  Future<NotificationsResponse> getAll(NotificationsRequest input) async {
+  Future<NotificationsResponse> getAll(PaginationRequest input) async {
     return await client.listNotifications(input);
   }
 

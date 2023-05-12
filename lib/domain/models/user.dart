@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:pips/data/requests/updateprofile_request.dart';
 
 import 'office.dart';
 

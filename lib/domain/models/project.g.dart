@@ -23,6 +23,8 @@ _$_Project _$$_ProjectFromJson(Map<String, dynamic> json) => _$_Project(
       user: json['user'] == null
           ? null
           : User.fromJson(json['user'] as Map<String, dynamic>),
+      isRead: json['is_read'] as bool,
+      contactInformation: json['contact_information'] as String?,
     );
 
 Map<String, dynamic> _$$_ProjectToJson(_$_Project instance) =>
@@ -37,4 +39,6 @@ Map<String, dynamic> _$$_ProjectToJson(_$_Project instance) =>
       'spatial_coverage': instance.spatialCoverage,
       'office': instance.office,
       'user': instance.user,
+      'is_read': instance.isRead,
+      'contact_information': instance.contactInformation,
     };

@@ -14,7 +14,8 @@ class MyApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentUser = ref.watch(currentUserProvider);
+    final currentUser =
+        ref.read(authControllerProvider.notifier).getCurrentUser();
 
     debugPrint(currentUser.toString());
 
@@ -52,8 +53,6 @@ class MyApp extends ConsumerWidget {
       //           else
       //             const SplashRoute(),
       //         ]),
-      // routeInformationParser:
-      //     _appRouter.defaultRouteParser(includePrefixMatches: true),
       routerConfig: _appRouter.config(),
       // home: currentUser != null ? const MainScreen() : const LoginScreen(),
       // TODO: replace with auto route

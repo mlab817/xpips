@@ -1,11 +1,19 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../data/data_sources/network.dart';
+import '../data_sources/app_service_client.dart';
 import '../../domain/models/projects_request.dart';
 import '../../domain/models/projects_response.dart';
 
 abstract class ProjectRepository {
   Future<ProjectsResponse> getAll(ProjectsRequest input);
+
+  // get One
+
+  // create
+
+  // update
+
+  // delete
 }
 
 class ProjectRepositoryImplementer implements ProjectRepository {
@@ -20,7 +28,10 @@ class ProjectRepositoryImplementer implements ProjectRepository {
 }
 
 final projectRepositoryProvider = Provider<ProjectRepositoryImplementer>((ref) {
-  final client = ref.watch(appServiceClientProvider);
+  print('projectRepositoryProvider called');
+
+  final client = ref
+      .watch(appServiceClientProvider); // this is not affected by dio provider?
 
   return ProjectRepositoryImplementer(client);
 });

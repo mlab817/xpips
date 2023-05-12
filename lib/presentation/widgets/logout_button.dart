@@ -33,9 +33,7 @@ class LogoutButton extends ConsumerWidget {
         });
 
     if (confirmed) {
-      final authController = ref.watch(authControllerProvider);
-
-      authController.logout();
+      ref.read(authControllerProvider.notifier).logout();
 
       AutoRouter.of(context).replace(const LoginRoute());
     } else {

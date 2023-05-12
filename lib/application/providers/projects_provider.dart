@@ -1,12 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pips/domain/models/projects_response.dart';
 
 import '../../data/repositories/project_repository.dart';
 import '../../domain/models/projects_request.dart';
-import '../../domain/models/projects_response.dart';
 
-class ProjectController extends AsyncNotifier<ProjectsResponse> {
+class ProjectController extends AsyncNotifier<void> {
   late ProjectsRequest request;
   int currentPage = 1;
   String? q;
@@ -17,7 +17,14 @@ class ProjectController extends AsyncNotifier<ProjectsResponse> {
     getAll();
   }
 
-  Future<ProjectsResponse> getAll() async {
+  void previousPage() {
+    if (currentPage > 1) {
+      currentPage--;
+      getAll();
+    }
+  }
+
+  Future<void> getAll() async {
     final repository = ref.read(projectRepositoryProvider);
 
     state = const AsyncLoading();
@@ -26,13 +33,11 @@ class ProjectController extends AsyncNotifier<ProjectsResponse> {
         repository.getAll(request.copyWith(page: currentPage, q: q));
 
     // retrieve notifications
-    state = await AsyncValue.guard(() => response);
-
-    return response;
+    state = await AsyncValue.guard<ProjectsResponse>(() => response);
   }
 
   @override
-  FutureOr<ProjectsResponse> build() {
+  FutureOr<void> build() {
     request = ProjectsRequest(perPage: 25, page: currentPage);
 
     return getAll();
@@ -40,6 +45,6 @@ class ProjectController extends AsyncNotifier<ProjectsResponse> {
 }
 
 final projectControllerProvider =
-    AsyncNotifierProvider<ProjectController, ProjectsResponse>(() {
+    AsyncNotifierProvider<ProjectController, void>(() {
   return ProjectController();
 });

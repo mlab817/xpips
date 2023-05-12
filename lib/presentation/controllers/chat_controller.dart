@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/repositories/chat_repository.dart';
 import '../../data/responses/chatrooms_response.dart';
 
-class ChatController extends AsyncNotifier<ChatRoomsResponse> {
+class ChatScreenController extends AsyncNotifier<ChatRoomsResponse> {
   Future<ChatRoomsResponse> getChatRooms() async {
     final repository = ref.watch(chatRepositoryProvider);
 
@@ -23,6 +23,6 @@ class ChatController extends AsyncNotifier<ChatRoomsResponse> {
 }
 
 final chatControllerProvider =
-    AsyncNotifierProvider<ChatController, ChatRoomsResponse>(() {
-  return ChatController();
+    AsyncNotifierProvider<ChatScreenController, ChatRoomsResponse>(() {
+  return ChatScreenController();
 });

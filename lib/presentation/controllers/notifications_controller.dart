@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pips/data/requests/pagination_request.dart';
 
 import '../../application/providers/notifications_provider.dart';
 import '../../data/requests/notifications_request.dart';
@@ -26,6 +27,8 @@ class NotificationController extends AsyncNotifier<NotificationsResponse> {
   }
 
   Future<NotificationsResponse> getAll() async {
+    final controller = ref.watch(paginationRequestControllerProvider);
+
     // set the loading state
     state = const AsyncLoading();
 
@@ -35,7 +38,7 @@ class NotificationController extends AsyncNotifier<NotificationsResponse> {
     final notificationsRepository = ref.read(notificationsRepositoryProvider);
 
     final response = notificationsRepository
-        .getAll(notificationsRequest.copyWith(page: currentPage, q: q));
+        .getAll(controller);
 
     // retrieve notifications
     state = await AsyncValue.guard(() => response);
@@ -47,7 +50,7 @@ class NotificationController extends AsyncNotifier<NotificationsResponse> {
     final notificationsRepository = ref.read(notificationsRepositoryProvider);
 
     final response =
-        notificationsRepository.markNotificationAsRead(notification.id);
+    notificationsRepository.markNotificationAsRead(notification.id);
 
     return response;
   }
@@ -68,6 +71,6 @@ class NotificationController extends AsyncNotifier<NotificationsResponse> {
 }
 
 final notificationsControllerProvider =
-    AsyncNotifierProvider<NotificationController, NotificationsResponse>(() {
+AsyncNotifierProvider<NotificationController, NotificationsResponse>(() {
   return NotificationController();
 });
