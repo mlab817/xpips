@@ -32,24 +32,53 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: LoginRoute.page, path: '/login'),
         AutoRoute(page: SignupRoute.page, path: '/signup'),
         AutoRoute(page: ForgotPasswordRoute.page, path: '/forgot-password'),
-        AutoRoute(page: MainRoute.page, children: [
-          AutoRoute(path: 'home', page: HomeRoute.page),
-          AutoRoute(path: 'chats', page: ChatRoute.page),
-          AutoRoute(path: 'notifications', page: NotificationsRoute.page),
+        AutoRoute(page: MainRoute.page, path: '/main', children: [
           AutoRoute(
-            path: 'settings',
-            page: SettingsRoute.page,
+            path: '',
+            page: HomeRoute.page,
           ),
+          AutoRoute(
+            path: 'chats',
+            page: ChatRoute.page,
+          ),
+          AutoRoute(
+            path: 'notifications',
+            page: NotificationsRoute.page,
+          ),
+          AutoRoute(path: 'settings', page: SettingsRoute.page, children: [
+            AutoRoute(
+              path: 'update-password',
+              page: UpdatePasswordRoute.page,
+            ),
+            AutoRoute(
+              path: 'update-profile',
+              page: UpdateProfileRoute.page,
+            ),
+            AutoRoute(
+              path: 'account-recovery',
+              page: AccountRecoveryRoute.page,
+            ),
+            AutoRoute(
+              path: 'preferences',
+              page: PreferencesRoute.page,
+            ),
+            AutoRoute(
+              path: 'about',
+              page: AboutRoute.page,
+            ),
+          ]),
         ]),
-        AutoRoute(path: '/new-project', page: NewPapRoute.page),
-        AutoRoute(path: '/project', page: PapViewRoute.page),
-        AutoRoute(path: '/update-password', page: UpdatePasswordRoute.page),
-        AutoRoute(path: '/update-profile', page: UpdateProfileRoute.page),
-        AutoRoute(path: '/account-recovery', page: AccountRecoveryRoute.page),
-        AutoRoute(path: '/preferences', page: PreferencesRoute.page),
-        AutoRoute(path: '/about', page: AboutRoute.page),
         AutoRoute(
-            path: '/request-reactivation', page: RequestReactivationRoute.page),
-        AutoRoute(page: ChatRoomRoute.page),
+          path: '/new-project',
+          page: NewPapRoute.page,
+        ),
+        AutoRoute(
+          path: '/project',
+          page: PapViewRoute.page,
+        ),
+        AutoRoute(
+          path: '/request-reactivation',
+          page: RequestReactivationRoute.page,
+        ),
       ];
 }

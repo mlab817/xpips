@@ -1,11 +1,10 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pips/data/responses/projects_response.dart';
+import 'package:pips/presentation/controllers/chats_controller.dart';
 
 import '../../../application/app_router.dart';
-import '../../../application/functions.dart';
-import '../../../data/responses/chatrooms_response.dart';
-import '../../../presentation/controllers/chat_controller.dart';
 import '../../../presentation/widgets/loading_dialog.dart';
 import '../../../presentation/widgets/logout_button.dart';
 
@@ -20,11 +19,11 @@ class ChatScreen extends ConsumerStatefulWidget {
 class _ChatScreenState extends ConsumerState<ChatScreen> {
   @override
   Widget build(BuildContext context) {
-    final valueAsync = ref.watch(chatControllerProvider);
+    final valueAsync = ref.watch(chatsControllerProvider);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Chat'),
+        title: const Text('Chats'),
         actions: const [
           LogoutButton(),
         ],
@@ -37,34 +36,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           );
         },
         error: (error, stackTrace) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'Error',
-                  style: Theme.of(context).textTheme.headlineLarge,
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Text(error.toString()),
-                const SizedBox(
-                  height: 20,
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    // reload chat rooms
-                    ref.read(chatControllerProvider.notifier).getChatRooms();
-                  },
-                  child: const Text('Try Again'),
-                ),
-              ],
-            ),
-          );
+          return _buildError(error);
         },
         loading: () {
           return const LoadingOverlay();
@@ -73,31 +45,56 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     );
   }
 
-  Widget _buildList(ChatRoomsResponse data) {
-    final chatRooms = data.data;
+  Widget _buildList(ProjectsResponse data) {
+    final projects = data.data;
 
     return ListView.builder(
-        itemCount: chatRooms.length,
+        itemCount: projects.length,
         itemBuilder: (context, index) {
-          final chatRoom = chatRooms[index];
-          final lastMessageDt = chatRoom.lastMessage?.createdAt;
+          final project = projects[index];
 
           return ListTile(
-            title: Text(chatRoom.users?.map((e) => e.fullname).join(', ') ??
-                'No Users'),
-            subtitle: Text(
-              chatRoom.lastMessage?.content ?? 'No message',
-              style: const TextStyle(
-                color: Colors.black45,
-              ),
-            ),
-            trailing:
-                lastMessageDt != null ? Text(formatDate(lastMessageDt)) : null,
+            title: Text(project.title),
+            subtitle: const Text('Last Comment'),
+            trailing: const Icon(Icons.chevron_right),
             onTap: () {
-              // TODO: open chat room
-              AutoRouter.of(context).push(ChatRoomRoute(chatRoom: chatRoom));
+              AutoRouter.of(context).push(PapViewRoute(project: project));
             },
           );
         });
+  }
+
+  Widget _buildError(error) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            'Error',
+            style: Theme
+                .of(context)
+                .textTheme
+                .headlineLarge,
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          Text(error.toString()),
+          const SizedBox(
+            height: 20,
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          ElevatedButton(
+            onPressed: () {
+              // reload chat rooms
+              ref.read(chatsControllerProvider.notifier).get();
+            },
+            child: const Text('Try Again'),
+          ),
+        ],
+      ),
+    );
   }
 }

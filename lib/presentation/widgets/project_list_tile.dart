@@ -69,72 +69,75 @@ class _ProjectListTileState extends State<ProjectListTile> {
             _project.title,
             overflow: TextOverflow.ellipsis,
           ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  _project.office?.name ?? 'No office',
-                  textAlign: TextAlign.start,
+          content: SizedBox(
+            width: double.infinity,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    _project.office?.name ?? 'No office',
+                    textAlign: TextAlign.start,
+                  ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  _project.description ?? 'No description',
-                  textAlign: TextAlign.start,
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    _project.description ?? 'No description',
+                    textAlign: TextAlign.start,
+                  ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  'PIPOL Code: ${_project.pipolCode ?? 'N/A'}',
-                  textAlign: TextAlign.start,
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    'PIPOL Code: ${_project.pipolCode ?? 'N/A'}',
+                    textAlign: TextAlign.start,
+                  ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  'Total Cost: ${_project.totalCost ?? 'N/A'}',
-                  textAlign: TextAlign.start,
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    'Total Cost: ${_project.totalCost ?? 'N/A'}',
+                    textAlign: TextAlign.start,
+                  ),
                 ),
-              ),
-              Container(
-                padding: const EdgeInsets.all(8.0),
-                width: double.infinity,
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8.0)),
-                child: Text(
-                    _project.contactInformation ?? 'No contact information'),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Container(
-                padding: const EdgeInsets.all(8.0),
-                width: double.infinity,
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8.0)),
-                child: Text(_project.notes ?? 'No notes'),
-              ),
-              // SizedBox(
-              //   width: double.maxFinite,
-              //   child: ListView.builder(
-              //       scrollDirection: Axis.horizontal,
-              //       shrinkWrap: true,
-              //       itemCount: 5,
-              //       itemBuilder: (context, index) {
-              //         //
-              //         return IconButton(
-              //             onPressed: () {},
-              //             icon: const Icon(Icons.download));
-              //       }),
-              // ),
-            ],
+                Container(
+                  padding: const EdgeInsets.all(8.0),
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8.0)),
+                  child: Text(
+                      _project.contactInformation ?? 'No contact information'),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  padding: const EdgeInsets.all(8.0),
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8.0)),
+                  child: Text(_project.notes ?? 'No notes'),
+                ),
+                // SizedBox(
+                //   width: double.maxFinite,
+                //   child: ListView.builder(
+                //       scrollDirection: Axis.horizontal,
+                //       shrinkWrap: true,
+                //       itemCount: 5,
+                //       itemBuilder: (context, index) {
+                //         //
+                //         return IconButton(
+                //             onPressed: () {},
+                //             icon: const Icon(Icons.download));
+                //       }),
+                // ),
+              ],
+            ),
           ),
           actions: [
             IconButton(

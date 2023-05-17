@@ -75,6 +75,9 @@ abstract class AppServiceClient {
   @GET('/chat-rooms/{id}')
   Future<ChatRoomResponse> getChatRoom(@Path('id') int id);
 
+  @GET('/chats')
+  Future<ProjectsResponse> getChats(@Queries() ProjectsRequest request);
+
   @GET('/pips-statuses')
   Future<PipsStatusResponse> getPipsStatuses();
 
