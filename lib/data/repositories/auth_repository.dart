@@ -3,13 +3,17 @@ import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pips/application/providers/sharedpreferences.dart';
 import 'package:pips/data/data_sources/app_service_client.dart';
+import 'package:pips/data/requests/reactivation_request.dart';
 import 'package:pips/data/requests/signup_request.dart';
+import 'package:pips/data/requests/updateprofile_request.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../domain/models/login_credentials.dart';
 import '../../domain/models/login_response.dart';
 import '../../domain/models/user.dart';
+import '../responses/reactivation_response.dart';
 import '../responses/signup_response.dart';
+import '../responses/updateprofile_response.dart';
 
 // see https://codewithandrea.com/articles/flutter-presentation-layer/
 
@@ -23,6 +27,10 @@ abstract class AuthRepository {
   User? get currentUser;
 
   Future<SignupResponse> signup(SignupRequest request);
+
+  Future<ReactivationResponse> requestReactivation(ReactivationRequest request);
+
+  Future<UpdateProfileResponse> updateProfile(UpdateProfileRequest request);
 }
 
 class AuthRepositoryImplementer implements AuthRepository {
@@ -61,6 +69,18 @@ class AuthRepositoryImplementer implements AuthRepository {
   Future<SignupResponse> signup(SignupRequest request) async {
     return client.signup(request);
   }
+
+  @override
+  Future<ReactivationResponse> requestReactivation(
+      ReactivationRequest request) async {
+    return client.requestReactivation(request);
+  }
+
+  @override
+  Future<UpdateProfileResponse> updateProfile(
+      UpdateProfileRequest request) async {
+    return client.updateProfile(request);
+  }
 }
 
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
@@ -85,8 +105,8 @@ class LoginScreenController extends StateNotifier<AsyncValue<void>> {
 }
 
 final loginScreenControllerProvider =
-StateNotifierProvider.autoDispose<LoginScreenController, AsyncValue<void>>(
+    StateNotifierProvider.autoDispose<LoginScreenController, AsyncValue<void>>(
         (ref) {
-      return LoginScreenController(
-          authRepository: ref.watch(authRepositoryProvider));
-    });
+  return LoginScreenController(
+      authRepository: ref.watch(authRepositoryProvider));
+});

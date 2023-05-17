@@ -44,6 +44,8 @@ mixin _$Project {
   bool get isRead => throw _privateConstructorUsedError;
   @JsonKey(name: "contact_information")
   String? get contactInformation => throw _privateConstructorUsedError;
+  @JsonKey(name: "notes")
+  String? get notes => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -67,7 +69,8 @@ abstract class $ProjectCopyWith<$Res> {
       @JsonKey(name: "office") Office? office,
       @JsonKey(name: "user") User? user,
       @JsonKey(name: "is_read") bool isRead,
-      @JsonKey(name: "contact_information") String? contactInformation});
+      @JsonKey(name: "contact_information") String? contactInformation,
+      @JsonKey(name: "notes") String? notes});
 
   $OptionCopyWith<$Res>? get spatialCoverage;
   $OfficeCopyWith<$Res>? get office;
@@ -99,6 +102,7 @@ class _$ProjectCopyWithImpl<$Res, $Val extends Project>
     Object? user = freezed,
     Object? isRead = null,
     Object? contactInformation = freezed,
+    Object? notes = freezed,
   }) {
     return _then(_value.copyWith(
       uuid: null == uuid
@@ -148,6 +152,10 @@ class _$ProjectCopyWithImpl<$Res, $Val extends Project>
       contactInformation: freezed == contactInformation
           ? _value.contactInformation
           : contactInformation // ignore: cast_nullable_to_non_nullable
+              as String?,
+      notes: freezed == notes
+          ? _value.notes
+          : notes // ignore: cast_nullable_to_non_nullable
               as String?,
     ) as $Val);
   }
@@ -208,7 +216,8 @@ abstract class _$$_ProjectCopyWith<$Res> implements $ProjectCopyWith<$Res> {
       @JsonKey(name: "office") Office? office,
       @JsonKey(name: "user") User? user,
       @JsonKey(name: "is_read") bool isRead,
-      @JsonKey(name: "contact_information") String? contactInformation});
+      @JsonKey(name: "contact_information") String? contactInformation,
+      @JsonKey(name: "notes") String? notes});
 
   @override
   $OptionCopyWith<$Res>? get spatialCoverage;
@@ -240,6 +249,7 @@ class __$$_ProjectCopyWithImpl<$Res>
     Object? user = freezed,
     Object? isRead = null,
     Object? contactInformation = freezed,
+    Object? notes = freezed,
   }) {
     return _then(_$_Project(
       uuid: null == uuid
@@ -290,6 +300,10 @@ class __$$_ProjectCopyWithImpl<$Res>
           ? _value.contactInformation
           : contactInformation // ignore: cast_nullable_to_non_nullable
               as String?,
+      notes: freezed == notes
+          ? _value.notes
+          : notes // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -309,7 +323,8 @@ class _$_Project implements _Project {
       @JsonKey(name: "office") required this.office,
       @JsonKey(name: "user") required this.user,
       @JsonKey(name: "is_read") required this.isRead,
-      @JsonKey(name: "contact_information") this.contactInformation});
+      @JsonKey(name: "contact_information") this.contactInformation,
+      @JsonKey(name: "notes") this.notes});
 
   factory _$_Project.fromJson(Map<String, dynamic> json) =>
       _$$_ProjectFromJson(json);
@@ -350,10 +365,13 @@ class _$_Project implements _Project {
   @override
   @JsonKey(name: "contact_information")
   final String? contactInformation;
+  @override
+  @JsonKey(name: "notes")
+  final String? notes;
 
   @override
   String toString() {
-    return 'Project(uuid: $uuid, title: $title, totalCost: $totalCost, isLocked: $isLocked, updatedAt: $updatedAt, pipolCode: $pipolCode, description: $description, spatialCoverage: $spatialCoverage, office: $office, user: $user, isRead: $isRead, contactInformation: $contactInformation)';
+    return 'Project(uuid: $uuid, title: $title, totalCost: $totalCost, isLocked: $isLocked, updatedAt: $updatedAt, pipolCode: $pipolCode, description: $description, spatialCoverage: $spatialCoverage, office: $office, user: $user, isRead: $isRead, contactInformation: $contactInformation, notes: $notes)';
   }
 
   @override
@@ -379,7 +397,8 @@ class _$_Project implements _Project {
             (identical(other.user, user) || other.user == user) &&
             (identical(other.isRead, isRead) || other.isRead == isRead) &&
             (identical(other.contactInformation, contactInformation) ||
-                other.contactInformation == contactInformation));
+                other.contactInformation == contactInformation) &&
+            (identical(other.notes, notes) || other.notes == notes));
   }
 
   @JsonKey(ignore: true)
@@ -397,7 +416,8 @@ class _$_Project implements _Project {
       office,
       user,
       isRead,
-      contactInformation);
+      contactInformation,
+      notes);
 
   @JsonKey(ignore: true)
   @override
@@ -415,30 +435,19 @@ class _$_Project implements _Project {
 
 abstract class _Project implements Project {
   factory _Project(
-      {@JsonKey(name: "uuid")
-          required final String uuid,
-      @JsonKey(name: "title")
-          required final String title,
-      @JsonKey(name: "total_cost")
-          required final double? totalCost,
-      @JsonKey(name: "is_locked")
-          required final bool isLocked,
-      @JsonKey(name: "updated_at")
-          required final String updatedAt,
-      @JsonKey(name: "pipol_code")
-          required final String? pipolCode,
-      @JsonKey(name: "description")
-          required final String? description,
-      @JsonKey(name: "spatial_coverage")
-          required final Option? spatialCoverage,
-      @JsonKey(name: "office")
-          required final Office? office,
-      @JsonKey(name: "user")
-          required final User? user,
-      @JsonKey(name: "is_read")
-          required final bool isRead,
-      @JsonKey(name: "contact_information")
-          final String? contactInformation}) = _$_Project;
+      {@JsonKey(name: "uuid") required final String uuid,
+      @JsonKey(name: "title") required final String title,
+      @JsonKey(name: "total_cost") required final double? totalCost,
+      @JsonKey(name: "is_locked") required final bool isLocked,
+      @JsonKey(name: "updated_at") required final String updatedAt,
+      @JsonKey(name: "pipol_code") required final String? pipolCode,
+      @JsonKey(name: "description") required final String? description,
+      @JsonKey(name: "spatial_coverage") required final Option? spatialCoverage,
+      @JsonKey(name: "office") required final Office? office,
+      @JsonKey(name: "user") required final User? user,
+      @JsonKey(name: "is_read") required final bool isRead,
+      @JsonKey(name: "contact_information") final String? contactInformation,
+      @JsonKey(name: "notes") final String? notes}) = _$_Project;
 
   factory _Project.fromJson(Map<String, dynamic> json) = _$_Project.fromJson;
 
@@ -478,6 +487,9 @@ abstract class _Project implements Project {
   @override
   @JsonKey(name: "contact_information")
   String? get contactInformation;
+  @override
+  @JsonKey(name: "notes")
+  String? get notes;
   @override
   @JsonKey(ignore: true)
   _$$_ProjectCopyWith<_$_Project> get copyWith =>

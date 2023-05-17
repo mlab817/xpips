@@ -81,18 +81,24 @@ _$_FullProject _$$_FullProjectFromJson(Map<String, dynamic> json) =>
           ? null
           : Option.fromJson(json['fs_status'] as Map<String, dynamic>),
       fsTotalCost: json['fs_total_cost'] as String?,
-      fsCost: FsCost.fromJson(json['fs_cost'] as Map<String, dynamic>),
+      fsCost: json['fs_cost'] == null
+          ? null
+          : FsCost.fromJson(json['fs_cost'] as Map<String, dynamic>),
       fsCompletionDate: json['fs_completion_date'] == null
           ? null
           : DateTime.parse(json['fs_completion_date'] as String),
       hasRow: json['has_row'] as bool?,
       rowAffectedHouseholds: json['row_affected_households'] as int?,
       rowTotalCost: (json['row_total_cost'] as num?)?.toDouble(),
-      rowCost: RowCost.fromJson(json['row_cost'] as Map<String, dynamic>),
+      rowCost: json['row_cost'] == null
+          ? null
+          : RowCost.fromJson(json['row_cost'] as Map<String, dynamic>),
       hasRap: json['has_rap'] as bool?,
       rapAffectedHouseholds: json['rap_affected_households'] as int?,
       rapTotalCost: (json['rap_total_cost'] as num?)?.toDouble(),
-      rapCost: RapCost.fromJson(json['rap_cost'] as Map<String, dynamic>),
+      rapCost: json['rap_cost'] == null
+          ? null
+          : RapCost.fromJson(json['rap_cost'] as Map<String, dynamic>),
       hasRowRap: json['has_row_rap'] as bool?,
       prerequisites: (json['prerequisites'] as List<dynamic>)
           .map((e) => Option.fromJson(e as Map<String, dynamic>))
@@ -121,7 +127,7 @@ _$_FullProject _$$_FullProjectFromJson(Map<String, dynamic> json) =>
       fsInvestments: (json['fs_investments'] as List<dynamic>)
           .map((e) => FsInvestment.fromJson(e as Map<String, dynamic>))
           .toList(),
-      regionalInvestments: (json['regional_investments'] as List<dynamic>)
+      regions: (json['regions'] as List<dynamic>)
           .map((e) => RegionalInvestment.fromJson(e as Map<String, dynamic>))
           .toList(),
       implementationModeId: json['implementation_mode_id'] as int?,
@@ -166,6 +172,7 @@ _$_FullProject _$$_FullProjectFromJson(Map<String, dynamic> json) =>
       financialAccomplishment: FinancialAccomplishment.fromJson(
           json['financial_accomplishment'] as Map<String, dynamic>),
       contactInformation: json['contact_information'] as String?,
+      notes: json['notes'] as String?,
     );
 
 Map<String, dynamic> _$$_FullProjectToJson(_$_FullProject instance) =>
@@ -232,7 +239,7 @@ Map<String, dynamic> _$$_FullProjectToJson(_$_FullProject instance) =>
       'implementation_mode': instance.implementationMode,
       'pure_grant': instance.pureGrant,
       'fs_investments': instance.fsInvestments,
-      'regional_investments': instance.regionalInvestments,
+      'regions': instance.regions,
       'implementation_mode_id': instance.implementationModeId,
       'project_status_id': instance.projectStatusId,
       'category_id': instance.categoryId,
@@ -256,6 +263,7 @@ Map<String, dynamic> _$$_FullProjectToJson(_$_FullProject instance) =>
       'uacs_code': instance.uacsCode,
       'financial_accomplishment': instance.financialAccomplishment,
       'contact_information': instance.contactInformation,
+      'notes': instance.notes,
     };
 
 _$_FsInvestment _$$_FsInvestmentFromJson(Map<String, dynamic> json) =>
@@ -295,14 +303,14 @@ _$_RegionalInvestment _$$_RegionalInvestmentFromJson(
       region: json['region'] == null
           ? null
           : Option.fromJson(json['region'] as Map<String, dynamic>),
-      y2022: json['y2022'] as num?,
-      y2023: json['y2023'] as num?,
-      y2024: json['y2024'] as num?,
-      y2025: json['y2025'] as num?,
-      y2026: json['y2026'] as num?,
-      y2027: json['y2027'] as num?,
-      y2028: json['y2028'] as num?,
-      y2029: json['y2029'] as num?,
+      y2022: (json['y2022'] as num?)?.toDouble(),
+      y2023: (json['y2023'] as num?)?.toDouble(),
+      y2024: (json['y2024'] as num?)?.toDouble(),
+      y2025: (json['y2025'] as num?)?.toDouble(),
+      y2026: (json['y2026'] as num?)?.toDouble(),
+      y2027: (json['y2027'] as num?)?.toDouble(),
+      y2028: (json['y2028'] as num?)?.toDouble(),
+      y2029: (json['y2029'] as num?)?.toDouble(),
     );
 
 Map<String, dynamic> _$$_RegionalInvestmentToJson(

@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'signup_request.freezed.dart';
@@ -13,9 +14,37 @@ class SignupRequest with _$SignupRequest {
     @JsonKey(name: "position") required String position,
     @JsonKey(name: "email") required String email,
     @JsonKey(name: "contact_number") required String contactNumber,
-    @JsonKey(name: "authorization") required String authorizationPath,
+    String? authorization,
   }) = _SignupRequest;
 
   factory SignupRequest.fromJson(Map<String, dynamic> json) =>
       _$SignupRequestFromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() {
+    FormData formData = FormData.fromMap({
+      'office_id': officeId,
+      'username': username,
+      'first_name': firstName,
+      'last_name': lastName,
+      'position': position,
+      'email': email,
+      'contact_number': contactNumber,
+      'authorization': authorization != null
+          ? MultipartFile.fromFileSync(authorization!)
+          : null, //TODO handle appending authorization form
+    });
+
+    final map = <String, dynamic>{};
+
+    for (var field in formData.fields) {
+      map[field.key] = field.value;
+    }
+
+    for (var file in formData.files) {
+      map[file.key] = file.value;
+    }
+
+    return map;
+  }
 }

@@ -1,17 +1,18 @@
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
-
-import '../../data/requests/updateprofile_request.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pips/presentation/controllers/updateprofile_controller.dart';
 
 @RoutePage()
-class UpdateProfileScreen extends StatefulWidget {
+class UpdateProfileScreen extends ConsumerStatefulWidget {
   const UpdateProfileScreen({Key? key}) : super(key: key);
 
   @override
-  State<UpdateProfileScreen> createState() => _UpdateProfileScreenState();
+  ConsumerState<UpdateProfileScreen> createState() =>
+      _UpdateProfileScreenState();
 }
 
-class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
+class _UpdateProfileScreenState extends ConsumerState<UpdateProfileScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   late TextEditingController _firstNameController;
@@ -19,43 +20,47 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   late TextEditingController _positionController;
   late TextEditingController _contactNumberController;
 
-  UpdateProfileRequest _updateProfileRequest = UpdateProfileRequest(
-      firstName: '', lastName: '', position: '', contactNumber: '');
-
   @override
   void initState() {
     super.initState();
 
-    // initialize updateProfileRequest based on user profile
-
+    // define listeners for TextFormFields
     _firstNameController = TextEditingController()
       ..addListener(() {
-        setState(() {
-          _updateProfileRequest = _updateProfileRequest.copyWith(
-              firstName: _firstNameController.text);
-        });
+        ref
+            .read(updateProfileRequestControllerProvider.notifier)
+            .update(firstName: _firstNameController.text);
       });
     _lastNameController = TextEditingController()
       ..addListener(() {
-        setState(() {
-          _updateProfileRequest = _updateProfileRequest.copyWith(
-              lastName: _lastNameController.text);
-        });
+        ref
+            .read(updateProfileRequestControllerProvider.notifier)
+            .update(lastName: _lastNameController.text);
       });
     _positionController = TextEditingController()
       ..addListener(() {
-        setState(() {
-          _updateProfileRequest = _updateProfileRequest.copyWith(
-              position: _positionController.text);
-        });
+        ref
+            .read(updateProfileRequestControllerProvider.notifier)
+            .update(position: _positionController.text);
       });
     _contactNumberController = TextEditingController()
       ..addListener(() {
-        setState(() {
-          _updateProfileRequest = _updateProfileRequest.copyWith(
-              contactNumber: _contactNumberController.text);
-        });
+        ref
+            .read(updateProfileRequestControllerProvider.notifier)
+            .update(contactNumber: _contactNumberController.text);
       });
+
+    // delay assignment of value until the UI has been rendered
+    Future.delayed(Duration.zero, () {
+      _firstNameController.text =
+          ref.watch(updateProfileRequestControllerProvider).firstName;
+      _lastNameController.text =
+          ref.watch(updateProfileRequestControllerProvider).lastName;
+      _positionController.text =
+          ref.watch(updateProfileRequestControllerProvider).position;
+      _contactNumberController.text =
+          ref.watch(updateProfileRequestControllerProvider).contactNumber;
+    });
   }
 
   @override
@@ -73,72 +78,92 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Update Profile'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              if (_formKey.currentState!.validate()) {
+                debugPrint('form is valid');
+                // TODO: handle submit
+                ref.read(updateProfileControllerProvider.notifier).submit();
+              }
+            },
+            child: const Text('UPDATE'),
+          ),
+        ],
       ),
-      body: Form(
-        key: _formKey,
-        child: Column(children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextFormField(
-              controller: _firstNameController,
-              decoration: const InputDecoration(label: Text('First Name')),
-              validator: (String? value) {
-                if (value == null || value.isEmpty) {
-                  return 'This field is required';
-                }
-                return null;
-              },
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: ClipOval(
+                child: Image.asset(
+                  'assets/logo.png',
+                  height: 150,
+                  width: 150,
+                ),
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextFormField(
-              controller: _lastNameController,
-              decoration: const InputDecoration(label: Text('Last Name')),
-              validator: (String? value) {
-                if (value == null || value.isEmpty) {
-                  return 'This field is required';
-                }
-                return null;
-              },
+            Card(
+              child: Form(
+                key: _formKey,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      TextFormField(
+                        controller: _firstNameController,
+                        decoration:
+                            const InputDecoration(label: Text('First Name')),
+                        validator: (String? value) {
+                          if (value == null || value.isEmpty) {
+                            return 'This field is required';
+                          }
+                          return null;
+                        },
+                      ),
+                      TextFormField(
+                        controller: _lastNameController,
+                        decoration:
+                            const InputDecoration(label: Text('Last Name')),
+                        validator: (String? value) {
+                          if (value == null || value.isEmpty) {
+                            return 'This field is required';
+                          }
+                          return null;
+                        },
+                      ),
+                      TextFormField(
+                        controller: _positionController,
+                        decoration: const InputDecoration(
+                            label: Text('Designation/Position')),
+                        validator: (String? value) {
+                          if (value == null || value.isEmpty) {
+                            return 'This field is required';
+                          }
+                          return null;
+                        },
+                      ),
+                      TextFormField(
+                        controller: _contactNumberController,
+                        decoration:
+                            const InputDecoration(label: Text('Contact No.')),
+                        validator: (String? value) {
+                          if (value == null || value.isEmpty) {
+                            return 'This field is required';
+                          }
+                          return null;
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextFormField(
-              controller: _positionController,
-              decoration:
-                  const InputDecoration(label: Text('Designation/Position')),
-              validator: (String? value) {
-                if (value == null || value.isEmpty) {
-                  return 'This field is required';
-                }
-                return null;
-              },
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextFormField(
-              controller: _contactNumberController,
-              decoration: const InputDecoration(label: Text('Contact No.')),
-              validator: (String? value) {
-                if (value == null || value.isEmpty) {
-                  return 'This field is required';
-                }
-                return null;
-              },
-            ),
-          ),
-          ElevatedButton(
-              onPressed: () {
-                if (_formKey.currentState!.validate()) {
-                  debugPrint('form is valid');
-                  // TODO: handle submit
-                }
-              },
-              child: const Text('Update Profile')),
-        ]),
+          ],
+        ),
       ),
     );
   }

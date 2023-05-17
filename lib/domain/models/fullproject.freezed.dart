@@ -105,7 +105,7 @@ mixin _$FullProject {
   @JsonKey(name: "fs_total_cost")
   String? get fsTotalCost => throw _privateConstructorUsedError;
   @JsonKey(name: "fs_cost")
-  FsCost get fsCost => throw _privateConstructorUsedError;
+  FsCost? get fsCost => throw _privateConstructorUsedError;
   @JsonKey(name: "fs_completion_date")
   DateTime? get fsCompletionDate => throw _privateConstructorUsedError;
   @JsonKey(name: "has_row")
@@ -115,7 +115,7 @@ mixin _$FullProject {
   @JsonKey(name: "row_total_cost")
   double? get rowTotalCost => throw _privateConstructorUsedError;
   @JsonKey(name: "row_cost")
-  RowCost get rowCost => throw _privateConstructorUsedError;
+  RowCost? get rowCost => throw _privateConstructorUsedError;
   @JsonKey(name: "has_rap")
   bool? get hasRap => throw _privateConstructorUsedError;
   @JsonKey(name: "rap_affected_households")
@@ -123,7 +123,7 @@ mixin _$FullProject {
   @JsonKey(name: "rap_total_cost")
   double? get rapTotalCost => throw _privateConstructorUsedError;
   @JsonKey(name: "rap_cost")
-  RapCost get rapCost => throw _privateConstructorUsedError;
+  RapCost? get rapCost => throw _privateConstructorUsedError;
   @JsonKey(name: "has_row_rap")
   bool? get hasRowRap => throw _privateConstructorUsedError;
   @JsonKey(name: "prerequisites")
@@ -146,9 +146,8 @@ mixin _$FullProject {
   bool? get pureGrant => throw _privateConstructorUsedError;
   @JsonKey(name: "fs_investments")
   List<FsInvestment> get fsInvestments => throw _privateConstructorUsedError;
-  @JsonKey(name: "regional_investments")
-  List<RegionalInvestment> get regionalInvestments =>
-      throw _privateConstructorUsedError;
+  @JsonKey(name: "regions")
+  List<RegionalInvestment> get regions => throw _privateConstructorUsedError;
   @JsonKey(name: "implementation_mode_id")
   int? get implementationModeId => throw _privateConstructorUsedError;
   @JsonKey(name: "project_status_id")
@@ -196,6 +195,8 @@ mixin _$FullProject {
       throw _privateConstructorUsedError;
   @JsonKey(name: "contact_information")
   String? get contactInformation => throw _privateConstructorUsedError;
+  @JsonKey(name: "notes")
+  String? get notes => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -295,7 +296,7 @@ abstract class $FullProjectCopyWith<$Res> {
       @JsonKey(name: "fs_total_cost")
           String? fsTotalCost,
       @JsonKey(name: "fs_cost")
-          FsCost fsCost,
+          FsCost? fsCost,
       @JsonKey(name: "fs_completion_date")
           DateTime? fsCompletionDate,
       @JsonKey(name: "has_row")
@@ -305,7 +306,7 @@ abstract class $FullProjectCopyWith<$Res> {
       @JsonKey(name: "row_total_cost")
           double? rowTotalCost,
       @JsonKey(name: "row_cost")
-          RowCost rowCost,
+          RowCost? rowCost,
       @JsonKey(name: "has_rap")
           bool? hasRap,
       @JsonKey(name: "rap_affected_households")
@@ -313,7 +314,7 @@ abstract class $FullProjectCopyWith<$Res> {
       @JsonKey(name: "rap_total_cost")
           double? rapTotalCost,
       @JsonKey(name: "rap_cost")
-          RapCost rapCost,
+          RapCost? rapCost,
       @JsonKey(name: "has_row_rap")
           bool? hasRowRap,
       @JsonKey(name: "prerequisites")
@@ -336,8 +337,8 @@ abstract class $FullProjectCopyWith<$Res> {
           bool? pureGrant,
       @JsonKey(name: "fs_investments")
           List<FsInvestment> fsInvestments,
-      @JsonKey(name: "regional_investments")
-          List<RegionalInvestment> regionalInvestments,
+      @JsonKey(name: "regions")
+          List<RegionalInvestment> regions,
       @JsonKey(name: "implementation_mode_id")
           int? implementationModeId,
       @JsonKey(name: "project_status_id")
@@ -383,7 +384,9 @@ abstract class $FullProjectCopyWith<$Res> {
       @JsonKey(name: "financial_accomplishment")
           FinancialAccomplishment financialAccomplishment,
       @JsonKey(name: "contact_information")
-          String? contactInformation});
+          String? contactInformation,
+      @JsonKey(name: "notes")
+          String? notes});
 
   $OptionCopyWith<$Res>? get type;
   $OptionCopyWith<$Res>? get spatialCoverage;
@@ -394,9 +397,9 @@ abstract class $FullProjectCopyWith<$Res> {
   $OptionCopyWith<$Res>? get gad;
   $OptionCopyWith<$Res>? get preparationDocument;
   $OptionCopyWith<$Res>? get fsStatus;
-  $FsCostCopyWith<$Res> get fsCost;
-  $RowCostCopyWith<$Res> get rowCost;
-  $RapCostCopyWith<$Res> get rapCost;
+  $FsCostCopyWith<$Res>? get fsCost;
+  $RowCostCopyWith<$Res>? get rowCost;
+  $RapCostCopyWith<$Res>? get rapCost;
   $OptionCopyWith<$Res>? get fundingSource;
   $OptionCopyWith<$Res>? get implementationMode;
   $OptionCopyWith<$Res>? get category;
@@ -464,16 +467,16 @@ class _$FullProjectCopyWithImpl<$Res, $Val extends FullProject>
     Object? fsStatusId = freezed,
     Object? fsStatus = freezed,
     Object? fsTotalCost = freezed,
-    Object? fsCost = null,
+    Object? fsCost = freezed,
     Object? fsCompletionDate = freezed,
     Object? hasRow = freezed,
     Object? rowAffectedHouseholds = freezed,
     Object? rowTotalCost = freezed,
-    Object? rowCost = null,
+    Object? rowCost = freezed,
     Object? hasRap = freezed,
     Object? rapAffectedHouseholds = freezed,
     Object? rapTotalCost = freezed,
-    Object? rapCost = null,
+    Object? rapCost = freezed,
     Object? hasRowRap = freezed,
     Object? prerequisites = null,
     Object? locations = null,
@@ -485,7 +488,7 @@ class _$FullProjectCopyWithImpl<$Res, $Val extends FullProject>
     Object? implementationMode = freezed,
     Object? pureGrant = freezed,
     Object? fsInvestments = null,
-    Object? regionalInvestments = null,
+    Object? regions = null,
     Object? implementationModeId = freezed,
     Object? projectStatusId = freezed,
     Object? categoryId = freezed,
@@ -509,6 +512,7 @@ class _$FullProjectCopyWithImpl<$Res, $Val extends FullProject>
     Object? uacsCode = freezed,
     Object? financialAccomplishment = null,
     Object? contactInformation = freezed,
+    Object? notes = freezed,
   }) {
     return _then(_value.copyWith(
       id: freezed == id
@@ -679,10 +683,10 @@ class _$FullProjectCopyWithImpl<$Res, $Val extends FullProject>
           ? _value.fsTotalCost
           : fsTotalCost // ignore: cast_nullable_to_non_nullable
               as String?,
-      fsCost: null == fsCost
+      fsCost: freezed == fsCost
           ? _value.fsCost
           : fsCost // ignore: cast_nullable_to_non_nullable
-              as FsCost,
+              as FsCost?,
       fsCompletionDate: freezed == fsCompletionDate
           ? _value.fsCompletionDate
           : fsCompletionDate // ignore: cast_nullable_to_non_nullable
@@ -699,10 +703,10 @@ class _$FullProjectCopyWithImpl<$Res, $Val extends FullProject>
           ? _value.rowTotalCost
           : rowTotalCost // ignore: cast_nullable_to_non_nullable
               as double?,
-      rowCost: null == rowCost
+      rowCost: freezed == rowCost
           ? _value.rowCost
           : rowCost // ignore: cast_nullable_to_non_nullable
-              as RowCost,
+              as RowCost?,
       hasRap: freezed == hasRap
           ? _value.hasRap
           : hasRap // ignore: cast_nullable_to_non_nullable
@@ -715,10 +719,10 @@ class _$FullProjectCopyWithImpl<$Res, $Val extends FullProject>
           ? _value.rapTotalCost
           : rapTotalCost // ignore: cast_nullable_to_non_nullable
               as double?,
-      rapCost: null == rapCost
+      rapCost: freezed == rapCost
           ? _value.rapCost
           : rapCost // ignore: cast_nullable_to_non_nullable
-              as RapCost,
+              as RapCost?,
       hasRowRap: freezed == hasRowRap
           ? _value.hasRowRap
           : hasRowRap // ignore: cast_nullable_to_non_nullable
@@ -763,9 +767,9 @@ class _$FullProjectCopyWithImpl<$Res, $Val extends FullProject>
           ? _value.fsInvestments
           : fsInvestments // ignore: cast_nullable_to_non_nullable
               as List<FsInvestment>,
-      regionalInvestments: null == regionalInvestments
-          ? _value.regionalInvestments
-          : regionalInvestments // ignore: cast_nullable_to_non_nullable
+      regions: null == regions
+          ? _value.regions
+          : regions // ignore: cast_nullable_to_non_nullable
               as List<RegionalInvestment>,
       implementationModeId: freezed == implementationModeId
           ? _value.implementationModeId
@@ -858,6 +862,10 @@ class _$FullProjectCopyWithImpl<$Res, $Val extends FullProject>
       contactInformation: freezed == contactInformation
           ? _value.contactInformation
           : contactInformation // ignore: cast_nullable_to_non_nullable
+              as String?,
+      notes: freezed == notes
+          ? _value.notes
+          : notes // ignore: cast_nullable_to_non_nullable
               as String?,
     ) as $Val);
   }
@@ -972,24 +980,36 @@ class _$FullProjectCopyWithImpl<$Res, $Val extends FullProject>
 
   @override
   @pragma('vm:prefer-inline')
-  $FsCostCopyWith<$Res> get fsCost {
-    return $FsCostCopyWith<$Res>(_value.fsCost, (value) {
+  $FsCostCopyWith<$Res>? get fsCost {
+    if (_value.fsCost == null) {
+      return null;
+    }
+
+    return $FsCostCopyWith<$Res>(_value.fsCost!, (value) {
       return _then(_value.copyWith(fsCost: value) as $Val);
     });
   }
 
   @override
   @pragma('vm:prefer-inline')
-  $RowCostCopyWith<$Res> get rowCost {
-    return $RowCostCopyWith<$Res>(_value.rowCost, (value) {
+  $RowCostCopyWith<$Res>? get rowCost {
+    if (_value.rowCost == null) {
+      return null;
+    }
+
+    return $RowCostCopyWith<$Res>(_value.rowCost!, (value) {
       return _then(_value.copyWith(rowCost: value) as $Val);
     });
   }
 
   @override
   @pragma('vm:prefer-inline')
-  $RapCostCopyWith<$Res> get rapCost {
-    return $RapCostCopyWith<$Res>(_value.rapCost, (value) {
+  $RapCostCopyWith<$Res>? get rapCost {
+    if (_value.rapCost == null) {
+      return null;
+    }
+
+    return $RapCostCopyWith<$Res>(_value.rapCost!, (value) {
       return _then(_value.copyWith(rapCost: value) as $Val);
     });
   }
@@ -1206,7 +1226,7 @@ abstract class _$$_FullProjectCopyWith<$Res>
       @JsonKey(name: "fs_total_cost")
           String? fsTotalCost,
       @JsonKey(name: "fs_cost")
-          FsCost fsCost,
+          FsCost? fsCost,
       @JsonKey(name: "fs_completion_date")
           DateTime? fsCompletionDate,
       @JsonKey(name: "has_row")
@@ -1216,7 +1236,7 @@ abstract class _$$_FullProjectCopyWith<$Res>
       @JsonKey(name: "row_total_cost")
           double? rowTotalCost,
       @JsonKey(name: "row_cost")
-          RowCost rowCost,
+          RowCost? rowCost,
       @JsonKey(name: "has_rap")
           bool? hasRap,
       @JsonKey(name: "rap_affected_households")
@@ -1224,7 +1244,7 @@ abstract class _$$_FullProjectCopyWith<$Res>
       @JsonKey(name: "rap_total_cost")
           double? rapTotalCost,
       @JsonKey(name: "rap_cost")
-          RapCost rapCost,
+          RapCost? rapCost,
       @JsonKey(name: "has_row_rap")
           bool? hasRowRap,
       @JsonKey(name: "prerequisites")
@@ -1247,8 +1267,8 @@ abstract class _$$_FullProjectCopyWith<$Res>
           bool? pureGrant,
       @JsonKey(name: "fs_investments")
           List<FsInvestment> fsInvestments,
-      @JsonKey(name: "regional_investments")
-          List<RegionalInvestment> regionalInvestments,
+      @JsonKey(name: "regions")
+          List<RegionalInvestment> regions,
       @JsonKey(name: "implementation_mode_id")
           int? implementationModeId,
       @JsonKey(name: "project_status_id")
@@ -1294,7 +1314,9 @@ abstract class _$$_FullProjectCopyWith<$Res>
       @JsonKey(name: "financial_accomplishment")
           FinancialAccomplishment financialAccomplishment,
       @JsonKey(name: "contact_information")
-          String? contactInformation});
+          String? contactInformation,
+      @JsonKey(name: "notes")
+          String? notes});
 
   @override
   $OptionCopyWith<$Res>? get type;
@@ -1315,11 +1337,11 @@ abstract class _$$_FullProjectCopyWith<$Res>
   @override
   $OptionCopyWith<$Res>? get fsStatus;
   @override
-  $FsCostCopyWith<$Res> get fsCost;
+  $FsCostCopyWith<$Res>? get fsCost;
   @override
-  $RowCostCopyWith<$Res> get rowCost;
+  $RowCostCopyWith<$Res>? get rowCost;
   @override
-  $RapCostCopyWith<$Res> get rapCost;
+  $RapCostCopyWith<$Res>? get rapCost;
   @override
   $OptionCopyWith<$Res>? get fundingSource;
   @override
@@ -1395,16 +1417,16 @@ class __$$_FullProjectCopyWithImpl<$Res>
     Object? fsStatusId = freezed,
     Object? fsStatus = freezed,
     Object? fsTotalCost = freezed,
-    Object? fsCost = null,
+    Object? fsCost = freezed,
     Object? fsCompletionDate = freezed,
     Object? hasRow = freezed,
     Object? rowAffectedHouseholds = freezed,
     Object? rowTotalCost = freezed,
-    Object? rowCost = null,
+    Object? rowCost = freezed,
     Object? hasRap = freezed,
     Object? rapAffectedHouseholds = freezed,
     Object? rapTotalCost = freezed,
-    Object? rapCost = null,
+    Object? rapCost = freezed,
     Object? hasRowRap = freezed,
     Object? prerequisites = null,
     Object? locations = null,
@@ -1416,7 +1438,7 @@ class __$$_FullProjectCopyWithImpl<$Res>
     Object? implementationMode = freezed,
     Object? pureGrant = freezed,
     Object? fsInvestments = null,
-    Object? regionalInvestments = null,
+    Object? regions = null,
     Object? implementationModeId = freezed,
     Object? projectStatusId = freezed,
     Object? categoryId = freezed,
@@ -1440,6 +1462,7 @@ class __$$_FullProjectCopyWithImpl<$Res>
     Object? uacsCode = freezed,
     Object? financialAccomplishment = null,
     Object? contactInformation = freezed,
+    Object? notes = freezed,
   }) {
     return _then(_$_FullProject(
       id: freezed == id
@@ -1610,10 +1633,10 @@ class __$$_FullProjectCopyWithImpl<$Res>
           ? _value.fsTotalCost
           : fsTotalCost // ignore: cast_nullable_to_non_nullable
               as String?,
-      fsCost: null == fsCost
+      fsCost: freezed == fsCost
           ? _value.fsCost
           : fsCost // ignore: cast_nullable_to_non_nullable
-              as FsCost,
+              as FsCost?,
       fsCompletionDate: freezed == fsCompletionDate
           ? _value.fsCompletionDate
           : fsCompletionDate // ignore: cast_nullable_to_non_nullable
@@ -1630,10 +1653,10 @@ class __$$_FullProjectCopyWithImpl<$Res>
           ? _value.rowTotalCost
           : rowTotalCost // ignore: cast_nullable_to_non_nullable
               as double?,
-      rowCost: null == rowCost
+      rowCost: freezed == rowCost
           ? _value.rowCost
           : rowCost // ignore: cast_nullable_to_non_nullable
-              as RowCost,
+              as RowCost?,
       hasRap: freezed == hasRap
           ? _value.hasRap
           : hasRap // ignore: cast_nullable_to_non_nullable
@@ -1646,10 +1669,10 @@ class __$$_FullProjectCopyWithImpl<$Res>
           ? _value.rapTotalCost
           : rapTotalCost // ignore: cast_nullable_to_non_nullable
               as double?,
-      rapCost: null == rapCost
+      rapCost: freezed == rapCost
           ? _value.rapCost
           : rapCost // ignore: cast_nullable_to_non_nullable
-              as RapCost,
+              as RapCost?,
       hasRowRap: freezed == hasRowRap
           ? _value.hasRowRap
           : hasRowRap // ignore: cast_nullable_to_non_nullable
@@ -1694,9 +1717,9 @@ class __$$_FullProjectCopyWithImpl<$Res>
           ? _value._fsInvestments
           : fsInvestments // ignore: cast_nullable_to_non_nullable
               as List<FsInvestment>,
-      regionalInvestments: null == regionalInvestments
-          ? _value._regionalInvestments
-          : regionalInvestments // ignore: cast_nullable_to_non_nullable
+      regions: null == regions
+          ? _value._regions
+          : regions // ignore: cast_nullable_to_non_nullable
               as List<RegionalInvestment>,
       implementationModeId: freezed == implementationModeId
           ? _value.implementationModeId
@@ -1789,6 +1812,10 @@ class __$$_FullProjectCopyWithImpl<$Res>
       contactInformation: freezed == contactInformation
           ? _value.contactInformation
           : contactInformation // ignore: cast_nullable_to_non_nullable
+              as String?,
+      notes: freezed == notes
+          ? _value.notes
+          : notes // ignore: cast_nullable_to_non_nullable
               as String?,
     ));
   }
@@ -1883,7 +1910,7 @@ class _$_FullProject implements _FullProject {
       @JsonKey(name: "fs_total_cost")
           this.fsTotalCost,
       @JsonKey(name: "fs_cost")
-          required this.fsCost,
+          this.fsCost,
       @JsonKey(name: "fs_completion_date")
           this.fsCompletionDate,
       @JsonKey(name: "has_row")
@@ -1893,7 +1920,7 @@ class _$_FullProject implements _FullProject {
       @JsonKey(name: "row_total_cost")
           this.rowTotalCost,
       @JsonKey(name: "row_cost")
-          required this.rowCost,
+          this.rowCost,
       @JsonKey(name: "has_rap")
           this.hasRap,
       @JsonKey(name: "rap_affected_households")
@@ -1901,7 +1928,7 @@ class _$_FullProject implements _FullProject {
       @JsonKey(name: "rap_total_cost")
           this.rapTotalCost,
       @JsonKey(name: "rap_cost")
-          required this.rapCost,
+          this.rapCost,
       @JsonKey(name: "has_row_rap")
           this.hasRowRap,
       @JsonKey(name: "prerequisites")
@@ -1924,8 +1951,8 @@ class _$_FullProject implements _FullProject {
           this.pureGrant,
       @JsonKey(name: "fs_investments")
           required final List<FsInvestment> fsInvestments,
-      @JsonKey(name: "regional_investments")
-          required final List<RegionalInvestment> regionalInvestments,
+      @JsonKey(name: "regions")
+          required final List<RegionalInvestment> regions,
       @JsonKey(name: "implementation_mode_id")
           this.implementationModeId,
       @JsonKey(name: "project_status_id")
@@ -1971,7 +1998,9 @@ class _$_FullProject implements _FullProject {
       @JsonKey(name: "financial_accomplishment")
           required this.financialAccomplishment,
       @JsonKey(name: "contact_information")
-          this.contactInformation})
+          this.contactInformation,
+      @JsonKey(name: "notes")
+          this.notes})
       : _bases = bases,
         _operatingUnits = operatingUnits,
         _pdpChapters = pdpChapters,
@@ -1983,7 +2012,7 @@ class _$_FullProject implements _FullProject {
         _fundingInstitutions = fundingInstitutions,
         _fundingSources = fundingSources,
         _fsInvestments = fsInvestments,
-        _regionalInvestments = regionalInvestments;
+        _regions = regions;
 
   factory _$_FullProject.fromJson(Map<String, dynamic> json) =>
       _$$_FullProjectFromJson(json);
@@ -2146,7 +2175,7 @@ class _$_FullProject implements _FullProject {
   final String? fsTotalCost;
   @override
   @JsonKey(name: "fs_cost")
-  final FsCost fsCost;
+  final FsCost? fsCost;
   @override
   @JsonKey(name: "fs_completion_date")
   final DateTime? fsCompletionDate;
@@ -2161,7 +2190,7 @@ class _$_FullProject implements _FullProject {
   final double? rowTotalCost;
   @override
   @JsonKey(name: "row_cost")
-  final RowCost rowCost;
+  final RowCost? rowCost;
   @override
   @JsonKey(name: "has_rap")
   final bool? hasRap;
@@ -2173,7 +2202,7 @@ class _$_FullProject implements _FullProject {
   final double? rapTotalCost;
   @override
   @JsonKey(name: "rap_cost")
-  final RapCost rapCost;
+  final RapCost? rapCost;
   @override
   @JsonKey(name: "has_row_rap")
   final bool? hasRowRap;
@@ -2245,14 +2274,13 @@ class _$_FullProject implements _FullProject {
     return EqualUnmodifiableListView(_fsInvestments);
   }
 
-  final List<RegionalInvestment> _regionalInvestments;
+  final List<RegionalInvestment> _regions;
   @override
-  @JsonKey(name: "regional_investments")
-  List<RegionalInvestment> get regionalInvestments {
-    if (_regionalInvestments is EqualUnmodifiableListView)
-      return _regionalInvestments;
+  @JsonKey(name: "regions")
+  List<RegionalInvestment> get regions {
+    if (_regions is EqualUnmodifiableListView) return _regions;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_regionalInvestments);
+    return EqualUnmodifiableListView(_regions);
   }
 
   @override
@@ -2324,10 +2352,13 @@ class _$_FullProject implements _FullProject {
   @override
   @JsonKey(name: "contact_information")
   final String? contactInformation;
+  @override
+  @JsonKey(name: "notes")
+  final String? notes;
 
   @override
   String toString() {
-    return 'FullProject(id: $id, uuid: $uuid, title: $title, typeId: $typeId, type: $type, regularProgram: $regularProgram, description: $description, totalCost: $totalCost, expectedOutputs: $expectedOutputs, spatialCoverageId: $spatialCoverageId, spatialCoverage: $spatialCoverage, approvalLevelId: $approvalLevelId, approvalLevel: $approvalLevel, approvalLevelDate: $approvalLevelDate, pip: $pip, typologyId: $typologyId, typology: $typology, cip: $cip, iccable: $iccable, cipTypeId: $cipTypeId, cipType: $cipType, trip: $trip, rdip: $rdip, covid: $covid, research: $research, bases: $bases, operatingUnits: $operatingUnits, rdcEndorsementRequired: $rdcEndorsementRequired, pdpChapterId: $pdpChapterId, pdpChapter: $pdpChapter, pdpChapters: $pdpChapters, risk: $risk, agenda: $agenda, sdgs: $sdgs, gadId: $gadId, gad: $gad, preparationDocumentId: $preparationDocumentId, preparationDocument: $preparationDocument, fsNeedsAssistance: $fsNeedsAssistance, fsStatusId: $fsStatusId, fsStatus: $fsStatus, fsTotalCost: $fsTotalCost, fsCost: $fsCost, fsCompletionDate: $fsCompletionDate, hasRow: $hasRow, rowAffectedHouseholds: $rowAffectedHouseholds, rowTotalCost: $rowTotalCost, rowCost: $rowCost, hasRap: $hasRap, rapAffectedHouseholds: $rapAffectedHouseholds, rapTotalCost: $rapTotalCost, rapCost: $rapCost, hasRowRap: $hasRowRap, prerequisites: $prerequisites, locations: $locations, infrastructureSectors: $infrastructureSectors, fundingInstitutions: $fundingInstitutions, fundingSourceId: $fundingSourceId, fundingSource: $fundingSource, fundingSources: $fundingSources, implementationMode: $implementationMode, pureGrant: $pureGrant, fsInvestments: $fsInvestments, regionalInvestments: $regionalInvestments, implementationModeId: $implementationModeId, projectStatusId: $projectStatusId, categoryId: $categoryId, category: $category, readinessLevelId: $readinessLevelId, readinessLevel: $readinessLevel, startYearId: $startYearId, startYear: $startYear, endYearId: $endYearId, endYear: $endYear, updates: $updates, asOf: $asOf, employmentGenerated: $employmentGenerated, employedMale: $employedMale, employedFemale: $employedFemale, projectStatus: $projectStatus, office: $office, updatedAt: $updatedAt, user: $user, remarks: $remarks, uacsCode: $uacsCode, financialAccomplishment: $financialAccomplishment, contactInformation: $contactInformation)';
+    return 'FullProject(id: $id, uuid: $uuid, title: $title, typeId: $typeId, type: $type, regularProgram: $regularProgram, description: $description, totalCost: $totalCost, expectedOutputs: $expectedOutputs, spatialCoverageId: $spatialCoverageId, spatialCoverage: $spatialCoverage, approvalLevelId: $approvalLevelId, approvalLevel: $approvalLevel, approvalLevelDate: $approvalLevelDate, pip: $pip, typologyId: $typologyId, typology: $typology, cip: $cip, iccable: $iccable, cipTypeId: $cipTypeId, cipType: $cipType, trip: $trip, rdip: $rdip, covid: $covid, research: $research, bases: $bases, operatingUnits: $operatingUnits, rdcEndorsementRequired: $rdcEndorsementRequired, pdpChapterId: $pdpChapterId, pdpChapter: $pdpChapter, pdpChapters: $pdpChapters, risk: $risk, agenda: $agenda, sdgs: $sdgs, gadId: $gadId, gad: $gad, preparationDocumentId: $preparationDocumentId, preparationDocument: $preparationDocument, fsNeedsAssistance: $fsNeedsAssistance, fsStatusId: $fsStatusId, fsStatus: $fsStatus, fsTotalCost: $fsTotalCost, fsCost: $fsCost, fsCompletionDate: $fsCompletionDate, hasRow: $hasRow, rowAffectedHouseholds: $rowAffectedHouseholds, rowTotalCost: $rowTotalCost, rowCost: $rowCost, hasRap: $hasRap, rapAffectedHouseholds: $rapAffectedHouseholds, rapTotalCost: $rapTotalCost, rapCost: $rapCost, hasRowRap: $hasRowRap, prerequisites: $prerequisites, locations: $locations, infrastructureSectors: $infrastructureSectors, fundingInstitutions: $fundingInstitutions, fundingSourceId: $fundingSourceId, fundingSource: $fundingSource, fundingSources: $fundingSources, implementationMode: $implementationMode, pureGrant: $pureGrant, fsInvestments: $fsInvestments, regions: $regions, implementationModeId: $implementationModeId, projectStatusId: $projectStatusId, categoryId: $categoryId, category: $category, readinessLevelId: $readinessLevelId, readinessLevel: $readinessLevel, startYearId: $startYearId, startYear: $startYear, endYearId: $endYearId, endYear: $endYear, updates: $updates, asOf: $asOf, employmentGenerated: $employmentGenerated, employedMale: $employedMale, employedFemale: $employedFemale, projectStatus: $projectStatus, office: $office, updatedAt: $updatedAt, user: $user, remarks: $remarks, uacsCode: $uacsCode, financialAccomplishment: $financialAccomplishment, contactInformation: $contactInformation, notes: $notes)';
   }
 
   @override
@@ -2438,11 +2469,11 @@ class _$_FullProject implements _FullProject {
                 other.pureGrant == pureGrant) &&
             const DeepCollectionEquality()
                 .equals(other._fsInvestments, _fsInvestments) &&
-            const DeepCollectionEquality()
-                .equals(other._regionalInvestments, _regionalInvestments) &&
+            const DeepCollectionEquality().equals(other._regions, _regions) &&
             (identical(other.implementationModeId, implementationModeId) ||
                 other.implementationModeId == implementationModeId) &&
-            (identical(other.projectStatusId, projectStatusId) || other.projectStatusId == projectStatusId) &&
+            (identical(other.projectStatusId, projectStatusId) ||
+                other.projectStatusId == projectStatusId) &&
             (identical(other.categoryId, categoryId) || other.categoryId == categoryId) &&
             (identical(other.category, category) || other.category == category) &&
             (identical(other.readinessLevelId, readinessLevelId) || other.readinessLevelId == readinessLevelId) &&
@@ -2463,7 +2494,8 @@ class _$_FullProject implements _FullProject {
             (identical(other.remarks, remarks) || other.remarks == remarks) &&
             (identical(other.uacsCode, uacsCode) || other.uacsCode == uacsCode) &&
             (identical(other.financialAccomplishment, financialAccomplishment) || other.financialAccomplishment == financialAccomplishment) &&
-            (identical(other.contactInformation, contactInformation) || other.contactInformation == contactInformation));
+            (identical(other.contactInformation, contactInformation) || other.contactInformation == contactInformation) &&
+            (identical(other.notes, notes) || other.notes == notes));
   }
 
   @JsonKey(ignore: true)
@@ -2533,7 +2565,7 @@ class _$_FullProject implements _FullProject {
         implementationMode,
         pureGrant,
         const DeepCollectionEquality().hash(_fsInvestments),
-        const DeepCollectionEquality().hash(_regionalInvestments),
+        const DeepCollectionEquality().hash(_regions),
         implementationModeId,
         projectStatusId,
         categoryId,
@@ -2556,7 +2588,8 @@ class _$_FullProject implements _FullProject {
         remarks,
         uacsCode,
         financialAccomplishment,
-        contactInformation
+        contactInformation,
+        notes
       ]);
 
   @JsonKey(ignore: true)
@@ -2660,7 +2693,7 @@ abstract class _FullProject implements FullProject {
       @JsonKey(name: "fs_total_cost")
           final String? fsTotalCost,
       @JsonKey(name: "fs_cost")
-          required final FsCost fsCost,
+          final FsCost? fsCost,
       @JsonKey(name: "fs_completion_date")
           final DateTime? fsCompletionDate,
       @JsonKey(name: "has_row")
@@ -2670,7 +2703,7 @@ abstract class _FullProject implements FullProject {
       @JsonKey(name: "row_total_cost")
           final double? rowTotalCost,
       @JsonKey(name: "row_cost")
-          required final RowCost rowCost,
+          final RowCost? rowCost,
       @JsonKey(name: "has_rap")
           final bool? hasRap,
       @JsonKey(name: "rap_affected_households")
@@ -2678,7 +2711,7 @@ abstract class _FullProject implements FullProject {
       @JsonKey(name: "rap_total_cost")
           final double? rapTotalCost,
       @JsonKey(name: "rap_cost")
-          required final RapCost rapCost,
+          final RapCost? rapCost,
       @JsonKey(name: "has_row_rap")
           final bool? hasRowRap,
       @JsonKey(name: "prerequisites")
@@ -2701,8 +2734,8 @@ abstract class _FullProject implements FullProject {
           final bool? pureGrant,
       @JsonKey(name: "fs_investments")
           required final List<FsInvestment> fsInvestments,
-      @JsonKey(name: "regional_investments")
-          required final List<RegionalInvestment> regionalInvestments,
+      @JsonKey(name: "regions")
+          required final List<RegionalInvestment> regions,
       @JsonKey(name: "implementation_mode_id")
           final int? implementationModeId,
       @JsonKey(name: "project_status_id")
@@ -2748,7 +2781,9 @@ abstract class _FullProject implements FullProject {
       @JsonKey(name: "financial_accomplishment")
           required final FinancialAccomplishment financialAccomplishment,
       @JsonKey(name: "contact_information")
-          final String? contactInformation}) = _$_FullProject;
+          final String? contactInformation,
+      @JsonKey(name: "notes")
+          final String? notes}) = _$_FullProject;
 
   factory _FullProject.fromJson(Map<String, dynamic> json) =
       _$_FullProject.fromJson;
@@ -2881,7 +2916,7 @@ abstract class _FullProject implements FullProject {
   String? get fsTotalCost;
   @override
   @JsonKey(name: "fs_cost")
-  FsCost get fsCost;
+  FsCost? get fsCost;
   @override
   @JsonKey(name: "fs_completion_date")
   DateTime? get fsCompletionDate;
@@ -2896,7 +2931,7 @@ abstract class _FullProject implements FullProject {
   double? get rowTotalCost;
   @override
   @JsonKey(name: "row_cost")
-  RowCost get rowCost;
+  RowCost? get rowCost;
   @override
   @JsonKey(name: "has_rap")
   bool? get hasRap;
@@ -2908,7 +2943,7 @@ abstract class _FullProject implements FullProject {
   double? get rapTotalCost;
   @override
   @JsonKey(name: "rap_cost")
-  RapCost get rapCost;
+  RapCost? get rapCost;
   @override
   @JsonKey(name: "has_row_rap")
   bool? get hasRowRap;
@@ -2943,8 +2978,8 @@ abstract class _FullProject implements FullProject {
   @JsonKey(name: "fs_investments")
   List<FsInvestment> get fsInvestments;
   @override
-  @JsonKey(name: "regional_investments")
-  List<RegionalInvestment> get regionalInvestments;
+  @JsonKey(name: "regions")
+  List<RegionalInvestment> get regions;
   @override
   @JsonKey(name: "implementation_mode_id")
   int? get implementationModeId;
@@ -3014,6 +3049,9 @@ abstract class _FullProject implements FullProject {
   @override
   @JsonKey(name: "contact_information")
   String? get contactInformation;
+  @override
+  @JsonKey(name: "notes")
+  String? get notes;
   @override
   @JsonKey(ignore: true)
   _$$_FullProjectCopyWith<_$_FullProject> get copyWith =>
@@ -3396,21 +3434,21 @@ mixin _$RegionalInvestment {
   @JsonKey(name: "region")
   Option? get region => throw _privateConstructorUsedError;
   @JsonKey(name: "y2022")
-  num? get y2022 => throw _privateConstructorUsedError;
+  double? get y2022 => throw _privateConstructorUsedError;
   @JsonKey(name: "y2023")
-  num? get y2023 => throw _privateConstructorUsedError;
+  double? get y2023 => throw _privateConstructorUsedError;
   @JsonKey(name: "y2024")
-  num? get y2024 => throw _privateConstructorUsedError;
+  double? get y2024 => throw _privateConstructorUsedError;
   @JsonKey(name: "y2025")
-  num? get y2025 => throw _privateConstructorUsedError;
+  double? get y2025 => throw _privateConstructorUsedError;
   @JsonKey(name: "y2026")
-  num? get y2026 => throw _privateConstructorUsedError;
+  double? get y2026 => throw _privateConstructorUsedError;
   @JsonKey(name: "y2027")
-  num? get y2027 => throw _privateConstructorUsedError;
+  double? get y2027 => throw _privateConstructorUsedError;
   @JsonKey(name: "y2028")
-  num? get y2028 => throw _privateConstructorUsedError;
+  double? get y2028 => throw _privateConstructorUsedError;
   @JsonKey(name: "y2029")
-  num? get y2029 => throw _privateConstructorUsedError;
+  double? get y2029 => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -3427,14 +3465,14 @@ abstract class $RegionalInvestmentCopyWith<$Res> {
   $Res call(
       {@JsonKey(name: "region_id") int? regionId,
       @JsonKey(name: "region") Option? region,
-      @JsonKey(name: "y2022") num? y2022,
-      @JsonKey(name: "y2023") num? y2023,
-      @JsonKey(name: "y2024") num? y2024,
-      @JsonKey(name: "y2025") num? y2025,
-      @JsonKey(name: "y2026") num? y2026,
-      @JsonKey(name: "y2027") num? y2027,
-      @JsonKey(name: "y2028") num? y2028,
-      @JsonKey(name: "y2029") num? y2029});
+      @JsonKey(name: "y2022") double? y2022,
+      @JsonKey(name: "y2023") double? y2023,
+      @JsonKey(name: "y2024") double? y2024,
+      @JsonKey(name: "y2025") double? y2025,
+      @JsonKey(name: "y2026") double? y2026,
+      @JsonKey(name: "y2027") double? y2027,
+      @JsonKey(name: "y2028") double? y2028,
+      @JsonKey(name: "y2029") double? y2029});
 
   $OptionCopyWith<$Res>? get region;
 }
@@ -3475,35 +3513,35 @@ class _$RegionalInvestmentCopyWithImpl<$Res, $Val extends RegionalInvestment>
       y2022: freezed == y2022
           ? _value.y2022
           : y2022 // ignore: cast_nullable_to_non_nullable
-              as num?,
+              as double?,
       y2023: freezed == y2023
           ? _value.y2023
           : y2023 // ignore: cast_nullable_to_non_nullable
-              as num?,
+              as double?,
       y2024: freezed == y2024
           ? _value.y2024
           : y2024 // ignore: cast_nullable_to_non_nullable
-              as num?,
+              as double?,
       y2025: freezed == y2025
           ? _value.y2025
           : y2025 // ignore: cast_nullable_to_non_nullable
-              as num?,
+              as double?,
       y2026: freezed == y2026
           ? _value.y2026
           : y2026 // ignore: cast_nullable_to_non_nullable
-              as num?,
+              as double?,
       y2027: freezed == y2027
           ? _value.y2027
           : y2027 // ignore: cast_nullable_to_non_nullable
-              as num?,
+              as double?,
       y2028: freezed == y2028
           ? _value.y2028
           : y2028 // ignore: cast_nullable_to_non_nullable
-              as num?,
+              as double?,
       y2029: freezed == y2029
           ? _value.y2029
           : y2029 // ignore: cast_nullable_to_non_nullable
-              as num?,
+              as double?,
     ) as $Val);
   }
 
@@ -3531,14 +3569,14 @@ abstract class _$$_RegionalInvestmentCopyWith<$Res>
   $Res call(
       {@JsonKey(name: "region_id") int? regionId,
       @JsonKey(name: "region") Option? region,
-      @JsonKey(name: "y2022") num? y2022,
-      @JsonKey(name: "y2023") num? y2023,
-      @JsonKey(name: "y2024") num? y2024,
-      @JsonKey(name: "y2025") num? y2025,
-      @JsonKey(name: "y2026") num? y2026,
-      @JsonKey(name: "y2027") num? y2027,
-      @JsonKey(name: "y2028") num? y2028,
-      @JsonKey(name: "y2029") num? y2029});
+      @JsonKey(name: "y2022") double? y2022,
+      @JsonKey(name: "y2023") double? y2023,
+      @JsonKey(name: "y2024") double? y2024,
+      @JsonKey(name: "y2025") double? y2025,
+      @JsonKey(name: "y2026") double? y2026,
+      @JsonKey(name: "y2027") double? y2027,
+      @JsonKey(name: "y2028") double? y2028,
+      @JsonKey(name: "y2029") double? y2029});
 
   @override
   $OptionCopyWith<$Res>? get region;
@@ -3578,35 +3616,35 @@ class __$$_RegionalInvestmentCopyWithImpl<$Res>
       y2022: freezed == y2022
           ? _value.y2022
           : y2022 // ignore: cast_nullable_to_non_nullable
-              as num?,
+              as double?,
       y2023: freezed == y2023
           ? _value.y2023
           : y2023 // ignore: cast_nullable_to_non_nullable
-              as num?,
+              as double?,
       y2024: freezed == y2024
           ? _value.y2024
           : y2024 // ignore: cast_nullable_to_non_nullable
-              as num?,
+              as double?,
       y2025: freezed == y2025
           ? _value.y2025
           : y2025 // ignore: cast_nullable_to_non_nullable
-              as num?,
+              as double?,
       y2026: freezed == y2026
           ? _value.y2026
           : y2026 // ignore: cast_nullable_to_non_nullable
-              as num?,
+              as double?,
       y2027: freezed == y2027
           ? _value.y2027
           : y2027 // ignore: cast_nullable_to_non_nullable
-              as num?,
+              as double?,
       y2028: freezed == y2028
           ? _value.y2028
           : y2028 // ignore: cast_nullable_to_non_nullable
-              as num?,
+              as double?,
       y2029: freezed == y2029
           ? _value.y2029
           : y2029 // ignore: cast_nullable_to_non_nullable
-              as num?,
+              as double?,
     ));
   }
 }
@@ -3637,28 +3675,28 @@ class _$_RegionalInvestment implements _RegionalInvestment {
   final Option? region;
   @override
   @JsonKey(name: "y2022")
-  final num? y2022;
+  final double? y2022;
   @override
   @JsonKey(name: "y2023")
-  final num? y2023;
+  final double? y2023;
   @override
   @JsonKey(name: "y2024")
-  final num? y2024;
+  final double? y2024;
   @override
   @JsonKey(name: "y2025")
-  final num? y2025;
+  final double? y2025;
   @override
   @JsonKey(name: "y2026")
-  final num? y2026;
+  final double? y2026;
   @override
   @JsonKey(name: "y2027")
-  final num? y2027;
+  final double? y2027;
   @override
   @JsonKey(name: "y2028")
-  final num? y2028;
+  final double? y2028;
   @override
   @JsonKey(name: "y2029")
-  final num? y2029;
+  final double? y2029;
 
   @override
   bool operator ==(dynamic other) {
@@ -3702,14 +3740,14 @@ abstract class _RegionalInvestment implements RegionalInvestment {
   factory _RegionalInvestment(
       {@JsonKey(name: "region_id") final int? regionId,
       @JsonKey(name: "region") final Option? region,
-      @JsonKey(name: "y2022") final num? y2022,
-      @JsonKey(name: "y2023") final num? y2023,
-      @JsonKey(name: "y2024") final num? y2024,
-      @JsonKey(name: "y2025") final num? y2025,
-      @JsonKey(name: "y2026") final num? y2026,
-      @JsonKey(name: "y2027") final num? y2027,
-      @JsonKey(name: "y2028") final num? y2028,
-      @JsonKey(name: "y2029") final num? y2029}) = _$_RegionalInvestment;
+      @JsonKey(name: "y2022") final double? y2022,
+      @JsonKey(name: "y2023") final double? y2023,
+      @JsonKey(name: "y2024") final double? y2024,
+      @JsonKey(name: "y2025") final double? y2025,
+      @JsonKey(name: "y2026") final double? y2026,
+      @JsonKey(name: "y2027") final double? y2027,
+      @JsonKey(name: "y2028") final double? y2028,
+      @JsonKey(name: "y2029") final double? y2029}) = _$_RegionalInvestment;
 
   factory _RegionalInvestment.fromJson(Map<String, dynamic> json) =
       _$_RegionalInvestment.fromJson;
@@ -3722,28 +3760,28 @@ abstract class _RegionalInvestment implements RegionalInvestment {
   Option? get region;
   @override
   @JsonKey(name: "y2022")
-  num? get y2022;
+  double? get y2022;
   @override
   @JsonKey(name: "y2023")
-  num? get y2023;
+  double? get y2023;
   @override
   @JsonKey(name: "y2024")
-  num? get y2024;
+  double? get y2024;
   @override
   @JsonKey(name: "y2025")
-  num? get y2025;
+  double? get y2025;
   @override
   @JsonKey(name: "y2026")
-  num? get y2026;
+  double? get y2026;
   @override
   @JsonKey(name: "y2027")
-  num? get y2027;
+  double? get y2027;
   @override
   @JsonKey(name: "y2028")
-  num? get y2028;
+  double? get y2028;
   @override
   @JsonKey(name: "y2029")
-  num? get y2029;
+  double? get y2029;
   @override
   @JsonKey(ignore: true)
   _$$_RegionalInvestmentCopyWith<_$_RegionalInvestment> get copyWith =>

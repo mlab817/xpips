@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 import '../domain/models/chatroom.dart';
+import '../domain/models/project.dart';
 import '../presentation/screens/about_screen.dart';
 import '../presentation/screens/accountrecovery_screen.dart';
 import '../presentation/screens/chat_screen.dart';
@@ -10,8 +11,11 @@ import '../presentation/screens/forgotpassword_screen.dart';
 import '../presentation/screens/home_screen.dart';
 import '../presentation/screens/login_screen.dart';
 import '../presentation/screens/main_screen.dart';
-import '../presentation/screens/newproject_screen.dart';
 import '../presentation/screens/notifications_screen.dart';
+import '../presentation/screens/papform_screen.dart';
+import '../presentation/screens/papview_screen.dart';
+import '../presentation/screens/preferences_screen.dart';
+import '../presentation/screens/requestreactivation_screen.dart';
 import '../presentation/screens/settings_screen.dart';
 import '../presentation/screens/signup_screen.dart';
 import '../presentation/screens/splash_screen.dart';
@@ -37,11 +41,15 @@ class AppRouter extends _$AppRouter {
             page: SettingsRoute.page,
           ),
         ]),
-        AutoRoute(path: '/new-project', page: NewProjectRoute.page),
+        AutoRoute(path: '/new-project', page: NewPapRoute.page),
+        AutoRoute(path: '/project', page: PapViewRoute.page),
         AutoRoute(path: '/update-password', page: UpdatePasswordRoute.page),
         AutoRoute(path: '/update-profile', page: UpdateProfileRoute.page),
         AutoRoute(path: '/account-recovery', page: AccountRecoveryRoute.page),
+        AutoRoute(path: '/preferences', page: PreferencesRoute.page),
         AutoRoute(path: '/about', page: AboutRoute.page),
+        AutoRoute(
+            path: '/request-reactivation', page: RequestReactivationRoute.page),
         AutoRoute(page: ChatRoomRoute.page),
       ];
 }

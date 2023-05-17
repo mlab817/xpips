@@ -22,6 +22,7 @@ Option _$OptionFromJson(Map<String, dynamic> json) {
 mixin _$Option {
   String get label => throw _privateConstructorUsedError;
   int get value => throw _privateConstructorUsedError;
+  List<Option>? get children => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -33,7 +34,7 @@ abstract class $OptionCopyWith<$Res> {
   factory $OptionCopyWith(Option value, $Res Function(Option) then) =
       _$OptionCopyWithImpl<$Res, Option>;
   @useResult
-  $Res call({String label, int value});
+  $Res call({String label, int value, List<Option>? children});
 }
 
 /// @nodoc
@@ -51,6 +52,7 @@ class _$OptionCopyWithImpl<$Res, $Val extends Option>
   $Res call({
     Object? label = null,
     Object? value = null,
+    Object? children = freezed,
   }) {
     return _then(_value.copyWith(
       label: null == label
@@ -61,6 +63,10 @@ class _$OptionCopyWithImpl<$Res, $Val extends Option>
           ? _value.value
           : value // ignore: cast_nullable_to_non_nullable
               as int,
+      children: freezed == children
+          ? _value.children
+          : children // ignore: cast_nullable_to_non_nullable
+              as List<Option>?,
     ) as $Val);
   }
 }
@@ -71,7 +77,7 @@ abstract class _$$_OptionCopyWith<$Res> implements $OptionCopyWith<$Res> {
       __$$_OptionCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String label, int value});
+  $Res call({String label, int value, List<Option>? children});
 }
 
 /// @nodoc
@@ -86,6 +92,7 @@ class __$$_OptionCopyWithImpl<$Res>
   $Res call({
     Object? label = null,
     Object? value = null,
+    Object? children = freezed,
   }) {
     return _then(_$_Option(
       label: null == label
@@ -96,6 +103,10 @@ class __$$_OptionCopyWithImpl<$Res>
           ? _value.value
           : value // ignore: cast_nullable_to_non_nullable
               as int,
+      children: freezed == children
+          ? _value._children
+          : children // ignore: cast_nullable_to_non_nullable
+              as List<Option>?,
     ));
   }
 }
@@ -103,7 +114,9 @@ class __$$_OptionCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$_Option implements _Option {
-  _$_Option({required this.label, required this.value});
+  _$_Option(
+      {required this.label, required this.value, final List<Option>? children})
+      : _children = children;
 
   factory _$_Option.fromJson(Map<String, dynamic> json) =>
       _$$_OptionFromJson(json);
@@ -112,10 +125,19 @@ class _$_Option implements _Option {
   final String label;
   @override
   final int value;
+  final List<Option>? _children;
+  @override
+  List<Option>? get children {
+    final value = _children;
+    if (value == null) return null;
+    if (_children is EqualUnmodifiableListView) return _children;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
 
   @override
   String toString() {
-    return 'Option(label: $label, value: $value)';
+    return 'Option(label: $label, value: $value, children: $children)';
   }
 
   @override
@@ -124,12 +146,14 @@ class _$_Option implements _Option {
         (other.runtimeType == runtimeType &&
             other is _$_Option &&
             (identical(other.label, label) || other.label == label) &&
-            (identical(other.value, value) || other.value == value));
+            (identical(other.value, value) || other.value == value) &&
+            const DeepCollectionEquality().equals(other._children, _children));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, label, value);
+  int get hashCode => Object.hash(runtimeType, label, value,
+      const DeepCollectionEquality().hash(_children));
 
   @JsonKey(ignore: true)
   @override
@@ -146,8 +170,10 @@ class _$_Option implements _Option {
 }
 
 abstract class _Option implements Option {
-  factory _Option({required final String label, required final int value}) =
-      _$_Option;
+  factory _Option(
+      {required final String label,
+      required final int value,
+      final List<Option>? children}) = _$_Option;
 
   factory _Option.fromJson(Map<String, dynamic> json) = _$_Option.fromJson;
 
@@ -155,6 +181,8 @@ abstract class _Option implements Option {
   String get label;
   @override
   int get value;
+  @override
+  List<Option>? get children;
   @override
   @JsonKey(ignore: true)
   _$$_OptionCopyWith<_$_Option> get copyWith =>

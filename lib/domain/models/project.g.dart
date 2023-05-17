@@ -25,6 +25,7 @@ _$_Project _$$_ProjectFromJson(Map<String, dynamic> json) => _$_Project(
           : User.fromJson(json['user'] as Map<String, dynamic>),
       isRead: json['is_read'] as bool,
       contactInformation: json['contact_information'] as String?,
+      notes: json['notes'] as String?,
     );
 
 Map<String, dynamic> _$$_ProjectToJson(_$_Project instance) =>
@@ -41,4 +42,5 @@ Map<String, dynamic> _$$_ProjectToJson(_$_Project instance) =>
       'user': instance.user,
       'is_read': instance.isRead,
       'contact_information': instance.contactInformation,
+      'notes': instance.notes,
     };

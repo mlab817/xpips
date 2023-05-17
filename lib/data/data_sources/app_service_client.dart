@@ -1,6 +1,12 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pips/data/requests/pagination_request.dart';
+import 'package:pips/data/requests/signup_request.dart';
+import 'package:pips/data/responses/comments_response.dart';
+import 'package:pips/data/responses/createproject_response.dart';
+import 'package:pips/data/responses/newcomment_response.dart';
 import 'package:retrofit/http.dart';
 
 import '../../application/config.dart';
@@ -9,15 +15,23 @@ import '../../data/responses/chatrooms_response.dart';
 import '../../domain/models/login_credentials.dart';
 import '../../domain/models/login_response.dart';
 import '../../domain/models/notifications.dart';
-import '../../domain/models/projects_request.dart';
-import '../../domain/models/projects_response.dart';
-import '../requests/signup_request.dart';
+import '../requests/comment_request.dart';
+import '../requests/fullproject_request.dart';
+import '../requests/projects_request.dart';
+import '../requests/reactivation_request.dart';
+import '../requests/updateprofile_request.dart';
 import '../responses/chatroom_response.dart';
 import '../responses/notifications_response.dart';
 import '../responses/offices_response.dart';
 import '../responses/options_response.dart';
 import '../responses/pipsstatus_response.dart';
+import '../responses/project_response.dart';
+import '../responses/projects_response.dart';
+import '../responses/reactivation_response.dart';
 import '../responses/signup_response.dart';
+import '../responses/updateprofile_response.dart';
+import '../responses/updateproject_response.dart';
+import '../responses/upload_response.dart';
 
 part 'app_service_client.g.dart';
 
@@ -31,7 +45,19 @@ abstract class AppServiceClient {
   @GET('/projects')
   Future<ProjectsResponse> getAllProjects(@Queries() ProjectsRequest input);
 
+  @GET('/projects/{uuid}')
+  Future<ProjectResponse> getProject(@Path() String uuid);
+
+  @POST('/projects')
+  Future<CreateProjectResponse> createProject(
+      @Body() FullProjectRequest request);
+
   /// Notifications API
+  @PUT('/projects/{uuid}')
+  Future<UpdateProjectResponse> updateProject(@Path() String uuid,
+      @Body() FullProjectRequest request);
+
+  /// TODO: Implement delete
 
   @GET("/notifications")
   Future<NotificationsResponse> listNotifications(
@@ -56,9 +82,28 @@ abstract class AppServiceClient {
   @GET('/all-offices')
   Future<OfficesResponse> getOffices();
 
-  @MultiPart()
   @POST("/signup")
-  Future<SignupResponse> signup(@Body() SignupRequest formData);
+  Future<SignupResponse> signup(@Body() SignupRequest input);
+
+  @POST("/upload")
+  Future<UploadResponse> upload({
+    @Part() required File file,
+  });
+
+  @POST('/request-reactivation')
+  Future<ReactivationResponse> requestReactivation(
+      @Body() ReactivationRequest request);
+
+  @POST('/update-profile')
+  Future<UpdateProfileResponse> updateProfile(
+      @Body() UpdateProfileRequest request);
+
+  @GET("/projects/{uuid}/comments")
+  Future<CommentsResponse> showComments(@Path() String uuid);
+
+  @POST("/projects/{uuid}/comments")
+  Future<NewCommentResponse> addComment(@Path() String uuid,
+      @Body() CommentRequest comment);
 }
 
 final appServiceClientProvider = Provider<AppServiceClient>((ref) {

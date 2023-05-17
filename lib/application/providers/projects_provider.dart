@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pips/domain/models/projects_response.dart';
+import 'package:pips/data/responses/projects_response.dart';
 
 import '../../data/repositories/project_repository.dart';
-import '../../domain/models/projects_request.dart';
+import '../../data/requests/projects_request.dart';
 
 class ProjectController extends AsyncNotifier<void> {
   late ProjectsRequest request;

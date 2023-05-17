@@ -44,7 +44,7 @@ extension ApplyPresets on FullProject {
       fundingInstitutions: [],
       fundingSources: [],
       fsInvestments: <FsInvestment>[],
-      regionalInvestments: <RegionalInvestment>[],
+      regions: <RegionalInvestment>[],
       financialAccomplishment: FinancialAccomplishment(),
       typeId: preset.typeId,
       type: preset.type,

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -167,7 +168,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           }
                           return null;
                         },
-                        autofocus: true,
+                        autofocus: kIsWeb, // autofocus on web
                       ),
                       const SizedBox(
                         height: 30,
@@ -279,17 +280,28 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         ],
                       ),
                       const SizedBox(
-                        height: 30,
+                        height: 15,
                       ),
                       const Divider(),
                       const SizedBox(
-                        height: 30,
+                        height: 15,
                       ),
                       TextButton(
                         onPressed: () {
                           AutoRouter.of(context).push(const SignupRoute());
                         },
                         child: const Text('Create a New Account'),
+                      ),
+                      const Divider(),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          AutoRouter.of(context)
+                              .push(const RequestReactivationRoute());
+                        },
+                        child: const Text('Request to Reactivate Account'),
                       ),
                     ],
                   ),

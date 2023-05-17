@@ -27,6 +27,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const ChatScreen(),
       );
     },
+    NewPapRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const NewPapScreen(),
+      );
+    },
     SettingsRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -37,6 +43,12 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const SignupScreen(),
+      );
+    },
+    RequestReactivationRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const RequestReactivationScreen(),
       );
     },
     NotificationsRoute.name: (routeData) {
@@ -73,16 +85,16 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const LoginScreen(),
       );
     },
-    NewProjectRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const NewProjectScreen(),
-      );
-    },
     UpdateProfileRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const UpdateProfileScreen(),
+      );
+    },
+    PreferencesRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const PreferencesScreen(),
       );
     },
     AccountRecoveryRoute.name: (routeData) {
@@ -95,6 +107,16 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const MainScreen(),
+      );
+    },
+    PapViewRoute.name: (routeData) {
+      final args = routeData.argsAs<PapViewRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: PapViewScreen(
+          key: args.key,
+          project: args.project,
+        ),
       );
     },
     HomeRoute.name: (routeData) {
@@ -141,6 +163,20 @@ class ChatRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [NewPapScreen]
+class NewPapRoute extends PageRouteInfo<void> {
+  const NewPapRoute({List<PageRouteInfo>? children})
+      : super(
+          NewPapRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'NewPapRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
 /// [SettingsScreen]
 class SettingsRoute extends PageRouteInfo<void> {
   const SettingsRoute({List<PageRouteInfo>? children})
@@ -164,6 +200,20 @@ class SignupRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'SignupRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [RequestReactivationScreen]
+class RequestReactivationRoute extends PageRouteInfo<void> {
+  const RequestReactivationRoute({List<PageRouteInfo>? children})
+      : super(
+          RequestReactivationRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'RequestReactivationRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
@@ -263,20 +313,6 @@ class LoginRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [NewProjectScreen]
-class NewProjectRoute extends PageRouteInfo<void> {
-  const NewProjectRoute({List<PageRouteInfo>? children})
-      : super(
-          NewProjectRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'NewProjectRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
 /// [UpdateProfileScreen]
 class UpdateProfileRoute extends PageRouteInfo<void> {
   const UpdateProfileRoute({List<PageRouteInfo>? children})
@@ -286,6 +322,20 @@ class UpdateProfileRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'UpdateProfileRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [PreferencesScreen]
+class PreferencesRoute extends PageRouteInfo<void> {
+  const PreferencesRoute({List<PageRouteInfo>? children})
+      : super(
+          PreferencesRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'PreferencesRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
@@ -316,6 +366,44 @@ class MainRoute extends PageRouteInfo<void> {
   static const String name = 'MainRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [PapViewScreen]
+class PapViewRoute extends PageRouteInfo<PapViewRouteArgs> {
+  PapViewRoute({
+    Key? key,
+    required Project project,
+    List<PageRouteInfo>? children,
+  }) : super(
+          PapViewRoute.name,
+          args: PapViewRouteArgs(
+            key: key,
+            project: project,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'PapViewRoute';
+
+  static const PageInfo<PapViewRouteArgs> page =
+      PageInfo<PapViewRouteArgs>(name);
+}
+
+class PapViewRouteArgs {
+  const PapViewRouteArgs({
+    this.key,
+    required this.project,
+  });
+
+  final Key? key;
+
+  final Project project;
+
+  @override
+  String toString() {
+    return 'PapViewRouteArgs{key: $key, project: $project}';
+  }
 }
 
 /// generated route for

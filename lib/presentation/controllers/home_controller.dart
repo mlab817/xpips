@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pips/data/repositories/pipsstatus_repository.dart';
 import 'package:pips/data/repositories/project_repository.dart';
+import 'package:pips/data/requests/projects_request.dart';
 import 'package:pips/data/responses/pipsstatus_response.dart';
-import 'package:pips/domain/models/projects_request.dart';
-import 'package:pips/domain/models/projects_response.dart';
+import 'package:pips/data/responses/projects_response.dart';
 
 class HomeScreenController extends AutoDisposeAsyncNotifier<ProjectsResponse> {
   Future<ProjectsResponse> getAll() async {

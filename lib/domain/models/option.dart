@@ -8,6 +8,7 @@ class Option with _$Option {
   factory Option({
     required String label,
     required int value,
+    List<Option>? children,
   }) = _Option;
 
   factory Option.fromJson(Map<String, dynamic> json) => _$OptionFromJson(json);

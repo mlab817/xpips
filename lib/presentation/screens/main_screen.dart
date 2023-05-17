@@ -1,9 +1,10 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pips/application/providers/theme_provider.dart';
 
-import '../../../presentation/widgets/logout_button.dart';
 import '../../application/app_router.dart';
+import '../widgets/logout_button.dart';
 import 'chat_screen.dart';
 import 'home_screen.dart';
 import 'notifications_screen.dart';
@@ -92,17 +93,28 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                           width: 40,
                         ),
                       ),
-                      labelType: NavigationRailLabelType.all,
+                      labelType: NavigationRailLabelType.none,
                       destinations: _destinations,
                       selectedIndex: tabsRouter.activeIndex,
-                      trailing: Column(
-                        children: [
-                          const LogoutButton(),
-                          Text(
-                            'Logout',
-                            style: Theme.of(context).textTheme.bodySmall,
-                          ),
-                        ],
+                      trailing: Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            IconButton(
+                              onPressed:
+                                  ref.read(themeProvider.notifier).switchTheme,
+                              icon: ref.watch(themeProvider) == ThemeMode.dark
+                                  ? const Icon(Icons.light_mode)
+                                  : const Icon(Icons.dark_mode),
+                              tooltip:
+                                  ref.watch(themeProvider) == ThemeMode.dark
+                                      ? 'Switch to Light Mode'
+                                      : 'Switch to Dark Mode',
+                            ),
+                            const LogoutButton(),
+                          ],
+                        ),
                       ),
                     ),
                   ),

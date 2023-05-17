@@ -28,6 +28,8 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Notifications'),
+        scrolledUnderElevation: 0.0,
+        automaticallyImplyLeading: false,
         actions: const [
           LogoutButton(),
         ],
