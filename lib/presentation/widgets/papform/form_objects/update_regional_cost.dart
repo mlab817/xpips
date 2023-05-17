@@ -49,7 +49,6 @@ class _UpdateRegionalCostState extends ConsumerState<UpdateRegionalCost> {
           child: const Text(
             'REGION',
             style: TextStyle(
-              color: Colors.black,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -65,7 +64,6 @@ class _UpdateRegionalCostState extends ConsumerState<UpdateRegionalCost> {
               child: Text(
                 "$year",
                 style: const TextStyle(
-                  color: Colors.black,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -80,7 +78,6 @@ class _UpdateRegionalCostState extends ConsumerState<UpdateRegionalCost> {
             child: Text(
               'TOTAL',
               style: TextStyle(
-                color: Colors.black,
                 fontWeight: FontWeight.bold,
               ),
             ),

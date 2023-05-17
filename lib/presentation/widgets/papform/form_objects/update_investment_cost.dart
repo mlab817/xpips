@@ -50,7 +50,6 @@ class _UpdateInvestmentCost extends ConsumerState {
           child: Text(
             'FUNDING SOURCE',
             style: const TextStyle(
-              color: Colors.black,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -65,7 +64,6 @@ class _UpdateInvestmentCost extends ConsumerState {
               child: Text(
                 "${2022 + index}",
                 style: const TextStyle(
-                  color: Colors.black,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -80,7 +78,6 @@ class _UpdateInvestmentCost extends ConsumerState {
             child: Text(
               'TOTAL',
               style: TextStyle(
-                color: Colors.black,
                 fontWeight: FontWeight.bold,
               ),
             ),

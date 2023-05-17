@@ -215,7 +215,9 @@ class _ProjectListTileState extends State<ProjectListTile> {
       ),
       child: ListTile(
         minVerticalPadding: 8.0,
-        tileColor: _project.isRead ? Colors.white : Colors.transparent,
+        tileColor: _project.isRead
+            ? Colors.transparent
+            : Theme.of(context).hoverColor.withAlpha(5),
         trailing: Text(formatDate(_project.updatedAt)),
         leading: CircleAvatar(
           child: Text(
