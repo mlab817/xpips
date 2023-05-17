@@ -17,7 +17,7 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentUser =
-        ref.read(authControllerProvider.notifier).getCurrentUser();
+    ref.read(authControllerProvider.notifier).getCurrentUser();
 
     debugPrint(currentUser.toString());
 
@@ -75,7 +75,9 @@ class MyApp extends ConsumerWidget {
         useMaterial3: true,
         swapLegacyOnMaterial3: true,
         // To use the Playground font, add GoogleFonts package and uncomment
-        fontFamily: GoogleFonts.robotoCondensed().fontFamily,
+        fontFamily: GoogleFonts
+            .robotoCondensed()
+            .fontFamily,
       ),
       // light theme
       theme: FlexThemeData.light(
@@ -115,18 +117,11 @@ class MyApp extends ConsumerWidget {
         useMaterial3: true,
         swapLegacyOnMaterial3: true,
         // To use the Playground font, add GoogleFonts package and uncomment
-        fontFamily: GoogleFonts.robotoCondensed().fontFamily,
+        fontFamily: GoogleFonts
+            .robotoCondensed()
+            .fontFamily,
       ),
-      // routerDelegate: AutoRouterDelegate.declarative(_appRouter,
-      //     routes: (_) => [
-      //           if (ref.watch(authControllerProvider).isLoggedIn)
-      //             const MainRoute()
-      //           else
-      //             const SplashRoute(),
-      //         ]),
       routerConfig: _appRouter.config(),
-      // home: currentUser != null ? const MainScreen() : const LoginScreen(),
-      // TODO: replace with auto route
     );
   }
 }

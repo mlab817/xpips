@@ -144,6 +144,29 @@ class _AppServiceClient implements AppServiceClient {
   }
 
   @override
+  Future<DeleteProjectResponse> deleteProject(String uuid) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final Map<String, dynamic>? _data = null;
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<DeleteProjectResponse>(Options(
+      method: 'DELETE',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/projects/${uuid}',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = DeleteProjectResponse.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
   Future<NotificationsResponse> listNotifications(
       PaginationRequest input) async {
     const _extra = <String, dynamic>{};

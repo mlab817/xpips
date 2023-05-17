@@ -32,7 +32,8 @@ class SignupRequest with _$SignupRequest {
       'contact_number': contactNumber,
       'authorization': authorization != null
           ? MultipartFile.fromFileSync(authorization!)
-          : null, //TODO handle appending authorization form
+          : null,
+      // TODO: handle appending authorization form, review for deletion
     });
 
     final map = <String, dynamic>{};
