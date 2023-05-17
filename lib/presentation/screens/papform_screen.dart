@@ -494,20 +494,16 @@ class _NewPapStateScreen extends ConsumerState<NewPapScreen> {
           LinearProgressIndicator(
             value: _scrollPercentage,
           ),
-          SizedBox(
-            height: height - 60,
+          Expanded(
             // update if linear progress indicator resizes
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: SingleChildScrollView(
-                controller: _scrollController,
-                physics: const ClampingScrollPhysics(),
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 20),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: children,
-                  ),
+            child: SingleChildScrollView(
+              controller: _scrollController,
+              physics: const ClampingScrollPhysics(),
+              child: Padding(
+                padding: const EdgeInsets.only(right: 20),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: children,
                 ),
               ),
             ),
@@ -590,7 +586,7 @@ class _NewPapStateScreen extends ConsumerState<NewPapScreen> {
         .watch(fullProjectControllerProvider.select((value) => value.office));
 
     return ListTile(
-      title: const Text('office'),
+      title: const Text('Office'),
       subtitle:
           office != null ? Text(office.acronym) : const Text('Select one'),
       trailing:

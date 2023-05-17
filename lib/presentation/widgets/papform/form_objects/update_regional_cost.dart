@@ -119,7 +119,7 @@ class _UpdateRegionalCostState extends ConsumerState<UpdateRegionalCost> {
                   final updatedInvestments = [...project.regions];
                   final index = updatedInvestments.indexOf(regionalInvestment);
                   final updatedRegionalInvestment = regionalInvestment.copyWith(
-                    y2022: num.parse(value),
+                    y2022: double.parse(value),
                   );
                   updatedInvestments[index] = updatedRegionalInvestment;
 
@@ -139,7 +139,7 @@ class _UpdateRegionalCostState extends ConsumerState<UpdateRegionalCost> {
                   final updatedInvestments = [...project.regions];
                   final index = updatedInvestments.indexOf(regionalInvestment);
                   final updatedRegionalInvestment = regionalInvestment.copyWith(
-                    y2023: num.parse(value),
+                    y2023: double.parse(value),
                   );
                   updatedInvestments[index] = updatedRegionalInvestment;
 
@@ -159,7 +159,7 @@ class _UpdateRegionalCostState extends ConsumerState<UpdateRegionalCost> {
                   final updatedInvestments = [...project.regions];
                   final index = updatedInvestments.indexOf(regionalInvestment);
                   final updatedRegionalInvestment = regionalInvestment.copyWith(
-                    y2024: num.parse(value),
+                    y2024: double.parse(value),
                   );
                   updatedInvestments[index] = updatedRegionalInvestment;
 
@@ -179,7 +179,7 @@ class _UpdateRegionalCostState extends ConsumerState<UpdateRegionalCost> {
                   final updatedInvestments = [...project.regions];
                   final index = updatedInvestments.indexOf(regionalInvestment);
                   final updatedRegionalInvestment = regionalInvestment.copyWith(
-                    y2025: num.parse(value),
+                    y2025: double.parse(value),
                   );
                   updatedInvestments[index] = updatedRegionalInvestment;
 
@@ -199,7 +199,7 @@ class _UpdateRegionalCostState extends ConsumerState<UpdateRegionalCost> {
                   final updatedInvestments = [...project.regions];
                   final index = updatedInvestments.indexOf(regionalInvestment);
                   final updatedRegionalInvestment = regionalInvestment.copyWith(
-                    y2026: num.parse(value),
+                    y2026: double.parse(value),
                   );
                   updatedInvestments[index] = updatedRegionalInvestment;
 
@@ -219,7 +219,7 @@ class _UpdateRegionalCostState extends ConsumerState<UpdateRegionalCost> {
                   final updatedInvestments = [...project.regions];
                   final index = updatedInvestments.indexOf(regionalInvestment);
                   final updatedRegionalInvestment = regionalInvestment.copyWith(
-                    y2027: num.parse(value),
+                    y2027: double.parse(value),
                   );
                   updatedInvestments[index] = updatedRegionalInvestment;
 
@@ -239,7 +239,7 @@ class _UpdateRegionalCostState extends ConsumerState<UpdateRegionalCost> {
                   final updatedInvestments = [...project.regions];
                   final index = updatedInvestments.indexOf(regionalInvestment);
                   final updatedRegionalInvestment = regionalInvestment.copyWith(
-                    y2028: num.parse(value),
+                    y2028: double.parse(value),
                   );
                   updatedInvestments[index] = updatedRegionalInvestment;
 
@@ -259,7 +259,7 @@ class _UpdateRegionalCostState extends ConsumerState<UpdateRegionalCost> {
                   final updatedInvestments = [...project.regions];
                   final index = updatedInvestments.indexOf(regionalInvestment);
                   final updatedRegionalInvestment = regionalInvestment.copyWith(
-                    y2029: num.parse(value),
+                    y2029: double.parse(value),
                   );
                   updatedInvestments[index] = updatedRegionalInvestment;
 

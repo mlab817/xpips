@@ -118,6 +118,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ),
             )
           : null,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          AutoRouter.of(context).push(const NewPapRoute());
+        },
+        child: const Icon(Icons.add),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Row(

@@ -28,28 +28,7 @@ class PapViewScreen extends ConsumerStatefulWidget {
 class _PapViewScreenState extends ConsumerState<PapViewScreen> {
   bool _isExpanded = false;
 
-  final List<Message> _messages = [];
-
   final TextEditingController _textEditingController = TextEditingController();
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-
-    _messages.addAll([
-      Message(
-        sender: 'John Doe',
-        message: 'Hello! How can I help you?',
-        timestamp: DateTime.now(),
-      ),
-      Message(
-        sender: 'Jane Smith',
-        message: 'I have a question about the product.',
-        timestamp: DateTime.now(),
-      ),
-    ]);
-  }
 
   @override
   void dispose() {
@@ -78,41 +57,66 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         .listen((event) {});
 
     subscription.onData((ChannelReadEvent event) {
-      debugPrint(event.toString());
+      debugPrint(
+        event.toString(),
+      );
     });
 
-    final valueAsync =
-    ref.watch(viewPapControllerProvider(widget.project.uuid));
+    final valueAsync = ref.watch(
+      viewPapControllerProvider(widget.project.uuid),
+    );
+
+    ref.watch(realTimeCommentsProvider);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('View PAP'),
-        scrolledUnderElevation: 0.0,
+        title: Text(
+          widget.project.title,
+          overflow: TextOverflow.ellipsis,
+        ),
+        // scrolledUnderElevation: 0.0,
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.delete),
+            tooltip: 'Delete',
+          ),
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.edit),
+            tooltip: 'Edit',
+          ),
+        ],
       ),
       floatingActionButton: !_isExpanded
           ? FloatingActionButton(
-        onPressed: () {
-          // expand messenger like
-          setState(() {
-            _isExpanded = !_isExpanded;
-          });
-        },
-        child: const Icon(Icons.chat_bubble),
-      )
+              onPressed: () {
+                // expand messenger like
+                setState(() {
+                  _isExpanded = !_isExpanded;
+                });
+              },
+              child: const Icon(Icons.chat_bubble),
+            )
           : null,
       body: Stack(
         children: [
           // content
           valueAsync.when(
-              data: (data) {
-                return _buildShow(data);
-              },
-              error: (error, stacktrace) {
-                return Center(
-                  child: Text(error.toString()),
-                );
-              },
-              loading: () => const CircularProgressIndicator()),
+            data: (data) {
+              return _buildShow(data);
+            },
+            error: (error, stacktrace) {
+              return Center(
+                child: Text(
+                  error.toString(),
+                ),
+              );
+            },
+            loading: () => const Center(
+              child: CircularProgressIndicator(),
+            ),
+          ),
           // chat box
           _buildChatBox()
         ],
@@ -130,9 +134,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         SliverStickyHeader(
           header: Container(
             height: 60.0,
-            color: Theme
-                .of(context)
-                .primaryColor,
+            color: Theme.of(context).primaryColor,
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             alignment: Alignment.centerLeft,
             child: const Text(
@@ -152,13 +154,15 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
               ),
               ListTile(
                 subtitle: Text(project.regularProgram != null &&
-                    project.regularProgram == true
+                        project.regularProgram == true
                     ? 'Yes'
                     : 'No'),
                 title: const Text('Regular Program'),
               ),
               ListTile(
-                subtitle: Text(project.bases.map((e) => e.label).join(', ')),
+                subtitle: Text(
+                  project.bases.map((e) => e.label).join(', '),
+                ),
                 title: const Text('Basis for Implementation'),
               ),
               ListTile(
@@ -176,9 +180,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         SliverStickyHeader(
           header: Container(
             height: 60.0,
-            color: Theme
-                .of(context)
-                .primaryColor,
+            color: Theme.of(context).primaryColor,
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             alignment: Alignment.centerLeft,
             child: const Text(
@@ -193,8 +195,9 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 title: const Text('Office'),
               ),
               ListTile(
-                subtitle:
-                Text(project.operatingUnits.map((e) => e.label).join(', ')),
+                subtitle: Text(
+                  project.operatingUnits.map((e) => e.label).join(', '),
+                ),
                 title: const Text('Implementing Units'),
               ),
             ]),
@@ -204,9 +207,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         SliverStickyHeader(
           header: Container(
             height: 60.0,
-            color: Theme
-                .of(context)
-                .primaryColor,
+            color: Theme.of(context).primaryColor,
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             alignment: Alignment.centerLeft,
             child: const Text(
@@ -221,8 +222,9 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 title: const Text('Spatial Coverage'),
               ),
               ListTile(
-                subtitle:
-                Text(project.locations.map((e) => e.label).join(', ')),
+                subtitle: Text(
+                  project.locations.map((e) => e.label).join(', '),
+                ),
                 title: const Text('Regions/Provinces'),
               ),
             ]),
@@ -232,9 +234,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         SliverStickyHeader(
           header: Container(
             height: 60.0,
-            color: Theme
-                .of(context)
-                .primaryColor,
+            color: Theme.of(context).primaryColor,
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             alignment: Alignment.centerLeft,
             child: const Text(
@@ -268,9 +268,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         SliverStickyHeader(
           header: Container(
             height: 60.0,
-            color: Theme
-                .of(context)
-                .primaryColor,
+            color: Theme.of(context).primaryColor,
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             alignment: Alignment.centerLeft,
             child: const Text(
@@ -325,7 +323,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                     ? 'Yes'
                     : 'No'),
                 title:
-                const Text('Is the Program/Project included in the RDIP?'),
+                    const Text('Is the Program/Project included in the RDIP?'),
               ),
             ]),
           ),
@@ -334,9 +332,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         SliverStickyHeader(
           header: Container(
             height: 60.0,
-            color: Theme
-                .of(context)
-                .primaryColor,
+            color: Theme.of(context).primaryColor,
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             alignment: Alignment.centerLeft,
             child: const Text(
@@ -350,11 +346,12 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 ListTile(
                   subtitle: Text(project.pdpChapter?.label ?? 'N/A'),
                   title:
-                  const Text('Philippine Development Plan (PDP) Chapter'),
+                      const Text('Philippine Development Plan (PDP) Chapter'),
                 ),
                 ListTile(
-                  subtitle:
-                  Text(project.pdpChapters.map((e) => e.label).join(', ')),
+                  subtitle: Text(
+                    project.pdpChapters.map((e) => e.label).join(', '),
+                  ),
                   title: const Text(
                       'Other Philippine Development Plan (PDP) Chapter/s'),
                 ),
@@ -365,9 +362,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         SliverStickyHeader(
           header: Container(
             height: 60.0,
-            color: Theme
-                .of(context)
-                .primaryColor,
+            color: Theme.of(context).primaryColor,
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             alignment: Alignment.centerLeft,
             child: const Text(
@@ -393,9 +388,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         SliverStickyHeader(
           header: Container(
             height: 60.0,
-            color: Theme
-                .of(context)
-                .primaryColor,
+            color: Theme.of(context).primaryColor,
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             alignment: Alignment.centerLeft,
             child: const Text(
@@ -435,9 +428,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         SliverStickyHeader(
           header: Container(
             height: 60.0,
-            color: Theme
-                .of(context)
-                .primaryColor,
+            color: Theme.of(context).primaryColor,
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             alignment: Alignment.centerLeft,
             child: const Text(
@@ -461,9 +452,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         SliverStickyHeader(
           header: Container(
             height: 60.0,
-            color: Theme
-                .of(context)
-                .primaryColor,
+            color: Theme.of(context).primaryColor,
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             alignment: Alignment.centerLeft,
             child: const Text(
@@ -487,9 +476,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         SliverStickyHeader(
           header: Container(
             height: 60.0,
-            color: Theme
-                .of(context)
-                .primaryColor,
+            color: Theme.of(context).primaryColor,
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             alignment: Alignment.centerLeft,
             child: const Text(
@@ -513,9 +500,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         SliverStickyHeader(
           header: Container(
             height: 60.0,
-            color: Theme
-                .of(context)
-                .primaryColor,
+            color: Theme.of(context).primaryColor,
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             alignment: Alignment.centerLeft,
             child: const Text(
@@ -539,9 +524,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         SliverStickyHeader(
           header: Container(
             height: 60.0,
-            color: Theme
-                .of(context)
-                .primaryColor,
+            color: Theme.of(context).primaryColor,
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             alignment: Alignment.centerLeft,
             child: const Text(
@@ -581,9 +564,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         SliverStickyHeader(
           header: Container(
             height: 60.0,
-            color: Theme
-                .of(context)
-                .primaryColor,
+            color: Theme.of(context).primaryColor,
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             alignment: Alignment.centerLeft,
             child: const Text(
@@ -635,9 +616,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         SliverStickyHeader(
           header: Container(
             height: 60.0,
-            color: Theme
-                .of(context)
-                .primaryColor,
+            color: Theme.of(context).primaryColor,
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             alignment: Alignment.centerLeft,
             child: const Text(
@@ -661,9 +640,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         SliverStickyHeader(
           header: Container(
             height: 60.0,
-            color: Theme
-                .of(context)
-                .primaryColor,
+            color: Theme.of(context).primaryColor,
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             alignment: Alignment.centerLeft,
             child: const Text(
@@ -682,9 +659,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         SliverStickyHeader(
           header: Container(
             height: 60.0,
-            color: Theme
-                .of(context)
-                .primaryColor,
+            color: Theme.of(context).primaryColor,
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             alignment: Alignment.centerLeft,
             child: const Text(
@@ -703,9 +678,24 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         SliverStickyHeader(
           header: Container(
             height: 60.0,
-            color: Theme
-                .of(context)
-                .primaryColor,
+            color: Theme.of(context).primaryColor,
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            alignment: Alignment.centerLeft,
+            child: const Text(
+              'Financial Accomplishments',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+          sliver: SliverList(
+            delegate: SliverChildListDelegate([
+              _buildFinancialAccomplishments(project),
+            ]),
+          ),
+        ),
+        SliverStickyHeader(
+          header: Container(
+            height: 60.0,
+            color: Theme.of(context).primaryColor,
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             alignment: Alignment.centerLeft,
             child: const Text(
@@ -725,9 +715,27 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         SliverStickyHeader(
           header: Container(
             height: 60.0,
-            color: Theme
-                .of(context)
-                .primaryColor,
+            color: Theme.of(context).primaryColor,
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            alignment: Alignment.centerLeft,
+            child: const Text(
+              'Attachments',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+          sliver: SliverList(
+            delegate: SliverChildListDelegate([
+              ListTile(
+                title: const Text('Attachments'),
+                subtitle: Text(project.notes ?? 'N/A'),
+              ),
+            ]),
+          ),
+        ),
+        SliverStickyHeader(
+          header: Container(
+            height: 60.0,
+            color: Theme.of(context).primaryColor,
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             alignment: Alignment.centerLeft,
             child: const Text(
@@ -755,18 +763,17 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
       padding: const EdgeInsets.all(8.0),
       child: Table(
         border:
-        TableBorder.all(color: Theme
-            .of(context)
-            .primaryColor, width: 0.5),
+            TableBorder.all(color: Theme.of(context).primaryColor, width: 0.5),
         defaultVerticalAlignment: TableCellVerticalAlignment.middle,
         children: <TableRow>[
           const TableRow(
             children: [
               TableCell(
-                  child: Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Text('Region'),
-                  )),
+                child: Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text('Region'),
+                ),
+              ),
               TableCell(
                 child: Padding(
                   padding: EdgeInsets.all(8.0),
@@ -854,10 +861,11 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
             return TableRow(
               children: [
                 TableCell(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(e.region?.label ?? 'N/A'),
-                    )),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(e.region?.label ?? 'N/A'),
+                  ),
+                ),
                 TableCell(
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -913,13 +921,14 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   ),
                 ),
                 TableCell(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        e.y2028.toString(),
-                        textAlign: TextAlign.end,
-                      ),
-                    )),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      e.y2028.toString(),
+                      textAlign: TextAlign.end,
+                    ),
+                  ),
+                ),
                 TableCell(
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -953,18 +962,17 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
       padding: const EdgeInsets.all(8.0),
       child: Table(
         border:
-        TableBorder.all(color: Theme
-            .of(context)
-            .primaryColor, width: 0.5),
+            TableBorder.all(color: Theme.of(context).primaryColor, width: 0.5),
         defaultVerticalAlignment: TableCellVerticalAlignment.middle,
         children: <TableRow>[
           const TableRow(
             children: [
               TableCell(
-                  child: Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Text('Funding Source'),
-                  )),
+                child: Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text('Funding Source'),
+                ),
+              ),
               TableCell(
                 child: Padding(
                   padding: EdgeInsets.all(8.0),
@@ -1052,10 +1060,11 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
             return TableRow(
               children: [
                 TableCell(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(e.fundingSource?.label ?? 'N/A'),
-                    )),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(e.fundingSource?.label ?? 'N/A'),
+                  ),
+                ),
                 TableCell(
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -1111,13 +1120,14 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   ),
                 ),
                 TableCell(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        e.y2028.toString(),
-                        textAlign: TextAlign.end,
-                      ),
-                    )),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      e.y2028.toString(),
+                      textAlign: TextAlign.end,
+                    ),
+                  ),
+                ),
                 TableCell(
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -1144,9 +1154,286 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
     );
   }
 
+  Widget _buildFinancialAccomplishments(project) {
+    final FinancialAccomplishment financialAccomplishment =
+        project.financialAccomplishment;
+
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Table(
+        border: TableBorder.all(
+          color: Theme.of(context).primaryColor,
+          width: 0.5,
+        ),
+        children: [
+          const TableRow(
+            children: [
+              TableCell(
+                child: Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text('Year'),
+                ),
+              ),
+              TableCell(
+                child: Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text(
+                    'National Expenditure Program',
+                    textAlign: TextAlign.end,
+                  ),
+                ),
+              ),
+              TableCell(
+                child: Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text(
+                    'General Appropriations Act',
+                    textAlign: TextAlign.end,
+                  ),
+                ),
+              ),
+              TableCell(
+                child: Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text(
+                    'Actual Disbursement',
+                    textAlign: TextAlign.end,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          TableRow(
+            children: [
+              const TableCell(
+                child: Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text('2023'),
+                ),
+              ),
+              TableCell(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    financialAccomplishment.nep2023.toString() ?? '',
+                    textAlign: TextAlign.end,
+                  ),
+                ),
+              ),
+              TableCell(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    financialAccomplishment.gaa2023.toString() ?? '',
+                    textAlign: TextAlign.end,
+                  ),
+                ),
+              ),
+              TableCell(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    financialAccomplishment.disbursement2023.toString() ?? '',
+                    textAlign: TextAlign.end,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          TableRow(
+            children: [
+              const TableCell(
+                child: Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text('2024'),
+                ),
+              ),
+              TableCell(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    financialAccomplishment.nep2024.toString() ?? '',
+                    textAlign: TextAlign.end,
+                  ),
+                ),
+              ),
+              TableCell(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    financialAccomplishment.gaa2024.toString() ?? '',
+                    textAlign: TextAlign.end,
+                  ),
+                ),
+              ),
+              TableCell(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    financialAccomplishment.disbursement2024.toString() ?? '',
+                    textAlign: TextAlign.end,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          TableRow(
+            children: [
+              const TableCell(
+                child: Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text('2025'),
+                ),
+              ),
+              TableCell(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    financialAccomplishment.nep2025.toString() ?? '',
+                    textAlign: TextAlign.end,
+                  ),
+                ),
+              ),
+              TableCell(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    financialAccomplishment.gaa2025.toString() ?? '',
+                    textAlign: TextAlign.end,
+                  ),
+                ),
+              ),
+              TableCell(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    financialAccomplishment.disbursement2025.toString() ?? '',
+                    textAlign: TextAlign.end,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          TableRow(
+            children: [
+              const TableCell(
+                child: Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text('2026'),
+                ),
+              ),
+              TableCell(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    financialAccomplishment.nep2026.toString() ?? '',
+                    textAlign: TextAlign.end,
+                  ),
+                ),
+              ),
+              TableCell(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    financialAccomplishment.gaa2026.toString() ?? '',
+                    textAlign: TextAlign.end,
+                  ),
+                ),
+              ),
+              TableCell(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    financialAccomplishment.disbursement2026.toString() ?? '',
+                    textAlign: TextAlign.end,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          TableRow(
+            children: [
+              const TableCell(
+                child: Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text('2027'),
+                ),
+              ),
+              TableCell(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    financialAccomplishment.nep2027.toString() ?? '',
+                    textAlign: TextAlign.end,
+                  ),
+                ),
+              ),
+              TableCell(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    financialAccomplishment.gaa2027.toString() ?? '',
+                    textAlign: TextAlign.end,
+                  ),
+                ),
+              ),
+              TableCell(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    financialAccomplishment.disbursement2027.toString() ?? '',
+                    textAlign: TextAlign.end,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          TableRow(
+            children: [
+              const TableCell(
+                child: Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text('2028'),
+                ),
+              ),
+              TableCell(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    financialAccomplishment.nep2028.toString() ?? '',
+                    textAlign: TextAlign.end,
+                  ),
+                ),
+              ),
+              TableCell(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    financialAccomplishment.gaa2028.toString() ?? '',
+                    textAlign: TextAlign.end,
+                  ),
+                ),
+              ),
+              TableCell(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    financialAccomplishment.disbursement2028.toString() ?? '',
+                    textAlign: TextAlign.end,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildChatBox() {
-    final commentsAsync =
-    ref.watch(commentsControllerProvider(widget.project.uuid));
+    final commentsAsync = ref.watch(
+      commentsControllerProvider(widget.project.uuid),
+    );
 
     return AnimatedPositioned(
       duration: const Duration(milliseconds: 250),
@@ -1160,9 +1447,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
           width: 360,
           padding: EdgeInsets.zero,
           decoration: BoxDecoration(
-            color: Theme
-                .of(context)
-                .canvasColor,
+            color: Theme.of(context).canvasColor,
             border: Border.all(color: Colors.grey, width: 0.5),
             borderRadius: BorderRadius.circular(8.0),
           ),
@@ -1175,12 +1460,13 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: IconButton(
-                        onPressed: () {
-                          setState(() {
-                            _isExpanded = false;
-                          });
-                        },
-                        icon: const Icon(Icons.close)),
+                      onPressed: () {
+                        setState(() {
+                          _isExpanded = false;
+                        });
+                      },
+                      icon: const Icon(Icons.close),
+                    ),
                   ),
                 ],
               ),
@@ -1207,8 +1493,9 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                         leading: const Icon(Icons.person),
                         title: Text(comment.user.firstName ?? ''),
                         subtitle: Text(comment.comment),
-                        trailing: Text(
-                            formatDate(comment.updatedAt.toIso8601String())),
+                        trailing: Text(formatDate(
+                          comment.updatedAt.toIso8601String(),
+                        )),
                       );
                     },
                   );
@@ -1222,8 +1509,9 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
                   controller: _textEditingController,
-                  decoration:
-                  const InputDecoration(suffixIcon: Icon(Icons.send)),
+                  decoration: const InputDecoration(
+                    suffixIcon: Icon(Icons.send),
+                  ),
                   onFieldSubmitted: (String? value) {
                     debugPrint(value);
                     if (value == null) {
@@ -1232,9 +1520,9 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                     //
 
                     ref.read(newCommentRepositoryProvider).addComment(
-                      widget.project.uuid,
-                      CommentRequest(comment: value),
-                    );
+                          widget.project.uuid,
+                          CommentRequest(comment: value),
+                        );
 
                     _textEditingController.clear();
                   },
@@ -1247,16 +1535,4 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
       ),
     );
   }
-}
-
-class Message {
-  final String sender;
-  final String message;
-  final DateTime timestamp;
-
-  Message({
-    required this.sender,
-    required this.message,
-    required this.timestamp,
-  });
 }

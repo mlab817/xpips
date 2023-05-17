@@ -65,38 +65,9 @@ class _ProjectListTileState extends State<ProjectListTile> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Row(
-            children: [
-              Expanded(
-                child: Text(
-                  _project.title,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              const Spacer(),
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.delete),
-                tooltip: 'Delete',
-              ),
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.edit),
-                tooltip: 'Edit',
-              ),
-              IconButton(
-                onPressed: _openInNewWindow,
-                icon: const Icon(Icons.picture_as_pdf),
-                tooltip: 'PDF',
-              ),
-              IconButton(
-                onPressed: () {
-                  AutoRouter.of(context).push(PapViewRoute(project: _project));
-                },
-                icon: const Icon(Icons.visibility),
-                tooltip: 'View',
-              ),
-            ],
+          title: Text(
+            _project.title,
+            overflow: TextOverflow.ellipsis,
           ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
@@ -150,18 +121,6 @@ class _ProjectListTileState extends State<ProjectListTile> {
                     borderRadius: BorderRadius.circular(8.0)),
                 child: Text(_project.notes ?? 'No notes'),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: Row(
-                  children: List.generate(
-                    5,
-                    (index) => IconButton(
-                      onPressed: () {},
-                      icon: const Icon(Icons.download),
-                    ),
-                  ),
-                ),
-              ),
               // SizedBox(
               //   width: double.maxFinite,
               //   child: ListView.builder(
@@ -177,6 +136,30 @@ class _ProjectListTileState extends State<ProjectListTile> {
               // ),
             ],
           ),
+          actions: [
+            IconButton(
+              onPressed: () {},
+              icon: const Icon(Icons.delete),
+              tooltip: 'Delete',
+            ),
+            IconButton(
+              onPressed: () {},
+              icon: const Icon(Icons.edit),
+              tooltip: 'Edit',
+            ),
+            IconButton(
+              onPressed: _openInNewWindow,
+              icon: const Icon(Icons.picture_as_pdf),
+              tooltip: 'PDF',
+            ),
+            IconButton(
+              onPressed: () {
+                AutoRouter.of(context).push(PapViewRoute(project: _project));
+              },
+              icon: const Icon(Icons.visibility),
+              tooltip: 'View',
+            ),
+          ],
         );
       },
     );
@@ -195,7 +178,7 @@ class _ProjectListTileState extends State<ProjectListTile> {
 
     return Slidable(
       endActionPane: ActionPane(
-        extentRatio: 0.25,
+        extentRatio: (width < 768) ? 0.75 : 0.25,
         motion: const ScrollMotion(),
         children: [
           SlidableAction(
@@ -205,7 +188,6 @@ class _ProjectListTileState extends State<ProjectListTile> {
             backgroundColor: Colors.grey,
             foregroundColor: Colors.white,
             icon: Icons.visibility,
-            label: 'View',
           ),
           SlidableAction(
             onPressed: (context) {
@@ -214,14 +196,12 @@ class _ProjectListTileState extends State<ProjectListTile> {
             backgroundColor: Colors.green,
             foregroundColor: Colors.white,
             icon: Icons.picture_as_pdf,
-            label: 'PDF',
           ),
           SlidableAction(
             onPressed: (context) {},
             backgroundColor: const Color(0xFF21B7CA),
             foregroundColor: Colors.white,
             icon: Icons.edit,
-            label: 'Edit',
           ),
           SlidableAction(
             onPressed: (context) {
@@ -230,7 +210,6 @@ class _ProjectListTileState extends State<ProjectListTile> {
             backgroundColor: const Color(0xFFFE4A49),
             foregroundColor: Colors.white,
             icon: Icons.delete,
-            label: 'Delete',
           ),
         ],
       ),
