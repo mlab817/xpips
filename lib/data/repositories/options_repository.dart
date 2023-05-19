@@ -1,7 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pips/data/data_sources/app_service_client.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../responses/options_response.dart';
+
+part 'options_repository.g.dart';
 
 abstract class OptionsRepository {
   Future<OptionsResponse> get();
@@ -10,7 +13,7 @@ abstract class OptionsRepository {
 class OptionsRepositoryImplementer implements OptionsRepository {
   final AppServiceClient client;
 
-  OptionsRepositoryImplementer(this.client);
+  OptionsRepositoryImplementer({required this.client});
 
   @override
   Future<OptionsResponse> get() async {
@@ -18,8 +21,6 @@ class OptionsRepositoryImplementer implements OptionsRepository {
   }
 }
 
-final optionsRepositoryProvider = Provider<OptionsRepository>((ref) {
-  final client = ref.watch(appServiceClientProvider);
-
-  return OptionsRepositoryImplementer(client);
-});
+@riverpod
+OptionsRepository optionsRepository(OptionsRepositoryRef ref) =>
+    OptionsRepositoryImplementer(client: ref.watch(appServiceClientProvider));

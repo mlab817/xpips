@@ -1,7 +1,9 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pips/data/data_sources/app_service_client.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../responses/offices_response.dart';
+
+part 'offices_repository.g.dart';
 
 abstract class OfficesRepository {
   Future<OfficesResponse> get();
@@ -10,7 +12,7 @@ abstract class OfficesRepository {
 class OfficesRepositoryImplementer implements OfficesRepository {
   final AppServiceClient client;
 
-  OfficesRepositoryImplementer(this.client);
+  OfficesRepositoryImplementer({required this.client});
 
   @override
   Future<OfficesResponse> get() async {
@@ -18,8 +20,6 @@ class OfficesRepositoryImplementer implements OfficesRepository {
   }
 }
 
-final officesRepositoryProvider = Provider<OfficesRepository>((ref) {
-  final client = ref.watch<AppServiceClient>(appServiceClientProvider);
-
-  return OfficesRepositoryImplementer(client);
-});
+@Riverpod(keepAlive: true)
+OfficesRepository officesRepository(OfficesRepositoryRef ref) =>
+    OfficesRepositoryImplementer(client: ref.watch(appServiceClientProvider));

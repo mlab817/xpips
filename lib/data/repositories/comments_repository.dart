@@ -1,7 +1,9 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pips/data/data_sources/app_service_client.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../responses/comments_response.dart';
+
+part 'comments_repository.g.dart';
 
 abstract class CommentsRepository {
   Future<CommentsResponse> showComments(String uuid);
@@ -18,9 +20,6 @@ class CommentsRepositoryImplementer implements CommentsRepository {
   }
 }
 
-final commentsRepositoryProvider =
-    Provider<CommentsRepositoryImplementer>((ref) {
-  final client = ref.watch(appServiceClientProvider);
-
-  return CommentsRepositoryImplementer(client: client);
-});
+@riverpod
+CommentsRepository commentsRepository(CommentsRepositoryRef ref) =>
+    CommentsRepositoryImplementer(client: ref.watch(appServiceClientProvider));

@@ -306,14 +306,14 @@ class OfficeBottomSheet extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final valueAsync = ref.watch(filteredOfficesControllerProvider);
+    final valueAsync = ref.watch(officesProvider);
 
     return Column(mainAxisSize: MainAxisSize.min, children: [
       Padding(
         padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 12.0),
         child: TextField(
           onChanged: (String? value) {
-            ref.read(officeFilterProvider.notifier).state = value;
+            // ref.read(officeFilterProvider.notifier).state = value;
           },
         ),
       ),

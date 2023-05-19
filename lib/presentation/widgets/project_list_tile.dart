@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:pips/application/app_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -26,7 +27,7 @@ class _ProjectListTileState extends State<ProjectListTile> {
     //
     if (await canLaunchUrl(url)) {
       // TODO: check why this is not working on android
-      await launchUrl(url);
+      await launchUrl(url, mode: LaunchMode.externalApplication);
     } else {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -220,87 +221,24 @@ class _ProjectListTileState extends State<ProjectListTile> {
         minVerticalPadding: 8.0,
         tileColor: _project.isRead
             ? Colors.transparent
-            : Theme.of(context).hoverColor.withAlpha(5),
+            : Theme.of(context).hoverColor.withAlpha(9),
         trailing: Text(formatDate(_project.updatedAt)),
         leading: CircleAvatar(
           child: Text(
-              _project.user?.fullname?.substring(0, 2).toUpperCase() ?? 'NA'),
+            _project.user?.fullname?.substring(0, 2).toUpperCase() ?? 'NA',
+          ),
         ),
         subtitle: Text(
           _project.title,
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
+          style: Theme.of(context).textTheme.bodyMedium,
         ),
-        title: Text(_project.office?.acronym ?? 'OFFICE'),
+        title: Text(
+          _project.office?.acronym.toUpperCase() ?? 'OFFICE',
+          style: Theme.of(context).textTheme.titleSmall,
+        ),
         onTap: _showDialog,
-      ),
-    );
-  }
-
-  Widget _buildControls() {
-    return Container(
-      decoration: const BoxDecoration(
-        color: Colors.transparent,
-      ),
-      width: 150,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          IconButton(
-            padding: EdgeInsets.zero,
-            onPressed: () {
-              // TODO: handle action
-            },
-            icon: const Icon(
-              Icons.visibility_outlined,
-              size: 22,
-            ),
-            tooltip: 'View',
-          ),
-          IconButton(
-            padding: EdgeInsets.zero,
-            onPressed: () {
-              // TODO: handle action
-            },
-            icon: const Icon(
-              Icons.edit_outlined,
-              size: 22,
-            ),
-            tooltip: 'Edit',
-          ),
-          IconButton(
-            padding: EdgeInsets.zero,
-            onPressed: () {
-              // TODO: handle action
-              showDialog(
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      title: const Text('Confirm Deletion'),
-                      content: const Text(
-                          'Are you sure you want to delete this PAP?'),
-                      actions: [
-                        TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: const Text('Cancel')),
-                        FilledButton(
-                            onPressed: () {
-                              // handle project deletion
-                            },
-                            child: const Text('Confirm')),
-                      ],
-                    );
-                  });
-            },
-            icon: const Icon(
-              Icons.delete_outline,
-              size: 22,
-            ),
-            tooltip: 'Delete',
-          ),
-        ],
       ),
     );
   }

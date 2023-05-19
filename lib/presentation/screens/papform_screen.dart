@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:pips/presentation/controllers/offices_controller.dart';
 import 'package:pips/presentation/controllers/options_controller.dart';
-import 'package:pips/presentation/controllers/project_controller.dart';
+import 'package:pips/presentation/controllers/fullproject_controller.dart';
 
 import '../../data/requests/fullproject_request.dart';
 import '../../domain/models/office.dart';
@@ -120,7 +120,7 @@ class _NewPapStateScreen extends ConsumerState<NewPapScreen> {
   Future<void> _selectOffice() async {
     final office = ref
         .watch(fullProjectControllerProvider.select((value) => value.office));
-    final officesAsync = ref.watch(officesControllerProvider);
+    final officesAsync = ref.watch(officesProvider);
 
     final Office? response = await showDialog(
         context: context,

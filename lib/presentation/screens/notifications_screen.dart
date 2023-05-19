@@ -8,6 +8,7 @@ import '../../../data/responses/notifications_response.dart';
 import '../../../presentation/controllers/notifications_controller.dart';
 import '../../../presentation/widgets/loading_dialog.dart';
 import '../../../presentation/widgets/logout_button.dart';
+import '../resources/strings_manager.dart';
 
 @RoutePage()
 class NotificationsScreen extends ConsumerStatefulWidget {
@@ -23,11 +24,11 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final valueAsync = ref.watch(notificationsControllerProvider);
+    final valueAsync = ref.watch(notificationsProvider);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Notifications'),
+        title: const Text(AppStrings.notifications),
         scrolledUnderElevation: 0.0,
         automaticallyImplyLeading: false,
         actions: const [
@@ -36,18 +37,16 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Card(
-          child: Column(
-            children: [
-              _buildPaginationControls(),
-              valueAsync.when(
-                data: (data) => _buildList(data, ref),
-                error: (error, stackTrace) => _buildError(error),
-                loading: () =>
-                    const Expanded(child: Center(child: LoadingOverlay())),
-              ),
-            ],
-          ),
+        child: Column(
+          children: [
+            _buildPaginationControls(),
+            valueAsync.when(
+              data: (data) => _buildList(data, ref),
+              error: (error, stackTrace) => _buildError(error),
+              loading: () =>
+                  const Expanded(child: Center(child: LoadingOverlay())),
+            ),
+          ],
         ),
       ),
     );
@@ -151,14 +150,14 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text('Close'),
+              child: const Text(AppStrings.close),
             ),
             if (notification.readAt == null)
               ElevatedButton(
                 onPressed: () {
                   Navigator.pop(context, true);
                 },
-                child: const Text('Mark as Read'),
+                child: const Text(AppStrings.markAsRead),
               ),
           ],
         );
@@ -181,9 +180,8 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
 
     // handle mark as read
     try {
-      final response = await ref
-          .read(notificationsControllerProvider.notifier)
-          .markAsRead(notification);
+      // TODO: handle response
+      ref.read(markAsReadProvider(notification: notification));
 
       if (context.mounted) {
         ScaffoldMessenger.of(context)

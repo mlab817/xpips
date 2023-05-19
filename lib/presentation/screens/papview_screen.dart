@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 import 'package:intl/intl.dart';
+import 'package:pips/application/extensions.dart';
 import 'package:pips/data/data_sources/pusher_client.dart';
 import 'package:pips/data/repositories/newcomment_repository.dart';
 import 'package:pips/data/requests/comment_request.dart';
@@ -14,6 +15,10 @@ import 'package:pips/presentation/controllers/comments_controller.dart';
 import 'package:pips/presentation/controllers/viewpap_controller.dart';
 
 import '../../application/functions.dart';
+import '../../application/providers/valueformatter_provider.dart';
+import '../../domain/models/financial_accomplishment.dart';
+import '../../domain/models/fs_investment.dart';
+import '../../domain/models/regional_investment.dart';
 
 @RoutePage()
 class PapViewScreen extends ConsumerStatefulWidget {
@@ -66,7 +71,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
       viewPapControllerProvider(widget.project.uuid),
     );
 
-    ref.watch(realTimeCommentsProvider);
+    // ref.watch(realTimeCommentsProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -170,7 +175,9 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 title: const Text('Description'),
               ),
               ListTile(
-                subtitle: Text(project.totalCost?.toString() ?? 'N/A'),
+                subtitle: Text(ref
+                    .watch(numberFormatterProvider)
+                    .format(project.totalCost)),
                 title: const Text('Total Project Cost'),
               ),
             ]),
@@ -870,7 +877,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      e.y2022.toString(),
+                      ref.watch(numberFormatterProvider).format(e.y2022),
                       textAlign: TextAlign.end,
                     ),
                   ),
@@ -879,7 +886,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      e.y2023.toString(),
+                      ref.watch(numberFormatterProvider).format(e.y2023),
                       textAlign: TextAlign.end,
                     ),
                   ),
@@ -888,7 +895,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      e.y2024.toString(),
+                      ref.watch(numberFormatterProvider).format(e.y2024),
                       textAlign: TextAlign.end,
                     ),
                   ),
@@ -897,7 +904,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      e.y2025.toString(),
+                      ref.watch(numberFormatterProvider).format(e.y2025),
                       textAlign: TextAlign.end,
                     ),
                   ),
@@ -906,7 +913,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      e.y2026.toString(),
+                      ref.watch(numberFormatterProvider).format(e.y2026),
                       textAlign: TextAlign.end,
                     ),
                   ),
@@ -915,7 +922,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      e.y2027.toString(),
+                      ref.watch(numberFormatterProvider).format(e.y2027),
                       textAlign: TextAlign.end,
                     ),
                   ),
@@ -924,7 +931,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      e.y2028.toString(),
+                      ref.watch(numberFormatterProvider).format(e.y2028),
                       textAlign: TextAlign.end,
                     ),
                   ),
@@ -933,7 +940,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      e.y2029.toString(),
+                      ref.watch(numberFormatterProvider).format(e.y2029),
                       textAlign: TextAlign.end,
                     ),
                   ),
@@ -942,7 +949,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      e.total().toString(),
+                      ref.watch(numberFormatterProvider).format(e.total),
                       textAlign: TextAlign.end,
                     ),
                   ),
@@ -1069,7 +1076,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      e.y2022.toString(),
+                      ref.watch(numberFormatterProvider).format(e.y2022),
                       textAlign: TextAlign.end,
                     ),
                   ),
@@ -1078,7 +1085,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      e.y2023.toString(),
+                      ref.watch(numberFormatterProvider).format(e.y2023),
                       textAlign: TextAlign.end,
                     ),
                   ),
@@ -1087,7 +1094,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      e.y2024.toString(),
+                      ref.watch(numberFormatterProvider).format(e.y2024),
                       textAlign: TextAlign.end,
                     ),
                   ),
@@ -1096,7 +1103,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      e.y2025.toString(),
+                      ref.watch(numberFormatterProvider).format(e.y2025),
                       textAlign: TextAlign.end,
                     ),
                   ),
@@ -1105,7 +1112,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      e.y2026.toString(),
+                      ref.watch(numberFormatterProvider).format(e.y2026),
                       textAlign: TextAlign.end,
                     ),
                   ),
@@ -1114,7 +1121,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      e.y2027.toString(),
+                      ref.watch(numberFormatterProvider).format(e.y2027),
                       textAlign: TextAlign.end,
                     ),
                   ),
@@ -1123,7 +1130,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      e.y2028.toString(),
+                      ref.watch(numberFormatterProvider).format(e.y2028),
                       textAlign: TextAlign.end,
                     ),
                   ),
@@ -1132,7 +1139,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      e.y2029.toString(),
+                      ref.watch(numberFormatterProvider).format(e.y2029),
                       textAlign: TextAlign.end,
                     ),
                   ),
@@ -1141,7 +1148,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      e.total().toString(),
+                      ref.watch(numberFormatterProvider).format(e.total),
                       textAlign: TextAlign.end,
                     ),
                   ),
@@ -1215,7 +1222,9 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    financialAccomplishment.nep2023.toString() ?? '',
+                    ref
+                        .watch(numberFormatterProvider)
+                        .format(financialAccomplishment.nep2023),
                     textAlign: TextAlign.end,
                   ),
                 ),
@@ -1224,7 +1233,9 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    financialAccomplishment.gaa2023.toString() ?? '',
+                    ref
+                        .watch(numberFormatterProvider)
+                        .format(financialAccomplishment.gaa2023),
                     textAlign: TextAlign.end,
                   ),
                 ),
@@ -1233,7 +1244,9 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    financialAccomplishment.disbursement2023.toString() ?? '',
+                    ref
+                        .watch(numberFormatterProvider)
+                        .format(financialAccomplishment.disbursement2023),
                     textAlign: TextAlign.end,
                   ),
                 ),
@@ -1252,7 +1265,9 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    financialAccomplishment.nep2024.toString() ?? '',
+                    ref
+                        .watch(numberFormatterProvider)
+                        .format(financialAccomplishment.nep2024),
                     textAlign: TextAlign.end,
                   ),
                 ),
@@ -1261,7 +1276,9 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    financialAccomplishment.gaa2024.toString() ?? '',
+                    ref
+                        .watch(numberFormatterProvider)
+                        .format(financialAccomplishment.gaa2024),
                     textAlign: TextAlign.end,
                   ),
                 ),
@@ -1270,7 +1287,9 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    financialAccomplishment.disbursement2024.toString() ?? '',
+                    ref
+                        .watch(numberFormatterProvider)
+                        .format(financialAccomplishment.disbursement2024),
                     textAlign: TextAlign.end,
                   ),
                 ),
@@ -1289,7 +1308,9 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    financialAccomplishment.nep2025.toString() ?? '',
+                    ref
+                        .watch(numberFormatterProvider)
+                        .format(financialAccomplishment.nep2025),
                     textAlign: TextAlign.end,
                   ),
                 ),
@@ -1298,7 +1319,9 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    financialAccomplishment.gaa2025.toString() ?? '',
+                    ref
+                        .watch(numberFormatterProvider)
+                        .format(financialAccomplishment.gaa2025),
                     textAlign: TextAlign.end,
                   ),
                 ),
@@ -1307,7 +1330,9 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    financialAccomplishment.disbursement2025.toString() ?? '',
+                    ref
+                        .watch(numberFormatterProvider)
+                        .format(financialAccomplishment.disbursement2025),
                     textAlign: TextAlign.end,
                   ),
                 ),
@@ -1326,7 +1351,9 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    financialAccomplishment.nep2026.toString() ?? '',
+                    ref
+                        .watch(numberFormatterProvider)
+                        .format(financialAccomplishment.nep2026),
                     textAlign: TextAlign.end,
                   ),
                 ),
@@ -1335,7 +1362,9 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    financialAccomplishment.gaa2026.toString() ?? '',
+                    ref
+                        .watch(numberFormatterProvider)
+                        .format(financialAccomplishment.gaa2026),
                     textAlign: TextAlign.end,
                   ),
                 ),
@@ -1344,7 +1373,9 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    financialAccomplishment.disbursement2026.toString() ?? '',
+                    ref
+                        .watch(numberFormatterProvider)
+                        .format(financialAccomplishment.disbursement2026),
                     textAlign: TextAlign.end,
                   ),
                 ),
@@ -1363,7 +1394,9 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    financialAccomplishment.nep2027.toString() ?? '',
+                    ref
+                        .watch(numberFormatterProvider)
+                        .format(financialAccomplishment.nep2027),
                     textAlign: TextAlign.end,
                   ),
                 ),
@@ -1372,7 +1405,9 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    financialAccomplishment.gaa2027.toString() ?? '',
+                    ref
+                        .watch(numberFormatterProvider)
+                        .format(financialAccomplishment.gaa2027),
                     textAlign: TextAlign.end,
                   ),
                 ),
@@ -1381,7 +1416,9 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    financialAccomplishment.disbursement2027.toString() ?? '',
+                    ref
+                        .watch(numberFormatterProvider)
+                        .format(financialAccomplishment.disbursement2027),
                     textAlign: TextAlign.end,
                   ),
                 ),
@@ -1400,7 +1437,9 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    financialAccomplishment.nep2028.toString() ?? '',
+                    ref
+                        .watch(numberFormatterProvider)
+                        .format(financialAccomplishment.nep2028),
                     textAlign: TextAlign.end,
                   ),
                 ),
@@ -1409,7 +1448,9 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    financialAccomplishment.gaa2028.toString() ?? '',
+                    ref
+                        .watch(numberFormatterProvider)
+                        .format(financialAccomplishment.gaa2028),
                     textAlign: TextAlign.end,
                   ),
                 ),
@@ -1418,13 +1459,57 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    financialAccomplishment.disbursement2028.toString() ?? '',
+                    ref
+                        .watch(numberFormatterProvider)
+                        .format(financialAccomplishment.disbursement2028),
                     textAlign: TextAlign.end,
                   ),
                 ),
               ),
             ],
           ),
+          // Totals Row
+          TableRow(children: [
+            const TableCell(
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text('Total'),
+              ),
+            ),
+            TableCell(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  ref
+                      .watch(numberFormatterProvider)
+                      .format(financialAccomplishment.nepTotal),
+                  textAlign: TextAlign.end,
+                ),
+              ),
+            ),
+            TableCell(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  ref
+                      .watch(numberFormatterProvider)
+                      .format(financialAccomplishment.gaaTotal),
+                  textAlign: TextAlign.end,
+                ),
+              ),
+            ),
+            TableCell(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  ref
+                      .watch(numberFormatterProvider)
+                      .format(financialAccomplishment.disbursementTotal),
+                  textAlign: TextAlign.end,
+                ),
+              ),
+            ),
+          ]),
         ],
       ),
     );

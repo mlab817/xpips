@@ -1,5 +1,5 @@
 name: pips
-description: A new Flutter project.
+description: A PIPS Cross-Platform project.
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -67,6 +67,9 @@ dependencies:
   flex_color_scheme: ^7.1.1
   dart_pusher_channels: ^1.1.0
   flutter_sticky_header: ^0.6.5
+  package_info_plus: ^4.0.0
+  riverpod_generator: ^2.2.3
+  riverpod_annotation: ^2.1.1
 
 dev_dependencies:
   flutter_test:
@@ -78,8 +81,6 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
-  riverpod_generator: ^2.2.1
-  riverpod_annotation: ^2.1.1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

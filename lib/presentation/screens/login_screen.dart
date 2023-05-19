@@ -9,11 +9,9 @@ import 'package:pips/application/extensions.dart';
 import 'package:pips/application/providers/bearertoken_provider.dart';
 import 'package:pips/application/providers/dio_provider.dart';
 import 'package:pips/application/providers/sharedpreferences.dart';
-import 'package:pips/domain/models/login_response.dart';
 import 'package:pips/presentation/controllers/auth_controller.dart';
 
 import '../../../application/app_router.dart';
-import '../../../domain/models/login_credentials.dart';
 import '../controllers/loginscreen_controller.dart';
 
 @RoutePage()
@@ -26,9 +24,6 @@ class LoginScreen extends ConsumerStatefulWidget {
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  LoginCredentials _loginCredentials =
-      LoginCredentials(username: '', password: '');
-
   late TextEditingController _usernameController;
   late TextEditingController _passwordController;
 
@@ -40,17 +35,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
     _usernameController = TextEditingController()
       ..addListener(() {
-        setState(() {
-          _loginCredentials =
-              _loginCredentials.copyWith(username: _usernameController.text);
-        });
+        ref
+            .read(loginCredentialsControllerProvider.notifier)
+            .update(username: _usernameController.text);
       });
     _passwordController = TextEditingController()
       ..addListener(() {
-        setState(() {
-          _loginCredentials =
-              _loginCredentials.copyWith(password: _passwordController.text);
-        });
+        ref
+            .read(loginCredentialsControllerProvider.notifier)
+            .update(password: _passwordController.text);
       });
   }
 
@@ -64,15 +57,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final AsyncValue<LoginResponse?> state =
-        ref.watch(loginScreenControllerProvider);
+    final state = ref.watch(loginControllerProvider);
 
     // show snackbar when state changes
-    ref.listen<AsyncValue<LoginResponse?>>(loginScreenControllerProvider,
+    ref.listen(loginControllerProvider,
         (_, state) => state.showSnackbarOnError(context));
 
-    ref.listen<AsyncValue<LoginResponse?>>(loginScreenControllerProvider,
-        (_, state) {
+    ref.listen(loginControllerProvider, (_, state) {
       if (state.hasValue && state.value != null) {
         // write the bearer token to shared preferences
         ref
@@ -159,7 +150,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       ),
                       TextFormField(
                         controller: _usernameController,
+
                         decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          prefixIcon: Icon(Icons.person),
                           hintText: 'Username',
                         ),
                         validator: (String? value) {
@@ -176,19 +170,20 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       TextFormField(
                         controller: _passwordController,
                         decoration: InputDecoration(
+                          border: const OutlineInputBorder(),
                           hintText: 'Password',
-                          suffix: IconButton(
-                            onPressed: () {
+                          prefixIcon: const Icon(Icons.lock),
+                          suffixIcon: GestureDetector(
+                            onTap: () {
                               setState(() {
                                 _obscuredText = !_obscuredText;
                               });
                             },
-                            icon: Icon(
+                            child: Icon(
                               _obscuredText
                                   ? Icons.visibility
                                   : Icons.visibility_off,
                             ),
-                            tooltip: 'Toggle show password',
                           ),
                         ),
                         validator: (String? value) {
@@ -224,44 +219,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                         return;
                                       }
 
-                                      // showDialog(
-                                      //     context: context,
-                                      //     barrierDismissible: false,
-                                      //     builder: (BuildContext context) {
-                                      //       return const LoadingOverlay();
-                                      //     });
-
                                       _handleLogin();
-
-                                      ref
-                                          .read(loginScreenControllerProvider
-                                              .notifier)
-                                          .login(_loginCredentials);
-
-                                      return;
-
-                                      try {
-                                        // handle login
-                                        await ref
-                                            .read(loginScreenControllerProvider
-                                                .notifier)
-                                            .login(_loginCredentials);
-
-                                        if (context.mounted) {
-                                          AutoRouter.of(context)
-                                              .replace(const MainRoute());
-                                        }
-                                      } catch (error) {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(SnackBar(
-                                                content:
-                                                    Text(error.toString())));
-                                      } finally {
-                                        // remove loading dialog
-                                        Navigator.of(context,
-                                                rootNavigator: true)
-                                            .pop();
-                                      }
                                     },
                               child: state.isLoading
                                   ? const SizedBox(
@@ -315,7 +273,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   void _handleLogin() async {
-    //
-    ref.read(loginScreenControllerProvider.notifier).login(_loginCredentials);
+    try {
+      //
+      ref.read(loginControllerProvider.notifier).login();
+    } catch (error) {
+      print(error);
+    }
   }
 }

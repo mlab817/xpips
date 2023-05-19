@@ -1,76 +1,53 @@
 import 'dart:async';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pips/data/requests/reactivation_request.dart';
+import 'package:pips/data/responses/reactivation_response.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../data/repositories/auth_repository.dart';
 import '../../data/repositories/upload_repository.dart';
 import '../../data/requests/upload_request.dart';
 import '../../data/responses/upload_response.dart';
 
-// Create controller to control [RequestReactivation]a
-class ReactivationRequestController extends Notifier<ReactivationRequest> {
-  void update({String? email, String? authorization}) {
-    print('update method called with email: $email');
-    print('update method called with authorization: $authorization');
+part 'reactivationrequest_controller.g.dart';
 
-    state = state.copyWith(
-      email: email ?? state.email,
-      authorization: authorization ?? state.authorization,
-    );
+// define a simple state provider for a class
+@riverpod
+class ReactivationRequestController extends _$ReactivationRequestController {
+  @override
+  ReactivationRequest build() {
+    return ReactivationRequest(email: '', authorization: '');
   }
 
-  @override
-  ReactivationRequest build() =>
-      ReactivationRequest(email: '', authorization: '');
+  void update({
+    String? email,
+    String? authorization,
+  }) {
+    state = state.copyWith(
+        email: email ?? state.email,
+        authorization: authorization ?? state.authorization);
+  }
 }
 
-final reactivationRequestControllerProvider =
-    NotifierProvider<ReactivationRequestController, ReactivationRequest>(() {
-  return ReactivationRequestController();
-});
-
-class ReactivationFileUploadController extends AsyncNotifier<UploadResponse?> {
-  Future<UploadResponse?> upload(UploadRequest request) async {
-    print('ReactivationFileUploadController executed');
-
+@riverpod
+class ReactivationFileUploadController
+    extends _$ReactivationFileUploadController {
+  Future<void> upload(UploadRequest request) async {
     final repository = ref.watch(uploadRepositoryProvider);
 
     state = const AsyncLoading();
-
-    final response = await repository.upload(request);
-
-    print(response);
 
     state = await AsyncValue.guard(() => repository.upload(request));
   }
 
   @override
-  FutureOr<UploadResponse?> build() async => null;
+  FutureOr<UploadResponse> build() async => Future.value(state.value);
 }
 
-final reactivationFileUploadControllerProvider =
-    AsyncNotifierProvider<ReactivationFileUploadController, UploadResponse?>(
-        () {
-  return ReactivationFileUploadController();
-});
-
-class RequestReactivationController extends AsyncNotifier<void> {
-  Future<void> submit() async {
-    final repository = ref.watch(authRepositoryProvider);
-    final request = ref.watch(reactivationRequestControllerProvider);
-
-    state = const AsyncLoading();
-
-    state = await AsyncValue.guard(
-        () async => repository.requestReactivation(request));
-  }
-
-  @override
-  FutureOr<void> build() => null;
+// define a future provider
+@riverpod
+Future<ReactivationResponse> requestReactivation(RequestReactivationRef ref) {
+  return ref
+      .watch(authRepositoryProvider)
+      .requestReactivation(ref.watch(reactivationRequestControllerProvider));
 }
-
-final requestReactivationController =
-    AsyncNotifierProvider<RequestReactivationController, void>(() {
-  return RequestReactivationController();
-});

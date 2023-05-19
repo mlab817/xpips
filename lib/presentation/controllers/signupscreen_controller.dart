@@ -1,10 +1,13 @@
 import 'dart:async';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pips/data/repositories/auth_repository.dart';
 import 'package:pips/data/requests/signup_request.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-class SignupRequestController extends Notifier<SignupRequest> {
+part 'signupscreen_controller.g.dart';
+
+@riverpod
+class SignupRequestController extends _$SignupRequestController {
   void update(
       {String? username,
       String? firstName,
@@ -40,12 +43,8 @@ class SignupRequestController extends Notifier<SignupRequest> {
   }
 }
 
-final signupRequestControllerProvider =
-    NotifierProvider<SignupRequestController, SignupRequest>(() {
-  return SignupRequestController();
-});
-
-class SignupController extends AsyncNotifier<void> {
+@riverpod
+class SignupController extends _$SignupController {
   Future<void> submit() async {
     final repository = ref.watch(authRepositoryProvider);
     final request = ref.watch(signupRequestControllerProvider);
@@ -58,8 +57,3 @@ class SignupController extends AsyncNotifier<void> {
   @override
   FutureOr<void> build() => null;
 }
-
-final signupControllerProvider =
-    AsyncNotifierProvider<SignupController, void>(() {
-  return SignupController();
-});

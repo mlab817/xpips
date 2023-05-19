@@ -17,7 +17,7 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentUser =
-    ref.read(authControllerProvider.notifier).getCurrentUser();
+        ref.read(authControllerProvider.notifier).getCurrentUser();
 
     debugPrint(currentUser.toString());
 
@@ -75,9 +75,7 @@ class MyApp extends ConsumerWidget {
         useMaterial3: true,
         swapLegacyOnMaterial3: true,
         // To use the Playground font, add GoogleFonts package and uncomment
-        fontFamily: GoogleFonts
-            .robotoCondensed()
-            .fontFamily,
+        fontFamily: GoogleFonts.robotoCondensed().fontFamily,
       ),
       // light theme
       theme: FlexThemeData.light(
@@ -117,9 +115,7 @@ class MyApp extends ConsumerWidget {
         useMaterial3: true,
         swapLegacyOnMaterial3: true,
         // To use the Playground font, add GoogleFonts package and uncomment
-        fontFamily: GoogleFonts
-            .robotoCondensed()
-            .fontFamily,
+        fontFamily: GoogleFonts.robotoCondensed().fontFamily,
       ),
       routerConfig: _appRouter.config(),
     );

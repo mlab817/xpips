@@ -12,4 +12,11 @@ class LoginCredentials with _$LoginCredentials {
 
   factory LoginCredentials.fromJson(Map<String, dynamic> json) =>
       _$LoginCredentialsFromJson(json);
+
+  static LoginCredentials initial() {
+    return LoginCredentials(
+      username: '',
+      password: '',
+    );
+  }
 }

@@ -61,6 +61,7 @@ class FileUploadController extends AsyncNotifier<UploadResponse?> {
     state = const AsyncLoading();
 
     state = await AsyncValue.guard(() => repository.upload(request));
+    return null;
   }
 
   @override

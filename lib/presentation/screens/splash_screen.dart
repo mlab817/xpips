@@ -1,4 +1,3 @@
-import 'dart:async';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pips/application/providers/bearertoken_provider.dart';
 
 import '../../../application/app_router.dart';
-import '../../../presentation/controllers/auth_controller.dart';
 
 @RoutePage()
 class SplashScreen extends ConsumerStatefulWidget {

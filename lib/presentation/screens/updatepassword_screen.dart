@@ -1,20 +1,17 @@
-import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pips/presentation/controllers/updatepassword_controller.dart';
 
-import '../../../data/requests/updatepassword_request.dart';
-
-@RoutePage()
-class UpdatePasswordScreen extends StatefulWidget {
+class UpdatePasswordScreen extends ConsumerStatefulWidget {
   const UpdatePasswordScreen({Key? key}) : super(key: key);
 
   @override
-  State<UpdatePasswordScreen> createState() => _UpdatePasswordScreenState();
+  ConsumerState<UpdatePasswordScreen> createState() =>
+      _UpdatePasswordScreenState();
 }
 
-class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
+class _UpdatePasswordScreenState extends ConsumerState<UpdatePasswordScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  UpdatePasswordRequest _updatePasswordRequest = UpdatePasswordRequest(
-      currentPassword: '', password: '', passwordConfirmation: '');
 
   late TextEditingController currentPasswordController;
   late TextEditingController passwordController;
@@ -34,24 +31,21 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
 
     currentPasswordController = TextEditingController()
       ..addListener(() {
-        setState(() {
-          _updatePasswordRequest = _updatePasswordRequest.copyWith(
-              currentPassword: currentPasswordController.text);
-        });
+        ref
+            .read(updatePasswordRequestControllerProvider.notifier)
+            .update(currentPassword: currentPasswordController.text);
       });
     passwordController = TextEditingController()
       ..addListener(() {
-        setState(() {
-          _updatePasswordRequest = _updatePasswordRequest.copyWith(
-              password: passwordController.text);
-        });
+        ref
+            .read(updatePasswordRequestControllerProvider.notifier)
+            .update(password: passwordController.text);
       });
     passwordConfirmationController = TextEditingController()
       ..addListener(() {
-        setState(() {
-          _updatePasswordRequest = _updatePasswordRequest.copyWith(
-              passwordConfirmation: passwordConfirmationController.text);
-        });
+        ref
+            .read(updatePasswordRequestControllerProvider.notifier)
+            .update(passwordConfirmation: passwordConfirmationController.text);
       });
   }
 
@@ -66,93 +60,100 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final submitAsync = ref.watch(updatePasswordSubmitControllerProvider);
+
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Update Password'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Card(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Form(
-              key: _formKey,
-              child: Column(children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    decoration: const InputDecoration(
-                      label: Text('Current Password'),
-                    ),
-                    validator: (String? value) {
-                      if (value == null || value.isEmpty) {
-                        return 'This field is required.';
-                      }
-                      return null;
-                    },
-                    obscureText: _passwordIsObscured,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Form(
+            key: _formKey,
+            child: Column(children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  decoration: const InputDecoration(
+                    label: Text('Current Password'),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    decoration: const InputDecoration(
-                      label: Text('New Password'),
-                    ),
-                    validator: (String? value) {
-                      if (value == null || value.isEmpty) {
-                        return 'This field is required.';
-                      }
-                      return null;
-                    },
-                    obscureText: _passwordIsObscured,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    decoration: const InputDecoration(
-                      label: Text('Confirm Password'),
-                    ),
-                    validator: (String? value) {
-                      if (value == null || value.isEmpty) {
-                        return 'This field is required.';
-                      }
-                      return null;
-                    },
-                    obscureText: _passwordIsObscured,
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    _togglePasswordObscurity(!_passwordIsObscured);
+                  validator: (String? value) {
+                    if (value == null || value.isEmpty) {
+                      return 'This field is required.';
+                    }
+                    return null;
                   },
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: Row(
-                      children: [
-                        Checkbox(
-                          value: !_passwordIsObscured,
-                          onChanged: null,
-                        ),
-                        const Text('Show Password')
-                      ],
-                    ),
+                  obscureText: _passwordIsObscured,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  decoration: const InputDecoration(
+                    label: Text('New Password'),
+                  ),
+                  validator: (String? value) {
+                    if (value == null || value.isEmpty) {
+                      return 'This field is required.';
+                    }
+                    return null;
+                  },
+                  obscureText: _passwordIsObscured,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  decoration: const InputDecoration(
+                    label: Text('Confirm Password'),
+                  ),
+                  validator: (String? value) {
+                    if (value == null || value.isEmpty) {
+                      return 'This field is required.';
+                    }
+                    return null;
+                  },
+                  obscureText: _passwordIsObscured,
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  _togglePasswordObscurity(!_passwordIsObscured);
+                },
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: Row(
+                    children: [
+                      Checkbox(
+                        value: !_passwordIsObscured,
+                        onChanged: null,
+                      ),
+                      const Text('Show Password')
+                    ],
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ElevatedButton(
-                      onPressed: () {
-                        // handle submit
-                        if (_formKey.currentState!.validate()) {
-                          // handle submit
-                        }
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: FilledButton(
+                  onPressed: () {
+                    // handle submit
+                    if (_formKey.currentState!.validate()) {
+                      // handle submit
+                      ref
+                          .read(updatePasswordSubmitControllerProvider.notifier)
+                          .submit();
+                    }
+                  },
+                  child: submitAsync.when(
+                      data: (data) {
+                        return const Text('Update Password');
                       },
-                      child: const Text('Update Password')),
+                      error: (error, _) => Text(error.toString()),
+                      loading: () {
+                        return const CircularProgressIndicator();
+                      }),
                 ),
-              ]),
-            ),
+              ),
+            ]),
           ),
         ),
       ),

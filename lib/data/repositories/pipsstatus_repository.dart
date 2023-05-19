@@ -1,6 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pips/data/data_sources/app_service_client.dart';
-import 'package:pips/domain/models/pipsstatus.dart';
 
 import '../responses/pipsstatus_response.dart';
 

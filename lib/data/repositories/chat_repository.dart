@@ -1,5 +1,5 @@
 // TODO: review for deletion
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../domain/models/chatroom.dart';
 import '../../domain/models/message.dart';
@@ -10,6 +10,8 @@ import '../responses/chatroom_response.dart';
 import '../responses/chatrooms_response.dart';
 import '../responses/messages_response.dart';
 import '../responses/users_response.dart';
+
+part 'chat_repository.g.dart';
 
 abstract class ChatRepository {
   Future<ChatRoomsResponse> getChatRooms();
@@ -30,9 +32,9 @@ abstract class ChatRepository {
 }
 
 class ChatRepositoryImplementer implements ChatRepository {
-  final AppServiceClient _client;
+  final AppServiceClient client;
 
-  ChatRepositoryImplementer(this._client);
+  ChatRepositoryImplementer({required this.client});
 
   @override
   Future<ChatRoom> createChatRoom(int userId) {
@@ -48,7 +50,7 @@ class ChatRepositoryImplementer implements ChatRepository {
 
   @override
   Future<ChatRoomResponse> getChatRoom(int chatRoomId) {
-    return _client.getChatRoom(chatRoomId);
+    return client.getChatRoom(chatRoomId);
   }
 
   @override
@@ -59,7 +61,7 @@ class ChatRepositoryImplementer implements ChatRepository {
 
   @override
   Future<ChatRoomsResponse> getChatRooms() async {
-    return _client.getChatRooms();
+    return client.getChatRooms();
   }
 
   @override
@@ -75,8 +77,6 @@ class ChatRepositoryImplementer implements ChatRepository {
   }
 }
 
-final chatRepositoryProvider = Provider<ChatRepository>((ref) {
-  final client = ref.watch(appServiceClientProvider);
-
-  return ChatRepositoryImplementer(client);
-});
+@riverpod
+ChatRepository chatRepository(ChatRepositoryRef ref) =>
+    ChatRepositoryImplementer(client: ref.watch(appServiceClientProvider));

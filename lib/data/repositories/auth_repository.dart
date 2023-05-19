@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,6 +7,7 @@ import 'package:pips/data/data_sources/app_service_client.dart';
 import 'package:pips/data/requests/reactivation_request.dart';
 import 'package:pips/data/requests/signup_request.dart';
 import 'package:pips/data/requests/updateprofile_request.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../domain/models/login_credentials.dart';
@@ -14,6 +16,8 @@ import '../../domain/models/user.dart';
 import '../responses/reactivation_response.dart';
 import '../responses/signup_response.dart';
 import '../responses/updateprofile_response.dart';
+
+part 'auth_repository.g.dart';
 
 // see https://codewithandrea.com/articles/flutter-presentation-layer/
 
@@ -83,30 +87,9 @@ class AuthRepositoryImplementer implements AuthRepository {
   }
 }
 
-final authRepositoryProvider = Provider<AuthRepository>((ref) {
-  return AuthRepositoryImplementer(
-    client: ref.watch(appServiceClientProvider),
-    sharedPreferences: ref.watch(sharedPreferencesProvider),
-  );
-});
-
-// controls login screen
-class LoginScreenController extends StateNotifier<AsyncValue<void>> {
-  LoginScreenController({required this.authRepository})
-      : super(const AsyncData<void>(null));
-
-  final AuthRepository authRepository;
-
-  Future<void> login(LoginCredentials input) async {
-    state = const AsyncLoading<void>();
-
-    state = await AsyncValue.guard<void>(() => authRepository.login(input));
-  }
-}
-
-final loginScreenControllerProvider =
-    StateNotifierProvider.autoDispose<LoginScreenController, AsyncValue<void>>(
-        (ref) {
-  return LoginScreenController(
-      authRepository: ref.watch(authRepositoryProvider));
-});
+@riverpod
+AuthRepository authRepository(AuthRepositoryRef ref) =>
+    AuthRepositoryImplementer(
+      client: ref.watch(appServiceClientProvider),
+      sharedPreferences: ref.watch(sharedPreferencesProvider),
+    );

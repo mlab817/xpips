@@ -124,167 +124,159 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         },
         child: const Icon(Icons.add),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // pips status navigation
-            if (width >= 768)
-              SizedBox(
-                width: 250,
+      body: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // pips status navigation
+          if (width >= 768)
+            SizedBox(
+              width: 250,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SizedBox(
+                          height: 40,
+                          width: 100,
+                          child: FilledButton(
+                            onPressed: () {
+                              AutoRouter.of(context).push(const NewPapRoute());
+                            },
+                            child: const Text('New'),
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            ref
+                                .read(pipsStatusControllerProvider.notifier)
+                                .get();
+                          },
+                          icon: const Icon(Icons.refresh),
+                          tooltip: 'Reload',
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    menuAsync.when(
+                      data: (data) {
+                        return ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: data.data.length,
+                          itemBuilder: (context, index) {
+                            return ListTile(
+                              dense: true,
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.only(
+                                  topRight: Radius.circular(50),
+                                  bottomRight: Radius.circular(50),
+                                ),
+                              ),
+                              selected: projectsRequest.pipsStatuses != null &&
+                                  projectsRequest.pipsStatuses![0] ==
+                                      data.data[index].id,
+                              title: Text(data.data[index].name),
+                              trailing: Text(
+                                  data.data[index].projectsCount.toString()),
+                              selectedTileColor: Theme.of(context)
+                                  .colorScheme
+                                  .primary
+                                  .withOpacity(0.2),
+                              onTap: () {
+                                setState(() {
+                                  _pipsStatus = data.data[index];
+                                });
+
+                                // set pips status to current id and reset to page 1
+                                ref
+                                    .read(projectsRequestControllerProvider
+                                        .notifier)
+                                    .update(
+                                        pipsStatuses: [data.data[index].id],
+                                        page: 1);
+                              },
+                            );
+                          },
+                        );
+                      },
+                      error: (error, stackTrace) => Center(
+                        child: Text(error.toString()),
+                      ),
+                      loading: () => const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          // content
+          Expanded(
+            child: Column(mainAxisSize: MainAxisSize.min, children: [
+              // top controls
+              Container(
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(
+                        color: Theme.of(context).primaryColor, width: 0.2),
+                  ),
+                ),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
+                  child: Row(
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          SizedBox(
-                            height: 40,
-                            width: 100,
-                            child: FilledButton(
-                              onPressed: () {
-                                AutoRouter.of(context)
-                                    .push(const NewPapRoute());
-                              },
-                              child: const Text('New'),
+                      Text(
+                        _pipsStatus?.name.toUpperCase() ?? 'NO STATUS SELECTED',
+                        style: Theme.of(context).textTheme.titleLarge?.apply(
+                              letterSpacingFactor: 2,
+                              color: Theme.of(context).primaryColor,
                             ),
-                          ),
-                          IconButton(
-                            onPressed: () {
-                              ref
-                                  .read(pipsStatusControllerProvider.notifier)
-                                  .get();
-                            },
-                            icon: const Icon(Icons.refresh),
-                            tooltip: 'Reload',
-                          ),
-                        ],
                       ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      menuAsync.when(
-                        data: (data) {
-                          return ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: data.data.length,
-                            itemBuilder: (context, index) {
-                              return ListTile(
-                                dense: true,
-                                shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(50),
-                                    bottomRight: Radius.circular(50),
-                                  ),
-                                ),
-                                selected:
-                                    projectsRequest.pipsStatuses != null &&
-                                        projectsRequest.pipsStatuses![0] ==
-                                            data.data[index].id,
-                                title: Text(data.data[index].name),
-                                trailing: Text(
-                                    data.data[index].projectsCount.toString()),
-                                selectedTileColor: Theme.of(context)
-                                    .colorScheme
-                                    .primary
-                                    .withOpacity(0.2),
-                                onTap: () {
-                                  setState(() {
-                                    _pipsStatus = data.data[index];
-                                  });
-
-                                  // set pips status to current id and reset to page 1
-                                  ref
-                                      .read(projectsRequestControllerProvider
-                                          .notifier)
-                                      .update(
-                                          pipsStatuses: [data.data[index].id],
-                                          page: 1);
-                                },
-                              );
-                            },
-                          );
-                        },
-                        error: (error, stackTrace) => Center(
-                          child: Text(error.toString()),
-                        ),
-                        loading: () => const Center(
-                          child: CircularProgressIndicator(),
-                        ),
-                      ),
+                      const Spacer(),
+                      // TODO: fix this
+                      _pagination != null ? _buildPageSelector() : Container(),
                     ],
                   ),
                 ),
               ),
-            // content
-            Expanded(
-              child: Column(mainAxisSize: MainAxisSize.min, children: [
-                // top controls
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(
-                          color: Theme.of(context).primaryColor, width: 0.2),
-                    ),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.zero,
-                    child: Row(
-                      children: [
-                        Text(
-                          _pipsStatus?.name.toUpperCase() ??
-                              'NO STATUS SELECTED',
-                          style: Theme.of(context).textTheme.titleLarge?.apply(
-                                letterSpacingFactor: 2,
-                                color: Theme.of(context).primaryColor,
-                              ),
-                        ),
-                        const Spacer(),
-                        // TODO: fix this
-                        _pagination != null
-                            ? _buildPageSelector()
-                            : Container(),
-                      ],
-                    ),
-                  ),
-                ),
-                // loading indicator
-                // if (valueAsync.isLoading) const LinearProgressIndicator(),
-                // content
-                Expanded(
-                  child: valueAsync.when(
-                    data: (data) {
-                      setState(() {
-                        _projects = data.data;
-                        _pagination = data.meta.pagination;
-                      });
+              // loading indicator
+              // if (valueAsync.isLoading) const LinearProgressIndicator(),
+              // content
+              Expanded(
+                child: valueAsync.when(
+                  data: (data) {
+                    setState(() {
+                      _projects = data.data;
+                      _pagination = data.meta.pagination;
+                    });
 
-                      return SlidableAutoCloseBehavior(
-                        closeWhenOpened: true,
-                        child: ListView.builder(
-                            physics: const ClampingScrollPhysics(),
-                            itemCount: data.data.length,
-                            itemBuilder: (context, index) {
-                              final project = data.data[index];
+                    return SlidableAutoCloseBehavior(
+                      closeWhenOpened: true,
+                      child: ListView.builder(
+                          physics: const ClampingScrollPhysics(),
+                          itemCount: data.data.length,
+                          itemBuilder: (context, index) {
+                            final project = data.data[index];
 
-                              return ProjectListTile(project: project);
-                            }),
-                      );
-                    },
-                    error: (error, _) => Center(child: Text(error.toString())),
-                    loading: () =>
-                        const Center(child: CircularProgressIndicator()),
-                  ),
+                            return ProjectListTile(project: project);
+                          }),
+                    );
+                  },
+                  error: (error, _) => Center(child: Text(error.toString())),
+                  loading: () =>
+                      const Center(child: CircularProgressIndicator()),
                 ),
-              ]),
-            ),
-          ],
-        ),
+              ),
+            ]),
+          ),
+        ],
       ),
     );
   }

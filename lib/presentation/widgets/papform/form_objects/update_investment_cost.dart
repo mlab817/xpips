@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pips/presentation/controllers/project_controller.dart';
+import 'package:pips/presentation/controllers/fullproject_controller.dart';
 
-import '../../../../domain/models/fullproject.dart';
+import '../../../../domain/models/fs_investment.dart';
 import '../cost_field.dart';
 
 class UpdateInvestmentCost extends ConsumerStatefulWidget {
@@ -47,9 +47,9 @@ class _UpdateInvestmentCost extends ConsumerState {
       DataColumn(
         label: SizedBox(
           width: columnWidth,
-          child: Text(
+          child: const Text(
             'FUNDING SOURCE',
-            style: const TextStyle(
+            style: TextStyle(
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -275,7 +275,7 @@ class _UpdateInvestmentCost extends ConsumerState {
           DataCell(
             SizedBox(
               width: columnWidth,
-              child: Text('// TODO'),
+              child: const Text('// TODO'),
             ),
           ),
         ],

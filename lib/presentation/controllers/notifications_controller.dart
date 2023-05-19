@@ -1,76 +1,47 @@
 import 'dart:async';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pips/data/requests/pagination_request.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../application/providers/notifications_provider.dart';
+import '../../data/repositories/notifications_repository.dart';
 import '../../data/requests/notifications_request.dart';
 import '../../data/responses/notifications_response.dart';
 import '../../domain/models/notifications.dart';
 
-class NotificationController extends AsyncNotifier<NotificationsResponse> {
-  late NotificationsRequest notificationsRequest;
-  int currentPage = 1;
-  String? q;
+part 'notifications_controller.g.dart';
 
-  void nextPage() {
-    print('nextPage ran');
-    currentPage++;
-    getAll();
-  }
-
-  void search(String query) {
-    print('nextPage ran');
-    currentPage = 1;
-    q = query;
-    getAll();
-  }
-
-  Future<NotificationsResponse> getAll() async {
-    final controller = ref.watch(paginationRequestControllerProvider);
-
-    // set the loading state
-    state = const AsyncLoading();
-
-    print("getAll ran");
-
-    // read repository using ref
-    final notificationsRepository = ref.read(notificationsRepositoryProvider);
-
-    final response = notificationsRepository
-        .getAll(controller);
-
-    // retrieve notifications
-    state = await AsyncValue.guard(() => response);
-
-    return response;
-  }
-
-  Future<Notification> markAsRead(Notification notification) {
-    final notificationsRepository = ref.read(notificationsRepositoryProvider);
-
-    final response =
-    notificationsRepository.markNotificationAsRead(notification.id);
-
-    return response;
-  }
-
+@riverpod
+class NotificationsRequestController extends _$NotificationsRequestController {
   @override
-  FutureOr<NotificationsResponse> build() {
-    // initialize currentPage at 1
-    currentPage = 1;
+  NotificationsRequest build() => NotificationsRequest(perPage: 25, page: 1);
 
-    // initialize search as null
-    q = null;
-
-    notificationsRequest =
-        NotificationsRequest(perPage: 25, page: currentPage, q: q);
-
-    return getAll();
+  void update({
+    int? perPage,
+    int? page,
+    String? q,
+  }) {
+    state = state.copyWith(
+      page: page ?? state.page,
+      perPage: perPage ?? state.perPage,
+      q: q ?? state.q,
+    );
   }
 }
 
-final notificationsControllerProvider =
-AsyncNotifierProvider<NotificationController, NotificationsResponse>(() {
-  return NotificationController();
-});
+@Riverpod(keepAlive: true)
+Future<NotificationsResponse> notifications(NotificationsRef ref) {
+  return ref
+      .read(notificationsRepositoryProvider)
+      .getAll(ref.watch(paginationRequestControllerProvider));
+}
+
+@riverpod
+Future<Notification> markAsRead(MarkAsReadRef ref,
+    {required Notification notification}) {
+  final notificationsRepository = ref.read(notificationsRepositoryProvider);
+
+  final response =
+      notificationsRepository.markNotificationAsRead(notification.id);
+
+  return response;
+}

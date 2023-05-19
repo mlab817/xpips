@@ -1,12 +1,30 @@
 import 'dart:async';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pips/application/extensions.dart';
 import 'package:pips/data/repositories/auth_repository.dart';
 import 'package:pips/data/requests/updateprofile_request.dart';
 import 'package:pips/presentation/controllers/user_controller.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:pips/application/extensions.dart';
 
-class UpdateProfileRequestController extends Notifier<UpdateProfileRequest> {
+import '../../data/responses/updateprofile_response.dart';
+
+part 'updateprofile_controller.g.dart';
+
+@riverpod
+class UpdateProfileRequestController extends _$UpdateProfileRequestController {
+  @override
+  UpdateProfileRequest build() {
+    final currentUser = ref.watch(currentUserControllerProvider);
+
+    return currentUser?.toUpdateProfileRequest() ??
+        UpdateProfileRequest(
+          firstName: '',
+          lastName: '',
+          position: '',
+          contactNumber: '',
+        );
+  }
+
   void update({
     String? firstName,
     String? lastName,
@@ -20,43 +38,11 @@ class UpdateProfileRequestController extends Notifier<UpdateProfileRequest> {
       contactNumber: contactNumber ?? state.contactNumber,
     );
   }
-
-  @override
-  UpdateProfileRequest build() {
-    final currentUser = ref.watch(currentUserControllerProvider);
-
-    return currentUser?.toUpdateProfileRequest() ??
-        UpdateProfileRequest(
-          firstName: '',
-          lastName: '',
-          position: '',
-          contactNumber: '',
-        );
-  }
 }
 
-final updateProfileRequestControllerProvider =
-    NotifierProvider<UpdateProfileRequestController, UpdateProfileRequest>(() {
-  return UpdateProfileRequestController();
-});
-
-class UpdateProfileController extends AsyncNotifier<void> {
-  Future<void> submit() async {
-    final request = ref.watch(updateProfileRequestControllerProvider);
-    final repository = ref.watch(authRepositoryProvider);
-
-    state = const AsyncLoading();
-
-    state = await AsyncValue.guard(() => repository.updateProfile(request));
-
-    // TODO: trigger current user update
-  }
-
-  @override
-  FutureOr<void> build() => null;
+@riverpod
+Future<UpdateProfileResponse> updateProfile(UpdateProfileRef ref) {
+  return ref
+      .watch(authRepositoryProvider)
+      .updateProfile(ref.watch(updateProfileRequestControllerProvider));
 }
-
-final updateProfileControllerProvider =
-    AsyncNotifierProvider<UpdateProfileController, void>(() {
-  return UpdateProfileController();
-});

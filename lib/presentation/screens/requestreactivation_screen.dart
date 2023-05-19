@@ -22,7 +22,7 @@ class _RequestReactivationScreenState
 
   final List<XFile> _list = [];
 
-  bool _dragging = false;
+  final bool _dragging = false;
 
   String? _uploadedPath;
   String? _uploadError;
@@ -125,8 +125,6 @@ class _RequestReactivationScreenState
                                     file: result.files.first.bytes!.toList(),
                                   ),
                                 );
-
-                            debugPrint('response is: $response');
                           }
                         },
                       ),
@@ -138,9 +136,7 @@ class _RequestReactivationScreenState
                         child: FilledButton(
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
-                              ref
-                                  .read(requestReactivationController.notifier)
-                                  .submit();
+                              ref.read(requestReactivationProvider);
                             }
                           },
                           child: const Text('Submit'),

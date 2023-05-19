@@ -1,7 +1,5 @@
-import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:pips/application/app_router.dart';
 
 @RoutePage()
 class ForgotPasswordScreen extends StatefulWidget {
@@ -62,8 +60,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 onPressed: () {
                   AutoRouter.of(context).pushNamed('/login');
                 },
-                child: Row(
-                  children: const <Widget>[
+                child: const Row(
+                  children: <Widget>[
                     Icon(Icons.arrow_back),
                     SizedBox(
                       height: 20,

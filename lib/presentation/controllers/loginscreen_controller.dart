@@ -1,31 +1,37 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:pips/data/repositories/auth_repository.dart';
 import 'package:pips/domain/models/login_credentials.dart';
 import 'package:pips/domain/models/login_response.dart';
 
-///AsyncValue<void>, as this allows us to represent three states:
-/// default (not loading) as AsyncData (same as AsyncValue.data)
-/// loading as AsyncLoading (same as AsyncValue.loading)
-/// error as AsyncError (same as AsyncValue.error)
-/// And since StateNotifier needs an initial value, we must call super in the initializer list.
-class LoginScreenController extends StateNotifier<AsyncValue<LoginResponse?>> {
-  LoginScreenController({required this.authRepository})
-      : super(const AsyncData(null));
+part 'loginscreen_controller.g.dart';
 
-  final AuthRepository authRepository;
+@Riverpod(keepAlive: true)
+class LoginCredentialsController extends _$LoginCredentialsController {
+  @override
+  LoginCredentials build() => LoginCredentials.initial();
 
-  Future<void> login(LoginCredentials credentials) async {
-    // set the state to loading
-    state = const AsyncLoading<LoginResponse>();
-
-    // call `authRepository.signInAnonymously` and await for the result
-    state = await AsyncValue.guard<LoginResponse>(
-        () => authRepository.login(credentials));
+  void update({
+    String? username,
+    String? password,
+  }) {
+    state = state.copyWith(
+      username: username ?? state.username,
+      password: password ?? state.password,
+    );
   }
 }
 
-final loginScreenControllerProvider = StateNotifierProvider.autoDispose<
-    LoginScreenController, AsyncValue<LoginResponse?>>((ref) {
-  return LoginScreenController(
-      authRepository: ref.watch(authRepositoryProvider));
-});
+@riverpod
+class LoginController extends _$LoginController {
+  Future<void> login() async {
+    final credentials = ref.watch(loginCredentialsControllerProvider);
+    final repository = ref.watch(authRepositoryProvider);
+
+    state = const AsyncLoading();
+
+    state = await AsyncValue.guard(() => repository.login(credentials));
+  }
+
+  @override
+  FutureOr<LoginResponse> build() => Future.value(state.value);
+}

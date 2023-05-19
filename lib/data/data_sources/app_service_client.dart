@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pips/data/requests/updatepassword_request.dart';
 import 'package:retrofit/http.dart';
 
 import '../../application/config.dart';
@@ -55,8 +56,8 @@ abstract class AppServiceClient {
 
   /// Notifications API
   @PUT('/projects/{uuid}')
-  Future<UpdateProjectResponse> updateProject(
-      @Path() String uuid, @Body() FullProjectRequest request);
+  Future<UpdateProjectResponse> updateProject(@Path() String uuid,
+      @Body() FullProjectRequest request);
 
   @DELETE('/projects/{uuid}')
   Future<DeleteProjectResponse> deleteProject(@Path() String uuid);
@@ -107,8 +108,15 @@ abstract class AppServiceClient {
   Future<CommentsResponse> showComments(@Path() String uuid);
 
   @POST("/projects/{uuid}/comments")
-  Future<NewCommentResponse> addComment(
-      @Path() String uuid, @Body() CommentRequest comment);
+  Future<NewCommentResponse> addComment(@Path() String uuid,
+      @Body() CommentRequest comment);
+
+  @MultiPart()
+  @POST("/upload-avatar")
+  Future<void> uploadAvatar(@Part(name: 'avatar') File request);
+
+  @POST('/update-password')
+  Future<void> updatePassword(@Body() UpdatePasswordRequest request);
 }
 
 final appServiceClientProvider = Provider<AppServiceClient>((ref) {

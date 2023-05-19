@@ -9,6 +9,8 @@ class CurrentUserController extends Notifier<User?> {
     final sharedPreferences = ref.watch(sharedPreferencesProvider);
     final userFromSharedPrefs = sharedPreferences.getString('CURRENT_USER');
 
+    print(userFromSharedPrefs);
+
     return userFromSharedPrefs != null
         ? User.fromJson(jsonDecode(userFromSharedPrefs))
         : null;

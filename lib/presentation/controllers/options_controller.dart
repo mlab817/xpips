@@ -1,28 +1,22 @@
 import 'dart:async';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../data/repositories/options_repository.dart';
 import '../../data/responses/options_response.dart';
 
-class OptionsController extends AsyncNotifier<OptionsResponse> {
-  Future<OptionsResponse> get() async {
+part 'options_controller.g.dart';
+
+@riverpod
+class OptionsController extends _$OptionsController {
+  Future<void> get() async {
     final repository = ref.watch(optionsRepositoryProvider);
 
     state = const AsyncLoading();
 
     state = await AsyncValue.guard(() => repository.get());
-
-    return repository.get();
   }
 
   @override
-  FutureOr<OptionsResponse> build() {
-    return get();
-  }
+  FutureOr<OptionsResponse> build() => Future.value(state.value);
 }
-
-final optionsControllerProvider =
-    AsyncNotifierProvider<OptionsController, OptionsResponse>(() {
-  return OptionsController();
-});

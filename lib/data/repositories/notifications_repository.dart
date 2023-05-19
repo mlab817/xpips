@@ -1,8 +1,11 @@
 import 'package:pips/data/requests/pagination_request.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../domain/models/notifications.dart';
 import '../data_sources/app_service_client.dart';
 import '../responses/notifications_response.dart';
+
+part 'notifications_repository.g.dart';
 
 abstract class NotificationsRepository {
   Future<NotificationsResponse> getAll(PaginationRequest input);
@@ -13,7 +16,7 @@ abstract class NotificationsRepository {
 class NotificationsRepositoryImplementer implements NotificationsRepository {
   final AppServiceClient client;
 
-  NotificationsRepositoryImplementer(this.client);
+  NotificationsRepositoryImplementer({required this.client});
 
   @override
   Future<NotificationsResponse> getAll(PaginationRequest input) async {
@@ -25,3 +28,9 @@ class NotificationsRepositoryImplementer implements NotificationsRepository {
     return await client.markNotificationAsRead(id);
   }
 }
+
+@riverpod
+NotificationsRepository notificationsRepository(
+        NotificationsRepositoryRef ref) =>
+    NotificationsRepositoryImplementer(
+        client: ref.watch(appServiceClientProvider));

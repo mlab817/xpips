@@ -4,9 +4,9 @@ import 'package:pips/application/providers/sharedpreferences.dart';
 class BearerToken extends Notifier<String?> {
   /// Set token explicitly when logging in
   void setToken(String token) {
-    // save the token to shared prefs
     final sharedPrefs = ref.watch(sharedPreferencesProvider);
 
+    // save the token to shared prefs
     sharedPrefs.setString('BEARER_TOKEN', token);
 
     // set the token to the state
@@ -21,9 +21,7 @@ class BearerToken extends Notifier<String?> {
   }
 
   @override
-  String? build() {
-    return getTokenFromSharedPrefs();
-  }
+  String? build() => getTokenFromSharedPrefs();
 }
 
 final bearerTokenNotifierProvider = NotifierProvider<BearerToken, String?>(() {

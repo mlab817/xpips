@@ -1,8 +1,12 @@
-import 'dart:convert';
-
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:pips/domain/models/rap_cost.dart';
+import 'package:pips/domain/models/regional_investment.dart';
+import 'package:pips/domain/models/row_cost.dart';
 import 'package:pips/domain/models/user.dart';
 
+import 'financial_accomplishment.dart';
+import 'fs_cost.dart';
+import 'fs_investment.dart';
 import 'office.dart';
 import 'option.dart';
 
@@ -192,157 +196,4 @@ class FullProject with _$FullProject {
 
   factory FullProject.fromJson(Map<String, Object?> json) =>
       _$FullProjectFromJson(json);
-}
-
-@freezed
-class FsInvestment with _$FsInvestment {
-  factory FsInvestment({
-    @JsonKey(name: "funding_source_id") int? fundingSourceId,
-    @JsonKey(name: "funding_source") Option? fundingSource,
-    @JsonKey(name: "y2022") double? y2022,
-    @JsonKey(name: "y2023") double? y2023,
-    @JsonKey(name: "y2024") double? y2024,
-    @JsonKey(name: "y2025") double? y2025,
-    @JsonKey(name: "y2026") double? y2026,
-    @JsonKey(name: "y2027") double? y2027,
-    @JsonKey(name: "y2028") double? y2028,
-    @JsonKey(name: "y2029") double? y2029,
-  }) = _FsInvestment;
-
-  factory FsInvestment.fromJson(Map<String, dynamic> json) =>
-      _$FsInvestmentFromJson(json);
-
-  // dump regional investment
-  @override
-  String toString() {
-    return jsonEncode(this);
-  }
-}
-
-extension RegionalInvestmentTotal on RegionalInvestment {
-  double total() {
-    return (y2022 ?? 0) +
-        (y2023 ?? 0) +
-        (y2024 ?? 0) +
-        (y2025 ?? 0) +
-        (y2026 ?? 0) +
-        (y2027 ?? 0) +
-        (y2028 ?? 0) +
-        (y2029 ?? 0);
-  }
-}
-
-extension FsInvestmentTotal on FsInvestment {
-  double total() {
-    return (y2022 ?? 0) +
-        (y2023 ?? 0) +
-        (y2024 ?? 0) +
-        (y2025 ?? 0) +
-        (y2026 ?? 0) +
-        (y2027 ?? 0) +
-        (y2028 ?? 0) +
-        (y2029 ?? 0);
-  }
-}
-
-@freezed
-class RegionalInvestment with _$RegionalInvestment {
-  factory RegionalInvestment({
-    @JsonKey(name: "region_id") int? regionId,
-    @JsonKey(name: "region") Option? region,
-    @JsonKey(name: "y2022") double? y2022,
-    @JsonKey(name: "y2023") double? y2023,
-    @JsonKey(name: "y2024") double? y2024,
-    @JsonKey(name: "y2025") double? y2025,
-    @JsonKey(name: "y2026") double? y2026,
-    @JsonKey(name: "y2027") double? y2027,
-    @JsonKey(name: "y2028") double? y2028,
-    @JsonKey(name: "y2029") double? y2029,
-  }) = _RegionalInvestment;
-
-  factory RegionalInvestment.fromJson(Map<String, dynamic> json) =>
-      _$RegionalInvestmentFromJson(json);
-
-  // dump regional investment
-  @override
-  String toString() {
-    return jsonEncode(this);
-  }
-}
-
-@freezed
-class FinancialAccomplishment with _$FinancialAccomplishment {
-  factory FinancialAccomplishment({
-    @JsonKey(name: "nep_2023") num? nep2023,
-    @JsonKey(name: "nep_2024") num? nep2024,
-    @JsonKey(name: "nep_2025") num? nep2025,
-    @JsonKey(name: "nep_2026") num? nep2026,
-    @JsonKey(name: "nep_2027") num? nep2027,
-    @JsonKey(name: "nep_2028") num? nep2028,
-    @JsonKey(name: "gaa_2023") num? gaa2023,
-    @JsonKey(name: "gaa_2024") num? gaa2024,
-    @JsonKey(name: "gaa_2025") num? gaa2025,
-    @JsonKey(name: "gaa_2026") num? gaa2026,
-    @JsonKey(name: "gaa_2027") num? gaa2027,
-    @JsonKey(name: "gaa_2028") num? gaa2028,
-    @JsonKey(name: "disbursement_2023") num? disbursement2023,
-    @JsonKey(name: "disbursement_2024") num? disbursement2024,
-    @JsonKey(name: "disbursement_2025") num? disbursement2025,
-    @JsonKey(name: "disbursement_2026") num? disbursement2026,
-    @JsonKey(name: "disbursement_2027") num? disbursement2027,
-    @JsonKey(name: "disbursement_2028") num? disbursement2028,
-  }) = _FinancialAccomplishment;
-
-  factory FinancialAccomplishment.fromJson(Map<String, dynamic> json) =>
-      _$FinancialAccomplishmentFromJson(json);
-
-  // dump the entire variable
-  @override
-  String toString() {
-    return jsonEncode(this);
-  }
-}
-
-@freezed
-class FsCost with _$FsCost {
-  factory FsCost({
-    @JsonKey(name: "y2023") num? y2023,
-    @JsonKey(name: "y2024") num? y2024,
-    @JsonKey(name: "y2025") num? y2025,
-    @JsonKey(name: "y2026") num? y2026,
-    @JsonKey(name: "y2027") num? y2027,
-    @JsonKey(name: "y2028") num? y2028,
-  }) = _FsCost;
-
-  factory FsCost.fromJson(Map<String, dynamic> json) => _$FsCostFromJson(json);
-}
-
-@freezed
-class RowCost with _$RowCost {
-  factory RowCost({
-    @JsonKey(name: "y2023") num? y2023,
-    @JsonKey(name: "y2024") num? y2024,
-    @JsonKey(name: "y2025") num? y2025,
-    @JsonKey(name: "y2026") num? y2026,
-    @JsonKey(name: "y2027") num? y2027,
-    @JsonKey(name: "y2028") num? y2028,
-  }) = _RowCost;
-
-  factory RowCost.fromJson(Map<String, dynamic> json) =>
-      _$RowCostFromJson(json);
-}
-
-@freezed
-class RapCost with _$RapCost {
-  factory RapCost({
-    @JsonKey(name: "y2023") num? y2023,
-    @JsonKey(name: "y2024") num? y2024,
-    @JsonKey(name: "y2025") num? y2025,
-    @JsonKey(name: "y2026") num? y2026,
-    @JsonKey(name: "y2027") num? y2027,
-    @JsonKey(name: "y2028") num? y2028,
-  }) = _RapCost;
-
-  factory RapCost.fromJson(Map<String, dynamic> json) =>
-      _$RapCostFromJson(json);
 }

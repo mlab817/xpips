@@ -1,9 +1,13 @@
-import 'package:auto_route/annotations.dart';
+import 'dart:io';
+
+import 'package:dio/dio.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pips/data/repositories/uploadavatar_repository.dart';
 import 'package:pips/presentation/controllers/updateprofile_controller.dart';
+import 'package:pips/presentation/controllers/user_controller.dart';
 
-@RoutePage()
 class UpdateProfileScreen extends ConsumerStatefulWidget {
   const UpdateProfileScreen({Key? key}) : super(key: key);
 
@@ -53,7 +57,7 @@ class _UpdateProfileScreenState extends ConsumerState<UpdateProfileScreen> {
     // delay assignment of value until the UI has been rendered
     Future.delayed(Duration.zero, () {
       _firstNameController.text =
-          ref.watch(updateProfileRequestControllerProvider).firstName;
+          ref.read(updateProfileRequestControllerProvider).firstName;
       _lastNameController.text =
           ref.watch(updateProfileRequestControllerProvider).lastName;
       _positionController.text =
@@ -75,38 +79,53 @@ class _UpdateProfileScreenState extends ConsumerState<UpdateProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final user = ref.watch(currentUserControllerProvider);
+
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Update Profile'),
-        actions: [
-          TextButton(
-            onPressed: () {
-              if (_formKey.currentState!.validate()) {
-                debugPrint('form is valid');
-                // TODO: handle submit
-                ref.read(updateProfileControllerProvider.notifier).submit();
-              }
-            },
-            child: const Text('UPDATE'),
-          ),
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: ClipOval(
-                child: Image.asset(
-                  'assets/logo.png',
-                  height: 150,
-                  width: 150,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Stack(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ClipOval(
+                        child: FadeInImage(
+                          image: NetworkImage(user?.imageUrl ??
+                              'https://placehold.co/150x150.png'),
+                          placeholder: const AssetImage('assets/logo.png'),
+                          height: 150,
+                          width: 150,
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      bottom: 0,
+                      right: 0,
+                      child: IconButton(
+                        icon: const Icon(Icons.camera_alt_sharp),
+                        onPressed: () async {
+                          final FilePickerResult? image =
+                              await FilePicker.platform.pickFiles();
+
+                          if (image != null) {
+                            final rawPath = image.files.first.path;
+
+                            ref
+                                .watch(uploadAvatarRepositoryProvider)
+                                .uploadAvatar(File(rawPath!));
+                          }
+                        },
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ),
-            Card(
-              child: Form(
+              Form(
                 key: _formKey,
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
@@ -124,6 +143,9 @@ class _UpdateProfileScreenState extends ConsumerState<UpdateProfileScreen> {
                           return null;
                         },
                       ),
+                      const SizedBox(
+                        height: 8.0,
+                      ),
                       TextFormField(
                         controller: _lastNameController,
                         decoration:
@@ -134,6 +156,9 @@ class _UpdateProfileScreenState extends ConsumerState<UpdateProfileScreen> {
                           }
                           return null;
                         },
+                      ),
+                      const SizedBox(
+                        height: 8.0,
                       ),
                       TextFormField(
                         controller: _positionController,
@@ -146,6 +171,9 @@ class _UpdateProfileScreenState extends ConsumerState<UpdateProfileScreen> {
                           return null;
                         },
                       ),
+                      const SizedBox(
+                        height: 8.0,
+                      ),
                       TextFormField(
                         controller: _contactNumberController,
                         decoration:
@@ -157,14 +185,50 @@ class _UpdateProfileScreenState extends ConsumerState<UpdateProfileScreen> {
                           return null;
                         },
                       ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: FilledButton(
+                          onPressed: () {
+                            //
+                            ref.read(updateProfileProvider);
+                          },
+                          child: const Text('Update Profile'),
+                        ),
+                      ),
                     ],
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
+  }
+}
+
+class UploadAvatarRequest {
+  final List<int> rawBytes;
+
+  UploadAvatarRequest(this.rawBytes);
+
+  Map<String, dynamic> toJson() {
+    FormData formData = FormData();
+
+    final file =
+        MultipartFile.fromBytes(rawBytes, filename: 'Authorization Form.pdf');
+
+    MapEntry<String, MultipartFile> fileEntry = MapEntry('file', file);
+
+    // implement Dio upload
+    formData.files.add(fileEntry);
+
+    var map = <String, dynamic>{};
+
+    for (var file in formData.files) {
+      map[file.key] = file;
+    }
+
+    return map;
   }
 }
