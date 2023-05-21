@@ -43,12 +43,13 @@ class _UpdateFsCostState extends ConsumerState<UpdateFsCost> {
   }
 
   List<DataColumn> _buildColumns(double columnWidth) {
-    return List.generate(6, (index) {
+    return List.generate(7, (index) {
       return DataColumn(
         label: SizedBox(
           width: columnWidth,
           child: Center(
-            child: Text("FY ${2023 + index}"),
+            child:
+                index == 6 ? const Text('Total') : Text("FY ${2023 + index}"),
           ),
         ),
       );
@@ -128,6 +129,7 @@ class _UpdateFsCostState extends ConsumerState<UpdateFsCost> {
             width: columnWidth,
             child: Text(
               ref.watch(numberFormatterProvider).format(total),
+              textAlign: TextAlign.right,
             ),
           )),
         ],

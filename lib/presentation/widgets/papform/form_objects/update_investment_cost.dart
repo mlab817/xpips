@@ -55,17 +55,105 @@ class _UpdateInvestmentCost extends ConsumerState {
           ),
         ),
       ),
-      ...List.generate(
-        8,
-        (index) => DataColumn(
-          label: SizedBox(
-            width: columnWidth,
-            child: Center(
-              child: Text(
-                "${2022 + index}",
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
+      DataColumn(
+        label: SizedBox(
+          width: columnWidth,
+          child: const Center(
+            child: Text(
+              "2022 & Prior",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+      ),
+      DataColumn(
+        label: SizedBox(
+          width: columnWidth,
+          child: const Center(
+            child: Text(
+              "2023",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+      ),
+      DataColumn(
+        label: SizedBox(
+          width: columnWidth,
+          child: const Center(
+            child: Text(
+              '2024',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+      ),
+      DataColumn(
+        label: SizedBox(
+          width: columnWidth,
+          child: const Center(
+            child: Text(
+              "2025",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+      ),
+      DataColumn(
+        label: SizedBox(
+          width: columnWidth,
+          child: const Center(
+            child: Text(
+              "2026",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+      ),
+      DataColumn(
+        label: SizedBox(
+          width: columnWidth,
+          child: const Center(
+            child: Text(
+              "2027",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+      ),
+      DataColumn(
+        label: SizedBox(
+          width: columnWidth,
+          child: const Center(
+            child: Text(
+              "2028",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+      ),
+      DataColumn(
+        label: SizedBox(
+          width: columnWidth,
+          child: const Center(
+            child: Text(
+              "2029",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
               ),
             ),
           ),

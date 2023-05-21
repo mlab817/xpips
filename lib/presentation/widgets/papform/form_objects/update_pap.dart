@@ -1,94 +1,216 @@
+// import 'package:flutter/material.dart';
+// import 'package:flutter_riverpod/flutter_riverpod.dart';
+// import 'package:pips/presentation/controllers/fullproject_controller.dart';
+//
+// import '../../../../domain/models/option.dart';
+// import '../../../controllers/options_controller.dart';
+// import '../empty_indicator.dart';
+// import '../select_dialog_content.dart';
+// import '../success_indicator.dart';
+//
+// class UpdatePap extends ConsumerWidget {
+//   const UpdatePap({super.key});
+//
+//   @override
+//   Widget build(BuildContext context, WidgetRef ref) {
+//     final project = ref.watch(fullProjectControllerProvider);
+//
+//     return ListTile(
+//       title: const Text('Program or Project'),
+//       subtitle: project.type != null
+//           ? Text(project.type!.label)
+//           : const Text('Select one'),
+//       trailing: project.type != null
+//           ? const SuccessIndicator()
+//           : const EmptyIndicator(),
+//       onTap: () => _selectPap(context, ref),
+//     );
+//   }
+//
+//   Future<void> _selectPap(context, ref) async {
+//     final project = ref.watch(fullProjectControllerProvider);
+//     final optionsAsync = ref.watch(optionsControllerProvider);
+//
+//     final response = await showDialog(
+//       context: context,
+//       builder: (context) {
+//         List<Option> selected = project.bases;
+//
+//         return AlertDialog(
+//           contentPadding: const EdgeInsets.symmetric(vertical: 16),
+//           title: const Text('Basis for Implementation'),
+//           content: optionsAsync.when(
+//             data: (data) {
+//               return SelectDialogContent(
+//                 options: data.data.bases ?? [],
+//                 multiple: true,
+//                 selected: selected,
+//                 onChanged: (value) {
+//                   selected = value;
+//                 },
+//               );
+//             },
+//             error: (err, stackTrace) {
+//               return Container();
+//             },
+//             loading: () => const CircularProgressIndicator(),
+//           ),
+//           // TODO: reimplement actions
+//           // actions: [
+//           //   CancelBu(),
+//           //   _buildUpdate(
+//           //     onUpdate: () {
+//           //       Navigator.pop(context, selected);
+//           //     },
+//           //   ),
+//           // ],
+//         );
+//       },
+//     );
+//
+//     ref.read(fullProjectControllerProvider.notifier).update(bases: response);
+//
+//     // final project = ref.watch(fullProjectControllerProvider);
+//     // final optionsAsync = ref.watch(optionsControllerProvider);
+//     // //
+//     // Option? response = await showDialog<Option>(
+//     //     context: context,
+//     //     builder: (context) {
+//     //       Option? selected = project.type;
+//     //
+//     //       return AlertDialog(
+//     //         contentPadding: const EdgeInsets.symmetric(vertical: 16),
+//     //         title: const Text('Program or Project'),
+//     //         content: optionsAsync.when(
+//     //           data: (data) {
+//     //             return SelectDialogContent(
+//     //               options: data.data.types ?? [],
+//     //               multiple: true,
+//     //               selected: selected,
+//     //               onChanged: (value) {
+//     //                 selected = value;
+//     //               },
+//     //             );
+//     //           },
+//     //           error: (err, stackTrace) {
+//     //             return Container();
+//     //           },
+//     //           loading: () => const CircularProgressIndicator(),
+//     //         ),
+//     //         actions: [
+//     //           buildCancel(context),
+//     //           buildUpdate(context, () {
+//     //             Navigator.pop(context, selected);
+//     //           }),
+//     //         ],
+//     //       );
+//     //     });
+//
+//     ref.read(fullProjectControllerProvider.notifier).update(type: response);
+//
+//     // TODO: implement the autofill for program/project
+//     //   if (response != null) {
+//     //     setState(() {
+//     //       _project = _project.copyWith(type: response);
+//     //     });
+//     //
+//     //     // if program, set funding source to ng-local
+//     //     if (response.value == 1) {
+//     //       setState(() {
+//     //         _project = _project.copyWith(
+//     //           fundingSource: _options?.fundingSources?.first, // ng-local
+//     //           implementationMode:
+//     //               _options?.implementationModes?.first, // local procurement
+//     //           // implementation period for programs is 2023 to 2028
+//     //           startYear: _options?.years
+//     //               ?.where((element) => int.parse(element.label) == 2023)
+//     //               .first, // Option(value: 24, label: '2023'),
+//     //           endYear: _options?.years
+//     //               ?.where((element) => int.parse(element.label) == 2028)
+//     //               .first, // Option(value: 29, label: '2028'),
+//     //         );
+//     //       });
+//     //     }
+//     //   }
+//     // }
+//   }
+// }
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pips/presentation/controllers/fullproject_controller.dart';
 
 import '../../../../domain/models/option.dart';
+import '../../../controllers/fullproject_controller.dart';
 import '../../../controllers/options_controller.dart';
-import '../../../screens/papform_screen.dart';
 import '../empty_indicator.dart';
 import '../select_dialog_content.dart';
 import '../success_indicator.dart';
 
 class UpdatePap extends ConsumerWidget {
-  const UpdatePap({super.key});
+  const UpdatePap({Key? key}) : super(key: key);
+
+  Future<void> _selectType(BuildContext context, WidgetRef ref) async {
+    final project = ref.watch(fullProjectControllerProvider);
+    final optionsAsync = ref.watch(optionsControllerProvider);
+
+    final response = await showDialog(
+      context: context,
+      builder: (context) {
+        Option? selected = project.type;
+
+        return AlertDialog(
+          contentPadding: const EdgeInsets.symmetric(vertical: 16),
+          title: const Text('Program or Project'),
+          content: optionsAsync.when(
+            data: (data) {
+              return SelectDialogContent(
+                options: data.data.types ?? [],
+                multiple: false,
+                selected: selected,
+                onChanged: (value) {
+                  selected = value;
+                },
+              );
+            },
+            error: (err, stackTrace) {
+              return Center(
+                child: Text(err.toString()),
+              );
+            },
+            loading: () => const CircularProgressIndicator(),
+          ),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text('Cancel')),
+            FilledButton(
+              onPressed: () {
+                Navigator.pop(context, selected);
+              },
+              child: const Text('Update'),
+            ),
+          ],
+        );
+      },
+    );
+
+    ref.read(fullProjectControllerProvider.notifier).update(type: response);
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final project = ref.watch(fullProjectControllerProvider);
+    final type =
+        ref.watch(fullProjectControllerProvider.select((value) => value.type));
 
     return ListTile(
-      title: const Text('Program or Project'),
-      subtitle: project.type != null
-          ? Text(project.type!.label)
-          : const Text('Select one'),
-      trailing: project.type != null
-          ? const SuccessIndicator()
-          : const EmptyIndicator(),
-      onTap: () => _selectPap(context, ref),
-    );
-  }
-
-  Future<void> _selectPap(context, ref) async {
-    final project = ref.watch(fullProjectControllerProvider);
-    final optionsAsync = ref.watch(optionsControllerProvider);
-    //
-    Option? response = await showDialog<Option>(
-        context: context,
-        builder: (context) {
-          Option? selected = project.type;
-
-          return AlertDialog(
-            contentPadding: const EdgeInsets.symmetric(vertical: 16),
-            title: const Text('Program or Project'),
-            content: optionsAsync.when(
-              data: (data) {
-                return SelectDialogContent(
-                  options: data.data.types ?? [],
-                  multiple: false,
-                  selected: selected,
-                  onChanged: (value) {
-                    selected = value;
-                  },
-                );
-              },
-              error: (err, stack) => Container(),
-              loading: () => const CircularProgressIndicator(),
-            ),
-            actions: [
-              buildCancel(context),
-              buildUpdate(context, () {
-                Navigator.pop(context, selected);
-              }),
-            ],
-          );
+        title: const Text('Program or Project'),
+        subtitle: type != null ? Text(type.label) : const Text('Select one'),
+        trailing:
+            type != null ? const SuccessIndicator() : const EmptyIndicator(),
+        onTap: () {
+          _selectType(context, ref);
         });
-
-    ref.read(fullProjectControllerProvider.notifier).update(type: response);
-
-    // TODO: implement the autofill for program/project
-    //   if (response != null) {
-    //     setState(() {
-    //       _project = _project.copyWith(type: response);
-    //     });
-    //
-    //     // if program, set funding source to ng-local
-    //     if (response.value == 1) {
-    //       setState(() {
-    //         _project = _project.copyWith(
-    //           fundingSource: _options?.fundingSources?.first, // ng-local
-    //           implementationMode:
-    //               _options?.implementationModes?.first, // local procurement
-    //           // implementation period for programs is 2023 to 2028
-    //           startYear: _options?.years
-    //               ?.where((element) => int.parse(element.label) == 2023)
-    //               .first, // Option(value: 24, label: '2023'),
-    //           endYear: _options?.years
-    //               ?.where((element) => int.parse(element.label) == 2028)
-    //               .first, // Option(value: 29, label: '2028'),
-    //         );
-    //       });
-    //     }
-    //   }
-    // }
   }
 }
