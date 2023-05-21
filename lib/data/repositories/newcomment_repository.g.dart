@@ -7,7 +7,7 @@ part of 'newcomment_repository.dart';
 // **************************************************************************
 
 String _$newCommentRepositoryHash() =>
-    r'd6944e12f4714959aca45dd76d38063276fc77ac';
+    r'92e3422a447705ab1feb85cfcb9960708bc73aa6';
 
 /// See also [newCommentRepository].
 @ProviderFor(newCommentRepository)
