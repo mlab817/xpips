@@ -3,15 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:pips/presentation/controllers/offices_controller.dart';
-import 'package:pips/presentation/controllers/options_controller.dart';
 import 'package:pips/presentation/controllers/fullproject_controller.dart';
+import 'package:pips/presentation/controllers/options_controller.dart';
+import 'package:pips/presentation/widgets/papform/form_objects/employment.dart';
+import 'package:pips/presentation/widgets/papform/form_objects/funding_source_implementation.dart';
+import 'package:pips/presentation/widgets/papform/form_objects/implementation_basis.dart';
+import 'package:pips/presentation/widgets/papform/form_objects/row.dart';
+import 'package:pips/presentation/widgets/papform/form_objects/total_project_cost.dart';
+import 'package:pips/presentation/widgets/papform/form_objects/update_office.dart';
 
 import '../../data/requests/fullproject_request.dart';
-import '../../domain/models/office.dart';
 import '../../domain/models/option.dart';
-import '../../domain/models/options.dart';
 import '../widgets/papform/empty_indicator.dart';
+import '../widgets/papform/form_objects/physical_status.dart';
 import '../widgets/papform/form_objects/update_description.dart';
 import '../widgets/papform/form_objects/update_financial_accomplishment.dart';
 import '../widgets/papform/form_objects/update_fs_cost.dart';
@@ -19,6 +23,7 @@ import '../widgets/papform/form_objects/update_infra_sectors.dart';
 import '../widgets/papform/form_objects/update_investment_cost.dart';
 import '../widgets/papform/form_objects/update_pap.dart';
 import '../widgets/papform/form_objects/update_pip.dart';
+import '../widgets/papform/form_objects/update_rap.dart';
 import '../widgets/papform/form_objects/update_regional_cost.dart';
 import '../widgets/papform/form_objects/update_title.dart';
 import '../widgets/papform/get_input_decoration.dart';
@@ -45,129 +50,17 @@ class _NewPapStateScreen extends ConsumerState<NewPapScreen> {
   // for reviewers use only
 
   // focus nodes
-  final FocusNode _totalCostNode = FocusNode();
-  final FocusNode _employedMaleNode = FocusNode();
-  final FocusNode _employedFemaleNode = FocusNode();
   final FocusNode _expectedOutputNode = FocusNode();
   final FocusNode _riskNode = FocusNode();
-  final FocusNode _updateNode = FocusNode();
   final FocusNode _remarkNode = FocusNode();
   final FocusNode _papCodeNode = FocusNode();
   final FocusNode _commentNode = FocusNode();
   final FocusNode _notesNode = FocusNode();
 
-  int get _totalEmployment {
-    int male = ref.watch(fullProjectControllerProvider
-            .select((value) => value.employedMale)) ??
-        0;
-    int female = ref.watch(fullProjectControllerProvider
-            .select((value) => value.employedFemale)) ??
-        0;
-
-    return male + female;
-  }
-
-  Options? _options;
-  String? _error;
-
   // monitor scroll position
   double _scrollPercentage = 0;
 
-  Future<void> _selectBases() async {
-    final project = ref.watch(fullProjectControllerProvider);
-    final optionsAsync = ref.watch(optionsControllerProvider);
-
-    final response = await showDialog(
-      context: context,
-      builder: (context) {
-        List<Option> selected = project.bases;
-
-        return AlertDialog(
-          contentPadding: const EdgeInsets.symmetric(vertical: 16),
-          title: const Text('Basis for Implementation'),
-          content: optionsAsync.when(
-            data: (data) {
-              return SelectDialogContent(
-                options: data.data.bases ?? [],
-                multiple: true,
-                selected: selected,
-                onChanged: (value) {
-                  selected = value;
-                },
-              );
-            },
-            error: (err, stackTrace) {
-              return Container();
-            },
-            loading: () => const CircularProgressIndicator(),
-          ),
-          actions: [
-            _buildCancel(),
-            _buildUpdate(
-              onUpdate: () {
-                Navigator.pop(context, selected);
-              },
-            ),
-          ],
-        );
-      },
-    );
-
-    ref.read(fullProjectControllerProvider.notifier).update(bases: response);
-  }
-
   // show radio to select office
-  Future<void> _selectOffice() async {
-    final office = ref
-        .watch(fullProjectControllerProvider.select((value) => value.office));
-    final officesAsync = ref.watch(officesProvider);
-
-    final Office? response = await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          Office? selected = office;
-
-          return AlertDialog(
-            contentPadding: const EdgeInsets.symmetric(vertical: 16),
-            title: const Text('Office'),
-            content: officesAsync.when(
-              data: (data) {
-                final offices = data.data;
-                return SizedBox(
-                  width: double.maxFinite,
-                  child: ListView.builder(
-                    itemCount: offices.length,
-                    itemBuilder: (context, index) {
-                      return RadioListTile(
-                        value: offices[index],
-                        groupValue: selected,
-                        title: Text(offices[index].acronym),
-                        onChanged: (Office? value) {
-                          setState(() {
-                            selected = value;
-                          });
-                        },
-                      );
-                    },
-                  ),
-                );
-              },
-              error: (err, stackTrace) {
-                return Container();
-              },
-              loading: () => const CircularProgressIndicator(),
-            ),
-            actions: [
-              _buildCancel(),
-              _buildUpdate(onUpdate: () {
-                Navigator.pop(context, selected);
-              }),
-            ],
-          );
-        });
-
-    ref.read(fullProjectControllerProvider.notifier).update(office: response);
-  }
 
   Future<void> _selectOus() async {
     final operatingUnits = ref.watch(
@@ -369,21 +262,18 @@ class _NewPapStateScreen extends ConsumerState<NewPapScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
-    final project = ref.watch(fullProjectControllerProvider);
-
     List<Widget> children = [
       const Text('General Information'),
       const UpdateTitle(),
       const UpdatePap(),
-      _buildRegularProgram(),
-      _buildBases(),
+      const RegularProgram(),
+      const ImplementationBasis(),
       const UpdateDescription(),
-      _buildTotalProjectCost(),
+      const TotalProjectCost(),
       const Divider(),
       // office
       const Text('Implementers'),
-      _buildOffice(),
+      const UpdateOffice(),
       _buildOus(),
       const Divider(),
       _buildSpatialCoverage(),
@@ -422,37 +312,22 @@ class _NewPapStateScreen extends ConsumerState<NewPapScreen> {
       const UpdateFsCost(),
       _buildFsCompletionDate(),
       const Divider(),
-      _buildRow(),
-      _buildRowCost(),
-      _buildRowAffectedHouseholds(),
+      const UpdateRow(),
       const Divider(),
-      _buildRap(),
-      _buildRapCost(),
-      _buildRapAffectedHouseholds(),
+      const UpdateRap(),
       const Divider(),
       _buildRowRap(),
       const Divider(),
-      _buildEmployment(),
-      _buildEmploymentMale(),
-      _buildEmploymentFemale(),
+      const EmploymentGenerated(),
       const Divider(),
       const Text('Funding Source and Mode of Implementation'),
-      _buildFundingSource(),
-      _buildFundingSources(),
-      _buildFundingInstitutions(),
-      _buildImplementationMode(),
+      const UpdateFundingSourceAndImplementation(),
       const Divider(),
       const UpdateRegionalCost(),
       const Divider(),
       const UpdateInvestmentCost(),
       const Divider(),
-      _buildCategory(),
-      _buildReadiness(),
-      // implementation period
-      _buildStart(),
-      _buildEnd(),
-      _buildUpdates(),
-      _buildUpdatesAsOf(),
+      PhysicalStatus(),
       const Divider(),
       _buildPureGrant(),
       _buildPapCode(),
@@ -477,7 +352,8 @@ class _NewPapStateScreen extends ConsumerState<NewPapScreen> {
             onPressed: () async {
               // TODO: handle submit
               FullProjectRequest projectToSubmit =
-                  FullProjectRequest.fromFullProject(project);
+                  FullProjectRequest.fromFullProject(
+                      ref.watch(fullProjectControllerProvider));
 
               debugPrint(projectToSubmit.toJson().toString());
 
@@ -510,88 +386,6 @@ class _NewPapStateScreen extends ConsumerState<NewPapScreen> {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildRegularProgram() {
-    final regularProgram = ref.watch(
-        fullProjectControllerProvider.select((value) => value.regularProgram));
-    final type =
-        ref.watch(fullProjectControllerProvider.select((value) => value.type));
-
-    return SwitchListTile(
-      value: regularProgram ?? false,
-      onChanged: type?.value == 1
-          ? (bool value) {
-              ref
-                  .read(fullProjectControllerProvider.notifier)
-                  .update(regularProgram: value);
-            }
-          : null,
-      title: const Text('Regular Program'),
-      subtitle: const Text(
-          'A regular program refers to a program being implemented by the agencies on a continuing basis.'),
-    );
-  }
-
-  Widget _buildBases() {
-    final bases =
-        ref.watch(fullProjectControllerProvider.select((value) => value.bases));
-
-    return ListTile(
-      title: const Text('Basis for Implementation'),
-      subtitle: bases.isNotEmpty
-          ? Text(bases.map((e) => e.label).join(', '))
-          : const Text(
-              'Select as many as applicable',
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-      trailing:
-          bases.isNotEmpty ? const SuccessIndicator() : const EmptyIndicator(),
-      onTap: _selectBases,
-    );
-  }
-
-  Widget _buildTotalProjectCost() {
-    final totalCost = ref.watch(
-        fullProjectControllerProvider.select((state) => state.totalCost));
-
-    return ListTile(
-      title: const Text('Total Project Cost in absolute PHP'),
-      trailing:
-          totalCost != null ? const SuccessIndicator() : const EmptyIndicator(),
-      subtitle: TextFormField(
-        focusNode: _totalCostNode,
-        initialValue: totalCost?.toString() ?? '',
-        inputFormatters: [
-          FilteringTextInputFormatter.digitsOnly,
-        ],
-        decoration: getTextInputDecoration(hintText: 'Total Project Cost'),
-        style: Theme.of(context).textTheme.bodyMedium,
-        onChanged: (String value) {
-          ref
-              .read(fullProjectControllerProvider.notifier)
-              .update(totalCost: double.tryParse(value));
-        },
-      ),
-      onTap: () {
-        _totalCostNode.requestFocus();
-      },
-    );
-  }
-
-  Widget _buildOffice() {
-    final office = ref
-        .watch(fullProjectControllerProvider.select((value) => value.office));
-
-    return ListTile(
-      title: const Text('Office'),
-      subtitle:
-          office != null ? Text(office.acronym) : const Text('Select one'),
-      trailing:
-          office != null ? const SuccessIndicator() : const EmptyIndicator(),
-      onTap: _selectOffice,
     );
   }
 
@@ -1557,183 +1351,6 @@ class _NewPapStateScreen extends ConsumerState<NewPapScreen> {
   // CIP only
 
   // CIP only
-  Widget _buildRow() {
-    final hasRow = ref
-        .watch(fullProjectControllerProvider.select((state) => state.hasRow));
-    final cip =
-        ref.watch(fullProjectControllerProvider.select((state) => state.cip));
-
-    return SwitchListTile(
-      title: const Text('With Right of Way Component?'),
-      value: hasRow ?? false,
-      onChanged: cip ?? false
-          ? (bool value) {
-              ref
-                  .read(fullProjectControllerProvider.notifier)
-                  .update(hasRow: value);
-            }
-          : null,
-    );
-  }
-
-  // CIP only
-  Widget _buildRowCost() {
-    final windowWidth = MediaQuery.of(context).size.width - 128;
-    final columnWidth = windowWidth / 6;
-
-    return SizedBox(
-      width: double.infinity,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: DataTable(
-          dataRowMinHeight: 60,
-          dataRowMaxHeight: 60,
-          columnSpacing: 1,
-          border: TableBorder.all(
-            color: Colors.grey,
-            width: 0.5,
-            borderRadius: BorderRadius.circular(16),
-          ),
-          columns: List.generate(6, (index) {
-            return DataColumn(
-              label: SizedBox(
-                width: columnWidth,
-                child: Center(
-                  child: Text("FY ${2023 + index}"),
-                ),
-              ),
-            );
-          }),
-          rows: [
-            DataRow(
-              cells: List.generate(
-                6,
-                (index) {
-                  return DataCell(SizedBox(
-                    width: columnWidth,
-                    child: TextField(
-                      key: ValueKey("row_$index"),
-                      decoration: getTextInputDecoration(),
-                      textAlign: TextAlign.right,
-                      textAlignVertical: TextAlignVertical.center,
-                      expands: false,
-                    ),
-                  ));
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildRowAffectedHouseholds() {
-    final rowAffectedHouseholds = ref.watch(fullProjectControllerProvider
-        .select((value) => value.rowAffectedHouseholds));
-
-    return ListTile(
-      title: const Text('Affected Households'),
-      subtitle: TextFormField(
-        inputFormatters: [
-          FilteringTextInputFormatter.digitsOnly,
-        ],
-        // TODO: initial value and onChanged
-        initialValue: rowAffectedHouseholds.toString(),
-        decoration: getTextInputDecoration(),
-        onChanged: (String value) {
-          ref
-              .read(fullProjectControllerProvider.notifier)
-              .update(rowAffectedHouseholds: int.tryParse(value));
-        },
-      ),
-    );
-  }
-
-  // CIP only
-  Widget _buildRap() {
-    final hasRap = ref
-        .watch(fullProjectControllerProvider.select((state) => state.hasRap));
-    final cip =
-        ref.watch(fullProjectControllerProvider.select((state) => state.cip));
-
-    return SwitchListTile(
-      title: const Text('With Resettlement Component?'),
-      value: hasRap ?? false,
-      onChanged: cip ?? false
-          ? (bool value) {
-              ref
-                  .read(fullProjectControllerProvider.notifier)
-                  .update(hasRap: value);
-            }
-          : null,
-    );
-  }
-
-  // CIP only
-  Widget _buildRapCost() {
-    final windowWidth = MediaQuery.of(context).size.width - 128;
-    final columnWidth = windowWidth / 6;
-
-    final columns = List.generate(6, (index) {
-      return DataColumn(
-          label: SizedBox(
-              width: columnWidth,
-              child: Center(child: Text("FY ${2023 + index}"))));
-    });
-
-    final rows = [
-      DataRow(
-        cells: List.generate(
-          6,
-          (index) {
-            return DataCell(SizedBox(
-              width: columnWidth,
-              child: TextField(
-                key: ValueKey("rap_$index"),
-                decoration: getTextInputDecoration(),
-                textAlign: TextAlign.right,
-                textAlignVertical: TextAlignVertical.center,
-                expands: false,
-              ),
-            ));
-          },
-        ),
-      ),
-    ];
-
-    return SizedBox(
-      width: double.infinity,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: DataTable(
-          dataRowMinHeight: 60,
-          dataRowMaxHeight: 60,
-          columnSpacing: 1,
-          border: TableBorder.all(
-            color: Colors.grey,
-            width: 0.5,
-            borderRadius: BorderRadius.circular(16),
-          ),
-          columns: columns,
-          rows: rows,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildRapAffectedHouseholds() {
-    return ListTile(
-      title: const Text('Affected Households'),
-      subtitle: TextFormField(
-        inputFormatters: [
-          FilteringTextInputFormatter.digitsOnly,
-        ],
-        // TODO: initial value and onChanged
-        decoration: getTextInputDecoration(),
-      ),
-    );
-  }
 
   // CIP only
   Widget _buildRowRap() {
@@ -1755,673 +1372,11 @@ class _NewPapStateScreen extends ConsumerState<NewPapScreen> {
     );
   }
 
-  Widget _buildEmployment() {
-    final trip =
-        ref.watch(fullProjectControllerProvider.select((state) => state.trip));
-
-    return ListTile(
-      enabled: trip ?? false,
-      title: const Text('No. of persons to be employed'),
-      subtitle: Text(_totalEmployment.toString()),
-    );
-  }
-
-  Widget _buildEmploymentMale() {
-    final employedMale = ref.watch(
-        fullProjectControllerProvider.select((value) => value.employedMale));
-
-    return ListTile(
-      title: const Text('No. of Males'),
-      subtitle: TextFormField(
-        focusNode: _employedMaleNode,
-        // TODO: initial value and onChanged
-        initialValue: employedMale?.toString() ?? '',
-        keyboardType: TextInputType.number,
-        decoration: getTextInputDecoration(hintText: 'No. of Males'),
-        style: Theme.of(context).textTheme.bodyMedium,
-        onChanged: (String value) {
-          ref
-              .read(fullProjectControllerProvider.notifier)
-              .update(employedMale: int.tryParse(value));
-        },
-      ),
-      onTap: () {
-        _employedMaleNode.requestFocus();
-      },
-    );
-  }
-
-  Widget _buildEmploymentFemale() {
-    final employedFemale = ref.watch(
-        fullProjectControllerProvider.select((value) => value.employedFemale));
-
-    return ListTile(
-      title: const Text('No. of Females'),
-      subtitle: TextFormField(
-        focusNode: _employedFemaleNode,
-        // TODO: initial value and onChanged
-        initialValue: employedFemale?.toString() ?? '',
-        keyboardType: TextInputType.number,
-        decoration: getTextInputDecoration(hintText: 'No. of Females'),
-        style: Theme.of(context).textTheme.bodyMedium,
-        onChanged: (String value) {
-          ref
-              .read(fullProjectControllerProvider.notifier)
-              .update(employedFemale: int.tryParse(value));
-        },
-      ),
-      onTap: () {
-        _employedFemaleNode.requestFocus();
-      },
-    );
-  }
-
-  Widget _buildFundingSource() {
-    final fundingSource = ref.watch(
-        fullProjectControllerProvider.select((state) => state.fundingSource));
-    final type =
-        ref.watch(fullProjectControllerProvider.select((state) => state.type));
-
-    return ListTile(
-      title: const Text('Main Funding Source'),
-      subtitle: fundingSource != null
-          ? Text(fundingSource.label)
-          : const Text('Select one'),
-      trailing: fundingSource != null
-          ? const SuccessIndicator()
-          : const EmptyIndicator(),
-      onTap: type?.value != 1 ? _selectFundingSource : null,
-    );
-  }
-
-  Future<void> _selectFundingSource() async {
-    final fundingSource = ref.watch(
-        fullProjectControllerProvider.select((value) => value.fundingSource));
-    final optionsAsync = ref.watch(optionsControllerProvider);
-
-    final response = await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        Option? selected = fundingSource;
-
-        //
-        return AlertDialog(
-          contentPadding: const EdgeInsets.symmetric(vertical: 16),
-          title: const Text('Main Funding Source'),
-          content: optionsAsync.when(
-              data: (data) {
-                return SelectDialogContent(
-                  options: data.data.fundingSources ?? [],
-                  multiple: false,
-                  selected: selected,
-                  onChanged: (value) {
-                    selected = value;
-                  },
-                );
-              },
-              error: (error, stacktrace) {
-                return Container();
-              },
-              loading: () => const CircularProgressIndicator()),
-          actions: [
-            _buildCancel(),
-            _buildUpdate(
-              onUpdate: () {
-                Navigator.pop(context, selected);
-              },
-            ),
-          ],
-        );
-      },
-    );
-
-    ref
-        .read(fullProjectControllerProvider.notifier)
-        .update(fundingSource: response);
-  }
-
-  Widget _buildFundingSources() {
-    final fundingSources = ref.watch(
-        fullProjectControllerProvider.select((value) => value.fundingSources));
-    final type =
-        ref.watch(fullProjectControllerProvider.select((value) => value.type));
-
-    return ListTile(
-      enabled: type?.value != 1,
-      // enable only if pap type if not a program
-      title: const Text('Other Funding Sources'),
-      subtitle: fundingSources.isNotEmpty
-          ? Text(fundingSources.map((e) => e.label).join(', '))
-          : const Text('Select as many as applicable'),
-      trailing: fundingSources.isNotEmpty
-          ? const SuccessIndicator()
-          : const EmptyIndicator(),
-      onTap: _selectFundingSources,
-    );
-  }
-
-  Future<void> _selectFundingSources() async {
-    final fundingSources = ref.watch(
-        fullProjectControllerProvider.select((value) => value.fundingSources));
-    final optionsAsync = ref.watch(optionsControllerProvider);
-
-    final response = await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        List<Option> selected = fundingSources;
-
-        //
-        return AlertDialog(
-          contentPadding: const EdgeInsets.symmetric(vertical: 16),
-          title: const Text('Other Funding Sources'),
-          content: optionsAsync.when(
-              data: (data) {
-                return SelectDialogContent(
-                  options: data.data.fundingSources ?? [],
-                  multiple: true,
-                  selected: selected,
-                  onChanged: (value) {
-                    selected = value;
-                  },
-                );
-              },
-              error: (error, stacktrace) {
-                return Container();
-              },
-              loading: () => const CircularProgressIndicator()),
-          actions: [
-            _buildCancel(),
-            _buildUpdate(
-              onUpdate: () {
-                Navigator.pop(context, selected);
-              },
-            ),
-          ],
-        );
-      },
-    );
-
-    ref
-        .read(fullProjectControllerProvider.notifier)
-        .update(fundingSources: response);
-  }
-
-  Widget _buildImplementationMode() {
-    final implementationMode = ref.watch(fullProjectControllerProvider
-        .select((state) => state.implementationMode));
-    final type =
-        ref.watch(fullProjectControllerProvider.select((state) => state.type));
-
-    return ListTile(
-      title: const Text('Mode of Implementation'),
-      subtitle: implementationMode != null
-          ? Text(implementationMode.label)
-          : const Text('Select one'),
-      trailing: implementationMode != null
-          ? const SuccessIndicator()
-          : const EmptyIndicator(),
-      onTap: type?.value != 1 ? _selectImplementationMode : null,
-    );
-  }
-
-  Future<void> _selectImplementationMode() async {
-    final implementationMode = ref.watch(fullProjectControllerProvider
-        .select((state) => state.implementationMode));
-    final optionsAsync = ref.watch(optionsControllerProvider);
-
-    final response = await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        Option? selected = implementationMode;
-
-        //
-        return AlertDialog(
-          contentPadding: const EdgeInsets.symmetric(vertical: 16),
-          title: const Text('Mode of Implementation'),
-          content: optionsAsync.when(
-              data: (data) {
-                return SelectDialogContent(
-                  options: data.data.implementationModes ?? [],
-                  multiple: false,
-                  selected: selected,
-                  onChanged: (value) {
-                    selected = value;
-                  },
-                );
-              },
-              error: (error, stacktrace) {
-                return Container();
-              },
-              loading: () => const CircularProgressIndicator()),
-          actions: [
-            _buildCancel(),
-            _buildUpdate(onUpdate: () {
-              Navigator.pop(context, selected);
-            }),
-          ],
-        );
-      },
-    );
-
-    ref
-        .read(fullProjectControllerProvider.notifier)
-        .update(implementationMode: response);
-  }
-
-  Widget _buildFundingInstitutions() {
-    final fundingInstitutions = ref.watch(fullProjectControllerProvider
-        .select((state) => state.fundingInstitutions));
-
-    return ListTile(
-      title: const Text('Funding Institutions'),
-      subtitle: fundingInstitutions.isNotEmpty
-          ? Text(fundingInstitutions.map((element) => element.label).join(', '))
-          : const Text('Select as many as applicable'),
-      trailing: fundingInstitutions.isNotEmpty
-          ? const SuccessIndicator()
-          : const EmptyIndicator(),
-      // TODO: disable if not NG-Grant/NG-Loan
-      onTap: _selectFundingInstitutions,
-    );
-  }
-
-  Future<void> _selectFundingInstitutions() async {
-    final fundingInstitutions = ref.watch(fullProjectControllerProvider
-        .select((state) => state.fundingInstitutions));
-    final optionsAsync = ref.watch(optionsControllerProvider);
-
-    final response = await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          List<Option> selected = fundingInstitutions;
-
-          return AlertDialog(
-            title: const Text('Funding Institutions'),
-            content: optionsAsync.when(
-                data: (data) {
-                  return SelectDialogContent(
-                    options: data.data.fundingInstitutions ?? [],
-                    multiple: true,
-                    selected: selected,
-                    onChanged: (value) {
-                      selected = value;
-                    },
-                  );
-                },
-                error: (error, stacktrace) {
-                  return Container();
-                },
-                loading: () => const CircularProgressIndicator()),
-            actions: [
-              _buildCancel(),
-              _buildUpdate(onUpdate: () {
-                Navigator.pop(context, selected);
-              }),
-            ],
-          );
-        });
-
-    ref
-        .read(fullProjectControllerProvider.notifier)
-        .update(fundingInstitutions: response);
-  }
-
-  /// TRIP only
-  Widget _buildCategory() {
-    final trip =
-        ref.watch(fullProjectControllerProvider.select((value) => value.trip));
-    final category = ref
-        .watch(fullProjectControllerProvider.select((value) => value.category));
-
-    return ListTile(
-      enabled: trip ?? false,
-      title: const Text('Category'),
-      subtitle:
-          category != null ? Text(category.label) : const Text('Select one'),
-      trailing:
-          category != null ? const SuccessIndicator() : const EmptyIndicator(),
-      onTap: _selectCategory,
-    );
-  }
+  ///
+  ///
 
   ///
   ///
-  Future<void> _selectCategory() async {
-    final category = ref
-        .watch(fullProjectControllerProvider.select((value) => value.category));
-    final optionsAsync = ref.watch(optionsControllerProvider);
-
-    final response = await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        Option? selected = category;
-
-        //
-        return AlertDialog(
-          contentPadding: const EdgeInsets.symmetric(vertical: 16),
-          title: const Text('Category'),
-          content: optionsAsync.when(
-              data: (data) {
-                return SelectDialogContent(
-                  options: data.data.categories ?? [],
-                  multiple: false,
-                  selected: selected,
-                  onChanged: (value) {
-                    selected = value;
-                  },
-                );
-              },
-              error: (error, stacktrace) {
-                return Container();
-              },
-              loading: () => const CircularProgressIndicator()),
-          actions: [
-            _buildCancel(),
-            _buildUpdate(onUpdate: () {
-              Navigator.pop(context, selected);
-            })
-          ],
-        );
-      },
-    );
-
-    ref.read(fullProjectControllerProvider.notifier).update(category: response);
-  }
-
-  Widget _buildReadiness() {
-    final trip =
-        ref.watch(fullProjectControllerProvider.select((value) => value.trip));
-    final projectStatus = ref.watch(
-        fullProjectControllerProvider.select((value) => value.projectStatus));
-
-    return ListTile(
-      enabled: trip ?? false,
-      title: const Text('Status of ImplementationReadiness'),
-      subtitle: projectStatus != null
-          ? Text(projectStatus.label)
-          : const Text('Select one'),
-      trailing: projectStatus != null
-          ? const SuccessIndicator()
-          : const EmptyIndicator(),
-      onTap: _selectReadiness,
-    );
-  }
-
-  Future<void> _selectReadiness() async {
-    final projectStatus = ref.watch(
-        fullProjectControllerProvider.select((value) => value.projectStatus));
-    final optionsAsync = ref.watch(optionsControllerProvider);
-
-    final response = await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        Option? selected = projectStatus;
-
-        //
-        return AlertDialog(
-          contentPadding: const EdgeInsets.symmetric(vertical: 16),
-          title: const Text('Status of Implementation Readiness'),
-          content: optionsAsync.when(
-              data: (data) {
-                return SelectDialogContent(
-                  options: data.data.projectStatuses ?? [],
-                  multiple: false,
-                  selected: selected,
-                  onChanged: (value) {
-                    selected = value;
-                  },
-                );
-              },
-              error: (error, stacktrace) {
-                return Container();
-              },
-              loading: () => const CircularProgressIndicator()),
-          actions: [
-            _buildCancel(),
-            _buildUpdate(onUpdate: () {
-              Navigator.pop(context, selected);
-            }),
-          ],
-        );
-      },
-    );
-
-    // TODO: update category
-    ref
-        .read(fullProjectControllerProvider.notifier)
-        .update(projectStatus: response);
-  }
-
-  ///
-  ///
-  Widget _buildUpdates() {
-    final updates = ref
-        .watch(fullProjectControllerProvider.select((value) => value.updates));
-
-    return ListTile(
-      title: const Text('Updates'),
-      subtitle: TextFormField(
-        focusNode: _updateNode,
-        // TODO: initial value and onChanged
-        initialValue: updates,
-        decoration: getTextInputDecoration(
-            hintText:
-                'For proposed program/project, please indicate the physical status of the program/project in terms of project preparation, approval, funding, etc. If ongoing, please provide information on the delivery of outputs, percentage of completion and financial status/ accomplishment in terms of utilization rate. Indicate the date of reference of the updates provided i.e. as of (month, day, year).'),
-        minLines: 3,
-        maxLines: 4,
-        style: Theme.of(context).textTheme.bodyMedium,
-        onChanged: (String value) {
-          ref
-              .read(fullProjectControllerProvider.notifier)
-              .update(updates: value);
-        },
-      ),
-      trailing: updates != null && updates.isNotEmpty
-          ? const SuccessIndicator()
-          : const EmptyIndicator(),
-      onTap: () {
-        _updateNode.requestFocus();
-      },
-    );
-  }
-
-  ///
-  ///
-  Widget _buildUpdatesAsOf() {
-    final asOf =
-        ref.watch(fullProjectControllerProvider.select((state) => state.asOf));
-
-    return ListTile(
-      title: const Text('As of'),
-      subtitle: asOf != null
-          ? Text(DateFormat.yMMMd().format(asOf))
-          : const Text('Select date'),
-      trailing:
-          asOf != null ? const SuccessIndicator() : const EmptyIndicator(),
-      onTap: _selectUpdatesAsOf,
-    );
-  }
-
-  ///
-  ///
-  Future<void> _selectUpdatesAsOf() async {
-    final asOf =
-        ref.watch(fullProjectControllerProvider.select((state) => state.asOf));
-
-    final DateTime? result = await showDatePicker(
-      context: context,
-      initialDate: asOf ?? DateTime.now(),
-      firstDate: DateTime(2022),
-      lastDate: DateTime.now(),
-    );
-
-    ref.read(fullProjectControllerProvider.notifier).update(asOf: result);
-  }
-
-  ///
-  ///
-  Widget _buildStart() {
-    final startYear = ref.watch(
-        fullProjectControllerProvider.select((value) => value.startYear));
-    final type =
-        ref.watch(fullProjectControllerProvider.select((state) => state.type));
-
-    return ListTile(
-      title: const Text('Start of Project Implementation'),
-      subtitle:
-          startYear != null ? Text(startYear.label) : const Text('Select year'),
-      trailing:
-          startYear != null ? const SuccessIndicator() : const EmptyIndicator(),
-      // _project.type?.value != 1
-      onTap: type?.value != 1
-          ? _selectStart
-          : () {
-              //
-              _showSnackbar(
-                message: 'Unable to change implementation period for programs.',
-                status: Status.error,
-              );
-            },
-    );
-  }
-
-  ///
-  ///
-  Future<void> _selectStart() async {
-    final startYear = ref.watch(
-        fullProjectControllerProvider.select((state) => state.startYear));
-    final endYear = ref
-        .watch(fullProjectControllerProvider.select((state) => state.endYear));
-    final optionsAsync = ref.watch(optionsControllerProvider);
-
-    final response = await showDialog(
-        context: context,
-        builder: (context) {
-          Option? selected = startYear;
-
-          return AlertDialog(
-            title: const Text('Start of Project Implementation'),
-            contentPadding: const EdgeInsets.symmetric(vertical: 16),
-            content: optionsAsync.when(
-              data: (data) {
-                final years = data.data.years
-                        ?.where((element) => (element.value.toInt() <= 2028))
-                        .toList() ??
-                    [];
-
-                return SelectDialogContent(
-                  options: years,
-                  multiple: false,
-                  selected: selected,
-                  onChanged: (value) {
-                    selected = value;
-                  },
-                );
-              },
-              error: (error, stacktrace) {
-                return Container();
-              },
-              loading: () => const CircularProgressIndicator(),
-            ),
-            actions: [
-              _buildCancel(),
-              _buildUpdate(onUpdate: () {
-                Navigator.pop(context, selected);
-              }),
-            ],
-          );
-        });
-
-    // clear end year if it is before start year
-    if (endYear != null &&
-        response != null &&
-        endYear.value < response!.value) {
-      ref.read(fullProjectControllerProvider.notifier).update(endYear: null);
-
-      _showSnackbar(
-          message:
-              'Year of project completion has been removed because it is before the selected start of project implementation.');
-    }
-
-    ref
-        .read(fullProjectControllerProvider.notifier)
-        .update(startYear: response);
-  }
-
-  Widget _buildEnd() {
-    final startYear = ref.watch(
-        fullProjectControllerProvider.select((state) => state.startYear));
-    final endYear = ref
-        .watch(fullProjectControllerProvider.select((state) => state.endYear));
-    final type =
-        ref.watch(fullProjectControllerProvider.select((state) => state.type));
-
-    return ListTile(
-      enabled: startYear != null,
-      title: const Text('Year of Project Completion'),
-      subtitle: endYear != null
-          ? Text(endYear.label)
-          : (startYear != null
-              ? const Text('Select year')
-              : const Text('Select start of project implementation first')),
-      trailing:
-          endYear != null ? const SuccessIndicator() : const EmptyIndicator(),
-      onTap: type?.value != 1
-          ? _selectEnd
-          : () {
-              //
-              _showSnackbar(
-                message: 'Unable to change implementation period for programs.',
-                status: Status.error,
-              );
-            },
-    );
-  }
-
-  Future<void> _selectEnd() async {
-    final endYear = ref
-        .watch(fullProjectControllerProvider.select((state) => state.endYear));
-    final optionsAsync = ref.watch(optionsControllerProvider);
-
-    final response = await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          Option? selected = endYear;
-
-          return AlertDialog(
-            title: const Text('Year of Project Completion'),
-            contentPadding: const EdgeInsets.symmetric(vertical: 16),
-            content: optionsAsync.when(
-                data: (data) {
-                  final years = data.data.years
-                          ?.where((element) => (element.value >= 2023))
-                          .toList() ??
-                      [];
-
-                  return SelectDialogContent(
-                    options: years,
-                    multiple: false,
-                    selected: selected,
-                    onChanged: (value) {
-                      selected = value;
-                    },
-                  );
-                },
-                error: (error, stacktrace) {
-                  return Container();
-                },
-                loading: () => const CircularProgressIndicator()),
-            actions: [
-              _buildCancel(),
-              _buildUpdate(onUpdate: () {
-                Navigator.pop(context, selected);
-              }),
-            ],
-          );
-        });
-
-    ref.read(fullProjectControllerProvider.notifier).update(endYear: response);
-  }
 
   Widget _buildPapCode() {
     final pureGrant = ref.watch(
@@ -2576,6 +1531,29 @@ class _NewPapStateScreen extends ConsumerState<NewPapScreen> {
           approvalLevelDate: null,
           gad: null,
         );
+  }
+}
+
+class RegularProgram extends ConsumerWidget {
+  const RegularProgram({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return SwitchListTile(
+      value: ref.watch(fullProjectControllerProvider).regularProgram ?? false,
+      onChanged: ref.watch(fullProjectControllerProvider).type?.value == 1
+          ? (bool value) {
+              ref
+                  .read(fullProjectControllerProvider.notifier)
+                  .update(regularProgram: value);
+            }
+          : null,
+      title: const Text('Regular Program'),
+      subtitle: const Text(
+          'A regular program refers to a program being implemented by the agencies on a continuing basis.'),
+    );
   }
 }
 
