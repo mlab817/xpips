@@ -2,6 +2,8 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:pips/application/providers/searchhistory_provider.dart';
+import 'package:pips/data/repositories/project_repository.dart';
 import 'package:pips/domain/models/pagination.dart';
 import 'package:pips/domain/models/pipsstatus.dart';
 import 'package:pips/presentation/controllers/options_controller.dart';
@@ -24,6 +26,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   final int _perPage = 25;
   PipsStatus? _pipsStatus = PipsStatus(id: 1, name: 'Draft', projectsCount: 0);
 
+  final TextEditingController _searchController = TextEditingController();
+
   List<Project>? _projects;
   Pagination? _pagination;
 
@@ -37,6 +41,24 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         builder: (context) {
           return Container();
         });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    Future.delayed(Duration.zero, () {
+      ref.read(searchHistoryProvider.notifier).retrieve();
+      _searchController.text =
+          ref.watch(projectsRequestControllerProvider).q ?? '';
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    _searchController.dispose();
   }
 
   @override
@@ -56,11 +78,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           IconButton(
               onPressed: _showFilters, icon: const Icon(Icons.tune_outlined)),
           IconButton(
-              onPressed: () {
-                showSearch(
+              onPressed: () async {
+                final String query = await showSearch(
                     context: context,
                     delegate: _HomeSearchDelegate(
                         ref: ref, projects: _projects ?? []));
+
+                if (query.isNotEmpty) {
+                  ref
+                      .read(projectsRequestControllerProvider.notifier)
+                      .update(q: query);
+                }
               },
               icon: const Icon(Icons.search)),
         ],
@@ -239,8 +267,54 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               color: Theme.of(context).primaryColor,
                             ),
                       ),
+                      SizedBox(
+                        width: 280,
+                        child: TextFormField(
+                          controller: _searchController,
+                          decoration: InputDecoration(
+                            fillColor: Colors.transparent,
+                            hoverColor: Colors.transparent,
+                            focusColor: Colors.transparent,
+                            prefixIcon: const Icon(Icons.search),
+                            suffixIcon: ref
+                                            .watch(
+                                                projectsRequestControllerProvider)
+                                            .q !=
+                                        null &&
+                                    ref
+                                        .watch(
+                                            projectsRequestControllerProvider)
+                                        .q!
+                                        .isNotEmpty
+                                ? IconButton(
+                                    icon: const Icon(Icons.clear),
+                                    onPressed: () {
+                                      ref
+                                          .read(
+                                              projectsRequestControllerProvider
+                                                  .notifier)
+                                          .clearQuery();
+                                      _searchController.clear();
+                                    })
+                                : null,
+                            border: InputBorder.none,
+                            focusedBorder: InputBorder.none,
+                            enabledBorder: InputBorder.none,
+                            hintText: 'Type and press enter to search',
+                          ),
+                          onFieldSubmitted: (String value) {
+                            // update the query value in the provider
+                            ref
+                                .read(
+                                    projectsRequestControllerProvider.notifier)
+                                .update(q: value);
+                          },
+                        ),
+                      ),
                       const Spacer(),
-                      // TODO: fix this
+                      const SizedBox(
+                        width: 10,
+                      ),
                       _pagination != null ? _buildPageSelector() : Container(),
                     ],
                   ),
@@ -369,15 +443,22 @@ class _HomeSearchDelegate extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
+    // add the query to history
+    ref.read(searchHistoryProvider.notifier).add(query);
+    ref.read(projectsRequestControllerProvider.notifier).update(q: query);
+
     final results = ref.watch(homeScreenControllerProvider);
 
     return results.when(
         data: (data) {
           return ListView.builder(
-              itemCount: data.data.length,
-              itemBuilder: (context, index) {
-                return ListTile(title: Text(data.data[index].title));
-              });
+            itemCount: data.data.length,
+            itemBuilder: (context, index) {
+              return ListTile(
+                title: Text(data.data[index].title),
+              );
+            },
+          );
         },
         error: (error, stackTrace) => Center(child: Text(error.toString())),
         loading: () => const Center(
@@ -395,15 +476,29 @@ class _HomeSearchDelegate extends SearchDelegate {
     }
 
     // pass data from home
-    final suggestions = projects
-        .where((element) =>
-            element.title.toLowerCase().contains(query.toLowerCase()))
+    final suggestions = ref
+        .watch(searchHistoryProvider)
+        .where((String element) =>
+            element.toLowerCase().contains(query.toLowerCase()))
         .toList();
 
     return ListView.builder(
         itemCount: suggestions.length,
         itemBuilder: (context, index) {
-          return ListTile(title: Text(suggestions[index].title));
+          return ListTile(
+            title: Text(suggestions[index]),
+            onTap: () {
+              query = suggestions[index];
+            },
+            trailing: IconButton(
+              onPressed: () {
+                ref
+                    .read(searchHistoryProvider.notifier)
+                    .remove(suggestions[index]);
+              },
+              icon: const Icon(Icons.clear),
+            ),
+          );
         });
   }
 }
