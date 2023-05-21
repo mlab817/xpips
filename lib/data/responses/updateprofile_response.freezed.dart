@@ -21,7 +21,8 @@ UpdateProfileResponse _$UpdateProfileResponseFromJson(
 
 /// @nodoc
 mixin _$UpdateProfileResponse {
-  String get status => throw _privateConstructorUsedError;
+  bool get success => throw _privateConstructorUsedError;
+  User get user => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -35,7 +36,9 @@ abstract class $UpdateProfileResponseCopyWith<$Res> {
           $Res Function(UpdateProfileResponse) then) =
       _$UpdateProfileResponseCopyWithImpl<$Res, UpdateProfileResponse>;
   @useResult
-  $Res call({String status});
+  $Res call({bool success, User user});
+
+  $UserCopyWith<$Res> get user;
 }
 
 /// @nodoc
@@ -52,14 +55,27 @@ class _$UpdateProfileResponseCopyWithImpl<$Res,
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? status = null,
+    Object? success = null,
+    Object? user = null,
   }) {
     return _then(_value.copyWith(
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as String,
+      success: null == success
+          ? _value.success
+          : success // ignore: cast_nullable_to_non_nullable
+              as bool,
+      user: null == user
+          ? _value.user
+          : user // ignore: cast_nullable_to_non_nullable
+              as User,
     ) as $Val);
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $UserCopyWith<$Res> get user {
+    return $UserCopyWith<$Res>(_value.user, (value) {
+      return _then(_value.copyWith(user: value) as $Val);
+    });
   }
 }
 
@@ -71,7 +87,10 @@ abstract class _$$_UpdateProfileResponseCopyWith<$Res>
       __$$_UpdateProfileResponseCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String status});
+  $Res call({bool success, User user});
+
+  @override
+  $UserCopyWith<$Res> get user;
 }
 
 /// @nodoc
@@ -85,13 +104,18 @@ class __$$_UpdateProfileResponseCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? status = null,
+    Object? success = null,
+    Object? user = null,
   }) {
     return _then(_$_UpdateProfileResponse(
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as String,
+      success: null == success
+          ? _value.success
+          : success // ignore: cast_nullable_to_non_nullable
+              as bool,
+      user: null == user
+          ? _value.user
+          : user // ignore: cast_nullable_to_non_nullable
+              as User,
     ));
   }
 }
@@ -99,17 +123,19 @@ class __$$_UpdateProfileResponseCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$_UpdateProfileResponse implements _UpdateProfileResponse {
-  _$_UpdateProfileResponse({required this.status});
+  _$_UpdateProfileResponse({required this.success, required this.user});
 
   factory _$_UpdateProfileResponse.fromJson(Map<String, dynamic> json) =>
       _$$_UpdateProfileResponseFromJson(json);
 
   @override
-  final String status;
+  final bool success;
+  @override
+  final User user;
 
   @override
   String toString() {
-    return 'UpdateProfileResponse(status: $status)';
+    return 'UpdateProfileResponse(success: $success, user: $user)';
   }
 
   @override
@@ -117,12 +143,13 @@ class _$_UpdateProfileResponse implements _UpdateProfileResponse {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_UpdateProfileResponse &&
-            (identical(other.status, status) || other.status == status));
+            (identical(other.success, success) || other.success == success) &&
+            (identical(other.user, user) || other.user == user));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, status);
+  int get hashCode => Object.hash(runtimeType, success, user);
 
   @JsonKey(ignore: true)
   @override
@@ -140,14 +167,17 @@ class _$_UpdateProfileResponse implements _UpdateProfileResponse {
 }
 
 abstract class _UpdateProfileResponse implements UpdateProfileResponse {
-  factory _UpdateProfileResponse({required final String status}) =
-      _$_UpdateProfileResponse;
+  factory _UpdateProfileResponse(
+      {required final bool success,
+      required final User user}) = _$_UpdateProfileResponse;
 
   factory _UpdateProfileResponse.fromJson(Map<String, dynamic> json) =
       _$_UpdateProfileResponse.fromJson;
 
   @override
-  String get status;
+  bool get success;
+  @override
+  User get user;
   @override
   @JsonKey(ignore: true)
   _$$_UpdateProfileResponseCopyWith<_$_UpdateProfileResponse> get copyWith =>
