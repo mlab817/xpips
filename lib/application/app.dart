@@ -10,16 +10,14 @@ import '../presentation/controllers/auth_controller.dart';
 import 'app_router.dart';
 
 class MyApp extends ConsumerWidget {
-  MyApp({Key? key}) : super(key: key);
-
-  final AppRouter _appRouter = AppRouter();
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentUser =
         ref.read(authControllerProvider.notifier).getCurrentUser();
 
-    debugPrint(currentUser.toString());
+    final AppRouter appRouter = AppRouter(isAuthenticated: currentUser != null);
 
     return MaterialApp.router(
       title: 'PIPS',
@@ -117,7 +115,7 @@ class MyApp extends ConsumerWidget {
         // To use the Playground font, add GoogleFonts package and uncomment
         fontFamily: GoogleFonts.robotoCondensed().fontFamily,
       ),
-      routerConfig: _appRouter.config(),
+      routerConfig: appRouter.config(),
     );
   }
 }
