@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'financial_accomplishment.freezed.dart';
+
 part 'financial_accomplishment.g.dart';
 
 @freezed
@@ -71,4 +72,27 @@ class FinancialAccomplishment with _$FinancialAccomplishment {
   }
 
   double get disbursementTotal => _disbursementTotal();
+
+  static FinancialAccomplishment initial() {
+    return FinancialAccomplishment(
+      nep2023: 0,
+      nep2024: 0,
+      nep2025: 0,
+      nep2026: 0,
+      nep2027: 0,
+      nep2028: 0,
+      gaa2023: 0,
+      gaa2024: 0,
+      gaa2025: 0,
+      gaa2026: 0,
+      gaa2027: 0,
+      gaa2028: 0,
+      disbursement2023: 0,
+      disbursement2024: 0,
+      disbursement2025: 0,
+      disbursement2026: 0,
+      disbursement2027: 0,
+      disbursement2028: 0,
+    );
+  }
 }
