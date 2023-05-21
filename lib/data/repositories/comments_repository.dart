@@ -20,6 +20,6 @@ class CommentsRepositoryImplementer implements CommentsRepository {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 CommentsRepository commentsRepository(CommentsRepositoryRef ref) =>
     CommentsRepositoryImplementer(client: ref.watch(appServiceClientProvider));
