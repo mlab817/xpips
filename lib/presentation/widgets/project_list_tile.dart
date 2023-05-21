@@ -1,24 +1,25 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:pips/application/app_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../application/config.dart';
 import '../../application/functions.dart';
 import '../../domain/models/project.dart';
+import '../controllers/viewpap_controller.dart';
 
-class ProjectListTile extends StatefulWidget {
+class ProjectListTile extends ConsumerStatefulWidget {
   const ProjectListTile({Key? key, required this.project}) : super(key: key);
 
   final Project project;
 
   @override
-  State<ProjectListTile> createState() => _ProjectListTileState();
+  ConsumerState<ProjectListTile> createState() => _ProjectListTileState();
 }
 
-class _ProjectListTileState extends State<ProjectListTile> {
+class _ProjectListTileState extends ConsumerState<ProjectListTile> {
   late Project _project;
 
   Future<void> _openInNewWindow() async {
@@ -158,7 +159,8 @@ class _ProjectListTileState extends State<ProjectListTile> {
             ),
             IconButton(
               onPressed: () {
-                AutoRouter.of(context).push(PapViewRoute(project: _project));
+                ref.read(selectedProjectProvider.notifier).update(_project);
+                AutoRouter.of(context).push(const PapViewRoute());
               },
               icon: const Icon(Icons.visibility),
               tooltip: 'View',
@@ -187,7 +189,9 @@ class _ProjectListTileState extends State<ProjectListTile> {
         children: [
           SlidableAction(
             onPressed: (context) {
-              AutoRouter.of(context).push(PapViewRoute(project: _project));
+              ref.read(selectedProjectProvider.notifier).update(_project);
+
+              AutoRouter.of(context).push(const PapViewRoute());
             },
             backgroundColor: Colors.grey,
             foregroundColor: Colors.white,
