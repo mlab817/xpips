@@ -19,6 +19,7 @@ jobs:
           cache: gradle
       - uses: subosito/flutter-action@v2
         with:
+          dart-version: "2.19.0"
           flutter-version: "3.0.0"
           channel: "stable"
 
