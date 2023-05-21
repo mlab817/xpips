@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pips/data/responses/projects_response.dart';
 import 'package:pips/presentation/controllers/chats_controller.dart';
+import 'package:pips/presentation/controllers/viewpap_controller.dart';
 
 import '../../../application/app_router.dart';
 import '../../../presentation/widgets/loading_dialog.dart';
@@ -19,7 +20,7 @@ class ChatScreen extends ConsumerStatefulWidget {
 class _ChatScreenState extends ConsumerState<ChatScreen> {
   @override
   Widget build(BuildContext context) {
-    final valueAsync = ref.watch(chatsControllerProvider);
+    final chatsAsync = ref.watch(chatMessagesProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -28,7 +29,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           LogoutButton(),
         ],
       ),
-      body: valueAsync.when(
+      body: chatsAsync.when(
         data: (data) {
           return Padding(
             padding: const EdgeInsets.all(8.0),
@@ -58,7 +59,9 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
             subtitle: const Text('Last Comment'),
             trailing: const Icon(Icons.chevron_right),
             onTap: () {
-              AutoRouter.of(context).push(PapViewRoute(project: project));
+              ref.read(selectedProjectProvider.notifier).update(project);
+
+              AutoRouter.of(context).push(const PapViewRoute());
             },
           );
         });
@@ -71,10 +74,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         children: [
           Text(
             'Error',
-            style: Theme
-                .of(context)
-                .textTheme
-                .headlineLarge,
+            style: Theme.of(context).textTheme.headlineLarge,
           ),
           const SizedBox(
             height: 20,
