@@ -2,7 +2,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 import '../domain/models/chatroom.dart';
-import '../domain/models/project.dart';
 import '../presentation/screens/chat_screen.dart';
 import '../presentation/screens/chatroom_screen.dart';
 import '../presentation/screens/forgotpassword_screen.dart';
@@ -20,14 +19,20 @@ import '../presentation/screens/splash_screen.dart';
 part 'app_router.gr.dart';
 
 @AutoRouterConfig()
-class AppRouter extends _$AppRouter {
+class AppRouter extends _$AppRouter implements AutoRouteGuard {
+  final bool isAuthenticated;
+
+  AppRouter({required this.isAuthenticated});
+
   @override
-  List<AutoRoute> get routes => [
+  List<AutoRoute> get routes =>
+      [
         AutoRoute(page: SplashRoute.page, initial: true),
         AutoRoute(page: LoginRoute.page, path: '/login'),
         AutoRoute(page: SignupRoute.page, path: '/signup'),
         AutoRoute(page: ForgotPasswordRoute.page, path: '/forgot-password'),
         AutoRoute(
+          guards: [],
           page: MainRoute.page,
           path: '/main',
           children: [
@@ -62,4 +67,21 @@ class AppRouter extends _$AppRouter {
           page: RequestReactivationRoute.page,
         ),
       ];
+
+  @override
+  void onNavigation(NavigationResolver resolver, StackRouter router) {
+    final publicRoutes = <String>[
+      LoginRoute.name,
+      SplashRoute.name,
+      SignupRoute.name,
+    ];
+
+    if (isAuthenticated || publicRoutes.contains(resolver.route.name)) {
+      // if user is authenticated we continue
+      resolver.next(true);
+    } else {
+      router.push(const LoginRoute());
+    }
+  }
 }
+

@@ -80,13 +80,9 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     PapViewRoute.name: (routeData) {
-      final args = routeData.argsAs<PapViewRouteArgs>();
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: PapViewScreen(
-          key: args.key,
-          project: args.project,
-        ),
+        child: const PapViewScreen(),
       );
     },
     HomeRoute.name: (routeData) {
@@ -270,40 +266,16 @@ class MainRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [PapViewScreen]
-class PapViewRoute extends PageRouteInfo<PapViewRouteArgs> {
-  PapViewRoute({
-    Key? key,
-    required Project project,
-    List<PageRouteInfo>? children,
-  }) : super(
+class PapViewRoute extends PageRouteInfo<void> {
+  const PapViewRoute({List<PageRouteInfo>? children})
+      : super(
           PapViewRoute.name,
-          args: PapViewRouteArgs(
-            key: key,
-            project: project,
-          ),
           initialChildren: children,
         );
 
   static const String name = 'PapViewRoute';
 
-  static const PageInfo<PapViewRouteArgs> page =
-      PageInfo<PapViewRouteArgs>(name);
-}
-
-class PapViewRouteArgs {
-  const PapViewRouteArgs({
-    this.key,
-    required this.project,
-  });
-
-  final Key? key;
-
-  final Project project;
-
-  @override
-  String toString() {
-    return 'PapViewRouteArgs{key: $key, project: $project}';
-  }
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
