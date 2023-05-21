@@ -9,11 +9,13 @@ part of 'updateprofile_response.dart';
 _$_UpdateProfileResponse _$$_UpdateProfileResponseFromJson(
         Map<String, dynamic> json) =>
     _$_UpdateProfileResponse(
-      status: json['status'] as String,
+      success: json['success'] as bool,
+      user: User.fromJson(json['user'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$_UpdateProfileResponseToJson(
         _$_UpdateProfileResponse instance) =>
     <String, dynamic>{
-      'status': instance.status,
+      'success': instance.success,
+      'user': instance.user,
     };
