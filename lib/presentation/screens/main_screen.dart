@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pips/application/providers/theme_provider.dart';
+import 'package:pips/data/data_sources/pusher_client.dart';
 
 import '../../application/app_router.dart';
 import '../widgets/logout_button.dart';
@@ -27,7 +28,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
   ];
 
   final List<NavigationRailDestination> _destinations =
-      const <NavigationRailDestination>[
+  const <NavigationRailDestination>[
     NavigationRailDestination(
       icon: Icon(Icons.home),
       label: Text('Home'),
@@ -49,7 +50,12 @@ class _MainScreenState extends ConsumerState<MainScreen> {
   @override
   Widget build(BuildContext context) {
     // retrieve current user
-    var width = MediaQuery.of(context).size.width;
+    var width = MediaQuery
+        .of(context)
+        .size
+        .width;
+
+    ref.watch(pusherClientProvider);
 
     return AutoTabsRouter(
         routes: const [
@@ -58,7 +64,8 @@ class _MainScreenState extends ConsumerState<MainScreen> {
           NotificationsRoute(),
           SettingsRoute(),
         ],
-        transitionBuilder: (context, child, animation) => FadeTransition(
+        transitionBuilder: (context, child, animation) =>
+            FadeTransition(
               opacity: animation,
               // the passed child is technically our animated selected-tab page
               child: child,
@@ -80,7 +87,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                     decoration: const BoxDecoration(
                         border: Border(
                             right:
-                                BorderSide(color: Colors.black, width: 0.2))),
+                            BorderSide(color: Colors.black, width: 0.2))),
                     child: NavigationRail(
                       onDestinationSelected: (int index) {
                         // update current index
@@ -103,14 +110,16 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                           children: [
                             IconButton(
                               onPressed:
-                                  ref.read(themeProvider.notifier).switchTheme,
+                              ref
+                                  .read(themeProvider.notifier)
+                                  .switchTheme,
                               icon: ref.watch(themeProvider) == ThemeMode.dark
                                   ? const Icon(Icons.light_mode)
                                   : const Icon(Icons.dark_mode),
                               tooltip:
-                                  ref.watch(themeProvider) == ThemeMode.dark
-                                      ? 'Switch to Light Mode'
-                                      : 'Switch to Dark Mode',
+                              ref.watch(themeProvider) == ThemeMode.dark
+                                  ? 'Switch to Light Mode'
+                                  : 'Switch to Dark Mode',
                             ),
                             const LogoutButton(),
                           ],
@@ -126,31 +135,31 @@ class _MainScreenState extends ConsumerState<MainScreen> {
             // show bottom navigation bar in smaller devices
             bottomNavigationBar: width < 768
                 ? BottomNavigationBar(
-                    onTap: (int index) {
-                      // update current index
-                      tabsRouter.setActiveIndex(index);
-                    },
-                    currentIndex: tabsRouter.activeIndex,
-                    type: BottomNavigationBarType.fixed,
-                    items: const <BottomNavigationBarItem>[
-                      BottomNavigationBarItem(
-                        icon: Icon(Icons.home),
-                        label: 'Home',
-                      ),
-                      BottomNavigationBarItem(
-                        icon: Icon(Icons.chat_bubble),
-                        label: 'Chat',
-                      ),
-                      BottomNavigationBarItem(
-                        icon: Icon(Icons.notifications),
-                        label: 'Notifications',
-                      ),
-                      BottomNavigationBarItem(
-                        icon: Icon(Icons.settings),
-                        label: 'Settings',
-                      ),
-                    ],
-                  )
+              onTap: (int index) {
+                // update current index
+                tabsRouter.setActiveIndex(index);
+              },
+              currentIndex: tabsRouter.activeIndex,
+              type: BottomNavigationBarType.fixed,
+              items: const <BottomNavigationBarItem>[
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.home),
+                  label: 'Home',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.chat_bubble),
+                  label: 'Chat',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.notifications),
+                  label: 'Notifications',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.settings),
+                  label: 'Settings',
+                ),
+              ],
+            )
                 : null,
           );
         });
