@@ -6,7 +6,7 @@ import 'package:pips/data/responses/projects_response.dart';
 import '../../data/repositories/project_repository.dart';
 import '../../data/requests/projects_request.dart';
 
-class ProjectController extends AsyncNotifier<void> {
+class ProjectsController extends AsyncNotifier<void> {
   late ProjectsRequest request;
   int currentPage = 1;
   String? q;
@@ -45,6 +45,6 @@ class ProjectController extends AsyncNotifier<void> {
 }
 
 final projectControllerProvider =
-    AsyncNotifierProvider<ProjectController, void>(() {
-  return ProjectController();
+    AsyncNotifierProvider<ProjectsController, void>(() {
+  return ProjectsController();
 });
