@@ -18,14 +18,15 @@ class _UpdateTitle extends ConsumerState {
 
   @override
   Widget build(BuildContext context) {
-    final project = ref.watch(fullProjectControllerProvider);
+    final title =
+        ref.watch(fullProjectControllerProvider.select((value) => value.title));
+
+    debugPrint('rebuilding UpdateTitle');
 
     return ListTile(
       title: const Text('Title'),
       subtitle: TextField(
         focusNode: _node,
-        // controller: _titleController,
-        autofocus: true,
         decoration: getTextInputDecoration(
           hintText: 'Title',
         ),
@@ -36,7 +37,7 @@ class _UpdateTitle extends ConsumerState {
           ref.read(fullProjectControllerProvider.notifier).update(title: value);
         },
       ),
-      trailing: project.title != null && project.title!.isNotEmpty
+      trailing: title != null && title!.isNotEmpty
           ? const SuccessIndicator()
           : const EmptyIndicator(),
       onTap: () {
