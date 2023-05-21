@@ -1,4 +1,3 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pips/data/data_sources/app_service_client.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -21,6 +20,6 @@ class OptionsRepositoryImplementer implements OptionsRepository {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 OptionsRepository optionsRepository(OptionsRepositoryRef ref) =>
     OptionsRepositoryImplementer(client: ref.watch(appServiceClientProvider));

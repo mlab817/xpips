@@ -6,12 +6,11 @@ part of 'options_repository.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$optionsRepositoryHash() => r'0b31a3341d6898e507c3df838ec6ac9abe29aea0';
+String _$optionsRepositoryHash() => r'6ab8f6223d815c44746c893237fc29bcfbad85b5';
 
 /// See also [optionsRepository].
 @ProviderFor(optionsRepository)
-final optionsRepositoryProvider =
-    AutoDisposeProvider<OptionsRepository>.internal(
+final optionsRepositoryProvider = Provider<OptionsRepository>.internal(
   optionsRepository,
   name: r'optionsRepositoryProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -21,5 +20,5 @@ final optionsRepositoryProvider =
   allTransitiveDependencies: null,
 );
 
-typedef OptionsRepositoryRef = AutoDisposeProviderRef<OptionsRepository>;
+typedef OptionsRepositoryRef = ProviderRef<OptionsRepository>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
