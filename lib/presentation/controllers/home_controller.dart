@@ -103,6 +103,10 @@ class ProjectsRequesController extends Notifier<ProjectsRequest> {
     );
   }
 
+  void clearQuery() {
+    state = state.copyWith(q: '');
+  }
+
   @override
   ProjectsRequest build() {
     return ProjectsRequest(perPage: 25, page: 1, pipsStatuses: [1]);

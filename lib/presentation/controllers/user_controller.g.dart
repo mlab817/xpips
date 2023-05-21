@@ -1,26 +1,26 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'fullproject_controller.dart';
+part of 'user_controller.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$fullProjectControllerHash() =>
-    r'805b3ec8f27ae67889b14d96ba57d7771cf7f985';
+String _$currentUserControllerHash() =>
+    r'a0ac95ee58af43c9612981beb0e331162ce25a74';
 
-/// See also [FullProjectController].
-@ProviderFor(FullProjectController)
-final fullProjectControllerProvider =
-    NotifierProvider<FullProjectController, FullProject>.internal(
-  FullProjectController.new,
-  name: r'fullProjectControllerProvider',
+/// See also [CurrentUserController].
+@ProviderFor(CurrentUserController)
+final currentUserControllerProvider =
+    NotifierProvider<CurrentUserController, User?>.internal(
+  CurrentUserController.new,
+  name: r'currentUserControllerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$fullProjectControllerHash,
+      : _$currentUserControllerHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$FullProjectController = Notifier<FullProject>;
+typedef _$CurrentUserController = Notifier<User?>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions

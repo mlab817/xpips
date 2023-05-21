@@ -7,16 +7,20 @@ import '../../data/responses/options_response.dart';
 
 part 'options_controller.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class OptionsController extends _$OptionsController {
-  Future<void> get() async {
+  Future<OptionsResponse> get() async {
     final repository = ref.watch(optionsRepositoryProvider);
 
     state = const AsyncLoading();
 
-    state = await AsyncValue.guard(() => repository.get());
+    final response = repository.get();
+
+    state = await AsyncValue.guard(() => response);
+
+    return await response;
   }
 
   @override
-  FutureOr<OptionsResponse> build() => Future.value(state.value);
+  FutureOr<OptionsResponse> build() => get();
 }

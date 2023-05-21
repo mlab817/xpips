@@ -1,9 +1,9 @@
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
 import '../../domain/models/financial_accomplishment.dart';
 import '../../domain/models/fs_cost.dart';
 import '../../domain/models/fs_investment.dart';
 import '../../domain/models/fullproject.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-
 import '../../domain/models/office.dart';
 import '../../domain/models/option.dart';
 import '../../domain/models/rap_cost.dart';
@@ -13,7 +13,7 @@ import 'options_controller.dart';
 
 part 'fullproject_controller.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class FullProjectController extends _$FullProjectController {
   void update({
     String? title,
@@ -150,31 +150,31 @@ class FullProjectController extends _$FullProjectController {
     List<RegionalInvestment> regions = [];
 
     options.when(
-        data: (data) {
-          for (var fs in data.data.fundingSources ?? []) {
-            fsInvestments.add(FsInvestment(
-              fundingSource: fs,
-            ));
-          }
+      data: (data) {
+        for (var fs in data.data.fundingSources ?? []) {
+          fsInvestments.add(FsInvestment.initial().copyWith(
+            fundingSource: fs,
+          ));
+        }
 
-          for (var region in data.data.regions ?? []) {
-            regions.add(RegionalInvestment(
-              region: region,
-            ));
-          }
-        },
-        error: (error, stacktrace) {},
-        loading: () {});
+        for (var region in data.data.regions ?? []) {
+          regions.add(RegionalInvestment.initial().copyWith(region: region));
+        }
+      },
+      error: (error, stacktrace) {},
+      loading: () {},
+    );
 
+    // initialize the full project model
     return FullProject(
       bases: [],
       operatingUnits: [],
       pdpChapters: [],
       agenda: [],
       sdgs: [],
-      fsCost: FsCost(),
-      rowCost: RowCost(),
-      rapCost: RapCost(),
+      fsCost: FsCost.initial(),
+      rowCost: RowCost.initial(),
+      rapCost: RapCost.initial(),
       prerequisites: [],
       locations: [],
       infrastructureSectors: [],
@@ -182,7 +182,7 @@ class FullProjectController extends _$FullProjectController {
       fundingSources: [],
       fsInvestments: fsInvestments,
       regions: regions,
-      financialAccomplishment: FinancialAccomplishment(),
+      financialAccomplishment: FinancialAccomplishment.initial(),
     );
   }
 }

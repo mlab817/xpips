@@ -1,15 +1,16 @@
 import 'dart:convert';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pips/application/providers/sharedpreferences.dart';
 import 'package:pips/domain/models/user.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-class CurrentUserController extends Notifier<User?> {
+part 'user_controller.g.dart';
+
+@Riverpod(keepAlive: true)
+class CurrentUserController extends _$CurrentUserController {
   User? getUser() {
     final sharedPreferences = ref.watch(sharedPreferencesProvider);
     final userFromSharedPrefs = sharedPreferences.getString('CURRENT_USER');
-
-    print(userFromSharedPrefs);
 
     return userFromSharedPrefs != null
         ? User.fromJson(jsonDecode(userFromSharedPrefs))
@@ -19,8 +20,3 @@ class CurrentUserController extends Notifier<User?> {
   @override
   User? build() => getUser();
 }
-
-final currentUserControllerProvider =
-    NotifierProvider<CurrentUserController, User?>(() {
-  return CurrentUserController();
-});

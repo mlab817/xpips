@@ -10,7 +10,7 @@ import '../../data/responses/updateprofile_response.dart';
 
 part 'updateprofile_controller.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class UpdateProfileRequestController extends _$UpdateProfileRequestController {
   @override
   UpdateProfileRequest build() {
@@ -41,8 +41,16 @@ class UpdateProfileRequestController extends _$UpdateProfileRequestController {
 }
 
 @riverpod
-Future<UpdateProfileResponse> updateProfile(UpdateProfileRef ref) {
-  return ref
-      .watch(authRepositoryProvider)
-      .updateProfile(ref.watch(updateProfileRequestControllerProvider));
+class UpdateProfileController extends _$UpdateProfileController {
+  Future<void> updateProfile() async {
+    final repository = ref.read(authRepositoryProvider);
+    final request = ref.read(updateProfileRequestControllerProvider);
+
+    state = const AsyncLoading();
+
+    state = await AsyncValue.guard(() => repository.updateProfile(request));
+  }
+
+  @override
+  FutureOr<UpdateProfileResponse> build() => Future.value(state.value);
 }

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pips/data/data_sources/app_service_client.dart';
 import 'package:pips/data/requests/projects_request.dart';
 import 'package:pips/data/responses/projects_response.dart';
+import 'package:pips/presentation/controllers/home_controller.dart';
 
 abstract class ChatsRepository {
   Future<ProjectsResponse> get(ProjectsRequest request);
@@ -26,6 +27,13 @@ final chatsRepositoryProvider = Provider<ChatsRepository>((ref) {
   return ChatsRepositoryImplementer(client);
 });
 
+// future provider for chats
+final chatMessagesProvider = FutureProvider<ProjectsResponse>((ref) async {
+  return await ref
+      .watch(chatsRepositoryProvider)
+      .get(ref.watch(projectsRequestControllerProvider));
+});
+
 class ChatsController extends AsyncNotifier<ProjectsResponse> {
   Future<ProjectsResponse> get() async {
     final repository = ref.watch(chatsRepositoryProvider);
@@ -45,7 +53,7 @@ class ChatsController extends AsyncNotifier<ProjectsResponse> {
 }
 
 final chatsControllerProvider =
-AsyncNotifierProvider<ChatsController, ProjectsResponse>(() {
+    AsyncNotifierProvider<ChatsController, ProjectsResponse>(() {
   return ChatsController();
 });
 
@@ -55,6 +63,6 @@ class ChatsRequestController extends Notifier<ProjectsRequest> {
 }
 
 final chatsRequestProvider =
-NotifierProvider<ChatsRequestController, ProjectsRequest>(() {
+    NotifierProvider<ChatsRequestController, ProjectsRequest>(() {
   return ChatsRequestController();
 });

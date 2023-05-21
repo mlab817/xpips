@@ -1,67 +1,73 @@
 import 'dart:async';
 
-import 'package:dart_pusher_channels/dart_pusher_channels.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pips/application/config.dart';
-import 'package:pips/application/providers/bearertoken_provider.dart';
-import 'package:pips/data/data_sources/pusher_client.dart';
 import 'package:pips/data/repositories/comments_repository.dart';
 import 'package:pips/data/responses/comments_response.dart';
-import 'package:pips/domain/models/comment.dart';
+import 'package:pips/presentation/controllers/viewpap_controller.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // fetch all comments
-class CommentsController
-    extends AutoDisposeFamilyAsyncNotifier<CommentsResponse, String> {
-  Future<CommentsResponse> get(String uuid) async {
+class CommentsController extends AsyncNotifier<CommentsResponse> {
+  Future<CommentsResponse> get() async {
+    final project = ref.watch(selectedProjectProvider);
     final repository = ref.watch(commentsRepositoryProvider);
 
     state = const AsyncLoading();
 
-    state = await AsyncValue.guard(() => repository.showComments(uuid));
+    state =
+        await AsyncValue.guard(() => repository.showComments(project!.uuid));
 
-    return await repository.showComments(uuid);
+    return await repository.showComments(project!.uuid);
   }
 
   @override
-  FutureOr<CommentsResponse> build(String arg) async => get(arg);
+  FutureOr<CommentsResponse> build() async => get();
 }
 
-final commentsControllerProvider = AutoDisposeAsyncNotifierProviderFamily<
-    CommentsController, CommentsResponse, String>(() {
-  return CommentsController();
+final commentsControllerProvider =
+    FutureProvider<CommentsResponse>((ref) async {
+  print('comments controller provider called');
+  final project = ref.watch(selectedProjectProvider);
+  final repository = ref.watch(commentsRepositoryProvider);
+
+  if (project == null) {
+    throw UnimplementedError('TODO: implement commentsController provider');
+  }
+
+  return repository.showComments(project.uuid);
 });
 
-// listen to real time comments
-final realTimeCommentsProvider = StreamProvider.autoDispose((ref) {
-  final token = ref.watch(bearerTokenNotifierProvider);
+//
+// final commentsProvider = Provider<List<Comment>>((ref) {
+//   List<Comment> comments = <Comment>[];
+//
+//   final messagesProvider = ref.watch(commentsControllerProvider);
+//
+//   messagesProvider.when(
+//       data: (data) {
+//         comments = data.data;
+//       },
+//       error: (error, stacktrace) {},
+//       loading: () {});
+//
+//   final newMessage = ref.listen(realTimeCommentsProvider, (previous, next) {
+//     if (next.hasValue) {}
+//   });
+//
+//   return comments;
+// });
 
-  final channel = ref.watch(pusherClientProvider);
-  final subscription = channel
-      .privateChannel(
-        'comments',
-        authorizationDelegate:
-            EndpointAuthorizableChannelTokenAuthorizationDelegate
-                .forPrivateChannel(
-          authorizationEndpoint:
-              Uri.parse("${Config.baseApiUrl}/api/broadcasting/auth"),
-          headers: {
-            'Authorization': 'Bearer $token',
-          },
-        ),
-      )
-      .bind('comments.added');
-
-  final streamController = StreamController();
-
-  subscription.listen((event) {
-    final comment = Comment.fromJson(event.data);
-    print(comment.toString());
-  });
-
-  ref.onDispose(() {
-    streamController.close();
-    channel.dispose();
-  });
-
-  return streamController.stream;
-});
+// @Riverpod(keepAlive: true)
+// class SelectedProject extends _$SelectedProject {
+//   Future<void> get(String uuid) async {
+//     final repository = ref.watch(projectRepositoryProvider);
+//
+//     state = const AsyncLoading();
+//
+//     state = await AsyncValue.guard(() => repository.get(uuid));
+//   }
+//
+//   @override
+//   FutureOr<void> build() {
+//     // do nothing
+//   }
+// }
