@@ -2,8 +2,8 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../application/mixins.dart';
 
-part 'rap_cost.g.dart';
 part 'rap_cost.freezed.dart';
+part 'rap_cost.g.dart';
 
 @freezed
 class RapCost with _$RapCost, TotalCostMixin {
@@ -20,4 +20,15 @@ class RapCost with _$RapCost, TotalCostMixin {
       _$RapCostFromJson(json);
 
   RapCost._() : super();
+
+  static RapCost initial() {
+    return RapCost(
+      y2023: 0,
+      y2024: 0,
+      y2025: 0,
+      y2026: 0,
+      y2027: 0,
+      y2028: 0,
+    );
+  }
 }

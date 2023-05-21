@@ -30,4 +30,19 @@ class FsInvestment with _$FsInvestment {
   String toString() {
     return jsonEncode(this);
   }
+
+  static FsInvestment initial() {
+    return FsInvestment(
+      fundingSourceId: null,
+      fundingSource: null,
+      y2022: 0,
+      y2023: 0,
+      y2024: 0,
+      y2025: 0,
+      y2026: 0,
+      y2027: 0,
+      y2028: 0,
+      y2029: 0,
+    );
+  }
 }

@@ -3,6 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import '../../application/mixins.dart';
 
 part 'fs_cost.freezed.dart';
+
 part 'fs_cost.g.dart';
 
 @freezed
@@ -19,4 +20,15 @@ class FsCost with _$FsCost, TotalCostMixin {
   factory FsCost.fromJson(Map<String, dynamic> json) => _$FsCostFromJson(json);
 
   FsCost._() : super();
+
+  static FsCost initial() {
+    return FsCost(
+      y2023: 0,
+      y2024: 0,
+      y2025: 0,
+      y2026: 0,
+      y2027: 0,
+      y2028: 0,
+    );
+  }
 }

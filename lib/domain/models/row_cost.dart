@@ -20,4 +20,15 @@ class RowCost with _$RowCost, TotalCostMixin {
       _$RowCostFromJson(json);
 
   RowCost._() : super();
+
+  static RowCost initial() {
+    return RowCost(
+      y2023: 0,
+      y2024: 0,
+      y2025: 0,
+      y2026: 0,
+      y2027: 0,
+      y2028: 0,
+    );
+  }
 }
