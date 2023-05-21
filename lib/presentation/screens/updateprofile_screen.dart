@@ -4,6 +4,8 @@ import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_network/image_network.dart';
+import 'package:pips/data/repositories/auth_repository.dart';
 import 'package:pips/data/repositories/uploadavatar_repository.dart';
 import 'package:pips/presentation/controllers/updateprofile_controller.dart';
 import 'package:pips/presentation/controllers/user_controller.dart';
@@ -79,7 +81,28 @@ class _UpdateProfileScreenState extends ConsumerState<UpdateProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final user = ref.watch(currentUserControllerProvider);
+    ref.listen(updateProfileControllerProvider, (previous, next) {
+      debugPrint('updateProfileControllerProvider triggered');
+      //
+      if (next.hasValue && previous != next) {
+        final value = next.value;
+
+// show snackbar
+        if (value != null) {
+          if (value.success) {
+            ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Successfully updated profile!')));
+
+            // update user info
+            final user = value.user;
+
+            ref.read(authRepositoryProvider).setUser(user);
+
+            // do something with the user
+          }
+        }
+      }
+    });
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -89,40 +112,33 @@ class _UpdateProfileScreenState extends ConsumerState<UpdateProfileScreen> {
             children: [
               Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: Stack(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ClipOval(
-                        child: FadeInImage(
-                          image: NetworkImage(user?.imageUrl ??
-                              'https://placehold.co/150x150.png'),
-                          placeholder: const AssetImage('assets/logo.png'),
-                          height: 150,
-                          width: 150,
+                child: SizedBox(
+                  height: 200,
+                  width: 200,
+                  child: Stack(
+                    children: [
+                      _buildAvatar(),
+                      Positioned(
+                        bottom: 0,
+                        right: 0,
+                        child: IconButton(
+                          icon: const Icon(Icons.camera_alt_sharp),
+                          onPressed: () async {
+                            final FilePickerResult? image =
+                                await FilePicker.platform.pickFiles();
+
+                            if (image != null) {
+                              final rawPath = image.files.first.path;
+
+                              ref
+                                  .watch(uploadAvatarRepositoryProvider)
+                                  .uploadAvatar(File(rawPath!));
+                            }
+                          },
                         ),
                       ),
-                    ),
-                    Positioned(
-                      bottom: 0,
-                      right: 0,
-                      child: IconButton(
-                        icon: const Icon(Icons.camera_alt_sharp),
-                        onPressed: () async {
-                          final FilePickerResult? image =
-                              await FilePicker.platform.pickFiles();
-
-                          if (image != null) {
-                            final rawPath = image.files.first.path;
-
-                            ref
-                                .watch(uploadAvatarRepositoryProvider)
-                                .uploadAvatar(File(rawPath!));
-                          }
-                        },
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
               Form(
@@ -188,11 +204,25 @@ class _UpdateProfileScreenState extends ConsumerState<UpdateProfileScreen> {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: FilledButton(
-                          onPressed: () {
-                            //
-                            ref.read(updateProfileProvider);
-                          },
-                          child: const Text('Update Profile'),
+                          onPressed: ref
+                                  .watch(updateProfileControllerProvider)
+                                  .isLoading
+                              ? null
+                              : () {
+                                  //
+                                  ref
+                                      .read(updateProfileControllerProvider
+                                          .notifier)
+                                      .updateProfile();
+                                },
+                          child: ref
+                                  .watch(updateProfileControllerProvider)
+                                  .isLoading
+                              ? const SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator())
+                              : const Text('Update Profile'),
                         ),
                       ),
                     ],
@@ -202,6 +232,29 @@ class _UpdateProfileScreenState extends ConsumerState<UpdateProfileScreen> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildAvatar() {
+    final user = ref.watch(currentUserControllerProvider);
+
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: ClipOval(
+        child: ImageNetwork(
+          image: user?.imageUrl ?? 'https://placehold.co/150x150.png',
+          width: 150,
+          height: 150,
+        ),
+
+        // child: FadeInImage(
+        //   image: NetworkImage(
+        //       user?.imageUrl ?? 'https://placehold.co/150x150.png'),
+        //   placeholder: const AssetImage('assets/logo.png'),
+        //   height: 150,
+        //   width: 150,
+        // ),
       ),
     );
   }
