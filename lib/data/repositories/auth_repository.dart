@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pips/application/providers/sharedpreferences.dart';
 import 'package:pips/data/data_sources/app_service_client.dart';
 import 'package:pips/data/requests/reactivation_request.dart';
@@ -30,6 +29,8 @@ abstract class AuthRepository {
 
   User? get currentUser;
 
+  void setUser(User user);
+
   Future<SignupResponse> signup(SignupRequest request);
 
   Future<ReactivationResponse> requestReactivation(ReactivationRequest request);
@@ -51,7 +52,6 @@ class AuthRepositoryImplementer implements AuthRepository {
 
   @override
   Future<void> signOut() {
-    // TODO: sign out
     throw UnimplementedError();
   }
 
@@ -84,6 +84,11 @@ class AuthRepositoryImplementer implements AuthRepository {
   Future<UpdateProfileResponse> updateProfile(
       UpdateProfileRequest request) async {
     return client.updateProfile(request);
+  }
+
+  @override
+  void setUser(User user) {
+    sharedPreferences.setString('CURRENT_USER', jsonEncode(user));
   }
 }
 
