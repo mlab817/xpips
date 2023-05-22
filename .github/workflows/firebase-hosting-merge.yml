@@ -25,8 +25,8 @@ jobs:
       - name: Show Flutter version
         run: flutter --version
 
-      - name: Short Dart version
-        run: dart -- version
+      - name: Show Dart version
+        run: dart --version
 
       - name: Get dependencies
         run: flutter pub get
