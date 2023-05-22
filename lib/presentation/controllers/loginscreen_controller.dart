@@ -1,7 +1,7 @@
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:pips/data/repositories/auth_repository.dart';
+import 'package:pips/data/responses/login_response.dart';
 import 'package:pips/domain/models/login_credentials.dart';
-import 'package:pips/domain/models/login_response.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'loginscreen_controller.g.dart';
 

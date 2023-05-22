@@ -10,8 +10,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../domain/models/login_credentials.dart';
-import '../../domain/models/login_response.dart';
 import '../../domain/models/user.dart';
+import '../responses/login_response.dart';
 import '../responses/reactivation_response.dart';
 import '../responses/signup_response.dart';
 import '../responses/updateprofile_response.dart';

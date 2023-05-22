@@ -9,10 +9,9 @@ import 'package:pips/application/extensions.dart';
 import 'package:pips/application/providers/bearertoken_provider.dart';
 import 'package:pips/application/providers/dio_provider.dart';
 import 'package:pips/application/providers/sharedpreferences.dart';
-import 'package:pips/presentation/controllers/auth_controller.dart';
+import 'package:pips/presentation/controllers/controllers.dart';
 
 import '../../../application/app_router.dart';
-import '../controllers/loginscreen_controller.dart';
 
 @RoutePage()
 class LoginScreen extends ConsumerStatefulWidget {

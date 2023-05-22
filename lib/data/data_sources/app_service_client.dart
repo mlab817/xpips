@@ -14,7 +14,6 @@ import '../../data/responses/comments_response.dart';
 import '../../data/responses/createproject_response.dart';
 import '../../data/responses/newcomment_response.dart';
 import '../../domain/models/login_credentials.dart';
-import '../../domain/models/login_response.dart';
 import '../../domain/models/notifications.dart';
 import '../requests/comment_request.dart';
 import '../requests/fullproject_request.dart';
@@ -23,6 +22,7 @@ import '../requests/reactivation_request.dart';
 import '../requests/updateprofile_request.dart';
 import '../responses/chatroom_response.dart';
 import '../responses/deleteproject_response.dart';
+import '../responses/login_response.dart';
 import '../responses/notifications_response.dart';
 import '../responses/offices_response.dart';
 import '../responses/options_response.dart';
@@ -56,8 +56,8 @@ abstract class AppServiceClient {
 
   /// Notifications API
   @PUT('/projects/{uuid}')
-  Future<UpdateProjectResponse> updateProject(@Path() String uuid,
-      @Body() FullProjectRequest request);
+  Future<UpdateProjectResponse> updateProject(
+      @Path() String uuid, @Body() FullProjectRequest request);
 
   @DELETE('/projects/{uuid}')
   Future<DeleteProjectResponse> deleteProject(@Path() String uuid);
@@ -108,8 +108,8 @@ abstract class AppServiceClient {
   Future<CommentsResponse> showComments(@Path() String uuid);
 
   @POST("/projects/{uuid}/comments")
-  Future<NewCommentResponse> addComment(@Path() String uuid,
-      @Body() CommentRequest comment);
+  Future<NewCommentResponse> addComment(
+      @Path() String uuid, @Body() CommentRequest comment);
 
   @MultiPart()
   @POST("/upload-avatar")
