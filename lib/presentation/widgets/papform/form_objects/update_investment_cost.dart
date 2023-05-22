@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pips/application/extensions.dart';
 import 'package:pips/presentation/controllers/fullproject_controller.dart';
 
 import '../../../../domain/models/fs_investment.dart';
@@ -363,7 +364,10 @@ class _UpdateInvestmentCost extends ConsumerState {
           DataCell(
             SizedBox(
               width: columnWidth,
-              child: const Text('// TODO'),
+              child: Text(
+                fsInvestment.total.toString(),
+                textAlign: TextAlign.end,
+              ),
             ),
           ),
         ],
