@@ -1,3 +1,4 @@
+export 'app_version.dart';
 export 'chatroom.dart';
 export 'comment.dart';
 export 'financial_accomplishment.dart';
