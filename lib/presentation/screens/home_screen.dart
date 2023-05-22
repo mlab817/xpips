@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:pips/application/providers/searchhistory_provider.dart';
-import 'package:pips/data/repositories/project_repository.dart';
 import 'package:pips/domain/models/pagination.dart';
 import 'package:pips/domain/models/pipsstatus.dart';
 import 'package:pips/presentation/controllers/options_controller.dart';
@@ -67,7 +66,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     double width = size.width;
 
     final menuAsync = ref.watch(pipsStatusControllerProvider);
-    final valueAsync = ref.watch(homeScreenControllerProvider);
+
     final projectsRequest = ref.watch(projectsRequestControllerProvider);
 
     return Scaffold(
@@ -76,21 +75,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         title: const Text('Home'),
         actions: [
           IconButton(
-              onPressed: _showFilters, icon: const Icon(Icons.tune_outlined)),
-          IconButton(
-              onPressed: () async {
-                final String query = await showSearch(
-                    context: context,
-                    delegate: _HomeSearchDelegate(
-                        ref: ref, projects: _projects ?? []));
-
-                if (query.isNotEmpty) {
-                  ref
-                      .read(projectsRequestControllerProvider.notifier)
-                      .update(q: query);
-                }
-              },
-              icon: const Icon(Icons.search)),
+            onPressed: _showFilters,
+            icon: const Icon(Icons.tune_outlined),
+          ),
         ],
       ),
       // show drawer for smaller screens
@@ -100,8 +87,30 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 data: (data) {
                   return ListView.builder(
                     shrinkWrap: true,
-                    itemCount: data.data.length,
+                    itemCount: data.data.length + 1,
                     itemBuilder: (context, index) {
+                      if (index == 0) {
+                        return ListTile(
+                          title: const Text('All'),
+                          dense: true,
+                          selected: ref
+                                  .watch(projectsRequestControllerProvider)
+                                  .pipsStatuses
+                                  ?.isEmpty ??
+                              false,
+                          selectedTileColor: Theme.of(context)
+                              .colorScheme
+                              .primary
+                              .withOpacity(0.2),
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(50),
+                              bottomRight: Radius.circular(50),
+                            ),
+                          ),
+                        );
+                      }
+
                       return ListTile(
                         dense: true,
                         shape: const RoundedRectangleBorder(
@@ -111,18 +120,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           ),
                         ),
                         selected: projectsRequest.pipsStatuses != null &&
+                            projectsRequest.pipsStatuses!.isNotEmpty &&
                             projectsRequest.pipsStatuses![0] ==
-                                data.data[index].id,
-                        title: Text(data.data[index].name),
+                                data.data[index - 1].id,
+                        title: Text(data.data[index - 1].name),
                         trailing:
-                            Text(data.data[index].projectsCount.toString()),
+                            Text(data.data[index - 1].projectsCount.toString()),
                         selectedTileColor: Theme.of(context)
                             .colorScheme
                             .primary
                             .withOpacity(0.2),
                         onTap: () {
                           setState(() {
-                            _pipsStatus = data.data[index];
+                            _pipsStatus = data.data[index - 1];
                           });
 
                           // set pips status to current id and reset to page 1
@@ -193,6 +203,38 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     const SizedBox(
                       height: 10,
                     ),
+                    ListTile(
+                      dense: true,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(50),
+                          bottomRight: Radius.circular(50),
+                        ),
+                      ),
+                      selected: ref
+                              .watch(projectsRequestControllerProvider)
+                              .pipsStatuses
+                              ?.isEmpty ??
+                          false,
+                      title: const Text('ALL'),
+                      selectedTileColor: Theme.of(context)
+                          .colorScheme
+                          .primary
+                          .withOpacity(0.2),
+                      onTap: () {
+                        setState(() {
+                          _pipsStatus = null;
+                        });
+
+                        // set pips status to current id and reset to page 1
+                        ref
+                            .read(projectsRequestControllerProvider.notifier)
+                            .update(
+                          pipsStatuses: [],
+                          page: 1,
+                        );
+                      },
+                    ),
                     menuAsync.when(
                       data: (data) {
                         return ListView.builder(
@@ -208,6 +250,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                 ),
                               ),
                               selected: projectsRequest.pipsStatuses != null &&
+                                  projectsRequest.pipsStatuses!.isNotEmpty &&
                                   projectsRequest.pipsStatuses![0] ==
                                       data.data[index].id,
                               title: Text(data.data[index].name),
@@ -261,56 +304,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   child: Row(
                     children: [
                       Text(
-                        _pipsStatus?.name.toUpperCase() ?? 'NO STATUS SELECTED',
+                        _pipsStatus?.name.toUpperCase() ?? 'ALL',
                         style: Theme.of(context).textTheme.titleLarge?.apply(
                               letterSpacingFactor: 2,
                               color: Theme.of(context).primaryColor,
                             ),
                       ),
-                      SizedBox(
-                        width: 280,
-                        child: TextFormField(
-                          controller: _searchController,
-                          decoration: InputDecoration(
-                            fillColor: Colors.transparent,
-                            hoverColor: Colors.transparent,
-                            focusColor: Colors.transparent,
-                            prefixIcon: const Icon(Icons.search),
-                            suffixIcon: ref
-                                            .watch(
-                                                projectsRequestControllerProvider)
-                                            .q !=
-                                        null &&
-                                    ref
-                                        .watch(
-                                            projectsRequestControllerProvider)
-                                        .q!
-                                        .isNotEmpty
-                                ? IconButton(
-                                    icon: const Icon(Icons.clear),
-                                    onPressed: () {
-                                      ref
-                                          .read(
-                                              projectsRequestControllerProvider
-                                                  .notifier)
-                                          .clearQuery();
-                                      _searchController.clear();
-                                    })
-                                : null,
-                            border: InputBorder.none,
-                            focusedBorder: InputBorder.none,
-                            enabledBorder: InputBorder.none,
-                            hintText: 'Type and press enter to search',
-                          ),
-                          onFieldSubmitted: (String value) {
-                            // update the query value in the provider
-                            ref
-                                .read(
-                                    projectsRequestControllerProvider.notifier)
-                                .update(q: value);
-                          },
-                        ),
-                      ),
+                      _buildSearchBox(),
                       const Spacer(),
                       const SizedBox(
                         width: 10,
@@ -323,34 +323,39 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               // loading indicator
               // if (valueAsync.isLoading) const LinearProgressIndicator(),
               // content
-              Expanded(
-                child: valueAsync.when(
-                  data: (data) {
-                    setState(() {
-                      _projects = data.data;
-                      _pagination = data.meta.pagination;
-                    });
-
-                    return SlidableAutoCloseBehavior(
-                      closeWhenOpened: true,
-                      child: ListView.builder(
-                          physics: const ClampingScrollPhysics(),
-                          itemCount: data.data.length,
-                          itemBuilder: (context, index) {
-                            final project = data.data[index];
-
-                            return ProjectListTile(project: project);
-                          }),
-                    );
-                  },
-                  error: (error, _) => Center(child: Text(error.toString())),
-                  loading: () =>
-                      const Center(child: CircularProgressIndicator()),
-                ),
-              ),
+              _buildContent(),
             ]),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildContent() {
+    final projectsAsync = ref.watch(homeScreenControllerProvider);
+
+    return Expanded(
+      child: projectsAsync.when(
+        data: (data) {
+          setState(() {
+            _projects = data.data;
+            _pagination = data.meta.pagination;
+          });
+
+          return SlidableAutoCloseBehavior(
+            closeWhenOpened: true,
+            child: ListView.builder(
+                physics: const ClampingScrollPhysics(),
+                itemCount: data.data.length,
+                itemBuilder: (context, index) {
+                  final project = data.data[index];
+
+                  return ProjectListTile(project: project);
+                }),
+          );
+        },
+        error: (error, _) => Center(child: Text(error.toString())),
+        loading: () => const Center(child: CircularProgressIndicator()),
       ),
     );
   }
@@ -380,6 +385,40 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               .read(projectsRequestControllerProvider.notifier)
               .update(page: newValue);
         });
+  }
+
+  Widget _buildSearchBox() {
+    return SizedBox(
+      width: 280,
+      child: TextFormField(
+        controller: _searchController,
+        decoration: InputDecoration(
+          fillColor: Colors.transparent,
+          hoverColor: Colors.transparent,
+          focusColor: Colors.transparent,
+          prefixIcon: const Icon(Icons.search),
+          suffixIcon: ref.watch(projectsRequestControllerProvider).q != null &&
+                  ref.watch(projectsRequestControllerProvider).q!.isNotEmpty
+              ? IconButton(
+                  icon: const Icon(Icons.clear),
+                  onPressed: () {
+                    ref
+                        .read(projectsRequestControllerProvider.notifier)
+                        .clearQuery();
+                    _searchController.clear();
+                  })
+              : null,
+          border: InputBorder.none,
+          focusedBorder: InputBorder.none,
+          enabledBorder: InputBorder.none,
+          hintText: 'Type and press enter to search',
+        ),
+        onFieldSubmitted: (String value) {
+          // update the query value in the provider
+          ref.read(projectsRequestControllerProvider.notifier).update(q: value);
+        },
+      ),
+    );
   }
 
   Widget _buildStatusSelector() {

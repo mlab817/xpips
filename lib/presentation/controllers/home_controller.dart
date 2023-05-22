@@ -32,14 +32,7 @@ final homeScreenControllerProvider =
   return HomeScreenController();
 });
 
-final paginatedProjectsProvider =
-    FutureProvider.family<ProjectsResponse, ProjectsRequest>(
-        (ref, request) async {
-  final repository = ref.watch(projectRepositoryProvider);
-
-  return repository.getAll(request);
-});
-
+// return list of PIPS statuses and the number of projects
 class PipsStatusController extends AsyncNotifier<PipsStatusResponse> {
   Future<PipsStatusResponse> get() async {
     final repository = ref.watch(pipsStatusRepositoryProvider);
@@ -64,7 +57,7 @@ final pipsStatusControllerProvider =
   return PipsStatusController();
 });
 
-class ProjectsRequesController extends Notifier<ProjectsRequest> {
+class ProjectsRequestController extends Notifier<ProjectsRequest> {
   void update({
     int? perPage,
     int? page,
@@ -109,11 +102,11 @@ class ProjectsRequesController extends Notifier<ProjectsRequest> {
 
   @override
   ProjectsRequest build() {
-    return ProjectsRequest(perPage: 25, page: 1, pipsStatuses: [1]);
+    return ProjectsRequest(perPage: 25, page: 1, pipsStatuses: []);
   }
 }
 
 final projectsRequestControllerProvider =
-    NotifierProvider<ProjectsRequesController, ProjectsRequest>(() {
-  return ProjectsRequesController();
+    NotifierProvider<ProjectsRequestController, ProjectsRequest>(() {
+  return ProjectsRequestController();
 });
