@@ -3,12 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:pips/application/app_router.dart';
+import 'package:pips/application/providers/valueformatter_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../application/config.dart';
 import '../../application/functions.dart';
-import '../../domain/models/project.dart';
-import '../controllers/viewpap_controller.dart';
+import '../../domain/models/models.dart';
+import '../controllers/controllers.dart';
 
 class ProjectListTile extends ConsumerStatefulWidget {
   const ProjectListTile({Key? key, required this.project}) : super(key: key);
@@ -27,7 +28,6 @@ class _ProjectListTileState extends ConsumerState<ProjectListTile> {
     final url = Uri.parse(rawUrl);
     //
     if (await canLaunchUrl(url)) {
-      // TODO: check why this is not working on android
       await launchUrl(url, mode: LaunchMode.externalApplication);
     } else {
       if (context.mounted) {
@@ -53,13 +53,17 @@ class _ProjectListTileState extends ConsumerState<ProjectListTile> {
               ),
               FilledButton(
                 onPressed: () {
-                  // TODO: handle deletion
+                  _handleDelete();
                 },
                 child: const Text('Confirm'),
               ),
             ],
           );
         });
+  }
+
+  void _handleDelete() {
+    final response = ref.watch(deleteProjectControllerProvider(_project.uuid));
   }
 
   void _showDialog() {
@@ -80,14 +84,14 @@ class _ProjectListTileState extends ConsumerState<ProjectListTile> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    _project.office?.name ?? 'No office',
+                    "PAP of ${_project.office?.acronym ?? 'NO OFFICE'}",
                     textAlign: TextAlign.start,
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    _project.description ?? 'No description',
+                    "Description: ${_project.description ?? 'No description'}",
                     textAlign: TextAlign.start,
                   ),
                 ),
@@ -101,13 +105,14 @@ class _ProjectListTileState extends ConsumerState<ProjectListTile> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    'Total Cost: ${_project.totalCost ?? 'N/A'}',
+                    'Total Cost: ${ref.watch(numberFormatterProvider).format(_project.totalCost)}',
                     textAlign: TextAlign.start,
                   ),
                 ),
                 Container(
                   padding: const EdgeInsets.all(8.0),
                   width: double.infinity,
+                  height: 90,
                   decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(8.0)),
@@ -120,35 +125,23 @@ class _ProjectListTileState extends ConsumerState<ProjectListTile> {
                 Container(
                   padding: const EdgeInsets.all(8.0),
                   width: double.infinity,
+                  height: 90,
                   decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(8.0)),
                   child: Text(_project.notes ?? 'No notes'),
                 ),
-                // SizedBox(
-                //   width: double.maxFinite,
-                //   child: ListView.builder(
-                //       scrollDirection: Axis.horizontal,
-                //       shrinkWrap: true,
-                //       itemCount: 5,
-                //       itemBuilder: (context, index) {
-                //         //
-                //         return IconButton(
-                //             onPressed: () {},
-                //             icon: const Icon(Icons.download));
-                //       }),
-                // ),
               ],
             ),
           ),
           actions: [
             IconButton(
-              onPressed: () {},
+              onPressed: _project.permissions.delete ? () {} : null,
               icon: const Icon(Icons.delete),
               tooltip: 'Delete',
             ),
             IconButton(
-              onPressed: () {},
+              onPressed: _project.permissions.update ? () {} : null,
               icon: const Icon(Icons.edit),
               tooltip: 'Edit',
             ),
@@ -158,10 +151,14 @@ class _ProjectListTileState extends ConsumerState<ProjectListTile> {
               tooltip: 'PDF',
             ),
             IconButton(
-              onPressed: () {
-                ref.read(selectedProjectProvider.notifier).update(_project);
-                AutoRouter.of(context).push(const PapViewRoute());
-              },
+              onPressed: _project.permissions.view
+                  ? () {
+                      ref
+                          .read(selectedProjectProvider.notifier)
+                          .update(_project);
+                      AutoRouter.of(context).push(const PapViewRoute());
+                    }
+                  : null,
               icon: const Icon(Icons.visibility),
               tooltip: 'View',
             ),
@@ -188,33 +185,39 @@ class _ProjectListTileState extends ConsumerState<ProjectListTile> {
         motion: const ScrollMotion(),
         children: [
           SlidableAction(
-            onPressed: (context) {
-              ref.read(selectedProjectProvider.notifier).update(_project);
+            onPressed: _project.permissions.view
+                ? (context) {
+                    ref.read(selectedProjectProvider.notifier).update(_project);
 
-              AutoRouter.of(context).push(const PapViewRoute());
-            },
+                    AutoRouter.of(context).push(const PapViewRoute());
+                  }
+                : null,
             backgroundColor: Colors.grey,
             foregroundColor: Colors.white,
             icon: Icons.visibility,
           ),
           SlidableAction(
-            onPressed: (context) {
-              _openInNewWindow();
-            },
+            onPressed: _project.permissions.view
+                ? (context) {
+                    _openInNewWindow();
+                  }
+                : null,
             backgroundColor: Colors.green,
             foregroundColor: Colors.white,
             icon: Icons.picture_as_pdf,
           ),
           SlidableAction(
-            onPressed: (context) {},
+            onPressed: _project.permissions.update ? (context) {} : null,
             backgroundColor: const Color(0xFF21B7CA),
             foregroundColor: Colors.white,
             icon: Icons.edit,
           ),
           SlidableAction(
-            onPressed: (context) {
-              _confirmDelete();
-            },
+            onPressed: _project.permissions.delete
+                ? (context) {
+                    _confirmDelete();
+                  }
+                : null,
             backgroundColor: const Color(0xFFFE4A49),
             foregroundColor: Colors.white,
             icon: Icons.delete,

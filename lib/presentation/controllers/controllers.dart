@@ -3,6 +3,7 @@ export 'chat_controller.dart';
 export 'chatroom_controller.dart';
 export 'chats_controller.dart';
 export 'comments_controller.dart';
+export 'deleteproject_controller.dart';
 export 'fullproject_controller.dart';
 export 'home_controller.dart';
 export 'loginscreen_controller.dart';

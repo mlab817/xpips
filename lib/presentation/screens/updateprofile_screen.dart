@@ -5,10 +5,9 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_network/image_network.dart';
-import 'package:pips/data/repositories/auth_repository.dart';
-import 'package:pips/data/repositories/uploadavatar_repository.dart';
-import 'package:pips/presentation/controllers/updateprofile_controller.dart';
-import 'package:pips/presentation/controllers/user_controller.dart';
+
+import '../../data/repositories/repositories.dart';
+import '../../presentation/controllers/controllers.dart';
 
 class UpdateProfileScreen extends ConsumerStatefulWidget {
   const UpdateProfileScreen({Key? key}) : super(key: key);

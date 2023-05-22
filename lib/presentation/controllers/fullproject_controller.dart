@@ -1,14 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../domain/models/financial_accomplishment.dart';
-import '../../domain/models/fs_cost.dart';
-import '../../domain/models/fs_investment.dart';
-import '../../domain/models/fullproject.dart';
-import '../../domain/models/office.dart';
-import '../../domain/models/option.dart';
-import '../../domain/models/rap_cost.dart';
-import '../../domain/models/regional_investment.dart';
-import '../../domain/models/row_cost.dart';
+import '../../domain/models/models.dart';
 import 'options_controller.dart';
 
 part 'fullproject_controller.g.dart';

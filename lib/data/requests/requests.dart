@@ -3,6 +3,7 @@ export 'fullproject_request.dart';
 export 'newmessage_request.dart';
 export 'notifications_request.dart';
 export 'pagination_request.dart';
+export 'projects_request.dart';
 export 'reactivation_request.dart';
 export 'signup_request.dart';
 export 'updatepassword_request.dart';

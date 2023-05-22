@@ -46,6 +46,8 @@ mixin _$Project {
   String? get contactInformation => throw _privateConstructorUsedError;
   @JsonKey(name: "notes")
   String? get notes => throw _privateConstructorUsedError;
+  @JsonKey(name: "permissions")
+  Permissions get permissions => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -70,11 +72,13 @@ abstract class $ProjectCopyWith<$Res> {
       @JsonKey(name: "user") User? user,
       @JsonKey(name: "is_read") bool isRead,
       @JsonKey(name: "contact_information") String? contactInformation,
-      @JsonKey(name: "notes") String? notes});
+      @JsonKey(name: "notes") String? notes,
+      @JsonKey(name: "permissions") Permissions permissions});
 
   $OptionCopyWith<$Res>? get spatialCoverage;
   $OfficeCopyWith<$Res>? get office;
   $UserCopyWith<$Res>? get user;
+  $PermissionsCopyWith<$Res> get permissions;
 }
 
 /// @nodoc
@@ -103,6 +107,7 @@ class _$ProjectCopyWithImpl<$Res, $Val extends Project>
     Object? isRead = null,
     Object? contactInformation = freezed,
     Object? notes = freezed,
+    Object? permissions = null,
   }) {
     return _then(_value.copyWith(
       uuid: null == uuid
@@ -157,6 +162,10 @@ class _$ProjectCopyWithImpl<$Res, $Val extends Project>
           ? _value.notes
           : notes // ignore: cast_nullable_to_non_nullable
               as String?,
+      permissions: null == permissions
+          ? _value.permissions
+          : permissions // ignore: cast_nullable_to_non_nullable
+              as Permissions,
     ) as $Val);
   }
 
@@ -195,6 +204,14 @@ class _$ProjectCopyWithImpl<$Res, $Val extends Project>
       return _then(_value.copyWith(user: value) as $Val);
     });
   }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $PermissionsCopyWith<$Res> get permissions {
+    return $PermissionsCopyWith<$Res>(_value.permissions, (value) {
+      return _then(_value.copyWith(permissions: value) as $Val);
+    });
+  }
 }
 
 /// @nodoc
@@ -217,7 +234,8 @@ abstract class _$$_ProjectCopyWith<$Res> implements $ProjectCopyWith<$Res> {
       @JsonKey(name: "user") User? user,
       @JsonKey(name: "is_read") bool isRead,
       @JsonKey(name: "contact_information") String? contactInformation,
-      @JsonKey(name: "notes") String? notes});
+      @JsonKey(name: "notes") String? notes,
+      @JsonKey(name: "permissions") Permissions permissions});
 
   @override
   $OptionCopyWith<$Res>? get spatialCoverage;
@@ -225,6 +243,8 @@ abstract class _$$_ProjectCopyWith<$Res> implements $ProjectCopyWith<$Res> {
   $OfficeCopyWith<$Res>? get office;
   @override
   $UserCopyWith<$Res>? get user;
+  @override
+  $PermissionsCopyWith<$Res> get permissions;
 }
 
 /// @nodoc
@@ -250,6 +270,7 @@ class __$$_ProjectCopyWithImpl<$Res>
     Object? isRead = null,
     Object? contactInformation = freezed,
     Object? notes = freezed,
+    Object? permissions = null,
   }) {
     return _then(_$_Project(
       uuid: null == uuid
@@ -304,6 +325,10 @@ class __$$_ProjectCopyWithImpl<$Res>
           ? _value.notes
           : notes // ignore: cast_nullable_to_non_nullable
               as String?,
+      permissions: null == permissions
+          ? _value.permissions
+          : permissions // ignore: cast_nullable_to_non_nullable
+              as Permissions,
     ));
   }
 }
@@ -324,7 +349,8 @@ class _$_Project implements _Project {
       @JsonKey(name: "user") required this.user,
       @JsonKey(name: "is_read") required this.isRead,
       @JsonKey(name: "contact_information") this.contactInformation,
-      @JsonKey(name: "notes") this.notes});
+      @JsonKey(name: "notes") this.notes,
+      @JsonKey(name: "permissions") required this.permissions});
 
   factory _$_Project.fromJson(Map<String, dynamic> json) =>
       _$$_ProjectFromJson(json);
@@ -368,10 +394,13 @@ class _$_Project implements _Project {
   @override
   @JsonKey(name: "notes")
   final String? notes;
+  @override
+  @JsonKey(name: "permissions")
+  final Permissions permissions;
 
   @override
   String toString() {
-    return 'Project(uuid: $uuid, title: $title, totalCost: $totalCost, isLocked: $isLocked, updatedAt: $updatedAt, pipolCode: $pipolCode, description: $description, spatialCoverage: $spatialCoverage, office: $office, user: $user, isRead: $isRead, contactInformation: $contactInformation, notes: $notes)';
+    return 'Project(uuid: $uuid, title: $title, totalCost: $totalCost, isLocked: $isLocked, updatedAt: $updatedAt, pipolCode: $pipolCode, description: $description, spatialCoverage: $spatialCoverage, office: $office, user: $user, isRead: $isRead, contactInformation: $contactInformation, notes: $notes, permissions: $permissions)';
   }
 
   @override
@@ -398,7 +427,9 @@ class _$_Project implements _Project {
             (identical(other.isRead, isRead) || other.isRead == isRead) &&
             (identical(other.contactInformation, contactInformation) ||
                 other.contactInformation == contactInformation) &&
-            (identical(other.notes, notes) || other.notes == notes));
+            (identical(other.notes, notes) || other.notes == notes) &&
+            (identical(other.permissions, permissions) ||
+                other.permissions == permissions));
   }
 
   @JsonKey(ignore: true)
@@ -417,7 +448,8 @@ class _$_Project implements _Project {
       user,
       isRead,
       contactInformation,
-      notes);
+      notes,
+      permissions);
 
   @JsonKey(ignore: true)
   @override
@@ -435,19 +467,34 @@ class _$_Project implements _Project {
 
 abstract class _Project implements Project {
   factory _Project(
-      {@JsonKey(name: "uuid") required final String uuid,
-      @JsonKey(name: "title") required final String title,
-      @JsonKey(name: "total_cost") required final double? totalCost,
-      @JsonKey(name: "is_locked") required final bool isLocked,
-      @JsonKey(name: "updated_at") required final String updatedAt,
-      @JsonKey(name: "pipol_code") required final String? pipolCode,
-      @JsonKey(name: "description") required final String? description,
-      @JsonKey(name: "spatial_coverage") required final Option? spatialCoverage,
-      @JsonKey(name: "office") required final Office? office,
-      @JsonKey(name: "user") required final User? user,
-      @JsonKey(name: "is_read") required final bool isRead,
-      @JsonKey(name: "contact_information") final String? contactInformation,
-      @JsonKey(name: "notes") final String? notes}) = _$_Project;
+      {@JsonKey(name: "uuid")
+          required final String uuid,
+      @JsonKey(name: "title")
+          required final String title,
+      @JsonKey(name: "total_cost")
+          required final double? totalCost,
+      @JsonKey(name: "is_locked")
+          required final bool isLocked,
+      @JsonKey(name: "updated_at")
+          required final String updatedAt,
+      @JsonKey(name: "pipol_code")
+          required final String? pipolCode,
+      @JsonKey(name: "description")
+          required final String? description,
+      @JsonKey(name: "spatial_coverage")
+          required final Option? spatialCoverage,
+      @JsonKey(name: "office")
+          required final Office? office,
+      @JsonKey(name: "user")
+          required final User? user,
+      @JsonKey(name: "is_read")
+          required final bool isRead,
+      @JsonKey(name: "contact_information")
+          final String? contactInformation,
+      @JsonKey(name: "notes")
+          final String? notes,
+      @JsonKey(name: "permissions")
+          required final Permissions permissions}) = _$_Project;
 
   factory _Project.fromJson(Map<String, dynamic> json) = _$_Project.fromJson;
 
@@ -491,7 +538,293 @@ abstract class _Project implements Project {
   @JsonKey(name: "notes")
   String? get notes;
   @override
+  @JsonKey(name: "permissions")
+  Permissions get permissions;
+  @override
   @JsonKey(ignore: true)
   _$$_ProjectCopyWith<_$_Project> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+Permissions _$PermissionsFromJson(Map<String, dynamic> json) {
+  return _Permissions.fromJson(json);
+}
+
+/// @nodoc
+mixin _$Permissions {
+  bool get view => throw _privateConstructorUsedError;
+  bool get update => throw _privateConstructorUsedError;
+  bool get delete => throw _privateConstructorUsedError;
+  bool get lock => throw _privateConstructorUsedError;
+  bool get unlock => throw _privateConstructorUsedError;
+  bool get validate => throw _privateConstructorUsedError;
+  bool get drop => throw _privateConstructorUsedError;
+  bool get updatePipol => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $PermissionsCopyWith<Permissions> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $PermissionsCopyWith<$Res> {
+  factory $PermissionsCopyWith(
+          Permissions value, $Res Function(Permissions) then) =
+      _$PermissionsCopyWithImpl<$Res, Permissions>;
+  @useResult
+  $Res call(
+      {bool view,
+      bool update,
+      bool delete,
+      bool lock,
+      bool unlock,
+      bool validate,
+      bool drop,
+      bool updatePipol});
+}
+
+/// @nodoc
+class _$PermissionsCopyWithImpl<$Res, $Val extends Permissions>
+    implements $PermissionsCopyWith<$Res> {
+  _$PermissionsCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? view = null,
+    Object? update = null,
+    Object? delete = null,
+    Object? lock = null,
+    Object? unlock = null,
+    Object? validate = null,
+    Object? drop = null,
+    Object? updatePipol = null,
+  }) {
+    return _then(_value.copyWith(
+      view: null == view
+          ? _value.view
+          : view // ignore: cast_nullable_to_non_nullable
+              as bool,
+      update: null == update
+          ? _value.update
+          : update // ignore: cast_nullable_to_non_nullable
+              as bool,
+      delete: null == delete
+          ? _value.delete
+          : delete // ignore: cast_nullable_to_non_nullable
+              as bool,
+      lock: null == lock
+          ? _value.lock
+          : lock // ignore: cast_nullable_to_non_nullable
+              as bool,
+      unlock: null == unlock
+          ? _value.unlock
+          : unlock // ignore: cast_nullable_to_non_nullable
+              as bool,
+      validate: null == validate
+          ? _value.validate
+          : validate // ignore: cast_nullable_to_non_nullable
+              as bool,
+      drop: null == drop
+          ? _value.drop
+          : drop // ignore: cast_nullable_to_non_nullable
+              as bool,
+      updatePipol: null == updatePipol
+          ? _value.updatePipol
+          : updatePipol // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$_PermissionsCopyWith<$Res>
+    implements $PermissionsCopyWith<$Res> {
+  factory _$$_PermissionsCopyWith(
+          _$_Permissions value, $Res Function(_$_Permissions) then) =
+      __$$_PermissionsCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {bool view,
+      bool update,
+      bool delete,
+      bool lock,
+      bool unlock,
+      bool validate,
+      bool drop,
+      bool updatePipol});
+}
+
+/// @nodoc
+class __$$_PermissionsCopyWithImpl<$Res>
+    extends _$PermissionsCopyWithImpl<$Res, _$_Permissions>
+    implements _$$_PermissionsCopyWith<$Res> {
+  __$$_PermissionsCopyWithImpl(
+      _$_Permissions _value, $Res Function(_$_Permissions) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? view = null,
+    Object? update = null,
+    Object? delete = null,
+    Object? lock = null,
+    Object? unlock = null,
+    Object? validate = null,
+    Object? drop = null,
+    Object? updatePipol = null,
+  }) {
+    return _then(_$_Permissions(
+      view: null == view
+          ? _value.view
+          : view // ignore: cast_nullable_to_non_nullable
+              as bool,
+      update: null == update
+          ? _value.update
+          : update // ignore: cast_nullable_to_non_nullable
+              as bool,
+      delete: null == delete
+          ? _value.delete
+          : delete // ignore: cast_nullable_to_non_nullable
+              as bool,
+      lock: null == lock
+          ? _value.lock
+          : lock // ignore: cast_nullable_to_non_nullable
+              as bool,
+      unlock: null == unlock
+          ? _value.unlock
+          : unlock // ignore: cast_nullable_to_non_nullable
+              as bool,
+      validate: null == validate
+          ? _value.validate
+          : validate // ignore: cast_nullable_to_non_nullable
+              as bool,
+      drop: null == drop
+          ? _value.drop
+          : drop // ignore: cast_nullable_to_non_nullable
+              as bool,
+      updatePipol: null == updatePipol
+          ? _value.updatePipol
+          : updatePipol // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$_Permissions implements _Permissions {
+  _$_Permissions(
+      {required this.view,
+      required this.update,
+      required this.delete,
+      required this.lock,
+      required this.unlock,
+      required this.validate,
+      required this.drop,
+      required this.updatePipol});
+
+  factory _$_Permissions.fromJson(Map<String, dynamic> json) =>
+      _$$_PermissionsFromJson(json);
+
+  @override
+  final bool view;
+  @override
+  final bool update;
+  @override
+  final bool delete;
+  @override
+  final bool lock;
+  @override
+  final bool unlock;
+  @override
+  final bool validate;
+  @override
+  final bool drop;
+  @override
+  final bool updatePipol;
+
+  @override
+  String toString() {
+    return 'Permissions(view: $view, update: $update, delete: $delete, lock: $lock, unlock: $unlock, validate: $validate, drop: $drop, updatePipol: $updatePipol)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_Permissions &&
+            (identical(other.view, view) || other.view == view) &&
+            (identical(other.update, update) || other.update == update) &&
+            (identical(other.delete, delete) || other.delete == delete) &&
+            (identical(other.lock, lock) || other.lock == lock) &&
+            (identical(other.unlock, unlock) || other.unlock == unlock) &&
+            (identical(other.validate, validate) ||
+                other.validate == validate) &&
+            (identical(other.drop, drop) || other.drop == drop) &&
+            (identical(other.updatePipol, updatePipol) ||
+                other.updatePipol == updatePipol));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, view, update, delete, lock,
+      unlock, validate, drop, updatePipol);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$_PermissionsCopyWith<_$_Permissions> get copyWith =>
+      __$$_PermissionsCopyWithImpl<_$_Permissions>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$_PermissionsToJson(
+      this,
+    );
+  }
+}
+
+abstract class _Permissions implements Permissions {
+  factory _Permissions(
+      {required final bool view,
+      required final bool update,
+      required final bool delete,
+      required final bool lock,
+      required final bool unlock,
+      required final bool validate,
+      required final bool drop,
+      required final bool updatePipol}) = _$_Permissions;
+
+  factory _Permissions.fromJson(Map<String, dynamic> json) =
+      _$_Permissions.fromJson;
+
+  @override
+  bool get view;
+  @override
+  bool get update;
+  @override
+  bool get delete;
+  @override
+  bool get lock;
+  @override
+  bool get unlock;
+  @override
+  bool get validate;
+  @override
+  bool get drop;
+  @override
+  bool get updatePipol;
+  @override
+  @JsonKey(ignore: true)
+  _$$_PermissionsCopyWith<_$_Permissions> get copyWith =>
       throw _privateConstructorUsedError;
 }

@@ -1,9 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../data_sources/app_service_client.dart';
-import '../requests/projects_request.dart';
-import '../responses/project_response.dart';
-import '../responses/projects_response.dart';
+import '../requests/requests.dart';
+import '../responses/responses.dart';
 
 abstract class ProjectRepository {
   Future<ProjectsResponse> getAll(ProjectsRequest input);
@@ -11,15 +10,16 @@ abstract class ProjectRepository {
   // get One
   Future<ProjectResponse> get(String uuid);
 
-// create
+  // create
 
-// update
+  // update
 
-// delete
+  // delete
+  Future<DeleteProjectResponse> delete(String uuid);
 }
 
 class ProjectRepositoryImplementer implements ProjectRepository {
-  ProjectRepositoryImplementer(this.client);
+  ProjectRepositoryImplementer({required this.client});
 
   final AppServiceClient client;
 
@@ -32,13 +32,15 @@ class ProjectRepositoryImplementer implements ProjectRepository {
   Future<ProjectResponse> get(String uuid) async {
     return client.getProject(uuid);
   }
+
+  @override
+  Future<DeleteProjectResponse> delete(String uuid) async {
+    return client.deleteProject(uuid);
+  }
 }
 
 final projectRepositoryProvider = Provider<ProjectRepositoryImplementer>((ref) {
-  print('projectRepositoryProvider called');
-
-  final client = ref
-      .watch(appServiceClientProvider); // this is not affected by dio provider?
-
-  return ProjectRepositoryImplementer(client);
+  return ProjectRepositoryImplementer(
+    client: ref.watch(appServiceClientProvider),
+  );
 });
