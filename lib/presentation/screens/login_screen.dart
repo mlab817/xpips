@@ -7,8 +7,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pips/application/extensions.dart';
 import 'package:pips/application/providers/bearertoken_provider.dart';
-import 'package:pips/application/providers/dio_provider.dart';
 import 'package:pips/application/providers/sharedpreferences.dart';
+import 'package:pips/data/network/dio.dart';
 import 'package:pips/presentation/controllers/controllers.dart';
 
 import '../../../application/app_router.dart';

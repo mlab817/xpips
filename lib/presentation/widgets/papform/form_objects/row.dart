@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../controllers/fullproject_controller.dart';
+import '../../../controllers/controllers.dart';
 import '../get_input_decoration.dart';
 
 class UpdateRow extends ConsumerWidget {

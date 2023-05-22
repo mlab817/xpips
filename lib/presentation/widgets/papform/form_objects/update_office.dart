@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../domain/models/office.dart';
-import '../../../controllers/fullproject_controller.dart';
-import '../../../controllers/offices_controller.dart';
+import '../../../../domain/models/models.dart';
+import '../../../controllers/controllers.dart';
 import '../empty_indicator.dart';
 import '../success_indicator.dart';
 
@@ -22,9 +21,9 @@ class UpdateOffice extends ConsumerWidget {
     return ListTile(
       title: const Text('Office'),
       subtitle:
-      office != null ? Text(office.acronym) : const Text('Select one'),
+          office != null ? Text(office.acronym) : const Text('Select one'),
       trailing:
-      office != null ? const SuccessIndicator() : const EmptyIndicator(),
+          office != null ? const SuccessIndicator() : const EmptyIndicator(),
       onTap: () {
         _selectOffice(context, ref);
       },

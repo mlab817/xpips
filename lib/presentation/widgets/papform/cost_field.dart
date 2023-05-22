@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
 import 'package:pips/application/providers/inputdecoration_provider.dart';
+import 'package:pips/application/providers/numberformatter_provider.dart';
 
 class CostField extends ConsumerWidget {
   const CostField({Key? key, required this.onChanged, this.enabled, this.value})
@@ -24,13 +24,17 @@ class CostField extends ConsumerWidget {
       enabled: enabled ?? true,
       onChanged: onChanged,
       inputFormatters: [
-        NumericTextFormatter(),
+        NumericTextFormatter(ref),
       ],
     );
   }
 }
 
 class NumericTextFormatter extends TextInputFormatter {
+  final WidgetRef ref;
+
+  NumericTextFormatter(this.ref);
+
   @override
   TextEditingValue formatEditUpdate(
       TextEditingValue oldValue, TextEditingValue newValue) {
@@ -39,7 +43,7 @@ class NumericTextFormatter extends TextInputFormatter {
     } else if (newValue.text.compareTo(oldValue.text) != 0) {
       final int selectionIndexFromTheRight =
           newValue.text.length - newValue.selection.end;
-      final f = NumberFormat("#,###");
+      final f = ref.watch(numberFormatterProvider);
       final number =
           int.parse(newValue.text.replaceAll(f.symbols.GROUP_SEP, ''));
       final newString = f.format(number);

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pips/application/providers/valueformatter_provider.dart';
 
+import '../../../../application/providers/numberformatter_provider.dart';
 import '../../../controllers/fullproject_controller.dart';
 import '../cost_field.dart';
 

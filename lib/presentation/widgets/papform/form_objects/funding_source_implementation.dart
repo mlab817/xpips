@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../domain/models/option.dart';
-import '../../../controllers/fullproject_controller.dart';
-import '../../../controllers/options_controller.dart';
+import '../../../../domain/models/models.dart';
+import '../../../controllers/controllers.dart';
 import '../empty_indicator.dart';
 import '../select_dialog_content.dart';
 import '../success_indicator.dart';
@@ -51,32 +50,34 @@ class UpdateFundingSourceAndImplementation extends ConsumerWidget {
   Future<void> _selectFundingSource(context, ref) async {
     final fundingSource = ref.watch(
         fullProjectControllerProvider.select((value) => value.fundingSource));
-    final optionsAsync = ref.watch(optionsControllerProvider);
 
     final response = await showDialog(
       context: context,
       builder: (BuildContext context) {
         Option? selected = fundingSource;
-
+        final optionsAsync = ref.watch(optionsControllerProvider);
         //
         return AlertDialog(
           contentPadding: const EdgeInsets.symmetric(vertical: 16),
           title: const Text('Main Funding Source'),
           content: optionsAsync.when(
-              data: (data) {
-                return SelectDialogContent(
-                  options: data.data.fundingSources ?? [],
-                  multiple: false,
-                  selected: selected,
-                  onChanged: (value) {
-                    selected = value;
-                  },
-                );
-              },
-              error: (error, stacktrace) {
-                return Container();
-              },
-              loading: () => const CircularProgressIndicator()),
+            data: (data) {
+              return SelectDialogContent(
+                options: data.data.fundingSources ?? [],
+                multiple: false,
+                selected: selected,
+                onChanged: (value) {
+                  selected = value;
+                },
+              );
+            },
+            error: (error, stacktrace) {
+              return Center(
+                child: Text(error.toString()),
+              );
+            },
+            loading: () => const CircularProgressIndicator(),
+          ),
           actions: [
             TextButton(
               onPressed: () {
@@ -125,32 +126,35 @@ class UpdateFundingSourceAndImplementation extends ConsumerWidget {
   Future<void> _selectFundingSources(context, ref) async {
     final fundingSources = ref.watch(
         fullProjectControllerProvider.select((value) => value.fundingSources));
-    final optionsAsync = ref.watch(optionsControllerProvider);
 
     final response = await showDialog(
       context: context,
       builder: (BuildContext context) {
         List<Option> selected = fundingSources;
+        final optionsAsync = ref.watch(optionsControllerProvider);
 
         //
         return AlertDialog(
           contentPadding: const EdgeInsets.symmetric(vertical: 16),
           title: const Text('Other Funding Sources'),
           content: optionsAsync.when(
-              data: (data) {
-                return SelectDialogContent(
-                  options: data.data.fundingSources ?? [],
-                  multiple: true,
-                  selected: selected,
-                  onChanged: (value) {
-                    selected = value;
-                  },
-                );
-              },
-              error: (error, stacktrace) {
-                return Container();
-              },
-              loading: () => const CircularProgressIndicator()),
+            data: (data) {
+              return SelectDialogContent(
+                options: data.data.fundingSources ?? [],
+                multiple: true,
+                selected: selected,
+                onChanged: (value) {
+                  selected = value;
+                },
+              );
+            },
+            error: (error, stacktrace) {
+              return Center(
+                child: Text(error.toString()),
+              );
+            },
+            loading: () => const CircularProgressIndicator(),
+          ),
           actions: [
             TextButton(
               onPressed: () {
@@ -199,32 +203,34 @@ class UpdateFundingSourceAndImplementation extends ConsumerWidget {
   Future<void> _selectImplementationMode(context, ref) async {
     final implementationMode = ref.watch(fullProjectControllerProvider
         .select((state) => state.implementationMode));
-    final optionsAsync = ref.watch(optionsControllerProvider);
 
     final response = await showDialog(
       context: context,
       builder: (BuildContext context) {
         Option? selected = implementationMode;
-
+        final optionsAsync = ref.watch(optionsControllerProvider);
         //
         return AlertDialog(
           contentPadding: const EdgeInsets.symmetric(vertical: 16),
           title: const Text('Mode of Implementation'),
           content: optionsAsync.when(
-              data: (data) {
-                return SelectDialogContent(
-                  options: data.data.implementationModes ?? [],
-                  multiple: false,
-                  selected: selected,
-                  onChanged: (value) {
-                    selected = value;
-                  },
-                );
-              },
-              error: (error, stacktrace) {
-                return Container();
-              },
-              loading: () => const CircularProgressIndicator()),
+            data: (data) {
+              return SelectDialogContent(
+                options: data.data.implementationModes ?? [],
+                multiple: false,
+                selected: selected,
+                onChanged: (value) {
+                  selected = value;
+                },
+              );
+            },
+            error: (error, stacktrace) {
+              return Center(
+                child: Text(error.toString()),
+              );
+            },
+            loading: () => const CircularProgressIndicator(),
+          ),
           actions: [
             TextButton(
               onPressed: () {
@@ -270,30 +276,33 @@ class UpdateFundingSourceAndImplementation extends ConsumerWidget {
   Future<void> _selectFundingInstitutions(context, ref) async {
     final fundingInstitutions = ref.watch(fullProjectControllerProvider
         .select((state) => state.fundingInstitutions));
-    final optionsAsync = ref.watch(optionsControllerProvider);
 
     final response = await showDialog(
         context: context,
         builder: (BuildContext context) {
+          final optionsAsync = ref.watch(optionsControllerProvider);
           List<Option> selected = fundingInstitutions;
 
           return AlertDialog(
             title: const Text('Funding Institutions'),
             content: optionsAsync.when(
-                data: (data) {
-                  return SelectDialogContent(
-                    options: data.data.fundingInstitutions ?? [],
-                    multiple: true,
-                    selected: selected,
-                    onChanged: (value) {
-                      selected = value;
-                    },
-                  );
-                },
-                error: (error, stacktrace) {
-                  return Container();
-                },
-                loading: () => const CircularProgressIndicator()),
+              data: (data) {
+                return SelectDialogContent(
+                  options: data.data.fundingInstitutions ?? [],
+                  multiple: true,
+                  selected: selected,
+                  onChanged: (value) {
+                    selected = value;
+                  },
+                );
+              },
+              error: (error, stacktrace) {
+                return Center(
+                  child: Text(error.toString()),
+                );
+              },
+              loading: () => const CircularProgressIndicator(),
+            ),
             actions: [
               TextButton(
                 onPressed: () {

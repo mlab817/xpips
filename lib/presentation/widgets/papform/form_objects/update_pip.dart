@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pips/presentation/controllers/fullproject_controller.dart';
+
+import '../../../controllers/fullproject_controller.dart';
 
 class UpdatePip extends ConsumerStatefulWidget {
   const UpdatePip({

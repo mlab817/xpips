@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:pips/application/app_router.dart';
-import 'package:pips/application/providers/valueformatter_provider.dart';
+import 'package:pips/application/providers/numberformatter_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../application/config.dart';
@@ -105,7 +105,7 @@ class _ProjectListTileState extends ConsumerState<ProjectListTile> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    'Total Cost: ${ref.watch(numberFormatterProvider).format(_project.totalCost)}',
+                    'Total Cost: PHP ${ref.watch(numberFormatterProvider).format(_project.totalCost)}',
                     textAlign: TextAlign.start,
                   ),
                 ),

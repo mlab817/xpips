@@ -1,24 +1,24 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'options_controller.dart';
+part of 'numberformatter_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$optionsControllerHash() => r'bf9bd8d2cb516a430ec2e5269b9da9fe159b8596';
+String _$numberFormatterHash() => r'94c2a7f3768b62b13153f6c7ad39cacfb400f8ef';
 
-/// See also [optionsController].
-@ProviderFor(optionsController)
-final optionsControllerProvider = FutureProvider<OptionsResponse>.internal(
-  optionsController,
-  name: r'optionsControllerProvider',
+/// See also [numberFormatter].
+@ProviderFor(numberFormatter)
+final numberFormatterProvider = AutoDisposeProvider<NumberFormat>.internal(
+  numberFormatter,
+  name: r'numberFormatterProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$optionsControllerHash,
+      : _$numberFormatterHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef OptionsControllerRef = FutureProviderRef<OptionsResponse>;
+typedef NumberFormatterRef = AutoDisposeProviderRef<NumberFormat>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions

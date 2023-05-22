@@ -4,19 +4,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 import '../../application/config.dart';
-import 'bearertoken_provider.dart';
+import '../../application/providers/bearertoken_provider.dart';
 
 class DioFactory extends Notifier<Dio> {
   Dio getDio() {
     Dio dio = Dio();
 
     // retrieve token from shared_prefs
-    // String? token = sharedPreferences.getString('BEARER_TOKEN');
-
-    // debugPrint("getDio called and token is $token");
     final token = ref.watch(bearerTokenNotifierProvider);
 
-    print("token $token");
+    if (kDebugMode) {
+      print("token $token");
+    }
 
     Map<String, String> headers = {
       'Content-Type': 'application/json',

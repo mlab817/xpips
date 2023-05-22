@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pips/application/extensions.dart';
-import 'package:pips/presentation/controllers/fullproject_controller.dart';
 
+import '../../../../application/extensions.dart';
+import '../../../../application/providers/numberformatter_provider.dart';
 import '../../../../domain/models/fs_investment.dart';
+import '../../../controllers/controllers.dart';
 import '../cost_field.dart';
 
 class UpdateInvestmentCost extends ConsumerStatefulWidget {
@@ -33,7 +34,10 @@ class _UpdateInvestmentCost extends ConsumerState {
             borderRadius: BorderRadius.circular(16),
           ),
           columns: _buildColumns(context),
-          rows: _buildRows(context, ref),
+          rows: [
+            ..._buildRows(context, ref),
+            _buildTotalRow(context, ref),
+          ],
         ),
       ),
     );
@@ -367,11 +371,144 @@ class _UpdateInvestmentCost extends ConsumerState {
               child: Text(
                 fsInvestment.total.toString(),
                 textAlign: TextAlign.end,
+                style: Theme.of(context).textTheme.bodyLarge,
               ),
             ),
           ),
         ],
       );
     }).toList();
+  }
+
+  DataRow _buildTotalRow(BuildContext context, WidgetRef ref) {
+    final columnWidth = (MediaQuery.of(context).size.width - 128) / 10;
+    return DataRow(cells: [
+      DataCell(
+        Text(
+          'GRAND TOTAL',
+          style: Theme.of(context).textTheme.bodyLarge,
+        ),
+      ),
+      DataCell(
+        SizedBox(
+          width: columnWidth,
+          child: Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: Text(
+              ref.watch(numberFormatterProvider).format(ref
+                  .watch(fullProjectControllerProvider)
+                  .fsInvestmentTotalRow
+                  .y2022),
+              textAlign: TextAlign.right,
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
+          ),
+        ),
+      ),
+      DataCell(
+        SizedBox(
+          width: columnWidth,
+          child: Text(
+            ref.watch(numberFormatterProvider).format(ref
+                .watch(fullProjectControllerProvider)
+                .fsInvestmentTotalRow
+                .y2023),
+            textAlign: TextAlign.right,
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
+        ),
+      ),
+      DataCell(
+        SizedBox(
+          width: columnWidth,
+          child: Text(
+            ref.watch(numberFormatterProvider).format(ref
+                .watch(fullProjectControllerProvider)
+                .fsInvestmentTotalRow
+                .y2024),
+            textAlign: TextAlign.right,
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
+        ),
+      ),
+      DataCell(
+        SizedBox(
+          width: columnWidth,
+          child: Text(
+            ref.watch(numberFormatterProvider).format(ref
+                .watch(fullProjectControllerProvider)
+                .fsInvestmentTotalRow
+                .y2025),
+            textAlign: TextAlign.right,
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
+        ),
+      ),
+      DataCell(
+        SizedBox(
+          width: columnWidth,
+          child: Text(
+            ref.watch(numberFormatterProvider).format(ref
+                .watch(fullProjectControllerProvider)
+                .fsInvestmentTotalRow
+                .y2026),
+            textAlign: TextAlign.right,
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
+        ),
+      ),
+      DataCell(
+        SizedBox(
+          width: columnWidth,
+          child: Text(
+            ref.watch(numberFormatterProvider).format(ref
+                .watch(fullProjectControllerProvider)
+                .fsInvestmentTotalRow
+                .y2027),
+            textAlign: TextAlign.right,
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
+        ),
+      ),
+      DataCell(
+        SizedBox(
+          width: columnWidth,
+          child: Text(
+            ref.watch(numberFormatterProvider).format(ref
+                .watch(fullProjectControllerProvider)
+                .fsInvestmentTotalRow
+                .y2028),
+            textAlign: TextAlign.right,
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
+        ),
+      ),
+      DataCell(
+        SizedBox(
+          width: columnWidth,
+          child: Text(
+            ref.watch(numberFormatterProvider).format(ref
+                .watch(fullProjectControllerProvider)
+                .fsInvestmentTotalRow
+                .y2029),
+            textAlign: TextAlign.right,
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
+        ),
+      ),
+      DataCell(
+        SizedBox(
+          width: columnWidth,
+          child: Text(
+            ref.watch(numberFormatterProvider).format(ref
+                .watch(fullProjectControllerProvider)
+                .fsInvestmentTotalRow
+                .grandTotal),
+            textAlign: TextAlign.right,
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
+        ),
+      ),
+    ]);
   }
 }

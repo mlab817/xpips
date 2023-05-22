@@ -6,7 +6,6 @@ import 'package:pips/data/requests/updatepassword_request.dart';
 import 'package:retrofit/http.dart';
 
 import '../../application/config.dart';
-import '../../application/providers/dio_provider.dart';
 import '../../data/requests/pagination_request.dart';
 import '../../data/requests/signup_request.dart';
 import '../../data/responses/chatrooms_response.dart';
@@ -15,6 +14,7 @@ import '../../data/responses/createproject_response.dart';
 import '../../data/responses/newcomment_response.dart';
 import '../../domain/models/login_credentials.dart';
 import '../../domain/models/notifications.dart';
+import '../network/dio.dart';
 import '../requests/comment_request.dart';
 import '../requests/fullproject_request.dart';
 import '../requests/projects_request.dart';

@@ -123,3 +123,87 @@ extension CalculateTotalEmployment on FullProject {
     return (employedMale ?? 0) + (employedFemale ?? 0);
   }
 }
+
+extension FullProjectRegionalInvestmentTotal on FullProject {
+  TotalRow _regionalInvestmentTotalRow() {
+    if (regions.isEmpty) {
+      return TotalRow.initial();
+    }
+
+    return regions.fold(TotalRow.initial(), (previousValue, element) {
+      return TotalRow(
+          y2022: previousValue.y2022 + (element.y2022 ?? 0),
+          y2023: previousValue.y2023 + (element.y2023 ?? 0),
+          y2024: previousValue.y2024 + (element.y2024 ?? 0),
+          y2025: previousValue.y2025 + (element.y2025 ?? 0),
+          y2026: previousValue.y2026 + (element.y2026 ?? 0),
+          y2027: previousValue.y2027 + (element.y2027 ?? 0),
+          y2028: previousValue.y2028 + (element.y2028 ?? 0),
+          y2029: previousValue.y2029 + (element.y2029 ?? 0),
+          grandTotal: previousValue.grandTotal + element.total);
+    });
+  }
+
+  TotalRow get regionalInvestmentTotalRow => _regionalInvestmentTotalRow();
+}
+
+extension FullProjectFsInvestmentTotal on FullProject {
+  TotalRow _fsInvestmentTotalRow() {
+    if (fsInvestments.isEmpty) {
+      return TotalRow.initial();
+    }
+
+    return fsInvestments.fold(TotalRow.initial(), (previousValue, element) {
+      return TotalRow(
+          y2022: previousValue.y2022 + (element.y2022 ?? 0),
+          y2023: previousValue.y2023 + (element.y2023 ?? 0),
+          y2024: previousValue.y2024 + (element.y2024 ?? 0),
+          y2025: previousValue.y2025 + (element.y2025 ?? 0),
+          y2026: previousValue.y2026 + (element.y2026 ?? 0),
+          y2027: previousValue.y2027 + (element.y2027 ?? 0),
+          y2028: previousValue.y2028 + (element.y2028 ?? 0),
+          y2029: previousValue.y2029 + (element.y2029 ?? 0),
+          grandTotal: previousValue.grandTotal + element.total);
+    });
+  }
+
+  TotalRow get fsInvestmentTotalRow => _fsInvestmentTotalRow();
+}
+
+class TotalRow {
+  final double y2022;
+  final double y2023;
+  final double y2024;
+  final double y2025;
+  final double y2026;
+  final double y2027;
+  final double y2028;
+  final double y2029;
+  final double grandTotal;
+
+  TotalRow({
+    required this.y2022,
+    required this.y2023,
+    required this.y2024,
+    required this.y2025,
+    required this.y2026,
+    required this.y2027,
+    required this.y2028,
+    required this.y2029,
+    required this.grandTotal,
+  });
+
+  static TotalRow initial() {
+    return TotalRow(
+      y2022: 0,
+      y2023: 0,
+      y2024: 0,
+      y2025: 0,
+      y2026: 0,
+      y2027: 0,
+      y2028: 0,
+      y2029: 0,
+      grandTotal: 0,
+    );
+  }
+}

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pips/presentation/controllers/fullproject_controller.dart';
 
+import '../../../controllers/controllers.dart';
 import '../cost_field.dart';
 
 // TODO: update setting value

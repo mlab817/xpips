@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pips/presentation/controllers/fullproject_controller.dart';
 
+import '../../../../application/extensions.dart';
+import '../../../../application/providers/numberformatter_provider.dart';
+import '../../../controllers/controllers.dart';
 import '../cost_field.dart';
 
 class UpdateRegionalCost extends ConsumerStatefulWidget {
@@ -30,7 +32,7 @@ class _UpdateRegionalCostState extends ConsumerState<UpdateRegionalCost> {
             borderRadius: BorderRadius.circular(16),
           ),
           columns: _buildColumns(context),
-          rows: _buildRows(context, ref),
+          rows: [..._buildRows(context, ref), _buildTotalRow(context, ref)],
           // total ROW
         ),
       ),
@@ -267,18 +269,136 @@ class _UpdateRegionalCostState extends ConsumerState<UpdateRegionalCost> {
               ),
             ),
           ),
-          // TODO: make static Text
           DataCell(
             SizedBox(
               width: columnWidth,
-              child: CostField(
-                value: null,
-                onChanged: (String value) {},
+              child: Text(
+                ref
+                    .watch(numberFormatterProvider)
+                    .format(regionalInvestment.total),
+                textAlign: TextAlign.end,
+                style: Theme.of(context).textTheme.bodyLarge,
               ),
             ),
           ),
         ],
       );
     }).toList();
+  }
+
+  DataRow _buildTotalRow(BuildContext context, WidgetRef ref) {
+    final columnWidth = (MediaQuery.of(context).size.width - 128) / 10;
+    return DataRow(cells: [
+      const DataCell(Text('GRAND TOTAL')),
+      DataCell(
+        SizedBox(
+          width: columnWidth,
+          child: Text(
+            ref.watch(numberFormatterProvider).format(ref
+                .watch(fullProjectControllerProvider)
+                .regionalInvestmentTotalRow
+                .y2022),
+            textAlign: TextAlign.right,
+          ),
+        ),
+      ),
+      DataCell(
+        SizedBox(
+          width: columnWidth,
+          child: Text(
+            ref.watch(numberFormatterProvider).format(ref
+                .watch(fullProjectControllerProvider)
+                .regionalInvestmentTotalRow
+                .y2023),
+            textAlign: TextAlign.right,
+          ),
+        ),
+      ),
+      DataCell(
+        SizedBox(
+          width: columnWidth,
+          child: Text(
+            ref.watch(numberFormatterProvider).format(ref
+                .watch(fullProjectControllerProvider)
+                .regionalInvestmentTotalRow
+                .y2024),
+            textAlign: TextAlign.right,
+          ),
+        ),
+      ),
+      DataCell(
+        SizedBox(
+          width: columnWidth,
+          child: Text(
+            ref.watch(numberFormatterProvider).format(ref
+                .watch(fullProjectControllerProvider)
+                .regionalInvestmentTotalRow
+                .y2025),
+            textAlign: TextAlign.right,
+          ),
+        ),
+      ),
+      DataCell(
+        SizedBox(
+          width: columnWidth,
+          child: Text(
+            ref.watch(numberFormatterProvider).format(ref
+                .watch(fullProjectControllerProvider)
+                .regionalInvestmentTotalRow
+                .y2026),
+            textAlign: TextAlign.right,
+          ),
+        ),
+      ),
+      DataCell(
+        SizedBox(
+          width: columnWidth,
+          child: Text(
+            ref.watch(numberFormatterProvider).format(ref
+                .watch(fullProjectControllerProvider)
+                .regionalInvestmentTotalRow
+                .y2027),
+            textAlign: TextAlign.right,
+          ),
+        ),
+      ),
+      DataCell(
+        SizedBox(
+          width: columnWidth,
+          child: Text(
+            ref.watch(numberFormatterProvider).format(ref
+                .watch(fullProjectControllerProvider)
+                .regionalInvestmentTotalRow
+                .y2028),
+            textAlign: TextAlign.right,
+          ),
+        ),
+      ),
+      DataCell(
+        SizedBox(
+          width: columnWidth,
+          child: Text(
+            ref.watch(numberFormatterProvider).format(ref
+                .watch(fullProjectControllerProvider)
+                .regionalInvestmentTotalRow
+                .y2029),
+            textAlign: TextAlign.right,
+          ),
+        ),
+      ),
+      DataCell(
+        SizedBox(
+          width: columnWidth,
+          child: Text(
+            ref.watch(numberFormatterProvider).format(ref
+                .watch(fullProjectControllerProvider)
+                .regionalInvestmentTotalRow
+                .grandTotal),
+            textAlign: TextAlign.right,
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
+        ),
+      ),
+    ]);
   }
 }

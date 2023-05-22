@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pips/application/providers/dio_provider.dart';
+import 'package:pips/data/network/dio.dart';
 import 'package:pips/data/requests/upload_request.dart';
 import 'package:pips/data/responses/upload_response.dart';
 

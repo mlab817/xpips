@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pips/application/providers/dateformatter_provider.dart';
 
-import '../../../../domain/models/option.dart';
-import '../../../controllers/fullproject_controller.dart';
-import '../../../controllers/options_controller.dart';
+import '../../../../domain/models/models.dart';
+import '../../../controllers/controllers.dart';
 import '../empty_indicator.dart';
 import '../get_input_decoration.dart';
 import '../select_dialog_content.dart';

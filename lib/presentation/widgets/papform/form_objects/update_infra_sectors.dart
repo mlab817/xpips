@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pips/presentation/controllers/options_controller.dart';
 
-import '../../../../domain/models/option.dart';
-import '../../../controllers/fullproject_controller.dart';
+import '../../../../domain/models/models.dart';
+import '../../../controllers/controllers.dart';
 import '../../../screens/papform_screen.dart';
 import '../empty_indicator.dart';
 import '../select_dialog_content.dart';
