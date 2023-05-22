@@ -23,27 +23,36 @@ class _UpdateTitle extends ConsumerState {
 
     debugPrint('rebuilding UpdateTitle');
 
-    return ListTile(
-      title: const Text('Title'),
-      subtitle: TextField(
-        focusNode: _node,
-        decoration: getTextInputDecoration(
-          hintText: 'Title',
-        ),
-        minLines: 1,
-        maxLines: 2,
-        style: Theme.of(context).textTheme.bodyMedium,
-        onChanged: (String value) {
-          ref.read(fullProjectControllerProvider.notifier).update(title: value);
-        },
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text('Title'),
+                TextField(
+                  focusNode: _node,
+                  decoration: getTextInputDecoration(
+                    hintText: 'Title',
+                  ),
+                  minLines: 1,
+                  maxLines: 2,
+                  style: Theme.of(context).textTheme.bodyMedium,
+                  onChanged: (String value) {
+                    ref
+                        .read(fullProjectControllerProvider.notifier)
+                        .update(title: value);
+                  },
+                )
+              ],
+            ),
+          ),
+          title != null ? const SuccessIndicator() : const EmptyIndicator(),
+        ],
       ),
-      trailing: title != null && title!.isNotEmpty
-          ? const SuccessIndicator()
-          : const EmptyIndicator(),
-      onTap: () {
-        // focus title
-        _node.requestFocus();
-      },
     );
   }
 }
