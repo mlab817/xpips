@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -7,11 +5,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pips/application/extensions.dart';
 import 'package:pips/application/providers/bearertoken_provider.dart';
-import 'package:pips/application/providers/sharedpreferences.dart';
-import 'package:pips/data/network/dio.dart';
-import 'package:pips/presentation/controllers/controllers.dart';
+import 'package:pips/presentation/controllers/currentuser_controller.dart';
 
 import '../../../application/app_router.dart';
+import '../../../presentation/controllers/controllers.dart';
 
 @RoutePage()
 class LoginScreen extends ConsumerStatefulWidget {
@@ -23,65 +20,32 @@ class LoginScreen extends ConsumerStatefulWidget {
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  late TextEditingController _usernameController;
-  late TextEditingController _passwordController;
 
   bool _obscuredText = true;
 
   @override
-  void initState() {
-    super.initState();
-
-    _usernameController = TextEditingController()
-      ..addListener(() {
-        ref
-            .read(loginCredentialsControllerProvider.notifier)
-            .update(username: _usernameController.text);
-      });
-    _passwordController = TextEditingController()
-      ..addListener(() {
-        ref
-            .read(loginCredentialsControllerProvider.notifier)
-            .update(password: _passwordController.text);
-      });
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-
-    _usernameController.dispose();
-    _passwordController.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final state = ref.watch(loginControllerProvider);
-
     // show snackbar when state changes
-    ref.listen(loginControllerProvider,
-        (_, state) => state.showSnackbarOnError(context));
+    ref.listen(loginProvider, (_, state) => state.showSnackbarOnError(context));
 
-    ref.listen(loginControllerProvider, (_, state) {
-      if (state.hasValue && state.value != null) {
-        // write the bearer token to shared preferences
-        ref
-            .read(sharedPreferencesProvider)
-            .setString('CURRENT_USER', jsonEncode(state.value!.user));
+    ref.listen(loginProvider, (previous, next) {
+      if (!next.isLoading && !next.hasError) {
+        if (next.value != null) {
+          // set the bearer token
+          ref
+              .read(bearerTokenProvider.notifier)
+              .setToken(next.value!.accessToken);
 
-        // reload bearerToken
-        ref
-            .read(bearerTokenNotifierProvider.notifier)
-            .setToken(state.value!.accessToken);
+          ref.invalidate(currentUserProvider);
+        }
+      }
+    });
 
-        // reread getDio
-        ref.read(dioFactoryProvider.notifier).getDio();
-
-        ref
-            .read(authControllerProvider.notifier)
-            .setCurrentUser(state.value!.user);
-
-        AutoRouter.of(context).replace(const MainRoute());
+    ref.listen(currentUserProvider, (previous, next) {
+      print("currentUserProvider previous: $previous");
+      print("currentUserProvider next: $next");
+      if (next != null) {
+        AutoRouter.of(context).push(const MainRoute());
       }
     });
 
@@ -148,8 +112,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         height: 30,
                       ),
                       TextFormField(
-                        controller: _usernameController,
-
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                           prefixIcon: Icon(Icons.person),
@@ -162,12 +124,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           return null;
                         },
                         autofocus: kIsWeb, // autofocus on web
+                        onChanged: (String? value) {
+                          ref
+                              .read(loginCredentialsControllerProvider.notifier)
+                              .update(username: value);
+                        },
                       ),
                       const SizedBox(
                         height: 30,
                       ),
                       TextFormField(
-                        controller: _passwordController,
                         decoration: InputDecoration(
                           border: const OutlineInputBorder(),
                           hintText: 'Password',
@@ -192,6 +158,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           return null;
                         },
                         obscureText: _obscuredText,
+                        onChanged: (String? value) {
+                          ref
+                              .read(loginCredentialsControllerProvider.notifier)
+                              .update(password: value);
+                        },
                       ),
                       const SizedBox(
                         height: 30,
@@ -210,25 +181,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           SizedBox(
                             width: 150,
                             child: FilledButton(
-                              onPressed: state.isLoading
-                                  ? null
-                                  : () async {
-                                      // validate
-                                      if (!_formKey.currentState!.validate()) {
-                                        return;
-                                      }
-
-                                      _handleLogin();
-                                    },
-                              child: state.isLoading
+                              onPressed: () {
+                                ref.read(loginProvider.notifier).login();
+                              },
+                              child: ref.watch(loginProvider).isLoading
                                   ? const SizedBox(
-                                      height: 15,
-                                      width: 15,
+                                      height: 20,
+                                      width: 20,
                                       child: CircularProgressIndicator(
                                         color: Colors.white,
                                       ),
                                     )
-                                  : const Text('Login'),
+                                  : const Text('LOGIN'),
                             ),
                           ),
                           const SizedBox(
@@ -274,7 +238,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   void _handleLogin() async {
     try {
       //
-      ref.read(loginControllerProvider.notifier).login();
+      ref.read(loginProvider);
     } catch (error) {
       print(error);
     }
