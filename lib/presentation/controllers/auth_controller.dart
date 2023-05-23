@@ -1,32 +1,29 @@
 import 'dart:convert';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pips/application/providers/sharedpreferences.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../domain/models/user.dart';
+import '../../domain/models/models.dart';
 
-class AuthController extends Notifier<User?> {
-  AuthController() : super();
+part 'auth_controller.g.dart';
 
-  User? user;
-
-  bool get isLoggedIn => user != null;
-
-  void setCurrentUser(User newUser) {
-    user = newUser;
-  }
-
+@Riverpod(keepAlive: true)
+class AuthController extends _$AuthController {
   User? getCurrentUser() {
-    final sharedPreferences = ref.watch(sharedPreferencesProvider);
-    final userFromSharedPrefs = sharedPreferences.getString('CURRENT_USER');
+    final userFromSharedPrefs =
+        ref.watch(sharedPreferencesProvider).getString('CURRENT_USER');
 
     return userFromSharedPrefs != null
         ? User.fromJson(jsonDecode(userFromSharedPrefs))
         : null;
   }
 
+  void setCurrentUser(User user) {
+    state = user;
+  }
+
   Future<void> logout() async {
-    user = null;
+    state = null;
   }
 
   @override
@@ -34,7 +31,3 @@ class AuthController extends Notifier<User?> {
     return getCurrentUser();
   }
 }
-
-final authControllerProvider = NotifierProvider<AuthController, User?>(() {
-  return AuthController();
-});
