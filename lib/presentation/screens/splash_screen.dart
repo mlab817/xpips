@@ -1,4 +1,3 @@
-
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -17,10 +16,7 @@ class SplashScreen extends ConsumerStatefulWidget {
 class _SplashScreenState extends ConsumerState<SplashScreen> {
   @override
   Widget build(BuildContext context) {
-    ref.read(bearerTokenNotifierProvider.notifier).getTokenFromSharedPrefs();
-    // final user = ref.watch(authControllerProvider);
-
-    final token = ref.watch(bearerTokenNotifierProvider);
+    final token = ref.watch(bearerTokenProvider);
 
     debugPrint("token @splashScreen: ${token.toString()}");
 
