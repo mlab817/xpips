@@ -11,7 +11,7 @@ class DioFactory extends Notifier<Dio> {
     Dio dio = Dio();
 
     // retrieve token from shared_prefs
-    final token = ref.watch(bearerTokenNotifierProvider);
+    final token = ref.watch(bearerTokenProvider);
 
     if (kDebugMode) {
       print("token $token");
