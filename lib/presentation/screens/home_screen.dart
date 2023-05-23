@@ -151,7 +151,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   child: Text(error.toString()),
                 ),
                 loading: () => const Center(
-                  child: CircularProgressIndicator(),
+                  child: Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: CircularProgressIndicator(),
+                  ),
                 ),
               ),
             )
@@ -281,7 +284,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         child: Text(error.toString()),
                       ),
                       loading: () => const Center(
-                        child: CircularProgressIndicator(),
+                        child: Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: CircularProgressIndicator(),
+                        ),
                       ),
                     ),
                   ],
