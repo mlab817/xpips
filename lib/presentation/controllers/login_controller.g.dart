@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'loginscreen_controller.dart';
+part of 'login_controller.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -23,20 +23,18 @@ final loginCredentialsControllerProvider =
 );
 
 typedef _$LoginCredentialsController = Notifier<LoginCredentials>;
-String _$loginControllerHash() => r'323800896ffd6e04e026912082a76a7e6fd0733c';
+String _$loginHash() => r'420f73a8ab8121bdb8687ab12beabd2a00fd86e6';
 
-/// See also [LoginController].
-@ProviderFor(LoginController)
-final loginControllerProvider =
-    AutoDisposeAsyncNotifierProvider<LoginController, LoginResponse>.internal(
-  LoginController.new,
-  name: r'loginControllerProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$loginControllerHash,
+/// See also [Login].
+@ProviderFor(Login)
+final loginProvider = AsyncNotifierProvider<Login, LoginResponse?>.internal(
+  Login.new,
+  name: r'loginProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$loginHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$LoginController = AutoDisposeAsyncNotifier<LoginResponse>;
+typedef _$Login = AsyncNotifier<LoginResponse?>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
