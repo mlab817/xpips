@@ -37,6 +37,11 @@ class SignupRequestController extends _$SignupRequestController {
     );
   }
 
+  // reset state to empty state
+  void reset() {
+    state = SignupRequest.initial();
+  }
+
   @override
   SignupRequest build() {
     return SignupRequest.initial();
@@ -55,7 +60,7 @@ class SignupController extends _$SignupController {
   }
 
   @override
-  FutureOr<void> build() => null;
+  FutureOr<void> build() => const AsyncData(null);
 }
 
 @Riverpod(keepAlive: true)
