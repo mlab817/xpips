@@ -1,74 +1,70 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/foundation.dart';
 import 'package:pips/data/network/dio.dart';
-import 'package:pips/data/requests/upload_request.dart';
 import 'package:pips/data/responses/upload_response.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+import '../../application/config.dart';
+import '../../application/providers/appserviceclient_provider.dart';
+import '../data_sources/app_service_client.dart';
+
+part 'upload_repository.g.dart';
 
 abstract class UploadRepository {
-  Future<UploadResponse> upload(UploadRequest request);
+  Future<UploadResponse> upload(File file);
+
+  Future<UploadResponse> webUpload(Uint8List file);
 }
 
 class UploadRepositoryImplementer implements UploadRepository {
+  final AppServiceClient client;
   final Dio dio;
-  final StreamController<int> streamController;
 
   UploadRepositoryImplementer({
+    required this.client,
     required this.dio,
-    required this.streamController,
   });
 
   @override
-  Future<UploadResponse> upload(UploadRequest request) async {
-    print('upload repository is executed');
-    FormData formData = FormData();
-    final file = MultipartFile.fromBytes(request.file,
-        filename: 'Authorization Form.pdf');
-    MapEntry<String, MultipartFile> fileEntry = MapEntry('file', file);
-    // implement Dio upload
-    formData.files.add(fileEntry);
+  Future<UploadResponse> upload(File file, {String? fileName}) async {
+    return client.upload(file: file);
+    // TODO: review progress implementation
+    //     onSendProgress: (int sent, int total) {
+    //   streamController.add(((sent / total) * 100).round());
+    // }).then((Response response) async {
+    //   // handle response
+    //   final data = UploadResponse.fromJson(response.data);
 
-    return dio.post('https://api.pips.da.gov.ph/upload', data: formData,
-        onSendProgress: (int sent, int total) {
-      streamController.add(((sent / total) * 100).round());
-    }).then((Response response) async {
-      // handle response
-      final data = UploadResponse.fromJson(response.data);
+    //   print('then is executed with data: $data');
+    //   print(data.path);
 
-      print('then is executed with data: $data');
-      print(data.path);
-
-      return data;
-    }).whenComplete(() => streamController.close());
-  }
-}
-
-final uploadStreamControllerProvider =
-    Provider<StreamController<int>>((ref) => StreamController<int>());
-
-final uploadRepositoryProvider = Provider<UploadRepository>((ref) {
-  final streamController = ref.watch(uploadStreamControllerProvider);
-
-  return UploadRepositoryImplementer(
-      dio: ref.watch(dioProvider), streamController: streamController);
-});
-
-class FileUploadController extends AsyncNotifier<UploadResponse?> {
-  Future<UploadResponse?> upload(UploadRequest request) async {
-    final repository = ref.watch(uploadRepositoryProvider);
-
-    state = const AsyncLoading();
-
-    state = await AsyncValue.guard(() => repository.upload(request));
-    return null;
+    //   return data;
+    // }).whenComplete(() => streamController.close());
   }
 
   @override
-  FutureOr<UploadResponse?> build() async => null;
+  Future<UploadResponse> webUpload(Uint8List file, {String? fileName}) async {
+    print('kIsWeb upload repo triggered');
+    FormData formData = FormData();
+
+    final multipartFile = MultipartFile.fromBytes(file,
+        filename: fileName ?? 'Authorization Form.pdf');
+    MapEntry<String, MultipartFile> fileEntry = MapEntry('file', multipartFile);
+    // implement Dio upload
+    formData.files.add(fileEntry);
+
+    return dio
+        .post("${Config.baseApiUrl}/upload", data: formData)
+        .then((response) => UploadResponse.fromJson(response.data));
+  }
 }
 
-final fileUploadControllerProvider =
-    AsyncNotifierProvider<FileUploadController, UploadResponse?>(() {
-  return FileUploadController();
-});
+@Riverpod(keepAlive: true)
+UploadRepository uploadRepository(UploadRepositoryRef ref) =>
+    UploadRepositoryImplementer(
+        client: ref.watch(appServiceClientProvider),
+        dio: ref.watch(dioProvider));
