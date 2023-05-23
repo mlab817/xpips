@@ -15,6 +15,7 @@ _$_SignupRequest _$$_SignupRequestFromJson(Map<String, dynamic> json) =>
       position: json['position'] as String,
       email: json['email'] as String,
       contactNumber: json['contact_number'] as String,
+      password: json['password'] as String,
       authorization: json['authorization'] as String?,
     );
 
@@ -27,5 +28,6 @@ Map<String, dynamic> _$$_SignupRequestToJson(_$_SignupRequest instance) =>
       'position': instance.position,
       'email': instance.email,
       'contact_number': instance.contactNumber,
+      'password': instance.password,
       'authorization': instance.authorization,
     };
