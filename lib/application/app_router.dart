@@ -1,9 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
-import '../domain/models/chatroom.dart';
 import '../presentation/screens/chat_screen.dart';
-import '../presentation/screens/chatroom_screen.dart';
 import '../presentation/screens/forgotpassword_screen.dart';
 import '../presentation/screens/home_screen.dart';
 import '../presentation/screens/login_screen.dart';
@@ -25,8 +23,7 @@ class AppRouter extends _$AppRouter implements AutoRouteGuard {
   AppRouter({required this.isAuthenticated});
 
   @override
-  List<AutoRoute> get routes =>
-      [
+  List<AutoRoute> get routes => [
         AutoRoute(page: SplashRoute.page, initial: true),
         AutoRoute(page: LoginRoute.page, path: '/login'),
         AutoRoute(page: SignupRoute.page, path: '/signup'),
@@ -59,7 +56,7 @@ class AppRouter extends _$AppRouter implements AutoRouteGuard {
           page: NewPapRoute.page,
         ),
         AutoRoute(
-          path: '/project',
+          path: '/project/{uuid}',
           page: PapViewRoute.page,
         ),
         AutoRoute(
@@ -84,4 +81,3 @@ class AppRouter extends _$AppRouter implements AutoRouteGuard {
     }
   }
 }
-

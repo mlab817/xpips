@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pips/application/providers/theme_provider.dart';
+import 'package:pips/presentation/controllers/currentuser_controller.dart';
 
-import '../presentation/controllers/auth_controller.dart';
 import 'app_router.dart';
 
 class MyApp extends ConsumerWidget {
@@ -14,8 +14,9 @@ class MyApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentUser =
-        ref.read(authControllerProvider.notifier).getCurrentUser();
+    final currentUser = ref.watch(currentUserProvider);
+
+    print("currentUser $currentUser");
 
     final AppRouter appRouter = AppRouter(isAuthenticated: currentUser != null);
 

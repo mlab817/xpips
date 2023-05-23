@@ -51,16 +51,6 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const NotificationsScreen(),
       );
     },
-    ChatRoomRoute.name: (routeData) {
-      final args = routeData.argsAs<ChatRoomRouteArgs>();
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: ChatRoomScreen(
-          key: args.key,
-          chatRoom: args.chatRoom,
-        ),
-      );
-    },
     ForgotPasswordRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -80,9 +70,13 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     PapViewRoute.name: (routeData) {
+      final args = routeData.argsAs<PapViewRouteArgs>();
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const PapViewScreen(),
+        child: PapViewScreen(
+          key: args.key,
+          uuid: args.uuid,
+        ),
       );
     },
     HomeRoute.name: (routeData) {
@@ -185,44 +179,6 @@ class NotificationsRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [ChatRoomScreen]
-class ChatRoomRoute extends PageRouteInfo<ChatRoomRouteArgs> {
-  ChatRoomRoute({
-    Key? key,
-    required ChatRoom chatRoom,
-    List<PageRouteInfo>? children,
-  }) : super(
-          ChatRoomRoute.name,
-          args: ChatRoomRouteArgs(
-            key: key,
-            chatRoom: chatRoom,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'ChatRoomRoute';
-
-  static const PageInfo<ChatRoomRouteArgs> page =
-      PageInfo<ChatRoomRouteArgs>(name);
-}
-
-class ChatRoomRouteArgs {
-  const ChatRoomRouteArgs({
-    this.key,
-    required this.chatRoom,
-  });
-
-  final Key? key;
-
-  final ChatRoom chatRoom;
-
-  @override
-  String toString() {
-    return 'ChatRoomRouteArgs{key: $key, chatRoom: $chatRoom}';
-  }
-}
-
-/// generated route for
 /// [ForgotPasswordScreen]
 class ForgotPasswordRoute extends PageRouteInfo<void> {
   const ForgotPasswordRoute({List<PageRouteInfo>? children})
@@ -266,16 +222,40 @@ class MainRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [PapViewScreen]
-class PapViewRoute extends PageRouteInfo<void> {
-  const PapViewRoute({List<PageRouteInfo>? children})
-      : super(
+class PapViewRoute extends PageRouteInfo<PapViewRouteArgs> {
+  PapViewRoute({
+    Key? key,
+    required String uuid,
+    List<PageRouteInfo>? children,
+  }) : super(
           PapViewRoute.name,
+          args: PapViewRouteArgs(
+            key: key,
+            uuid: uuid,
+          ),
           initialChildren: children,
         );
 
   static const String name = 'PapViewRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static const PageInfo<PapViewRouteArgs> page =
+      PageInfo<PapViewRouteArgs>(name);
+}
+
+class PapViewRouteArgs {
+  const PapViewRouteArgs({
+    this.key,
+    required this.uuid,
+  });
+
+  final Key? key;
+
+  final String uuid;
+
+  @override
+  String toString() {
+    return 'PapViewRouteArgs{key: $key, uuid: $uuid}';
+  }
 }
 
 /// generated route for
