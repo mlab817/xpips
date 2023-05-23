@@ -82,7 +82,6 @@ final realTimeCommentsProvider =
 });
 
 extension ChannelReadEventToString on ChannelReadEvent {
-  @override
   String toDebugString() {
     return jsonEncode(this);
   }
