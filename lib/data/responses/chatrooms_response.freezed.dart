@@ -22,6 +22,8 @@ ChatRoomsResponse _$ChatRoomsResponseFromJson(Map<String, dynamic> json) {
 mixin _$ChatRoomsResponse {
   @JsonKey(name: "data")
   List<ChatRoom> get data => throw _privateConstructorUsedError;
+  @JsonKey(name: "meta")
+  Meta get meta => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -35,7 +37,11 @@ abstract class $ChatRoomsResponseCopyWith<$Res> {
           ChatRoomsResponse value, $Res Function(ChatRoomsResponse) then) =
       _$ChatRoomsResponseCopyWithImpl<$Res, ChatRoomsResponse>;
   @useResult
-  $Res call({@JsonKey(name: "data") List<ChatRoom> data});
+  $Res call(
+      {@JsonKey(name: "data") List<ChatRoom> data,
+      @JsonKey(name: "meta") Meta meta});
+
+  $MetaCopyWith<$Res> get meta;
 }
 
 /// @nodoc
@@ -52,13 +58,26 @@ class _$ChatRoomsResponseCopyWithImpl<$Res, $Val extends ChatRoomsResponse>
   @override
   $Res call({
     Object? data = null,
+    Object? meta = null,
   }) {
     return _then(_value.copyWith(
       data: null == data
           ? _value.data
           : data // ignore: cast_nullable_to_non_nullable
               as List<ChatRoom>,
+      meta: null == meta
+          ? _value.meta
+          : meta // ignore: cast_nullable_to_non_nullable
+              as Meta,
     ) as $Val);
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $MetaCopyWith<$Res> get meta {
+    return $MetaCopyWith<$Res>(_value.meta, (value) {
+      return _then(_value.copyWith(meta: value) as $Val);
+    });
   }
 }
 
@@ -70,7 +89,12 @@ abstract class _$$_ChatRoomsResponseCopyWith<$Res>
       __$$_ChatRoomsResponseCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({@JsonKey(name: "data") List<ChatRoom> data});
+  $Res call(
+      {@JsonKey(name: "data") List<ChatRoom> data,
+      @JsonKey(name: "meta") Meta meta});
+
+  @override
+  $MetaCopyWith<$Res> get meta;
 }
 
 /// @nodoc
@@ -85,12 +109,17 @@ class __$$_ChatRoomsResponseCopyWithImpl<$Res>
   @override
   $Res call({
     Object? data = null,
+    Object? meta = null,
   }) {
     return _then(_$_ChatRoomsResponse(
       data: null == data
           ? _value._data
           : data // ignore: cast_nullable_to_non_nullable
               as List<ChatRoom>,
+      meta: null == meta
+          ? _value.meta
+          : meta // ignore: cast_nullable_to_non_nullable
+              as Meta,
     ));
   }
 }
@@ -99,7 +128,8 @@ class __$$_ChatRoomsResponseCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_ChatRoomsResponse implements _ChatRoomsResponse {
   _$_ChatRoomsResponse(
-      {@JsonKey(name: "data") required final List<ChatRoom> data})
+      {@JsonKey(name: "data") required final List<ChatRoom> data,
+      @JsonKey(name: "meta") required this.meta})
       : _data = data;
 
   factory _$_ChatRoomsResponse.fromJson(Map<String, dynamic> json) =>
@@ -115,8 +145,12 @@ class _$_ChatRoomsResponse implements _ChatRoomsResponse {
   }
 
   @override
+  @JsonKey(name: "meta")
+  final Meta meta;
+
+  @override
   String toString() {
-    return 'ChatRoomsResponse(data: $data)';
+    return 'ChatRoomsResponse(data: $data, meta: $meta)';
   }
 
   @override
@@ -124,13 +158,14 @@ class _$_ChatRoomsResponse implements _ChatRoomsResponse {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_ChatRoomsResponse &&
-            const DeepCollectionEquality().equals(other._data, _data));
+            const DeepCollectionEquality().equals(other._data, _data) &&
+            (identical(other.meta, meta) || other.meta == meta));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(_data));
+  int get hashCode => Object.hash(
+      runtimeType, const DeepCollectionEquality().hash(_data), meta);
 
   @JsonKey(ignore: true)
   @override
@@ -149,8 +184,8 @@ class _$_ChatRoomsResponse implements _ChatRoomsResponse {
 
 abstract class _ChatRoomsResponse implements ChatRoomsResponse {
   factory _ChatRoomsResponse(
-          {@JsonKey(name: "data") required final List<ChatRoom> data}) =
-      _$_ChatRoomsResponse;
+      {@JsonKey(name: "data") required final List<ChatRoom> data,
+      @JsonKey(name: "meta") required final Meta meta}) = _$_ChatRoomsResponse;
 
   factory _ChatRoomsResponse.fromJson(Map<String, dynamic> json) =
       _$_ChatRoomsResponse.fromJson;
@@ -158,6 +193,9 @@ abstract class _ChatRoomsResponse implements ChatRoomsResponse {
   @override
   @JsonKey(name: "data")
   List<ChatRoom> get data;
+  @override
+  @JsonKey(name: "meta")
+  Meta get meta;
   @override
   @JsonKey(ignore: true)
   _$$_ChatRoomsResponseCopyWith<_$_ChatRoomsResponse> get copyWith =>
