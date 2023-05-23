@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pips/presentation/controllers/pushnotifications_controller.dart';
 import 'package:pips/presentation/controllers/theme_controller.dart';
 
 class PreferencesScreen extends ConsumerStatefulWidget {
@@ -26,6 +27,17 @@ class _PreferencesScreenState extends ConsumerState<PreferencesScreen> {
                 value: ref.watch(themeControllerProvider) == ThemeMode.dark,
                 onChanged: (bool value) {
                   ref.read(themeControllerProvider.notifier).switchTheme();
+                },
+              ),
+              SwitchListTile(
+                title: const Text('Push Notifications'),
+                subtitle: const Text(
+                    'Receive push notifications even when you are not using the app. Android only'),
+                value: ref.watch(pushNotificationsControllerProvider),
+                onChanged: (bool value) {
+                  ref
+                      .read(pushNotificationsControllerProvider.notifier)
+                      .toggle();
                 },
               ),
             ],

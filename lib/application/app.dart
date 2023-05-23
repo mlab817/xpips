@@ -36,7 +36,7 @@ class MyApp extends ConsumerWidget {
       // showPerformanceOverlay: true,
       debugShowCheckedModeBanner: true,
       // set to true until further notice
-      themeMode: ref.watch(themeProvider),
+      themeMode: ref.watch(themeControllerProvider),
       // dark theme
       darkTheme: FlexThemeData.dark(
         scheme: FlexScheme.gold,
