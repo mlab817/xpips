@@ -7,7 +7,7 @@ part of 'signupscreen_controller.dart';
 // **************************************************************************
 
 String _$signupRequestControllerHash() =>
-    r'16e6c66d027a2ceaca2f900454de4cdae1a64135';
+    r'89c861fc56798f3a44cde68cd3c75c93614825b9';
 
 /// See also [SignupRequestController].
 @ProviderFor(SignupRequestController)
@@ -23,7 +23,7 @@ final signupRequestControllerProvider =
 );
 
 typedef _$SignupRequestController = Notifier<SignupRequest>;
-String _$signupControllerHash() => r'956848464a190a32d3bea6dc11f4a8875485505b';
+String _$signupControllerHash() => r'6a74bf1db0acc7a7fd34156cd6655f9751de3aed';
 
 /// See also [SignupController].
 @ProviderFor(SignupController)
