@@ -31,6 +31,11 @@ extension AsyncValueUI on AsyncValue<void> {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text(error.toString())));
       });
+
+  void showSnackbarOnSuccess(BuildContext context) => whenOrNull(data: (data) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('Success')));
+      });
 }
 
 extension ApplyPresets on FullProject {
