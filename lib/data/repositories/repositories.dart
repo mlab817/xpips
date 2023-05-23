@@ -1,5 +1,6 @@
 export 'auth_repository.dart';
 export 'chat_repository.dart';
+export 'chats_repository.dart';
 export 'comments_repository.dart';
 export 'newcomment_repository.dart';
 export 'notifications_repository.dart';

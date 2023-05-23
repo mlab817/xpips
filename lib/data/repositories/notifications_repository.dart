@@ -1,6 +1,7 @@
 import 'package:pips/data/requests/pagination_request.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../application/providers/appserviceclient_provider.dart';
 import '../../domain/models/notifications.dart';
 import '../data_sources/app_service_client.dart';
 import '../responses/notifications_response.dart';

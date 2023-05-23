@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:pips/application/providers/appserviceclient_provider.dart';
 import 'package:pips/application/providers/sharedpreferences.dart';
 import 'package:pips/data/data_sources/app_service_client.dart';
 import 'package:pips/data/requests/reactivation_request.dart';

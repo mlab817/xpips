@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pips/data/data_sources/app_service_client.dart';
 
+import '../../application/providers/appserviceclient_provider.dart';
+
 abstract class UploadAvatarRepository {
   Future<void> uploadAvatar(File request);
 }
@@ -19,7 +21,6 @@ class UploadAvatarRepositoryImplementer implements UploadAvatarRepository {
 }
 
 final uploadAvatarRepositoryProvider = Provider<UploadAvatarRepository>((ref) {
-  final client = ref.watch(appServiceClientProvider);
-
-  return UploadAvatarRepositoryImplementer(client: client);
+  return UploadAvatarRepositoryImplementer(
+      client: ref.watch(appServiceClientProvider));
 });
