@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
@@ -26,22 +28,13 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   Office? _office;
 
   // hold state for tracking file upload
-  bool _uploading = false;
-  String? _uploadedPath;
+  bool _obscuredPassword = true;
 
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
 
     final data = ref.watch(signupRequestControllerProvider);
-
-    ref.listen(fileUploadControllerProvider, (previous, next) {
-      //
-      ref
-          .read(signupRequestControllerProvider.notifier)
-          .update(authorization: next.value?.path ?? '');
-      _uploadedPath = next.value?.path;
-    });
 
     if (kDebugMode) {
       print(data);
@@ -99,6 +92,9 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                         ),
                       ],
                     ),
+                    const SizedBox(
+                      height: 10,
+                    ),
                     TextFormField(
                       decoration: const InputDecoration(
                         label: Text('Position/Designation'),
@@ -108,6 +104,9 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                             .read(signupRequestControllerProvider.notifier)
                             .update(position: value);
                       },
+                    ),
+                    const SizedBox(
+                      height: 10,
                     ),
                     TextFormField(
                       decoration: const InputDecoration(
@@ -119,6 +118,9 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                             .update(email: value);
                       },
                     ),
+                    const SizedBox(
+                      height: 10,
+                    ),
                     TextFormField(
                       decoration: const InputDecoration(
                         label: Text('Contact Number'),
@@ -129,6 +131,9 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                             .update(contactNumber: value);
                       },
                     ),
+                    const SizedBox(
+                      height: 10,
+                    ),
                     TextFormField(
                       decoration: const InputDecoration(
                         label: Text('Username'),
@@ -138,6 +143,32 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                             .read(signupRequestControllerProvider.notifier)
                             .update(username: value);
                       },
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    TextFormField(
+                      decoration: InputDecoration(
+                          label: const Text('Password'),
+                          suffix: InkWell(
+                            onTap: () {
+                              setState(() {
+                                _obscuredPassword = !_obscuredPassword;
+                              });
+                            },
+                            child: Icon(!_obscuredPassword
+                                ? Icons.visibility_off
+                                : Icons.visibility),
+                          )),
+                      obscureText: _obscuredPassword,
+                      onChanged: (String? value) {
+                        ref
+                            .read(signupRequestControllerProvider.notifier)
+                            .update(password: value);
+                      },
+                    ),
+                    const SizedBox(
+                      height: 10,
                     ),
                     InkWell(
                       onTap: () {
@@ -175,47 +206,15 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                         ),
                       ),
                     ),
+                    const SizedBox(
+                      height: 10,
+                    ),
                     InkWell(
-                      onTap: () async {
-                        FilePickerResult? result =
-                            await FilePicker.platform.pickFiles(
-                          type: FileType.custom,
-                          allowedExtensions: ['jpg', 'pdf', 'png'],
-                        );
-
-                        if (result != null) {
-                          // set uploading status
-                          setState(() {
-                            _uploading = true;
-                          });
-
-                          var uploadedFile = result.files.first;
-
-                          // handle file upload
-                          ref
-                              .read(fileUploadControllerProvider.notifier)
-                              .upload(UploadRequest(
-                                  file: uploadedFile.bytes!.toList()))
-                              .then((data) {
-                            setState(() {
-                              _uploading = false;
-                            });
-                          });
-
-                          // add the file path to the signupRequest
-                        } else {
-                          if (context.mounted) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('No file selected.'),
-                              ),
-                            );
-                          }
-                        }
-                      },
+                      onTap: _pickFile,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 16.0),
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
                               children: [
@@ -229,30 +228,40 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                                               Theme.of(context).primaryColor),
                                 ),
                                 const Spacer(),
-                                _uploading
-                                    ? _buildUploadingProgress()
-                                    : const Icon(Icons.attach_file),
+                                const Icon(Icons.attach_file),
                               ],
                             ),
-                            if (_uploadedPath != null) Text(_uploadedPath!),
+                            ref
+                                .watch(
+                                    authorizationFileUploadControllerProvider)
+                                .when(data: (data) {
+                              return Text(
+                                data?.path ?? 'NO FILE',
+                                textAlign: TextAlign.start,
+                              );
+                            }, error: (error, stacktrace) {
+                              return Text(error.toString());
+                            }, loading: () {
+                              return Container();
+                            }),
                           ],
                         ),
                       ),
                     ),
-                    // TODO: add fields
+                    const SizedBox(
+                      height: 10,
+                    ),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8.0),
                       child: SizedBox(
                         width: double.infinity,
                         child: FilledButton(
                           // disable if file is being uploaded
-                          onPressed: _uploading
-                              ? null
-                              : () {
-                                  ref
-                                      .read(signupControllerProvider.notifier)
-                                      .submit();
-                                },
+                          onPressed: () {
+                            ref
+                                .read(signupControllerProvider.notifier)
+                                .submit();
+                          },
                           child: const Text('Sign up'),
                         ),
                       ),
@@ -280,19 +289,47 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
     );
   }
 
-  Widget _buildUploadingProgress() {
-    final uploadStream = ref.watch(uploadStreamControllerProvider).stream;
+  Future<void> _pickFile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['jpg', 'pdf', 'png'],
+    );
 
-    return StreamBuilder<int>(
-        stream: uploadStream,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return CircularProgressIndicator(
-              value: snapshot.data! / 100,
-            );
-          }
-          return Container();
-        });
+    if (result != null) {
+      print(result);
+      // set uploading status
+      // only works on web
+
+      /// note: file uploads work differently based on platform particularly on web
+      /// files uploaded on web do not have access to path so the file is the one
+      /// being stored in memory. so web has access to bytes whereas other platforms
+      /// have access to path
+      if (kIsWeb) {
+        print('kIsWeb');
+
+        var webFile = result.files.first.bytes!;
+
+        ref
+            .read(authorizationFileUploadControllerProvider.notifier)
+            .webUpload(webFile);
+      } else {
+        var uploaded = result.files.first;
+
+        var fileForUpload = File(uploaded.path!);
+
+        ref
+            .read(authorizationFileUploadControllerProvider.notifier)
+            .upload(fileForUpload);
+      }
+    } else {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('No file selected.'),
+          ),
+        );
+      }
+    }
   }
 }
 
@@ -306,47 +343,38 @@ class OfficeBottomSheet extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final valueAsync = ref.watch(officesProvider);
+    final offices = ref.watch(filteredOfficesProvider);
 
     return Column(mainAxisSize: MainAxisSize.min, children: [
       Padding(
         padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 12.0),
         child: TextField(
-          onChanged: (String? value) {
-            // ref.read(officeFilterProvider.notifier).state = value;
+          onChanged: (String value) {
+            ref.read(officeFilterProvider.notifier).state = value;
           },
         ),
       ),
       Expanded(
-        child: valueAsync.when(
-          data: (data) {
-            return ListView.builder(
-                shrinkWrap: true,
-                itemCount: data.data.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(data.data[index].acronym),
-                    subtitle: Text(data.data[index].name),
-                    onTap: () {
-                      ref
-                          .read(signupRequestControllerProvider.notifier)
-                          .update(officeId: data.data[index].id);
-                      // handleTap
-                      onSelect(data.data[index]);
-                    },
-                  );
-                });
-          },
-          error: (error, _) => Center(
-            child: Text(error.toString()),
-          ),
-          loading: () {
-            return const Center(
-              child: LoadingOverlay(),
+        child: ListView.builder(
+          shrinkWrap: true,
+          itemCount: offices.length,
+          itemBuilder: (context, index) {
+            final office = offices[index];
+
+            return ListTile(
+              title: Text(office.acronym),
+              subtitle: Text(office.name),
+              onTap: () {
+                ref
+                    .read(signupRequestControllerProvider.notifier)
+                    .update(officeId: office.id);
+                // handleTap
+                onSelect(office);
+              },
             );
           },
         ),
-      )
+      ),
     ]);
   }
 }
