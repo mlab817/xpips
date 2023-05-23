@@ -16,7 +16,8 @@ import '../controllers/controllers.dart';
 
 @RoutePage()
 class PapViewScreen extends ConsumerStatefulWidget {
-  const PapViewScreen({Key? key, required this.uuid}) : super(key: key);
+  const PapViewScreen({Key? key, @PathParam('uuid') required this.uuid})
+      : super(key: key);
 
   final String uuid;
 
@@ -85,14 +86,24 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         ],
       ),
       floatingActionButton: !_isExpanded
-          ? FloatingActionButton(
-              onPressed: () {
-                // expand messenger like
-                setState(() {
-                  _isExpanded = !_isExpanded;
-                });
-              },
-              child: const Icon(Icons.chat_bubble),
+          ? Badge(
+              label:
+                  ref.watch(realTimeCommentsProvider(widget.uuid)).value != null
+                      ? Text(ref
+                          .watch(realTimeCommentsProvider(widget.uuid))
+                          .value!
+                          .length
+                          .toString())
+                      : null,
+              child: FloatingActionButton(
+                onPressed: () {
+                  // expand messenger like
+                  setState(() {
+                    _isExpanded = !_isExpanded;
+                  });
+                },
+                child: const Icon(Icons.chat_bubble),
+              ),
             )
           : null,
       body: Stack(

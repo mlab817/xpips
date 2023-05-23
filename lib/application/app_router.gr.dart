@@ -70,7 +70,9 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     PapViewRoute.name: (routeData) {
-      final args = routeData.argsAs<PapViewRouteArgs>();
+      final pathParams = routeData.inheritedPathParams;
+      final args = routeData.argsAs<PapViewRouteArgs>(
+          orElse: () => PapViewRouteArgs(uuid: pathParams.getString('uuid')));
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: PapViewScreen(
@@ -233,6 +235,7 @@ class PapViewRoute extends PageRouteInfo<PapViewRouteArgs> {
             key: key,
             uuid: uuid,
           ),
+          rawPathParams: {'uuid': uuid},
           initialChildren: children,
         );
 

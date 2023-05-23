@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pips/application/providers/theme_provider.dart';
+import 'package:pips/presentation/controllers/theme_controller.dart';
 
 class PreferencesScreen extends ConsumerStatefulWidget {
   const PreferencesScreen({Key? key}) : super(key: key);
@@ -21,10 +21,11 @@ class _PreferencesScreenState extends ConsumerState<PreferencesScreen> {
             children: [
               SwitchListTile(
                 title: const Text('Theme'),
-                subtitle: Text(ref.watch(themeProvider).name.toUpperCase()),
-                value: ref.watch(themeProvider) == ThemeMode.dark,
+                subtitle:
+                    Text(ref.watch(themeControllerProvider).name.toUpperCase()),
+                value: ref.watch(themeControllerProvider) == ThemeMode.dark,
                 onChanged: (bool value) {
-                  ref.read(themeProvider.notifier).switchTheme();
+                  ref.read(themeControllerProvider.notifier).switchTheme();
                 },
               ),
             ],

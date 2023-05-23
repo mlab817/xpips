@@ -4,8 +4,8 @@ import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:pips/application/providers/theme_provider.dart';
 import 'package:pips/presentation/controllers/currentuser_controller.dart';
+import 'package:pips/presentation/controllers/theme_controller.dart';
 
 import 'app_router.dart';
 
@@ -34,7 +34,8 @@ class MyApp extends ConsumerWidget {
       ),
       // debugShowMaterialGrid: true,
       // showPerformanceOverlay: true,
-      debugShowCheckedModeBanner: false,
+      debugShowCheckedModeBanner: true,
+      // set to true until further notice
       themeMode: ref.watch(themeProvider),
       // dark theme
       darkTheme: FlexThemeData.dark(

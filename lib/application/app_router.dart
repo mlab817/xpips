@@ -56,7 +56,7 @@ class AppRouter extends _$AppRouter implements AutoRouteGuard {
           page: NewPapRoute.page,
         ),
         AutoRoute(
-          path: '/project/{uuid}',
+          path: '/project/:uuid',
           page: PapViewRoute.page,
         ),
         AutoRoute(
