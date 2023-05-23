@@ -5,14 +5,11 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pips/application/app_router.dart';
-import 'package:pips/data/repositories/upload_repository.dart';
-import 'package:pips/data/requests/upload_request.dart';
-import 'package:pips/presentation/controllers/offices_controller.dart';
-import 'package:pips/presentation/controllers/signupscreen_controller.dart';
-import 'package:pips/presentation/widgets/loading_dialog.dart';
+import 'package:pips/application/extensions.dart';
 
+import '../../application/app_router.dart';
 import '../../domain/models/office.dart';
+import '../controllers/controllers.dart';
 
 @RoutePage()
 class SignupScreen extends ConsumerStatefulWidget {
@@ -39,6 +36,12 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
     if (kDebugMode) {
       print(data);
     }
+
+    ref.listen(signupControllerProvider, (_, state) {
+      if (state.hasError) return state.showSnackbarOnError(context);
+
+      if (state.hasValue) return state.showSnackbarOnSuccess(context);
+    });
 
     return Scaffold(
       appBar: AppBar(
@@ -228,7 +231,12 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                                               Theme.of(context).primaryColor),
                                 ),
                                 const Spacer(),
-                                const Icon(Icons.attach_file),
+                                ref
+                                        .watch(
+                                            authorizationFileUploadControllerProvider)
+                                        .isLoading
+                                    ? const CircularProgressIndicator()
+                                    : const Icon(Icons.attach_file),
                               ],
                             ),
                             ref
@@ -257,12 +265,21 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                         width: double.infinity,
                         child: FilledButton(
                           // disable if file is being uploaded
-                          onPressed: () {
-                            ref
-                                .read(signupControllerProvider.notifier)
-                                .submit();
-                          },
-                          child: const Text('Sign up'),
+                          onPressed: ref
+                                  .watch(signupControllerProvider)
+                                  .isLoading
+                              ? null
+                              : () {
+                                  ref
+                                      .read(signupControllerProvider.notifier)
+                                      .submit();
+                                },
+                          child: ref.watch(signupControllerProvider).isLoading
+                              ? const SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator())
+                              : const Text('Sign up'),
                         ),
                       ),
                     ),
