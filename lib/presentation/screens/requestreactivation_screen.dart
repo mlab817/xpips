@@ -1,9 +1,10 @@
+import 'dart:io';
+
 import 'package:auto_route/annotations.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:pips/data/requests/upload_request.dart';
 
 import '../controllers/reactivationrequest_controller.dart';
 
@@ -120,11 +121,9 @@ class _RequestReactivationScreenState
                             final response = await ref
                                 .read(reactivationFileUploadControllerProvider
                                     .notifier)
-                                .upload(
-                                  UploadRequest(
-                                    file: result.files.first.bytes!.toList(),
-                                  ),
-                                );
+                                .upload(File.fromRawPath(
+                                  result.files.first.bytes!,
+                                ));
                           }
                         },
                       ),
