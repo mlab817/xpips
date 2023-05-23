@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pips/data/data_sources/app_service_client.dart';
 import 'package:pips/data/requests/updatepassword_request.dart';
 
+import '../../application/providers/appserviceclient_provider.dart';
+
 class UpdatePasswordController extends Notifier<UpdatePasswordRequest> {
   void update({
     String? currentPassword,

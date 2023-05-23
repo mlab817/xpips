@@ -13,7 +13,7 @@ class Comment with _$Comment {
     @JsonKey(name: "updated_at") required DateTime updatedAt,
     @JsonKey(name: "created_at") required DateTime createdAt,
     @JsonKey(name: "is_resolved") required bool isResolved,
-    required User user,
+    User? user,
   }) = _Comment;
 
   factory Comment.fromJson(Map<String, dynamic> json) =>

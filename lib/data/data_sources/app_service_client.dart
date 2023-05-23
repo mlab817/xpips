@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pips/data/requests/updatepassword_request.dart';
 import 'package:retrofit/http.dart';
 
@@ -14,7 +13,6 @@ import '../../data/responses/createproject_response.dart';
 import '../../data/responses/newcomment_response.dart';
 import '../../domain/models/login_credentials.dart';
 import '../../domain/models/notifications.dart';
-import '../network/dio.dart';
 import '../requests/comment_request.dart';
 import '../requests/fullproject_request.dart';
 import '../requests/projects_request.dart';
@@ -77,7 +75,7 @@ abstract class AppServiceClient {
   Future<ChatRoomResponse> getChatRoom(@Path('id') int id);
 
   @GET('/chats')
-  Future<ProjectsResponse> getChats(@Queries() ProjectsRequest request);
+  Future<ChatRoomsResponse> getChats(@Queries() ProjectsRequest request);
 
   @GET('/pips-statuses')
   Future<PipsStatusResponse> getPipsStatuses();
@@ -118,13 +116,3 @@ abstract class AppServiceClient {
   @POST('/update-password')
   Future<void> updatePassword(@Body() UpdatePasswordRequest request);
 }
-
-final appServiceClientProvider = Provider<AppServiceClient>((ref) {
-  print('appServiceClientProvider called');
-
-  final dio = ref.watch(dioProvider);
-
-  print('dio watched');
-
-  return AppServiceClient(dio);
-});

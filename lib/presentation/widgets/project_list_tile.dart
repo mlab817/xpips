@@ -153,10 +153,9 @@ class _ProjectListTileState extends ConsumerState<ProjectListTile> {
             IconButton(
               onPressed: _project.permissions.view
                   ? () {
-                      ref
-                          .read(selectedProjectProvider.notifier)
-                          .update(_project);
-                      AutoRouter.of(context).push(const PapViewRoute());
+                      ref.read(projectProvider(uuid: _project.uuid));
+                      AutoRouter.of(context)
+                          .push(PapViewRoute(uuid: _project.uuid));
                     }
                   : null,
               icon: const Icon(Icons.visibility),
@@ -187,9 +186,10 @@ class _ProjectListTileState extends ConsumerState<ProjectListTile> {
           SlidableAction(
             onPressed: _project.permissions.view
                 ? (context) {
-                    ref.read(selectedProjectProvider.notifier).update(_project);
+                    ref.read(projectProvider(uuid: _project.uuid));
 
-                    AutoRouter.of(context).push(const PapViewRoute());
+                    AutoRouter.of(context)
+                        .push(PapViewRoute(uuid: _project.uuid));
                   }
                 : null,
             backgroundColor: Colors.grey,

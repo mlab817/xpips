@@ -2,6 +2,7 @@ import 'package:pips/data/data_sources/app_service_client.dart';
 import 'package:pips/presentation/controllers/viewpap_controller.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../application/providers/appserviceclient_provider.dart';
 import '../requests/comment_request.dart';
 import '../responses/newcomment_response.dart';
 
@@ -24,8 +25,9 @@ class NewCommentRepositoryImplementer implements NewCommentRepository {
 }
 
 @riverpod
-NewCommentRepository newCommentRepository(NewCommentRepositoryRef ref) =>
+NewCommentRepository newCommentRepository(NewCommentRepositoryRef ref,
+        {required String uuid}) =>
     NewCommentRepositoryImplementer(
-        // TODO: ensure that uuid is not null
-        uuid: ref.watch(selectedProjectProvider)?.uuid ?? '',
-        client: ref.watch(appServiceClientProvider));
+      uuid: uuid,
+      client: ref.watch(appServiceClientProvider),
+    );

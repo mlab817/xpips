@@ -1,41 +1,21 @@
 import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pips/data/data_sources/app_service_client.dart';
 import 'package:pips/data/requests/projects_request.dart';
-import 'package:pips/data/responses/projects_response.dart';
+import 'package:pips/data/responses/responses.dart';
 import 'package:pips/presentation/controllers/home_controller.dart';
 
-abstract class ChatsRepository {
-  Future<ProjectsResponse> get(ProjectsRequest request);
-}
-
-class ChatsRepositoryImplementer implements ChatsRepository {
-  final AppServiceClient client;
-
-  ChatsRepositoryImplementer(this.client);
-
-  @override
-  Future<ProjectsResponse> get(ProjectsRequest request) async {
-    return client.getChats(request);
-  }
-}
-
-final chatsRepositoryProvider = Provider<ChatsRepository>((ref) {
-  final client = ref.watch(appServiceClientProvider);
-
-  return ChatsRepositoryImplementer(client);
-});
+import '../../data/repositories/chats_repository.dart';
 
 // future provider for chats
-final chatMessagesProvider = FutureProvider<ProjectsResponse>((ref) async {
+final chatMessagesProvider = FutureProvider<ChatRoomsResponse>((ref) async {
   return await ref
       .watch(chatsRepositoryProvider)
       .get(ref.watch(projectsRequestControllerProvider));
 });
 
-class ChatsController extends AsyncNotifier<ProjectsResponse> {
-  Future<ProjectsResponse> get() async {
+class ChatsController extends AsyncNotifier<ChatRoomsResponse> {
+  Future<ChatRoomsResponse> get() async {
     final repository = ref.watch(chatsRepositoryProvider);
     final request = ref.watch(chatsRequestProvider);
 
@@ -49,11 +29,11 @@ class ChatsController extends AsyncNotifier<ProjectsResponse> {
   }
 
   @override
-  FutureOr<ProjectsResponse> build() => get();
+  FutureOr<ChatRoomsResponse> build() => get();
 }
 
 final chatsControllerProvider =
-    AsyncNotifierProvider<ChatsController, ProjectsResponse>(() {
+    AsyncNotifierProvider<ChatsController, ChatRoomsResponse>(() {
   return ChatsController();
 });
 

@@ -1,6 +1,7 @@
 // TODO: review for deletion
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../application/providers/appserviceclient_provider.dart';
 import '../../domain/models/chatroom.dart';
 import '../../domain/models/message.dart';
 import '../data_sources/app_service_client.dart';

@@ -1,4 +1,5 @@
 import 'package:auto_route/annotations.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
@@ -15,7 +16,9 @@ import '../controllers/controllers.dart';
 
 @RoutePage()
 class PapViewScreen extends ConsumerStatefulWidget {
-  const PapViewScreen({Key? key}) : super(key: key);
+  const PapViewScreen({Key? key, required this.uuid}) : super(key: key);
+
+  final String uuid;
 
   @override
   ConsumerState<PapViewScreen> createState() => _PapViewScreenState();
@@ -57,14 +60,14 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
     //   );
     // });
 
-    final projectProfileAsync = ref.watch(viewPapControllerProvider);
+    final projectProfileAsync = ref.watch(projectProvider(uuid: widget.uuid));
 
     // ref.watch(realTimeCommentsProvider);
 
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          ref.watch(selectedProjectProvider)?.title ?? 'No Project Selected',
+          projectProfileAsync.value?.project.title ?? 'No Project Selected',
           overflow: TextOverflow.ellipsis,
         ),
         // scrolledUnderElevation: 0.0,
@@ -1726,7 +1729,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
   }
 
   Widget _buildChat() {
-    final liveComments = ref.watch(realTimeCommentsProvider);
+    final liveComments = ref.watch(realTimeCommentsProvider(widget.uuid));
 
     return AnimatedPositioned(
       duration: const Duration(milliseconds: 250),
@@ -1791,7 +1794,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
 
                         return ListTile(
                           leading: const Icon(Icons.person),
-                          title: Text(comment.user.firstName ?? ''),
+                          title: Text(comment.user?.firstName ?? 'NO USER'),
                           subtitle: Text(comment.comment),
                           trailing: Text(
                             ref.watch(dateFormatterProvider).format(
@@ -1819,7 +1822,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                     //
 
                     ref
-                        .read(newCommentRepositoryProvider)
+                        .read(newCommentRepositoryProvider(uuid: widget.uuid))
                         .addComment(CommentRequest(comment: value));
 
                     _textEditingController.clear();

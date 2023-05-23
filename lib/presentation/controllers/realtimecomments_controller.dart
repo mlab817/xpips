@@ -13,7 +13,7 @@ import '../../domain/models/comment.dart';
 final endpointAuthorizationDelegateProvider = Provider<
     EndpointAuthorizableChannelTokenAuthorizationDelegate<
         PrivateChannelAuthorizationData>>((ref) {
-  final token = ref.watch(bearerTokenNotifierProvider);
+  final token = ref.watch(bearerTokenProvider);
 
   return EndpointAuthorizableChannelTokenAuthorizationDelegate
       .forPrivateChannel(
@@ -25,7 +25,8 @@ final endpointAuthorizationDelegateProvider = Provider<
   );
 });
 
-final realTimeCommentsProvider = StreamProvider<List<Comment>>((ref) async* {
+final realTimeCommentsProvider =
+    StreamProvider.family<List<Comment>, String>((ref, uuid) async* {
   print('real time comments provider init');
 
   final endpointAuthorization =
@@ -39,7 +40,7 @@ final realTimeCommentsProvider = StreamProvider<List<Comment>>((ref) async* {
   List<Comment> comments = <Comment>[];
 
   // get the comments from repository
-  final commentsRef = ref.watch(commentsControllerProvider);
+  final commentsRef = ref.watch(commentsControllerProvider(uuid: uuid));
 
   if (commentsRef.value != null) {
     comments = commentsRef.value?.data ?? [];

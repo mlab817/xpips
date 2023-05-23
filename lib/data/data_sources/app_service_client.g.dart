@@ -261,14 +261,14 @@ class _AppServiceClient implements AppServiceClient {
   }
 
   @override
-  Future<ProjectsResponse> getChats(ProjectsRequest request) async {
+  Future<ChatRoomsResponse> getChats(ProjectsRequest request) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     queryParameters.addAll(request.toJson());
     final _headers = <String, dynamic>{};
     final Map<String, dynamic>? _data = null;
     final _result = await _dio
-        .fetch<Map<String, dynamic>>(_setStreamType<ProjectsResponse>(Options(
+        .fetch<Map<String, dynamic>>(_setStreamType<ChatRoomsResponse>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
@@ -280,7 +280,7 @@ class _AppServiceClient implements AppServiceClient {
               data: _data,
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = ProjectsResponse.fromJson(_result.data!);
+    final value = ChatRoomsResponse.fromJson(_result.data!);
     return value;
   }
 

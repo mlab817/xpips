@@ -1,6 +1,7 @@
 import 'package:pips/data/data_sources/app_service_client.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../application/providers/appserviceclient_provider.dart';
 import '../responses/comments_response.dart';
 
 part 'comments_repository.g.dart';

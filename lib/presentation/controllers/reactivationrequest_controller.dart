@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:pips/data/requests/reactivation_request.dart';
 import 'package:pips/data/responses/reactivation_response.dart';
@@ -6,7 +7,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../data/repositories/auth_repository.dart';
 import '../../data/repositories/upload_repository.dart';
-import '../../data/requests/upload_request.dart';
 import '../../data/responses/upload_response.dart';
 
 part 'reactivationrequest_controller.g.dart';
@@ -32,12 +32,12 @@ class ReactivationRequestController extends _$ReactivationRequestController {
 @riverpod
 class ReactivationFileUploadController
     extends _$ReactivationFileUploadController {
-  Future<void> upload(UploadRequest request) async {
+  Future<void> upload(File file) async {
     final repository = ref.watch(uploadRepositoryProvider);
 
     state = const AsyncLoading();
 
-    state = await AsyncValue.guard(() => repository.upload(request));
+    state = await AsyncValue.guard(() => repository.upload(file));
   }
 
   @override

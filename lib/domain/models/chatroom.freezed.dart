@@ -20,14 +20,16 @@ ChatRoom _$ChatRoomFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$ChatRoom {
-  @JsonKey(name: "id")
-  int get id => throw _privateConstructorUsedError;
-  @JsonKey(name: "users")
-  List<User>? get users => throw _privateConstructorUsedError;
-  @JsonKey(name: "messages")
-  List<Message>? get messages => throw _privateConstructorUsedError;
-  @JsonKey(name: "last_message")
-  Message? get lastMessage => throw _privateConstructorUsedError;
+  @JsonKey(name: "uuid")
+  String get uuid => throw _privateConstructorUsedError;
+  @JsonKey(name: "title")
+  String get title => throw _privateConstructorUsedError;
+  @JsonKey(name: "description")
+  String get description => throw _privateConstructorUsedError;
+  @JsonKey(name: "last_comment")
+  List<Comment>? get lastComment => throw _privateConstructorUsedError;
+  @JsonKey(name: "notes")
+  String? get notes => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -41,12 +43,11 @@ abstract class $ChatRoomCopyWith<$Res> {
       _$ChatRoomCopyWithImpl<$Res, ChatRoom>;
   @useResult
   $Res call(
-      {@JsonKey(name: "id") int id,
-      @JsonKey(name: "users") List<User>? users,
-      @JsonKey(name: "messages") List<Message>? messages,
-      @JsonKey(name: "last_message") Message? lastMessage});
-
-  $MessageCopyWith<$Res>? get lastMessage;
+      {@JsonKey(name: "uuid") String uuid,
+      @JsonKey(name: "title") String title,
+      @JsonKey(name: "description") String description,
+      @JsonKey(name: "last_comment") List<Comment>? lastComment,
+      @JsonKey(name: "notes") String? notes});
 }
 
 /// @nodoc
@@ -62,41 +63,34 @@ class _$ChatRoomCopyWithImpl<$Res, $Val extends ChatRoom>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
-    Object? users = freezed,
-    Object? messages = freezed,
-    Object? lastMessage = freezed,
+    Object? uuid = null,
+    Object? title = null,
+    Object? description = null,
+    Object? lastComment = freezed,
+    Object? notes = freezed,
   }) {
     return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      users: freezed == users
-          ? _value.users
-          : users // ignore: cast_nullable_to_non_nullable
-              as List<User>?,
-      messages: freezed == messages
-          ? _value.messages
-          : messages // ignore: cast_nullable_to_non_nullable
-              as List<Message>?,
-      lastMessage: freezed == lastMessage
-          ? _value.lastMessage
-          : lastMessage // ignore: cast_nullable_to_non_nullable
-              as Message?,
+      uuid: null == uuid
+          ? _value.uuid
+          : uuid // ignore: cast_nullable_to_non_nullable
+              as String,
+      title: null == title
+          ? _value.title
+          : title // ignore: cast_nullable_to_non_nullable
+              as String,
+      description: null == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String,
+      lastComment: freezed == lastComment
+          ? _value.lastComment
+          : lastComment // ignore: cast_nullable_to_non_nullable
+              as List<Comment>?,
+      notes: freezed == notes
+          ? _value.notes
+          : notes // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $MessageCopyWith<$Res>? get lastMessage {
-    if (_value.lastMessage == null) {
-      return null;
-    }
-
-    return $MessageCopyWith<$Res>(_value.lastMessage!, (value) {
-      return _then(_value.copyWith(lastMessage: value) as $Val);
-    });
   }
 }
 
@@ -108,13 +102,11 @@ abstract class _$$_ChatRoomCopyWith<$Res> implements $ChatRoomCopyWith<$Res> {
   @override
   @useResult
   $Res call(
-      {@JsonKey(name: "id") int id,
-      @JsonKey(name: "users") List<User>? users,
-      @JsonKey(name: "messages") List<Message>? messages,
-      @JsonKey(name: "last_message") Message? lastMessage});
-
-  @override
-  $MessageCopyWith<$Res>? get lastMessage;
+      {@JsonKey(name: "uuid") String uuid,
+      @JsonKey(name: "title") String title,
+      @JsonKey(name: "description") String description,
+      @JsonKey(name: "last_comment") List<Comment>? lastComment,
+      @JsonKey(name: "notes") String? notes});
 }
 
 /// @nodoc
@@ -128,28 +120,33 @@ class __$$_ChatRoomCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
-    Object? users = freezed,
-    Object? messages = freezed,
-    Object? lastMessage = freezed,
+    Object? uuid = null,
+    Object? title = null,
+    Object? description = null,
+    Object? lastComment = freezed,
+    Object? notes = freezed,
   }) {
     return _then(_$_ChatRoom(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      users: freezed == users
-          ? _value._users
-          : users // ignore: cast_nullable_to_non_nullable
-              as List<User>?,
-      messages: freezed == messages
-          ? _value._messages
-          : messages // ignore: cast_nullable_to_non_nullable
-              as List<Message>?,
-      lastMessage: freezed == lastMessage
-          ? _value.lastMessage
-          : lastMessage // ignore: cast_nullable_to_non_nullable
-              as Message?,
+      uuid: null == uuid
+          ? _value.uuid
+          : uuid // ignore: cast_nullable_to_non_nullable
+              as String,
+      title: null == title
+          ? _value.title
+          : title // ignore: cast_nullable_to_non_nullable
+              as String,
+      description: null == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String,
+      lastComment: freezed == lastComment
+          ? _value._lastComment
+          : lastComment // ignore: cast_nullable_to_non_nullable
+              as List<Comment>?,
+      notes: freezed == notes
+          ? _value.notes
+          : notes // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -158,48 +155,43 @@ class __$$_ChatRoomCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_ChatRoom implements _ChatRoom {
   _$_ChatRoom(
-      {@JsonKey(name: "id") required this.id,
-      @JsonKey(name: "users") final List<User>? users,
-      @JsonKey(name: "messages") final List<Message>? messages,
-      @JsonKey(name: "last_message") this.lastMessage})
-      : _users = users,
-        _messages = messages;
+      {@JsonKey(name: "uuid") required this.uuid,
+      @JsonKey(name: "title") required this.title,
+      @JsonKey(name: "description") required this.description,
+      @JsonKey(name: "last_comment") final List<Comment>? lastComment,
+      @JsonKey(name: "notes") this.notes})
+      : _lastComment = lastComment;
 
   factory _$_ChatRoom.fromJson(Map<String, dynamic> json) =>
       _$$_ChatRoomFromJson(json);
 
   @override
-  @JsonKey(name: "id")
-  final int id;
-  final List<User>? _users;
+  @JsonKey(name: "uuid")
+  final String uuid;
   @override
-  @JsonKey(name: "users")
-  List<User>? get users {
-    final value = _users;
-    if (value == null) return null;
-    if (_users is EqualUnmodifiableListView) return _users;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(value);
-  }
-
-  final List<Message>? _messages;
+  @JsonKey(name: "title")
+  final String title;
   @override
-  @JsonKey(name: "messages")
-  List<Message>? get messages {
-    final value = _messages;
+  @JsonKey(name: "description")
+  final String description;
+  final List<Comment>? _lastComment;
+  @override
+  @JsonKey(name: "last_comment")
+  List<Comment>? get lastComment {
+    final value = _lastComment;
     if (value == null) return null;
-    if (_messages is EqualUnmodifiableListView) return _messages;
+    if (_lastComment is EqualUnmodifiableListView) return _lastComment;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(value);
   }
 
   @override
-  @JsonKey(name: "last_message")
-  final Message? lastMessage;
+  @JsonKey(name: "notes")
+  final String? notes;
 
   @override
   String toString() {
-    return 'ChatRoom(id: $id, users: $users, messages: $messages, lastMessage: $lastMessage)';
+    return 'ChatRoom(uuid: $uuid, title: $title, description: $description, lastComment: $lastComment, notes: $notes)';
   }
 
   @override
@@ -207,21 +199,19 @@ class _$_ChatRoom implements _ChatRoom {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_ChatRoom &&
-            (identical(other.id, id) || other.id == id) &&
-            const DeepCollectionEquality().equals(other._users, _users) &&
-            const DeepCollectionEquality().equals(other._messages, _messages) &&
-            (identical(other.lastMessage, lastMessage) ||
-                other.lastMessage == lastMessage));
+            (identical(other.uuid, uuid) || other.uuid == uuid) &&
+            (identical(other.title, title) || other.title == title) &&
+            (identical(other.description, description) ||
+                other.description == description) &&
+            const DeepCollectionEquality()
+                .equals(other._lastComment, _lastComment) &&
+            (identical(other.notes, notes) || other.notes == notes));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      const DeepCollectionEquality().hash(_users),
-      const DeepCollectionEquality().hash(_messages),
-      lastMessage);
+  int get hashCode => Object.hash(runtimeType, uuid, title, description,
+      const DeepCollectionEquality().hash(_lastComment), notes);
 
   @JsonKey(ignore: true)
   @override
@@ -239,25 +229,29 @@ class _$_ChatRoom implements _ChatRoom {
 
 abstract class _ChatRoom implements ChatRoom {
   factory _ChatRoom(
-      {@JsonKey(name: "id") required final int id,
-      @JsonKey(name: "users") final List<User>? users,
-      @JsonKey(name: "messages") final List<Message>? messages,
-      @JsonKey(name: "last_message") final Message? lastMessage}) = _$_ChatRoom;
+      {@JsonKey(name: "uuid") required final String uuid,
+      @JsonKey(name: "title") required final String title,
+      @JsonKey(name: "description") required final String description,
+      @JsonKey(name: "last_comment") final List<Comment>? lastComment,
+      @JsonKey(name: "notes") final String? notes}) = _$_ChatRoom;
 
   factory _ChatRoom.fromJson(Map<String, dynamic> json) = _$_ChatRoom.fromJson;
 
   @override
-  @JsonKey(name: "id")
-  int get id;
+  @JsonKey(name: "uuid")
+  String get uuid;
   @override
-  @JsonKey(name: "users")
-  List<User>? get users;
+  @JsonKey(name: "title")
+  String get title;
   @override
-  @JsonKey(name: "messages")
-  List<Message>? get messages;
+  @JsonKey(name: "description")
+  String get description;
   @override
-  @JsonKey(name: "last_message")
-  Message? get lastMessage;
+  @JsonKey(name: "last_comment")
+  List<Comment>? get lastComment;
+  @override
+  @JsonKey(name: "notes")
+  String? get notes;
   @override
   @JsonKey(ignore: true)
   _$$_ChatRoomCopyWith<_$_ChatRoom> get copyWith =>

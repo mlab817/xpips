@@ -30,7 +30,7 @@ mixin _$Comment {
   DateTime get createdAt => throw _privateConstructorUsedError;
   @JsonKey(name: "is_resolved")
   bool get isResolved => throw _privateConstructorUsedError;
-  User get user => throw _privateConstructorUsedError;
+  User? get user => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -49,9 +49,9 @@ abstract class $CommentCopyWith<$Res> {
       @JsonKey(name: "updated_at") DateTime updatedAt,
       @JsonKey(name: "created_at") DateTime createdAt,
       @JsonKey(name: "is_resolved") bool isResolved,
-      User user});
+      User? user});
 
-  $UserCopyWith<$Res> get user;
+  $UserCopyWith<$Res>? get user;
 }
 
 /// @nodoc
@@ -73,7 +73,7 @@ class _$CommentCopyWithImpl<$Res, $Val extends Comment>
     Object? updatedAt = null,
     Object? createdAt = null,
     Object? isResolved = null,
-    Object? user = null,
+    Object? user = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -100,17 +100,21 @@ class _$CommentCopyWithImpl<$Res, $Val extends Comment>
           ? _value.isResolved
           : isResolved // ignore: cast_nullable_to_non_nullable
               as bool,
-      user: null == user
+      user: freezed == user
           ? _value.user
           : user // ignore: cast_nullable_to_non_nullable
-              as User,
+              as User?,
     ) as $Val);
   }
 
   @override
   @pragma('vm:prefer-inline')
-  $UserCopyWith<$Res> get user {
-    return $UserCopyWith<$Res>(_value.user, (value) {
+  $UserCopyWith<$Res>? get user {
+    if (_value.user == null) {
+      return null;
+    }
+
+    return $UserCopyWith<$Res>(_value.user!, (value) {
       return _then(_value.copyWith(user: value) as $Val);
     });
   }
@@ -130,10 +134,10 @@ abstract class _$$_CommentCopyWith<$Res> implements $CommentCopyWith<$Res> {
       @JsonKey(name: "updated_at") DateTime updatedAt,
       @JsonKey(name: "created_at") DateTime createdAt,
       @JsonKey(name: "is_resolved") bool isResolved,
-      User user});
+      User? user});
 
   @override
-  $UserCopyWith<$Res> get user;
+  $UserCopyWith<$Res>? get user;
 }
 
 /// @nodoc
@@ -152,7 +156,7 @@ class __$$_CommentCopyWithImpl<$Res>
     Object? updatedAt = null,
     Object? createdAt = null,
     Object? isResolved = null,
-    Object? user = null,
+    Object? user = freezed,
   }) {
     return _then(_$_Comment(
       id: null == id
@@ -179,10 +183,10 @@ class __$$_CommentCopyWithImpl<$Res>
           ? _value.isResolved
           : isResolved // ignore: cast_nullable_to_non_nullable
               as bool,
-      user: null == user
+      user: freezed == user
           ? _value.user
           : user // ignore: cast_nullable_to_non_nullable
-              as User,
+              as User?,
     ));
   }
 }
@@ -197,7 +201,7 @@ class _$_Comment implements _Comment {
       @JsonKey(name: "updated_at") required this.updatedAt,
       @JsonKey(name: "created_at") required this.createdAt,
       @JsonKey(name: "is_resolved") required this.isResolved,
-      required this.user});
+      this.user});
 
   factory _$_Comment.fromJson(Map<String, dynamic> json) =>
       _$$_CommentFromJson(json);
@@ -219,7 +223,7 @@ class _$_Comment implements _Comment {
   @JsonKey(name: "is_resolved")
   final bool isResolved;
   @override
-  final User user;
+  final User? user;
 
   @override
   String toString() {
@@ -270,7 +274,7 @@ abstract class _Comment implements Comment {
       @JsonKey(name: "updated_at") required final DateTime updatedAt,
       @JsonKey(name: "created_at") required final DateTime createdAt,
       @JsonKey(name: "is_resolved") required final bool isResolved,
-      required final User user}) = _$_Comment;
+      final User? user}) = _$_Comment;
 
   factory _Comment.fromJson(Map<String, dynamic> json) = _$_Comment.fromJson;
 
@@ -291,7 +295,7 @@ abstract class _Comment implements Comment {
   @JsonKey(name: "is_resolved")
   bool get isResolved;
   @override
-  User get user;
+  User? get user;
   @override
   @JsonKey(ignore: true)
   _$$_CommentCopyWith<_$_Comment> get copyWith =>

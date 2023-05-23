@@ -1,12 +1,13 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'viewpap_controller.dart';
+part of 'comments_controller.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$projectHash() => r'233c50e25eb5fe43ebaa7362b9ea4d06efa464c0';
+String _$commentsControllerHash() =>
+    r'a690d88b7d6e6a17976b0484ba771f5888047965';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -29,29 +30,29 @@ class _SystemHash {
   }
 }
 
-typedef ProjectRef = FutureProviderRef<ProjectResponse>;
+typedef CommentsControllerRef = FutureProviderRef<CommentsResponse>;
 
-/// See also [project].
-@ProviderFor(project)
-const projectProvider = ProjectFamily();
+/// See also [commentsController].
+@ProviderFor(commentsController)
+const commentsControllerProvider = CommentsControllerFamily();
 
-/// See also [project].
-class ProjectFamily extends Family<AsyncValue<ProjectResponse>> {
-  /// See also [project].
-  const ProjectFamily();
+/// See also [commentsController].
+class CommentsControllerFamily extends Family<AsyncValue<CommentsResponse>> {
+  /// See also [commentsController].
+  const CommentsControllerFamily();
 
-  /// See also [project].
-  ProjectProvider call({
+  /// See also [commentsController].
+  CommentsControllerProvider call({
     required String uuid,
   }) {
-    return ProjectProvider(
+    return CommentsControllerProvider(
       uuid: uuid,
     );
   }
 
   @override
-  ProjectProvider getProviderOverride(
-    covariant ProjectProvider provider,
+  CommentsControllerProvider getProviderOverride(
+    covariant CommentsControllerProvider provider,
   ) {
     return call(
       uuid: provider.uuid,
@@ -70,34 +71,35 @@ class ProjectFamily extends Family<AsyncValue<ProjectResponse>> {
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'projectProvider';
+  String? get name => r'commentsControllerProvider';
 }
 
-/// See also [project].
-class ProjectProvider extends FutureProvider<ProjectResponse> {
-  /// See also [project].
-  ProjectProvider({
+/// See also [commentsController].
+class CommentsControllerProvider extends FutureProvider<CommentsResponse> {
+  /// See also [commentsController].
+  CommentsControllerProvider({
     required this.uuid,
   }) : super.internal(
-          (ref) => project(
+          (ref) => commentsController(
             ref,
             uuid: uuid,
           ),
-          from: projectProvider,
-          name: r'projectProvider',
+          from: commentsControllerProvider,
+          name: r'commentsControllerProvider',
           debugGetCreateSourceHash:
               const bool.fromEnvironment('dart.vm.product')
                   ? null
-                  : _$projectHash,
-          dependencies: ProjectFamily._dependencies,
-          allTransitiveDependencies: ProjectFamily._allTransitiveDependencies,
+                  : _$commentsControllerHash,
+          dependencies: CommentsControllerFamily._dependencies,
+          allTransitiveDependencies:
+              CommentsControllerFamily._allTransitiveDependencies,
         );
 
   final String uuid;
 
   @override
   bool operator ==(Object other) {
-    return other is ProjectProvider && other.uuid == uuid;
+    return other is CommentsControllerProvider && other.uuid == uuid;
   }
 
   @override

@@ -1,10 +1,10 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pips/data/responses/projects_response.dart';
-import 'package:pips/presentation/controllers/chats_controller.dart';
-import 'package:pips/presentation/controllers/viewpap_controller.dart';
+import 'package:pips/application/providers/dateformatter_provider.dart';
 
+import '../../../data/responses/responses.dart';
+import '../../../presentation/controllers/controllers.dart';
 import '../../../application/app_router.dart';
 import '../../../presentation/widgets/loading_dialog.dart';
 import '../../../presentation/widgets/logout_button.dart';
@@ -46,22 +46,35 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     );
   }
 
-  Widget _buildList(ProjectsResponse data) {
-    final projects = data.data;
+  Widget _buildList(ChatRoomsResponse data) {
+    final chats = data.data;
 
     return ListView.builder(
-        itemCount: projects.length,
+        itemCount: chats.length,
         itemBuilder: (context, index) {
-          final project = projects[index];
+          final chat = chats[index];
+          final comment =
+              chat.lastComment != null && chat.lastComment!.isNotEmpty
+                  ? chat.lastComment!.first.comment
+                  : 'NO COMMENT';
 
           return ListTile(
-            title: Text(project.title),
-            subtitle: const Text('Last Comment'),
-            trailing: const Icon(Icons.chevron_right),
+            title: Text(chat.title),
+            subtitle: Text(
+              comment,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(color: Colors.black54),
+            ),
+            trailing: chat.lastComment != null
+                ? Text(ref
+                    .watch(dateFormatterProvider)
+                    .format(chat.lastComment!.first.createdAt))
+                : null,
             onTap: () {
-              ref.read(selectedProjectProvider.notifier).update(project);
+              // ref.read(selectedProjectProvider.notifier).update(project);
 
-              AutoRouter.of(context).push(const PapViewRoute());
+              AutoRouter.of(context).push(PapViewRoute(uuid: chat.uuid));
             },
           );
         });
