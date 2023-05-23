@@ -7,8 +7,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:window_size/window_size.dart';
 
+import './application/app.dart';
 import './application/providers/sharedpreferences.dart';
-import 'application/app.dart';
 
 void main() async {
   // debugPaintSizeEnabled = true;
@@ -35,6 +35,6 @@ void main() async {
       // override the previous value with the new object
       sharedPreferencesProvider.overrideWithValue(sharedPrefs),
     ],
-    child: MyApp(),
+    child: const MyApp(),
   ));
 }
