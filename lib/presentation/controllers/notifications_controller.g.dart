@@ -1,0 +1,146 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+part of 'notifications_controller.dart';
+
+// **************************************************************************
+// RiverpodGenerator
+// **************************************************************************
+
+String _$notificationsHash() => r'09474cf69d86cfdb85a36d376f019545d7791047';
+
+/// See also [notifications].
+@ProviderFor(notifications)
+final notificationsProvider = FutureProvider<NotificationsResponse>.internal(
+  notifications,
+  name: r'notificationsProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$notificationsHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef NotificationsRef = FutureProviderRef<NotificationsResponse>;
+String _$markAsReadHash() => r'd477c12042cbeabbd45ed83ee541bc856eada4ec';
+
+/// Copied from Dart SDK
+class _SystemHash {
+  _SystemHash._();
+
+  static int combine(int hash, int value) {
+    // ignore: parameter_assignments
+    hash = 0x1fffffff & (hash + value);
+    // ignore: parameter_assignments
+    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
+    return hash ^ (hash >> 6);
+  }
+
+  static int finish(int hash) {
+    // ignore: parameter_assignments
+    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
+    // ignore: parameter_assignments
+    hash = hash ^ (hash >> 11);
+    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
+  }
+}
+
+typedef MarkAsReadRef = AutoDisposeFutureProviderRef<Notification>;
+
+/// See also [markAsRead].
+@ProviderFor(markAsRead)
+const markAsReadProvider = MarkAsReadFamily();
+
+/// See also [markAsRead].
+class MarkAsReadFamily extends Family<AsyncValue<Notification>> {
+  /// See also [markAsRead].
+  const MarkAsReadFamily();
+
+  /// See also [markAsRead].
+  MarkAsReadProvider call({
+    required Notification notification,
+  }) {
+    return MarkAsReadProvider(
+      notification: notification,
+    );
+  }
+
+  @override
+  MarkAsReadProvider getProviderOverride(
+    covariant MarkAsReadProvider provider,
+  ) {
+    return call(
+      notification: provider.notification,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'markAsReadProvider';
+}
+
+/// See also [markAsRead].
+class MarkAsReadProvider extends AutoDisposeFutureProvider<Notification> {
+  /// See also [markAsRead].
+  MarkAsReadProvider({
+    required this.notification,
+  }) : super.internal(
+          (ref) => markAsRead(
+            ref,
+            notification: notification,
+          ),
+          from: markAsReadProvider,
+          name: r'markAsReadProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$markAsReadHash,
+          dependencies: MarkAsReadFamily._dependencies,
+          allTransitiveDependencies:
+              MarkAsReadFamily._allTransitiveDependencies,
+        );
+
+  final Notification notification;
+
+  @override
+  bool operator ==(Object other) {
+    return other is MarkAsReadProvider && other.notification == notification;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, notification.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+String _$notificationsRequestControllerHash() =>
+    r'24b661e113697eec3316025eafecd46782ad7a00';
+
+/// See also [NotificationsRequestController].
+@ProviderFor(NotificationsRequestController)
+final notificationsRequestControllerProvider = AutoDisposeNotifierProvider<
+    NotificationsRequestController, NotificationsRequest>.internal(
+  NotificationsRequestController.new,
+  name: r'notificationsRequestControllerProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$notificationsRequestControllerHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$NotificationsRequestController
+    = AutoDisposeNotifier<NotificationsRequest>;
+// ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
