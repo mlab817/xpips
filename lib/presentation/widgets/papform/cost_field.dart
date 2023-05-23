@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pips/application/providers/inputdecoration_provider.dart';
-import 'package:pips/application/providers/numberformatter_provider.dart';
+
+import '../../../application/providers/inputdecoration_provider.dart';
+import '../../../application/providers/numberformatter_provider.dart';
 
 class CostField extends ConsumerWidget {
   const CostField({Key? key, required this.onChanged, this.enabled, this.value})
