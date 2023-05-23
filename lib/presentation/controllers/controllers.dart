@@ -6,7 +6,7 @@ export 'comments_controller.dart';
 export 'deleteproject_controller.dart';
 export 'fullproject_controller.dart';
 export 'home_controller.dart';
-export 'loginscreen_controller.dart';
+export 'login_controller.dart';
 export 'notifications_controller.dart';
 export 'offices_controller.dart';
 export 'options_controller.dart';
