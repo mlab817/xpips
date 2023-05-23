@@ -34,6 +34,8 @@ mixin _$SignupRequest {
   String get email => throw _privateConstructorUsedError;
   @JsonKey(name: "contact_number")
   String get contactNumber => throw _privateConstructorUsedError;
+  @JsonKey(name: "password")
+  String get password => throw _privateConstructorUsedError;
   String? get authorization => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -56,6 +58,7 @@ abstract class $SignupRequestCopyWith<$Res> {
       @JsonKey(name: "position") String position,
       @JsonKey(name: "email") String email,
       @JsonKey(name: "contact_number") String contactNumber,
+      @JsonKey(name: "password") String password,
       String? authorization});
 }
 
@@ -79,6 +82,7 @@ class _$SignupRequestCopyWithImpl<$Res, $Val extends SignupRequest>
     Object? position = null,
     Object? email = null,
     Object? contactNumber = null,
+    Object? password = null,
     Object? authorization = freezed,
   }) {
     return _then(_value.copyWith(
@@ -110,6 +114,10 @@ class _$SignupRequestCopyWithImpl<$Res, $Val extends SignupRequest>
           ? _value.contactNumber
           : contactNumber // ignore: cast_nullable_to_non_nullable
               as String,
+      password: null == password
+          ? _value.password
+          : password // ignore: cast_nullable_to_non_nullable
+              as String,
       authorization: freezed == authorization
           ? _value.authorization
           : authorization // ignore: cast_nullable_to_non_nullable
@@ -134,6 +142,7 @@ abstract class _$$_SignupRequestCopyWith<$Res>
       @JsonKey(name: "position") String position,
       @JsonKey(name: "email") String email,
       @JsonKey(name: "contact_number") String contactNumber,
+      @JsonKey(name: "password") String password,
       String? authorization});
 }
 
@@ -155,6 +164,7 @@ class __$$_SignupRequestCopyWithImpl<$Res>
     Object? position = null,
     Object? email = null,
     Object? contactNumber = null,
+    Object? password = null,
     Object? authorization = freezed,
   }) {
     return _then(_$_SignupRequest(
@@ -186,6 +196,10 @@ class __$$_SignupRequestCopyWithImpl<$Res>
           ? _value.contactNumber
           : contactNumber // ignore: cast_nullable_to_non_nullable
               as String,
+      password: null == password
+          ? _value.password
+          : password // ignore: cast_nullable_to_non_nullable
+              as String,
       authorization: freezed == authorization
           ? _value.authorization
           : authorization // ignore: cast_nullable_to_non_nullable
@@ -205,6 +219,7 @@ class _$_SignupRequest implements _SignupRequest {
       @JsonKey(name: "position") required this.position,
       @JsonKey(name: "email") required this.email,
       @JsonKey(name: "contact_number") required this.contactNumber,
+      @JsonKey(name: "password") required this.password,
       this.authorization});
 
   factory _$_SignupRequest.fromJson(Map<String, dynamic> json) =>
@@ -232,11 +247,14 @@ class _$_SignupRequest implements _SignupRequest {
   @JsonKey(name: "contact_number")
   final String contactNumber;
   @override
+  @JsonKey(name: "password")
+  final String password;
+  @override
   final String? authorization;
 
   @override
   String toString() {
-    return 'SignupRequest(officeId: $officeId, username: $username, firstName: $firstName, lastName: $lastName, position: $position, email: $email, contactNumber: $contactNumber, authorization: $authorization)';
+    return 'SignupRequest(officeId: $officeId, username: $username, firstName: $firstName, lastName: $lastName, position: $position, email: $email, contactNumber: $contactNumber, password: $password, authorization: $authorization)';
   }
 
   @override
@@ -257,6 +275,8 @@ class _$_SignupRequest implements _SignupRequest {
             (identical(other.email, email) || other.email == email) &&
             (identical(other.contactNumber, contactNumber) ||
                 other.contactNumber == contactNumber) &&
+            (identical(other.password, password) ||
+                other.password == password) &&
             (identical(other.authorization, authorization) ||
                 other.authorization == authorization));
   }
@@ -264,7 +284,7 @@ class _$_SignupRequest implements _SignupRequest {
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, officeId, username, firstName,
-      lastName, position, email, contactNumber, authorization);
+      lastName, position, email, contactNumber, password, authorization);
 
   @JsonKey(ignore: true)
   @override
@@ -289,6 +309,7 @@ abstract class _SignupRequest implements SignupRequest {
       @JsonKey(name: "position") required final String position,
       @JsonKey(name: "email") required final String email,
       @JsonKey(name: "contact_number") required final String contactNumber,
+      @JsonKey(name: "password") required final String password,
       final String? authorization}) = _$_SignupRequest;
 
   factory _SignupRequest.fromJson(Map<String, dynamic> json) =
@@ -315,6 +336,9 @@ abstract class _SignupRequest implements SignupRequest {
   @override
   @JsonKey(name: "contact_number")
   String get contactNumber;
+  @override
+  @JsonKey(name: "password")
+  String get password;
   @override
   String? get authorization;
   @override
