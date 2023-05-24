@@ -1,6 +1,7 @@
 import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 import 'package:intl/intl.dart';
@@ -159,6 +160,14 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
               ListTile(
                 subtitle: Text(project.title ?? 'N/A'),
                 title: const Text('Title'),
+                onTap: () async {
+                  await Clipboard.setData(
+                          ClipboardData(text: project.title ?? ''))
+                      .then((_) {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text("Title copied to clipboard")));
+                  });
+                },
               ),
               ListTile(
                 subtitle: Text(project.type?.label ?? 'N/A'),
@@ -180,6 +189,14 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
               ListTile(
                 subtitle: Text(project.description ?? 'N/A'),
                 title: const Text('Description'),
+                onTap: () async {
+                  await Clipboard.setData(
+                          ClipboardData(text: project.description ?? ''))
+                      .then((_) {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text("Description copied to clipboard")));
+                  });
+                },
               ),
               ListTile(
                 subtitle: Text(
@@ -388,6 +405,14 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
               ListTile(
                 title: const Text('Updates'),
                 subtitle: Text(project.updates ?? 'N/A'),
+                onTap: () async {
+                  await Clipboard.setData(
+                          ClipboardData(text: project.updates ?? ''))
+                      .then((_) {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text("Updates copied to clipboard")));
+                  });
+                },
               ),
               ListTile(
                 title: const Text('As of'),
@@ -428,13 +453,21 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 ),
               ),
               ListTile(
-                title: const Text(
-                  'Implementation Risks and Mitigation Strategies',
-                ),
-                subtitle: Text(
-                  project.risk ?? 'N/A',
-                ),
-              ),
+                  title: const Text(
+                    'Implementation Risks and Mitigation Strategies',
+                  ),
+                  subtitle: Text(
+                    project.risk ?? 'N/A',
+                  ),
+                  onTap: () async {
+                    await Clipboard.setData(
+                            ClipboardData(text: project.risk ?? ''))
+                        .then((_) {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text(
+                              "Implementation risks and mitigation strategies copied to clipboard")));
+                    });
+                  }),
             ]),
           ),
         ),
@@ -880,74 +913,162 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   ),
                 ),
                 TableCell(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      ref.watch(numberFormatterProvider).format(e.y2022),
-                      textAlign: TextAlign.end,
+                  child: InkWell(
+                    onTap: () async {
+                      await Clipboard.setData(
+                              ClipboardData(text: e.y2022.toString() ?? ''))
+                          .then((_) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text("Value copied to clipboard")));
+                      });
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        ref.watch(numberFormatterProvider).format(e.y2022),
+                        textAlign: TextAlign.end,
+                      ),
                     ),
                   ),
                 ),
                 TableCell(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      ref.watch(numberFormatterProvider).format(e.y2023),
-                      textAlign: TextAlign.end,
+                  child: InkWell(
+                    onTap: () async {
+                      await Clipboard.setData(
+                              ClipboardData(text: e.y2023.toString() ?? ''))
+                          .then((_) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text("Value copied to clipboard")));
+                      });
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        ref.watch(numberFormatterProvider).format(e.y2023),
+                        textAlign: TextAlign.end,
+                      ),
                     ),
                   ),
                 ),
                 TableCell(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      ref.watch(numberFormatterProvider).format(e.y2024),
-                      textAlign: TextAlign.end,
+                  child: InkWell(
+                    onTap: () async {
+                      await Clipboard.setData(
+                              ClipboardData(text: e.y2024.toString() ?? ''))
+                          .then((_) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text("Value copied to clipboard")));
+                      });
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        ref.watch(numberFormatterProvider).format(e.y2024),
+                        textAlign: TextAlign.end,
+                      ),
                     ),
                   ),
                 ),
                 TableCell(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      ref.watch(numberFormatterProvider).format(e.y2025),
-                      textAlign: TextAlign.end,
+                  child: InkWell(
+                    onTap: () async {
+                      await Clipboard.setData(
+                              ClipboardData(text: e.y2025.toString() ?? ''))
+                          .then((_) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text("Value copied to clipboard")));
+                      });
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        ref.watch(numberFormatterProvider).format(e.y2025),
+                        textAlign: TextAlign.end,
+                      ),
                     ),
                   ),
                 ),
                 TableCell(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      ref.watch(numberFormatterProvider).format(e.y2026),
-                      textAlign: TextAlign.end,
+                  child: InkWell(
+                    onTap: () async {
+                      await Clipboard.setData(
+                              ClipboardData(text: e.y2026.toString() ?? ''))
+                          .then((_) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text("Value copied to clipboard")));
+                      });
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        ref.watch(numberFormatterProvider).format(e.y2026),
+                        textAlign: TextAlign.end,
+                      ),
                     ),
                   ),
                 ),
                 TableCell(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      ref.watch(numberFormatterProvider).format(e.y2027),
-                      textAlign: TextAlign.end,
+                  child: InkWell(
+                    onTap: () async {
+                      await Clipboard.setData(
+                              ClipboardData(text: e.y2027.toString() ?? ''))
+                          .then((_) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text("Value copied to clipboard")));
+                      });
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        ref.watch(numberFormatterProvider).format(e.y2027),
+                        textAlign: TextAlign.end,
+                      ),
                     ),
                   ),
                 ),
                 TableCell(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      ref.watch(numberFormatterProvider).format(e.y2028),
-                      textAlign: TextAlign.end,
+                  child: InkWell(
+                    onTap: () async {
+                      await Clipboard.setData(
+                              ClipboardData(text: e.y2028.toString() ?? ''))
+                          .then((_) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text("Value copied to clipboard")));
+                      });
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        ref.watch(numberFormatterProvider).format(e.y2028),
+                        textAlign: TextAlign.end,
+                      ),
                     ),
                   ),
                 ),
                 TableCell(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      ref.watch(numberFormatterProvider).format(e.y2029),
-                      textAlign: TextAlign.end,
+                  child: InkWell(
+                    onTap: () async {
+                      await Clipboard.setData(
+                              ClipboardData(text: e.y2029.toString() ?? ''))
+                          .then((_) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text("Value copied to clipboard")));
+                      });
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        ref.watch(numberFormatterProvider).format(e.y2029),
+                        textAlign: TextAlign.end,
+                      ),
                     ),
                   ),
                 ),
@@ -1188,74 +1309,162 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   ),
                 ),
                 TableCell(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      ref.watch(numberFormatterProvider).format(e.y2022),
-                      textAlign: TextAlign.end,
+                  child: InkWell(
+                    onTap: () async {
+                      await Clipboard.setData(
+                              ClipboardData(text: e.y2022.toString() ?? ''))
+                          .then((_) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text("Value copied to clipboard")));
+                      });
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        ref.watch(numberFormatterProvider).format(e.y2022),
+                        textAlign: TextAlign.end,
+                      ),
                     ),
                   ),
                 ),
                 TableCell(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      ref.watch(numberFormatterProvider).format(e.y2023),
-                      textAlign: TextAlign.end,
+                  child: InkWell(
+                    onTap: () async {
+                      await Clipboard.setData(
+                              ClipboardData(text: e.y2023.toString() ?? ''))
+                          .then((_) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text("Value copied to clipboard")));
+                      });
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        ref.watch(numberFormatterProvider).format(e.y2023),
+                        textAlign: TextAlign.end,
+                      ),
                     ),
                   ),
                 ),
                 TableCell(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      ref.watch(numberFormatterProvider).format(e.y2024),
-                      textAlign: TextAlign.end,
+                  child: InkWell(
+                    onTap: () async {
+                      await Clipboard.setData(
+                              ClipboardData(text: e.y2024.toString() ?? ''))
+                          .then((_) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text("Value copied to clipboard")));
+                      });
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        ref.watch(numberFormatterProvider).format(e.y2024),
+                        textAlign: TextAlign.end,
+                      ),
                     ),
                   ),
                 ),
                 TableCell(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      ref.watch(numberFormatterProvider).format(e.y2025),
-                      textAlign: TextAlign.end,
+                  child: InkWell(
+                    onTap: () async {
+                      await Clipboard.setData(
+                              ClipboardData(text: e.y2025.toString() ?? ''))
+                          .then((_) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text("Value copied to clipboard")));
+                      });
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        ref.watch(numberFormatterProvider).format(e.y2025),
+                        textAlign: TextAlign.end,
+                      ),
                     ),
                   ),
                 ),
                 TableCell(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      ref.watch(numberFormatterProvider).format(e.y2026),
-                      textAlign: TextAlign.end,
+                  child: InkWell(
+                    onTap: () async {
+                      await Clipboard.setData(
+                              ClipboardData(text: e.y2026.toString() ?? ''))
+                          .then((_) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text("Value copied to clipboard")));
+                      });
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        ref.watch(numberFormatterProvider).format(e.y2026),
+                        textAlign: TextAlign.end,
+                      ),
                     ),
                   ),
                 ),
                 TableCell(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      ref.watch(numberFormatterProvider).format(e.y2027),
-                      textAlign: TextAlign.end,
+                  child: InkWell(
+                    onTap: () async {
+                      await Clipboard.setData(
+                              ClipboardData(text: e.y2027.toString() ?? ''))
+                          .then((_) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text("Value copied to clipboard")));
+                      });
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        ref.watch(numberFormatterProvider).format(e.y2027),
+                        textAlign: TextAlign.end,
+                      ),
                     ),
                   ),
                 ),
                 TableCell(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      ref.watch(numberFormatterProvider).format(e.y2028),
-                      textAlign: TextAlign.end,
+                  child: InkWell(
+                    onTap: () async {
+                      await Clipboard.setData(
+                              ClipboardData(text: e.y2028.toString() ?? ''))
+                          .then((_) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text("Value copied to clipboard")));
+                      });
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        ref.watch(numberFormatterProvider).format(e.y2028),
+                        textAlign: TextAlign.end,
+                      ),
                     ),
                   ),
                 ),
                 TableCell(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      ref.watch(numberFormatterProvider).format(e.y2029),
-                      textAlign: TextAlign.end,
+                  child: InkWell(
+                    onTap: () async {
+                      await Clipboard.setData(
+                              ClipboardData(text: e.y2029.toString() ?? ''))
+                          .then((_) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text("Value copied to clipboard")));
+                      });
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        ref.watch(numberFormatterProvider).format(e.y2029),
+                        textAlign: TextAlign.end,
+                      ),
                     ),
                   ),
                 ),
