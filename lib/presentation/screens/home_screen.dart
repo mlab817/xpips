@@ -337,6 +337,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     );
   }
 
+  // this should be replaceable by the project details screen
   Widget _buildContent() {
     final projectsAsync = ref.watch(homeScreenControllerProvider);
 
@@ -351,13 +352,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           return SlidableAutoCloseBehavior(
             closeWhenOpened: true,
             child: ListView.builder(
-                physics: const ClampingScrollPhysics(),
-                itemCount: data.data.length,
-                itemBuilder: (context, index) {
-                  final project = data.data[index];
+              physics: const ClampingScrollPhysics(),
+              itemCount: data.data.length,
+              itemBuilder: (context, index) {
+                final project = data.data[index];
 
-                  return ProjectListTile(project: project);
-                }),
+                return ProjectListTile(project: project);
+              },
+            ),
           );
         },
         error: (error, _) => Center(child: Text(error.toString())),
@@ -394,8 +396,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   Widget _buildSearchBox() {
-    return SizedBox(
-      width: 280,
+    return Expanded(
       child: TextFormField(
         controller: _searchController,
         decoration: InputDecoration(
@@ -457,95 +458,3 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         loading: () => const Text('Loading'));
   }
 }
-
-class _HomeSearchDelegate extends SearchDelegate {
-  _HomeSearchDelegate({required this.ref, required this.projects});
-
-  final WidgetRef ref;
-  final List<Project> projects;
-
-  @override
-  List<Widget>? buildActions(BuildContext context) {
-    return [
-      IconButton(
-        icon: const Icon(Icons.clear),
-        onPressed: () {
-          query = '';
-        },
-      ),
-    ];
-  }
-
-  @override
-  Widget? buildLeading(BuildContext context) {
-    return IconButton(
-      icon: const Icon(Icons.arrow_back),
-      onPressed: () {
-        close(context, null);
-      },
-    );
-  }
-
-  @override
-  Widget buildResults(BuildContext context) {
-    // add the query to history
-    ref.read(searchHistoryProvider.notifier).add(query);
-    ref.read(projectsRequestControllerProvider.notifier).update(q: query);
-
-    final results = ref.watch(homeScreenControllerProvider);
-
-    return results.when(
-        data: (data) {
-          return ListView.builder(
-            itemCount: data.data.length,
-            itemBuilder: (context, index) {
-              return ListTile(
-                title: Text(data.data[index].title),
-              );
-            },
-          );
-        },
-        error: (error, stackTrace) => Center(child: Text(error.toString())),
-        loading: () => const Center(
-              child: CircularProgressIndicator(),
-            ));
-  }
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    if (query.isEmpty) {
-      return const Center(
-        child:
-            Text('Start typing for suggestions. Press enter to search more.'),
-      );
-    }
-
-    // pass data from home
-    final suggestions = ref
-        .watch(searchHistoryProvider)
-        .where((String element) =>
-            element.toLowerCase().contains(query.toLowerCase()))
-        .toList();
-
-    return ListView.builder(
-        itemCount: suggestions.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(suggestions[index]),
-            onTap: () {
-              query = suggestions[index];
-            },
-            trailing: IconButton(
-              onPressed: () {
-                ref
-                    .read(searchHistoryProvider.notifier)
-                    .remove(suggestions[index]);
-              },
-              icon: const Icon(Icons.clear),
-            ),
-          );
-        });
-  }
-}
-
-// TODO: Page selector not updating
