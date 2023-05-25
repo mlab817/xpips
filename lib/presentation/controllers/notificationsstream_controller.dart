@@ -1,5 +1,6 @@
 import 'package:dart_pusher_channels/dart_pusher_channels.dart';
 import 'package:pips/data/data_sources/pusher_client.dart';
+import 'package:pips/domain/models/models.dart';
 import 'package:pips/presentation/controllers/currentuser_controller.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -9,14 +10,12 @@ part 'notificationsstream_controller.g.dart';
 
 @Riverpod(keepAlive: true)
 Stream<ChannelReadEvent> notificationsStream(NotificationsStreamRef ref) {
-  final client = ref.watch(pusherClientProvider);
-  final currentUser = ref.watch(currentUserProvider);
+  final PusherChannelsClient client = ref.watch(pusherClientProvider);
+  final User? currentUser = ref.watch(currentUserProvider);
 
-  client.connect();
+  final String channelName = "users.${currentUser?.uuid}.notifications";
 
-  final channelName = "users.${currentUser?.uuid}.notifications";
-
-  final privateChannel = client.privateChannel(channelName,
+  final PrivateChannel privateChannel = client.privateChannel(channelName,
       authorizationDelegate: ref.watch(endpointAuthorizationDelegateProvider));
 
   client.onConnectionEstablished.listen((_) {
@@ -26,6 +25,9 @@ Stream<ChannelReadEvent> notificationsStream(NotificationsStreamRef ref) {
 
     print('subscribed to $channelName');
   });
+
+  // unsubscribe from the channel when the ref has been disposed
+  ref.onDispose(() => privateChannel.unsubscribe());
 
   return privateChannel.bind('notifications.added');
 }

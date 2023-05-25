@@ -1,48 +1,42 @@
 import 'dart:async';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pips/data/requests/projects_request.dart';
 import 'package:pips/data/responses/responses.dart';
-import 'package:pips/presentation/controllers/home_controller.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../data/repositories/chats_repository.dart';
 
-// future provider for chats
-final chatMessagesProvider = FutureProvider<ChatRoomsResponse>((ref) async {
-  return await ref
-      .watch(chatsRepositoryProvider)
-      .get(ref.watch(projectsRequestControllerProvider));
-});
+part 'chats_controller.g.dart';
 
-class ChatsController extends AsyncNotifier<ChatRoomsResponse> {
-  Future<ChatRoomsResponse> get() async {
-    final repository = ref.watch(chatsRepositoryProvider);
-    final request = ref.watch(chatsRequestProvider);
+@Riverpod(keepAlive: true)
+Future<ChatRoomsResponse> chatRooms(ChatRoomsRef ref) async {
+  final repository = ref.watch(chatsRepositoryProvider);
+  final request = ref.watch(chatsRequestControllerProvider);
 
-    state = const AsyncLoading();
+  return await repository.get(request);
+}
 
-    state = await AsyncValue.guard(() => repository.get(request));
+@Riverpod(keepAlive: true)
+class ChatsRequestController extends _$ChatsRequestController {
+  @override
+  ProjectsRequest build() => ProjectsRequest.initial();
 
-    final response = await repository.get(request);
-
-    return response;
+  void update({
+    int? perPage,
+    int? page,
+  }) {
+    state = state.copyWith(
+        page: page ?? state.page, perPage: perPage ?? state.perPage);
   }
 
-  @override
-  FutureOr<ChatRoomsResponse> build() => get();
+  void previousPage() {
+    // if page is not 1, then, go back to previous page
+    if (state.page > 1) {
+      state = state.copyWith(page: state.page - 1);
+    }
+  }
+
+  void nextPage() {
+    state = state.copyWith(page: state.page + 1);
+  }
 }
-
-final chatsControllerProvider =
-    AsyncNotifierProvider<ChatsController, ChatRoomsResponse>(() {
-  return ChatsController();
-});
-
-class ChatsRequestController extends Notifier<ProjectsRequest> {
-  @override
-  ProjectsRequest build() => ProjectsRequest(perPage: 25, page: 1);
-}
-
-final chatsRequestProvider =
-    NotifierProvider<ChatsRequestController, ProjectsRequest>(() {
-  return ChatsRequestController();
-});

@@ -9,21 +9,22 @@ part 'realtimecomments_controller.g.dart';
 @Riverpod(keepAlive: true)
 Stream<ChannelReadEvent> realTimeCommentsStream(RealTimeCommentsStreamRef ref,
     {required String uuid}) {
-// ignore: avoid_manual_providers_as_generated_provider_dependency
-  final client = ref.watch(pusherClientProvider);
-
-  client.connect();
+  final PusherChannelsClient client = ref.watch(pusherClientProvider);
 
   final String channel = "projects.$uuid.comments";
 
-  final commentsChannel = client.publicChannel(
+  // declare and create the channel
+  final PublicChannel commentsChannel = client.publicChannel(
     channel,
   );
 
-  // subscribe to the channel
+  // subscribe to the channel once connection is established
   client.onConnectionEstablished.listen((event) {
     commentsChannel.subscribeIfNotUnsubscribed();
   });
+
+  // unsubscribe from the channel when the ref has been disposed
+  ref.onDispose(() => commentsChannel.unsubscribe());
 
   // listen to events
   return commentsChannel.bind('comments.added');
