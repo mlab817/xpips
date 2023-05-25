@@ -10,9 +10,9 @@ _$_ChatRoom _$$_ChatRoomFromJson(Map<String, dynamic> json) => _$_ChatRoom(
       uuid: json['uuid'] as String,
       title: json['title'] as String,
       description: json['description'] as String,
-      lastComment: (json['last_comment'] as List<dynamic>?)
-          ?.map((e) => Comment.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      lastComment: json['last_comment'] == null
+          ? null
+          : Comment.fromJson(json['last_comment'] as Map<String, dynamic>),
       notes: json['notes'] as String?,
     );
 
