@@ -27,7 +27,7 @@ mixin _$ChatRoom {
   @JsonKey(name: "description")
   String get description => throw _privateConstructorUsedError;
   @JsonKey(name: "last_comment")
-  List<Comment>? get lastComment => throw _privateConstructorUsedError;
+  Comment? get lastComment => throw _privateConstructorUsedError;
   @JsonKey(name: "notes")
   String? get notes => throw _privateConstructorUsedError;
 
@@ -46,8 +46,10 @@ abstract class $ChatRoomCopyWith<$Res> {
       {@JsonKey(name: "uuid") String uuid,
       @JsonKey(name: "title") String title,
       @JsonKey(name: "description") String description,
-      @JsonKey(name: "last_comment") List<Comment>? lastComment,
+      @JsonKey(name: "last_comment") Comment? lastComment,
       @JsonKey(name: "notes") String? notes});
+
+  $CommentCopyWith<$Res>? get lastComment;
 }
 
 /// @nodoc
@@ -85,12 +87,24 @@ class _$ChatRoomCopyWithImpl<$Res, $Val extends ChatRoom>
       lastComment: freezed == lastComment
           ? _value.lastComment
           : lastComment // ignore: cast_nullable_to_non_nullable
-              as List<Comment>?,
+              as Comment?,
       notes: freezed == notes
           ? _value.notes
           : notes // ignore: cast_nullable_to_non_nullable
               as String?,
     ) as $Val);
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $CommentCopyWith<$Res>? get lastComment {
+    if (_value.lastComment == null) {
+      return null;
+    }
+
+    return $CommentCopyWith<$Res>(_value.lastComment!, (value) {
+      return _then(_value.copyWith(lastComment: value) as $Val);
+    });
   }
 }
 
@@ -105,8 +119,11 @@ abstract class _$$_ChatRoomCopyWith<$Res> implements $ChatRoomCopyWith<$Res> {
       {@JsonKey(name: "uuid") String uuid,
       @JsonKey(name: "title") String title,
       @JsonKey(name: "description") String description,
-      @JsonKey(name: "last_comment") List<Comment>? lastComment,
+      @JsonKey(name: "last_comment") Comment? lastComment,
       @JsonKey(name: "notes") String? notes});
+
+  @override
+  $CommentCopyWith<$Res>? get lastComment;
 }
 
 /// @nodoc
@@ -140,9 +157,9 @@ class __$$_ChatRoomCopyWithImpl<$Res>
           : description // ignore: cast_nullable_to_non_nullable
               as String,
       lastComment: freezed == lastComment
-          ? _value._lastComment
+          ? _value.lastComment
           : lastComment // ignore: cast_nullable_to_non_nullable
-              as List<Comment>?,
+              as Comment?,
       notes: freezed == notes
           ? _value.notes
           : notes // ignore: cast_nullable_to_non_nullable
@@ -158,9 +175,8 @@ class _$_ChatRoom implements _ChatRoom {
       {@JsonKey(name: "uuid") required this.uuid,
       @JsonKey(name: "title") required this.title,
       @JsonKey(name: "description") required this.description,
-      @JsonKey(name: "last_comment") final List<Comment>? lastComment,
-      @JsonKey(name: "notes") this.notes})
-      : _lastComment = lastComment;
+      @JsonKey(name: "last_comment") this.lastComment,
+      @JsonKey(name: "notes") this.notes});
 
   factory _$_ChatRoom.fromJson(Map<String, dynamic> json) =>
       _$$_ChatRoomFromJson(json);
@@ -174,17 +190,9 @@ class _$_ChatRoom implements _ChatRoom {
   @override
   @JsonKey(name: "description")
   final String description;
-  final List<Comment>? _lastComment;
   @override
   @JsonKey(name: "last_comment")
-  List<Comment>? get lastComment {
-    final value = _lastComment;
-    if (value == null) return null;
-    if (_lastComment is EqualUnmodifiableListView) return _lastComment;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(value);
-  }
-
+  final Comment? lastComment;
   @override
   @JsonKey(name: "notes")
   final String? notes;
@@ -203,15 +211,15 @@ class _$_ChatRoom implements _ChatRoom {
             (identical(other.title, title) || other.title == title) &&
             (identical(other.description, description) ||
                 other.description == description) &&
-            const DeepCollectionEquality()
-                .equals(other._lastComment, _lastComment) &&
+            (identical(other.lastComment, lastComment) ||
+                other.lastComment == lastComment) &&
             (identical(other.notes, notes) || other.notes == notes));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, uuid, title, description,
-      const DeepCollectionEquality().hash(_lastComment), notes);
+  int get hashCode =>
+      Object.hash(runtimeType, uuid, title, description, lastComment, notes);
 
   @JsonKey(ignore: true)
   @override
@@ -232,7 +240,7 @@ abstract class _ChatRoom implements ChatRoom {
       {@JsonKey(name: "uuid") required final String uuid,
       @JsonKey(name: "title") required final String title,
       @JsonKey(name: "description") required final String description,
-      @JsonKey(name: "last_comment") final List<Comment>? lastComment,
+      @JsonKey(name: "last_comment") final Comment? lastComment,
       @JsonKey(name: "notes") final String? notes}) = _$_ChatRoom;
 
   factory _ChatRoom.fromJson(Map<String, dynamic> json) = _$_ChatRoom.fromJson;
@@ -248,7 +256,7 @@ abstract class _ChatRoom implements ChatRoom {
   String get description;
   @override
   @JsonKey(name: "last_comment")
-  List<Comment>? get lastComment;
+  Comment? get lastComment;
   @override
   @JsonKey(name: "notes")
   String? get notes;

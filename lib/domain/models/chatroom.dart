@@ -11,7 +11,7 @@ class ChatRoom with _$ChatRoom {
     @JsonKey(name: "uuid") required String uuid,
     @JsonKey(name: "title") required String title,
     @JsonKey(name: "description") required String description,
-    @JsonKey(name: "last_comment") List<Comment>? lastComment,
+    @JsonKey(name: "last_comment") Comment? lastComment,
     @JsonKey(name: "notes") String? notes,
   }) = _ChatRoom;
 
