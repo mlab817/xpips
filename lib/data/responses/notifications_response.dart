@@ -8,7 +8,7 @@ part 'notifications_response.g.dart';
 @JsonSerializable()
 class NotificationsResponse {
   @JsonKey(name: 'data')
-  List<Notification> data;
+  List<Notifications> data;
 
   @JsonKey(name: 'meta')
   Meta meta;

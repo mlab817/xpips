@@ -11,7 +11,7 @@ part 'notifications_repository.g.dart';
 abstract class NotificationsRepository {
   Future<NotificationsResponse> getAll(PaginationRequest input);
 
-  Future<Notification> markNotificationAsRead(String id);
+  Future<Notifications> markNotificationAsRead(String id);
 }
 
 class NotificationsRepositoryImplementer implements NotificationsRepository {
@@ -25,7 +25,7 @@ class NotificationsRepositoryImplementer implements NotificationsRepository {
   }
 
   @override
-  Future<Notification> markNotificationAsRead(String id) async {
+  Future<Notifications> markNotificationAsRead(String id) async {
     return await client.markNotificationAsRead(id);
   }
 }

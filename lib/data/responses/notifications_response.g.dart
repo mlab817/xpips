@@ -10,7 +10,7 @@ NotificationsResponse _$NotificationsResponseFromJson(
         Map<String, dynamic> json) =>
     NotificationsResponse(
       data: (json['data'] as List<dynamic>)
-          .map((e) => Notification.fromJson(e as Map<String, dynamic>))
+          .map((e) => Notifications.fromJson(e as Map<String, dynamic>))
           .toList(),
       meta: Meta.fromJson(json['meta'] as Map<String, dynamic>),
     );

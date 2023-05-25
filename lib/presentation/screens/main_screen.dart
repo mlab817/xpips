@@ -1,10 +1,13 @@
+import 'dart:convert';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pips/data/data_sources/pusher_client.dart';
 import 'package:pips/presentation/controllers/theme_controller.dart';
 
 import '../../application/app_router.dart';
+import '../../domain/models/notifications.dart';
+import '../controllers/notificationsstream_controller.dart';
 import '../widgets/logout_button.dart';
 import 'chat_screen.dart';
 import 'home_screen.dart';
@@ -52,7 +55,17 @@ class _MainScreenState extends ConsumerState<MainScreen> {
     // retrieve current user
     var width = MediaQuery.of(context).size.width;
 
-    ref.watch(pusherClientProvider);
+    // listen to notifications in realtime
+    ref.listen(notificationsStreamProvider, (previous, next) {
+      if (next.hasValue) {
+        final Notifications notification =
+            Notifications.fromJson(jsonDecode(next.value?.data));
+
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(
+                "${notification.data.message} from ${notification.data.sender}")));
+      }
+    });
 
     return AutoTabsRouter(
         routes: const [

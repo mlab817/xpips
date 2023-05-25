@@ -27,28 +27,31 @@ final pusherClientProvider = Provider<PusherChannelsClient>((ref) {
     },
   );
 
-  final publicChannels = <Channel>[
-    client.publicChannel('PIPSv3.Public'),
-  ];
-
-  final subscriptions = client.onConnectionEstablished.listen((_) {
-    for (var channel in publicChannels) {
-      channel.subscribeIfNotUnsubscribed();
-    }
-  });
-
-  publicChannels.first.bind('pusher:subscription_succeeded').listen((_) {
-    print('subscription succeeded');
-  });
-
-  publicChannels.first.bindToAll().listen((event) {
-    // do something
-    print(event.data.toString());
-  });
+  // final publicChannels = <Channel>[
+  //   client.publicChannel('PIPSv3.Public'),
+  // ];
+  //
+  // final subscriptions = client.onConnectionEstablished.listen((_) {
+  //   for (var channel in publicChannels) {
+  //     channel.subscribeIfNotUnsubscribed();
+  //   }
+  // });
+  //
+  // publicChannels.first.bind('pusher:subscription_succeeded').listen((_) {
+  //   print('subscription succeeded');
+  // });
+  //
+  // publicChannels.first.bindToAll().listen((event) {
+  //   // do something
+  //   print('from pusherClientProvider bindToAll');
+  //   print(event.data.toString());
+  // });
 
   client.connect();
 
   ref.onDispose(() {
+    print('pusher client disposed');
+
     client.dispose();
   });
 

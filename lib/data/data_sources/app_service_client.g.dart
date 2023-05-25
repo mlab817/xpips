@@ -192,13 +192,13 @@ class _AppServiceClient implements AppServiceClient {
   }
 
   @override
-  Future<Notification> markNotificationAsRead(String id) async {
+  Future<Notifications> markNotificationAsRead(String id) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = {'id': id};
     final _result = await _dio
-        .fetch<Map<String, dynamic>>(_setStreamType<Notification>(Options(
+        .fetch<Map<String, dynamic>>(_setStreamType<Notifications>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -210,7 +210,7 @@ class _AppServiceClient implements AppServiceClient {
               data: _data,
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = Notification.fromJson(_result.data!);
+    final value = Notifications.fromJson(_result.data!);
     return value;
   }
 

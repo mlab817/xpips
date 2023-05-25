@@ -36,8 +36,8 @@ Future<NotificationsResponse> notifications(NotificationsRef ref) {
 }
 
 @riverpod
-Future<Notification> markAsRead(MarkAsReadRef ref,
-    {required Notification notification}) {
+Future<Notifications> markAsRead(MarkAsReadRef ref,
+    {required Notifications notification}) {
   final notificationsRepository = ref.read(notificationsRepositoryProvider);
 
   final response =

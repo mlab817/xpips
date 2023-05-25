@@ -21,7 +21,7 @@ final notificationsProvider = FutureProvider<NotificationsResponse>.internal(
 );
 
 typedef NotificationsRef = FutureProviderRef<NotificationsResponse>;
-String _$markAsReadHash() => r'd477c12042cbeabbd45ed83ee541bc856eada4ec';
+String _$markAsReadHash() => r'22ab913ceef4dba0687fd87904b19e22028555c6';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -44,20 +44,20 @@ class _SystemHash {
   }
 }
 
-typedef MarkAsReadRef = AutoDisposeFutureProviderRef<Notification>;
+typedef MarkAsReadRef = AutoDisposeFutureProviderRef<Notifications>;
 
 /// See also [markAsRead].
 @ProviderFor(markAsRead)
 const markAsReadProvider = MarkAsReadFamily();
 
 /// See also [markAsRead].
-class MarkAsReadFamily extends Family<AsyncValue<Notification>> {
+class MarkAsReadFamily extends Family<AsyncValue<Notifications>> {
   /// See also [markAsRead].
   const MarkAsReadFamily();
 
   /// See also [markAsRead].
   MarkAsReadProvider call({
-    required Notification notification,
+    required Notifications notification,
   }) {
     return MarkAsReadProvider(
       notification: notification,
@@ -89,7 +89,7 @@ class MarkAsReadFamily extends Family<AsyncValue<Notification>> {
 }
 
 /// See also [markAsRead].
-class MarkAsReadProvider extends AutoDisposeFutureProvider<Notification> {
+class MarkAsReadProvider extends AutoDisposeFutureProvider<Notifications> {
   /// See also [markAsRead].
   MarkAsReadProvider({
     required this.notification,
@@ -109,7 +109,7 @@ class MarkAsReadProvider extends AutoDisposeFutureProvider<Notification> {
               MarkAsReadFamily._allTransitiveDependencies,
         );
 
-  final Notification notification;
+  final Notifications notification;
 
   @override
   bool operator ==(Object other) {

@@ -65,7 +65,7 @@ abstract class AppServiceClient {
       @Queries() PaginationRequest input);
 
   @POST("/mark-notification-as-read")
-  Future<Notification> markNotificationAsRead(@Field("id") String id);
+  Future<Notifications> markNotificationAsRead(@Field("id") String id);
 
   /// Chats API
   @GET('/chat-rooms')

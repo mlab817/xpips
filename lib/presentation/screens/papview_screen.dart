@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 import 'package:intl/intl.dart';
+import 'package:pips/presentation/controllers/currentuser_controller.dart';
 
 import '../../application/extensions.dart';
 import '../../application/providers/dateformatter_provider.dart';
@@ -13,6 +14,7 @@ import '../../data/repositories/repositories.dart';
 import '../../data/requests/requests.dart';
 import '../../data/responses/responses.dart';
 import '../../domain/models/models.dart';
+import '../controllers/combinedcomments_controller.dart';
 import '../controllers/controllers.dart';
 
 @RoutePage()
@@ -75,49 +77,67 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         // scrolledUnderElevation: 0.0,
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () async {
+              // todo: handle confirm delete
+              await showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: const Text('Confirm Delete'),
+                      content: const Text(
+                          'Deleted PAPs cannot be restored. If you wish to go back to this PAP later, drop it instead. If you still wish to proceed, tap Confirm button below.'),
+                      actions: [
+                        ElevatedButton(
+                          onPressed: () {
+                            // TODO: handle drop
+                          },
+                          child: const Text('DROP'),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Text('CANCEL'),
+                        ),
+                        FilledButton(
+                          onPressed: () async {
+                            // TODO: handle deletion
+                            try {
+                              await ref
+                                  .read(projectRepositoryProvider)
+                                  .delete(widget.uuid);
+                            } catch (error) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text(error.toString())));
+                            } finally {
+                              Navigator.pop(context);
+                            }
+                          },
+                          child: const Text('CONFIRM'),
+                        ),
+                      ],
+                    );
+                  });
+            },
             icon: const Icon(Icons.delete),
             tooltip: 'Delete',
           ),
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              // TODO: route to edit
+            },
             icon: const Icon(Icons.edit),
             tooltip: 'Edit',
           ),
         ],
       ),
-      floatingActionButton: !_isExpanded
-          ? Badge(
-              label:
-                  ref.watch(realTimeCommentsProvider(widget.uuid)).value != null
-                      ? Text(ref
-                          .watch(realTimeCommentsProvider(widget.uuid))
-                          .value!
-                          .length
-                          .toString())
-                      : null,
-              child: FloatingActionButton(
-                onPressed: () {
-                  // expand messenger like
-                  setState(() {
-                    _isExpanded = !_isExpanded;
-                  });
-                },
-                child: const Icon(Icons.chat_bubble),
-              ),
-            )
-          : null,
+      floatingActionButton: !_isExpanded ? _buildChatBadge() : null,
       body: Stack(
         children: [
           // content
           projectProfileAsync.when(
             data: (data) {
-              if (data != null) {
-                return _buildShow(data);
-              }
-              return const Center(
-                child: Text('Something went wrong.'),
-              );
+              return _buildShow(data);
             },
             error: (error, stacktrace) {
               return Center(
@@ -135,6 +155,29 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         ],
       ),
     );
+  }
+
+  Widget _buildChatBadge() {
+    final asyncValue = ref.watch(combinedCommentsProvider(uuid: widget.uuid));
+
+    return asyncValue.when(data: (data) {
+      return Badge(
+        label: Text(data.length.toString()),
+        child: FloatingActionButton(
+          onPressed: () {
+            // expand messenger like
+            setState(() {
+              _isExpanded = !_isExpanded;
+            });
+          },
+          child: const Icon(Icons.chat_bubble),
+        ),
+      );
+    }, error: (error, stacktrace) {
+      return Container();
+    }, loading: () {
+      return Container();
+    });
   }
 
   Widget _buildShow(ProjectResponse response) {
@@ -1652,35 +1695,69 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 ),
               ),
               TableCell(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    ref
-                        .watch(numberFormatterProvider)
-                        .format(financialAccomplishment.nep2023),
-                    textAlign: TextAlign.end,
+                child: InkWell(
+                  onTap: () async {
+                    await Clipboard.setData(ClipboardData(
+                            text: financialAccomplishment.nep2023.toString() ??
+                                ''))
+                        .then((_) {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text("Value copied to clipboard")));
+                    });
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      ref
+                          .watch(numberFormatterProvider)
+                          .format(financialAccomplishment.nep2023),
+                      textAlign: TextAlign.end,
+                    ),
                   ),
                 ),
               ),
               TableCell(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    ref
-                        .watch(numberFormatterProvider)
-                        .format(financialAccomplishment.gaa2023),
-                    textAlign: TextAlign.end,
+                child: InkWell(
+                  onTap: () async {
+                    await Clipboard.setData(ClipboardData(
+                            text: financialAccomplishment.gaa2023.toString() ??
+                                ''))
+                        .then((_) {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text("Value copied to clipboard")));
+                    });
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      ref
+                          .watch(numberFormatterProvider)
+                          .format(financialAccomplishment.gaa2023),
+                      textAlign: TextAlign.end,
+                    ),
                   ),
                 ),
               ),
               TableCell(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    ref
-                        .watch(numberFormatterProvider)
-                        .format(financialAccomplishment.disbursement2023),
-                    textAlign: TextAlign.end,
+                child: InkWell(
+                  onTap: () async {
+                    await Clipboard.setData(ClipboardData(
+                            text: financialAccomplishment.disbursement2023
+                                    .toString() ??
+                                ''))
+                        .then((_) {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text("Value copied to clipboard")));
+                    });
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      ref
+                          .watch(numberFormatterProvider)
+                          .format(financialAccomplishment.disbursement2023),
+                      textAlign: TextAlign.end,
+                    ),
                   ),
                 ),
               ),
@@ -1695,35 +1772,69 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 ),
               ),
               TableCell(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    ref
-                        .watch(numberFormatterProvider)
-                        .format(financialAccomplishment.nep2024),
-                    textAlign: TextAlign.end,
+                child: InkWell(
+                  onTap: () async {
+                    await Clipboard.setData(ClipboardData(
+                            text: financialAccomplishment.nep2024.toString() ??
+                                ''))
+                        .then((_) {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text("Value copied to clipboard")));
+                    });
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      ref
+                          .watch(numberFormatterProvider)
+                          .format(financialAccomplishment.nep2024),
+                      textAlign: TextAlign.end,
+                    ),
                   ),
                 ),
               ),
               TableCell(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    ref
-                        .watch(numberFormatterProvider)
-                        .format(financialAccomplishment.gaa2024),
-                    textAlign: TextAlign.end,
+                child: InkWell(
+                  onTap: () async {
+                    await Clipboard.setData(ClipboardData(
+                            text: financialAccomplishment.gaa2024.toString() ??
+                                ''))
+                        .then((_) {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text("Value copied to clipboard")));
+                    });
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      ref
+                          .watch(numberFormatterProvider)
+                          .format(financialAccomplishment.gaa2024),
+                      textAlign: TextAlign.end,
+                    ),
                   ),
                 ),
               ),
               TableCell(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    ref
-                        .watch(numberFormatterProvider)
-                        .format(financialAccomplishment.disbursement2024),
-                    textAlign: TextAlign.end,
+                child: InkWell(
+                  onTap: () async {
+                    await Clipboard.setData(ClipboardData(
+                            text: financialAccomplishment.disbursement2024
+                                    .toString() ??
+                                ''))
+                        .then((_) {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text("Value copied to clipboard")));
+                    });
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      ref
+                          .watch(numberFormatterProvider)
+                          .format(financialAccomplishment.disbursement2024),
+                      textAlign: TextAlign.end,
+                    ),
                   ),
                 ),
               ),
@@ -1738,35 +1849,69 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 ),
               ),
               TableCell(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    ref
-                        .watch(numberFormatterProvider)
-                        .format(financialAccomplishment.nep2025),
-                    textAlign: TextAlign.end,
+                child: InkWell(
+                  onTap: () async {
+                    await Clipboard.setData(ClipboardData(
+                            text: financialAccomplishment.nep2025.toString() ??
+                                ''))
+                        .then((_) {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text("Value copied to clipboard")));
+                    });
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      ref
+                          .watch(numberFormatterProvider)
+                          .format(financialAccomplishment.nep2025),
+                      textAlign: TextAlign.end,
+                    ),
                   ),
                 ),
               ),
               TableCell(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    ref
-                        .watch(numberFormatterProvider)
-                        .format(financialAccomplishment.gaa2025),
-                    textAlign: TextAlign.end,
+                child: InkWell(
+                  onTap: () async {
+                    await Clipboard.setData(ClipboardData(
+                            text: financialAccomplishment.gaa2025.toString() ??
+                                ''))
+                        .then((_) {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text("Value copied to clipboard")));
+                    });
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      ref
+                          .watch(numberFormatterProvider)
+                          .format(financialAccomplishment.gaa2025),
+                      textAlign: TextAlign.end,
+                    ),
                   ),
                 ),
               ),
               TableCell(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    ref
-                        .watch(numberFormatterProvider)
-                        .format(financialAccomplishment.disbursement2025),
-                    textAlign: TextAlign.end,
+                child: InkWell(
+                  onTap: () async {
+                    await Clipboard.setData(ClipboardData(
+                            text: financialAccomplishment.disbursement2025
+                                    .toString() ??
+                                ''))
+                        .then((_) {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text("Value copied to clipboard")));
+                    });
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      ref
+                          .watch(numberFormatterProvider)
+                          .format(financialAccomplishment.disbursement2025),
+                      textAlign: TextAlign.end,
+                    ),
                   ),
                 ),
               ),
@@ -1781,35 +1926,69 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 ),
               ),
               TableCell(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    ref
-                        .watch(numberFormatterProvider)
-                        .format(financialAccomplishment.nep2026),
-                    textAlign: TextAlign.end,
+                child: InkWell(
+                  onTap: () async {
+                    await Clipboard.setData(ClipboardData(
+                            text: financialAccomplishment.nep2026.toString() ??
+                                ''))
+                        .then((_) {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text("Value copied to clipboard")));
+                    });
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      ref
+                          .watch(numberFormatterProvider)
+                          .format(financialAccomplishment.nep2026),
+                      textAlign: TextAlign.end,
+                    ),
                   ),
                 ),
               ),
               TableCell(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    ref
-                        .watch(numberFormatterProvider)
-                        .format(financialAccomplishment.gaa2026),
-                    textAlign: TextAlign.end,
+                child: InkWell(
+                  onTap: () async {
+                    await Clipboard.setData(ClipboardData(
+                            text: financialAccomplishment.gaa2026.toString() ??
+                                ''))
+                        .then((_) {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text("Value copied to clipboard")));
+                    });
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      ref
+                          .watch(numberFormatterProvider)
+                          .format(financialAccomplishment.gaa2026),
+                      textAlign: TextAlign.end,
+                    ),
                   ),
                 ),
               ),
               TableCell(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    ref
-                        .watch(numberFormatterProvider)
-                        .format(financialAccomplishment.disbursement2026),
-                    textAlign: TextAlign.end,
+                child: InkWell(
+                  onTap: () async {
+                    await Clipboard.setData(ClipboardData(
+                            text: financialAccomplishment.disbursement2026
+                                    .toString() ??
+                                ''))
+                        .then((_) {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text("Value copied to clipboard")));
+                    });
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      ref
+                          .watch(numberFormatterProvider)
+                          .format(financialAccomplishment.disbursement2026),
+                      textAlign: TextAlign.end,
+                    ),
                   ),
                 ),
               ),
@@ -1824,35 +2003,69 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 ),
               ),
               TableCell(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    ref
-                        .watch(numberFormatterProvider)
-                        .format(financialAccomplishment.nep2027),
-                    textAlign: TextAlign.end,
+                child: InkWell(
+                  onTap: () async {
+                    await Clipboard.setData(ClipboardData(
+                            text: financialAccomplishment.nep2027.toString() ??
+                                ''))
+                        .then((_) {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text("Value copied to clipboard")));
+                    });
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      ref
+                          .watch(numberFormatterProvider)
+                          .format(financialAccomplishment.nep2027),
+                      textAlign: TextAlign.end,
+                    ),
                   ),
                 ),
               ),
               TableCell(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    ref
-                        .watch(numberFormatterProvider)
-                        .format(financialAccomplishment.gaa2027),
-                    textAlign: TextAlign.end,
+                child: InkWell(
+                  onTap: () async {
+                    await Clipboard.setData(ClipboardData(
+                            text: financialAccomplishment.gaa2027.toString() ??
+                                ''))
+                        .then((_) {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text("Value copied to clipboard")));
+                    });
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      ref
+                          .watch(numberFormatterProvider)
+                          .format(financialAccomplishment.gaa2027),
+                      textAlign: TextAlign.end,
+                    ),
                   ),
                 ),
               ),
               TableCell(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    ref
-                        .watch(numberFormatterProvider)
-                        .format(financialAccomplishment.disbursement2027),
-                    textAlign: TextAlign.end,
+                child: InkWell(
+                  onTap: () async {
+                    await Clipboard.setData(ClipboardData(
+                            text: financialAccomplishment.disbursement2027
+                                    .toString() ??
+                                ''))
+                        .then((_) {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text("Value copied to clipboard")));
+                    });
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      ref
+                          .watch(numberFormatterProvider)
+                          .format(financialAccomplishment.disbursement2027),
+                      textAlign: TextAlign.end,
+                    ),
                   ),
                 ),
               ),
@@ -1867,35 +2080,69 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 ),
               ),
               TableCell(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    ref
-                        .watch(numberFormatterProvider)
-                        .format(financialAccomplishment.nep2028),
-                    textAlign: TextAlign.end,
+                child: InkWell(
+                  onTap: () async {
+                    await Clipboard.setData(ClipboardData(
+                            text: financialAccomplishment.nep2028.toString() ??
+                                ''))
+                        .then((_) {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text("Value copied to clipboard")));
+                    });
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      ref
+                          .watch(numberFormatterProvider)
+                          .format(financialAccomplishment.nep2028),
+                      textAlign: TextAlign.end,
+                    ),
                   ),
                 ),
               ),
               TableCell(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    ref
-                        .watch(numberFormatterProvider)
-                        .format(financialAccomplishment.gaa2028),
-                    textAlign: TextAlign.end,
+                child: InkWell(
+                  onTap: () async {
+                    await Clipboard.setData(ClipboardData(
+                            text: financialAccomplishment.gaa2028.toString() ??
+                                ''))
+                        .then((_) {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text("Value copied to clipboard")));
+                    });
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      ref
+                          .watch(numberFormatterProvider)
+                          .format(financialAccomplishment.gaa2028),
+                      textAlign: TextAlign.end,
+                    ),
                   ),
                 ),
               ),
               TableCell(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    ref
-                        .watch(numberFormatterProvider)
-                        .format(financialAccomplishment.disbursement2028),
-                    textAlign: TextAlign.end,
+                child: InkWell(
+                  onTap: () async {
+                    await Clipboard.setData(ClipboardData(
+                            text: financialAccomplishment.disbursement2028
+                                    .toString() ??
+                                ''))
+                        .then((_) {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text("Value copied to clipboard")));
+                    });
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      ref
+                          .watch(numberFormatterProvider)
+                          .format(financialAccomplishment.disbursement2028),
+                      textAlign: TextAlign.end,
+                    ),
                   ),
                 ),
               ),
@@ -1949,7 +2196,9 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
   }
 
   Widget _buildChat() {
-    final liveComments = ref.watch(realTimeCommentsProvider(widget.uuid));
+    final liveComments = ref.watch(combinedCommentsProvider(uuid: widget.uuid));
+
+    print('live comments length: ');
 
     return AnimatedPositioned(
       duration: const Duration(milliseconds: 250),
@@ -1970,32 +2219,22 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Row(
-                children: [
-                  const Spacer(),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: IconButton(
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    const Text('Comments'),
+                    const Spacer(),
+                    IconButton(
                       onPressed: _toggleExpanded,
                       icon: const Icon(Icons.close),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-              // Your expanded chat widget goes here
               Expanded(
                 child: liveComments.when(
-                  loading: () => const CircularProgressIndicator(),
-                  error: (error, stackTrace) => Center(
-                    child: Text("Error: ${error.toString()}: $stackTrace"),
-                  ),
                   data: (data) {
-                    if (data.isEmpty) {
-                      return const Center(
-                        child: Text('Hooray! No comments here.'),
-                      );
-                    }
-
                     return ListView.builder(
                       physics: const ClampingScrollPhysics(),
                       shrinkWrap: true,
@@ -2003,8 +2242,22 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                       itemBuilder: (context, index) {
                         final comment = data[index];
 
-                        if (comment.userId == 1) {
+                        print(
+                            ref.watch(currentUserProvider)?.id ?? 'NO USER ID');
+
+                        // if the user added the comment, display on the right
+                        if (comment.userId ==
+                            ref.watch(currentUserProvider)?.id) {
                           return ListTile(
+                            leading: Text(
+                              ref.watch(dateFormatterProvider).format(
+                                    comment.updatedAt,
+                                  ),
+                            ),
+                            title: Text(
+                              comment.user.fullname ?? 'NO USER',
+                              textAlign: TextAlign.end,
+                            ),
                             subtitle: Text(
                               comment.comment,
                               textAlign: TextAlign.end,
@@ -2012,9 +2265,10 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                           );
                         }
 
+                        // default: display on the left
                         return ListTile(
                           leading: const Icon(Icons.person),
-                          title: Text(comment.user?.firstName ?? 'NO USER'),
+                          title: Text(comment.user.fullname ?? 'NO USER'),
                           subtitle: Text(comment.comment),
                           trailing: Text(
                             ref.watch(dateFormatterProvider).format(
@@ -2025,6 +2279,12 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                       },
                     );
                   },
+                  error: (error, stacktrace) {
+                    return Center(
+                      child: Text('Error: ${error.toString()}'),
+                    );
+                  },
+                  loading: () => const CircularProgressIndicator(),
                 ),
               ),
               Padding(
