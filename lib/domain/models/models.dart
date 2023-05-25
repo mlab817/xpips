@@ -21,3 +21,4 @@ export 'rap_cost.dart';
 export 'regional_investment.dart';
 export 'row_cost.dart';
 export 'user.dart';
+export 'userquickresource.dart';
