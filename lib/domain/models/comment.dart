@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:pips/domain/models/user.dart';
+import 'package:pips/domain/models/models.dart';
 
 part 'comment.freezed.dart';
 part 'comment.g.dart';
@@ -13,7 +13,7 @@ class Comment with _$Comment {
     @JsonKey(name: "updated_at") required DateTime updatedAt,
     @JsonKey(name: "created_at") required DateTime createdAt,
     @JsonKey(name: "is_resolved") required bool isResolved,
-    @JsonKey(name: "user") required User user,
+    @JsonKey(name: "user") required UserQuickResource user,
   }) = _Comment;
 
   factory Comment.fromJson(Map<String, dynamic> json) =>

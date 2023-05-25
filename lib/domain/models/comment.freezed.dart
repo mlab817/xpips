@@ -31,7 +31,7 @@ mixin _$Comment {
   @JsonKey(name: "is_resolved")
   bool get isResolved => throw _privateConstructorUsedError;
   @JsonKey(name: "user")
-  User get user => throw _privateConstructorUsedError;
+  UserQuickResource get user => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -50,9 +50,9 @@ abstract class $CommentCopyWith<$Res> {
       @JsonKey(name: "updated_at") DateTime updatedAt,
       @JsonKey(name: "created_at") DateTime createdAt,
       @JsonKey(name: "is_resolved") bool isResolved,
-      @JsonKey(name: "user") User user});
+      @JsonKey(name: "user") UserQuickResource user});
 
-  $UserCopyWith<$Res> get user;
+  $UserQuickResourceCopyWith<$Res> get user;
 }
 
 /// @nodoc
@@ -104,14 +104,14 @@ class _$CommentCopyWithImpl<$Res, $Val extends Comment>
       user: null == user
           ? _value.user
           : user // ignore: cast_nullable_to_non_nullable
-              as User,
+              as UserQuickResource,
     ) as $Val);
   }
 
   @override
   @pragma('vm:prefer-inline')
-  $UserCopyWith<$Res> get user {
-    return $UserCopyWith<$Res>(_value.user, (value) {
+  $UserQuickResourceCopyWith<$Res> get user {
+    return $UserQuickResourceCopyWith<$Res>(_value.user, (value) {
       return _then(_value.copyWith(user: value) as $Val);
     });
   }
@@ -131,10 +131,10 @@ abstract class _$$_CommentCopyWith<$Res> implements $CommentCopyWith<$Res> {
       @JsonKey(name: "updated_at") DateTime updatedAt,
       @JsonKey(name: "created_at") DateTime createdAt,
       @JsonKey(name: "is_resolved") bool isResolved,
-      @JsonKey(name: "user") User user});
+      @JsonKey(name: "user") UserQuickResource user});
 
   @override
-  $UserCopyWith<$Res> get user;
+  $UserQuickResourceCopyWith<$Res> get user;
 }
 
 /// @nodoc
@@ -183,7 +183,7 @@ class __$$_CommentCopyWithImpl<$Res>
       user: null == user
           ? _value.user
           : user // ignore: cast_nullable_to_non_nullable
-              as User,
+              as UserQuickResource,
     ));
   }
 }
@@ -221,7 +221,7 @@ class _$_Comment implements _Comment {
   final bool isResolved;
   @override
   @JsonKey(name: "user")
-  final User user;
+  final UserQuickResource user;
 
   @override
   String toString() {
@@ -266,13 +266,14 @@ class _$_Comment implements _Comment {
 
 abstract class _Comment implements Comment {
   factory _Comment(
-      {required final int id,
-      required final String comment,
-      @JsonKey(name: "user_id") required final int userId,
-      @JsonKey(name: "updated_at") required final DateTime updatedAt,
-      @JsonKey(name: "created_at") required final DateTime createdAt,
-      @JsonKey(name: "is_resolved") required final bool isResolved,
-      @JsonKey(name: "user") required final User user}) = _$_Comment;
+          {required final int id,
+          required final String comment,
+          @JsonKey(name: "user_id") required final int userId,
+          @JsonKey(name: "updated_at") required final DateTime updatedAt,
+          @JsonKey(name: "created_at") required final DateTime createdAt,
+          @JsonKey(name: "is_resolved") required final bool isResolved,
+          @JsonKey(name: "user") required final UserQuickResource user}) =
+      _$_Comment;
 
   factory _Comment.fromJson(Map<String, dynamic> json) = _$_Comment.fromJson;
 
@@ -294,7 +295,7 @@ abstract class _Comment implements Comment {
   bool get isResolved;
   @override
   @JsonKey(name: "user")
-  User get user;
+  UserQuickResource get user;
   @override
   @JsonKey(ignore: true)
   _$$_CommentCopyWith<_$_Comment> get copyWith =>

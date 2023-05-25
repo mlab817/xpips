@@ -13,7 +13,7 @@ _$_Comment _$$_CommentFromJson(Map<String, dynamic> json) => _$_Comment(
       updatedAt: DateTime.parse(json['updated_at'] as String),
       createdAt: DateTime.parse(json['created_at'] as String),
       isResolved: json['is_resolved'] as bool,
-      user: User.fromJson(json['user'] as Map<String, dynamic>),
+      user: UserQuickResource.fromJson(json['user'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$_CommentToJson(_$_Comment instance) =>
