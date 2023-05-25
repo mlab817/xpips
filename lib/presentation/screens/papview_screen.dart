@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 import 'package:intl/intl.dart';
 import 'package:pips/presentation/controllers/currentuser_controller.dart';
+import 'package:pips/presentation/widgets/message_bubble.dart';
 
 import '../../application/extensions.dart';
 import '../../application/providers/dateformatter_provider.dart';
@@ -146,7 +147,8 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 ),
               );
             },
-            loading: () => const Center(
+            loading: () =>
+            const Center(
               child: CircularProgressIndicator(),
             ),
           ),
@@ -190,7 +192,9 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         SliverStickyHeader(
           header: Container(
             height: 60.0,
-            color: Theme.of(context).primaryColor,
+            color: Theme
+                .of(context)
+                .primaryColor,
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             alignment: Alignment.centerLeft,
             child: const Text(
@@ -205,7 +209,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 title: const Text('Title'),
                 onTap: () async {
                   await Clipboard.setData(
-                          ClipboardData(text: project.title ?? ''))
+                      ClipboardData(text: project.title ?? ''))
                       .then((_) {
                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                         content: Text("Title copied to clipboard")));
@@ -218,7 +222,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
               ),
               ListTile(
                 subtitle: Text(project.regularProgram != null &&
-                        project.regularProgram == true
+                    project.regularProgram == true
                     ? 'Yes'
                     : 'No'),
                 title: const Text('Regular Program'),
@@ -234,7 +238,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 title: const Text('Description'),
                 onTap: () async {
                   await Clipboard.setData(
-                          ClipboardData(text: project.description ?? ''))
+                      ClipboardData(text: project.description ?? ''))
                       .then((_) {
                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                         content: Text("Description copied to clipboard")));
@@ -243,7 +247,8 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
               ),
               ListTile(
                 subtitle: Text(
-                    "PHP ${ref.watch(numberFormatterProvider).format(project.totalCost)}"),
+                    "PHP ${ref.watch(numberFormatterProvider).format(
+                        project.totalCost)}"),
                 title: const Text('Total Project Cost'),
               ),
             ]),
@@ -253,7 +258,9 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         SliverStickyHeader(
           header: Container(
             height: 60.0,
-            color: Theme.of(context).primaryColor,
+            color: Theme
+                .of(context)
+                .primaryColor,
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             alignment: Alignment.centerLeft,
             child: const Text(
@@ -280,7 +287,9 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         SliverStickyHeader(
           header: Container(
             height: 60.0,
-            color: Theme.of(context).primaryColor,
+            color: Theme
+                .of(context)
+                .primaryColor,
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             alignment: Alignment.centerLeft,
             child: const Text(
@@ -307,7 +316,9 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         SliverStickyHeader(
           header: Container(
             height: 60.0,
-            color: Theme.of(context).primaryColor,
+            color: Theme
+                .of(context)
+                .primaryColor,
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             alignment: Alignment.centerLeft,
             child: const Text(
@@ -341,7 +352,9 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         SliverStickyHeader(
           header: Container(
             height: 60.0,
-            color: Theme.of(context).primaryColor,
+            color: Theme
+                .of(context)
+                .primaryColor,
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             alignment: Alignment.centerLeft,
             child: const Text(
@@ -396,7 +409,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                     ? 'Yes'
                     : 'No'),
                 title:
-                    const Text('Is the Program/Project included in the RDIP?'),
+                const Text('Is the Program/Project included in the RDIP?'),
               ),
             ]),
           ),
@@ -405,7 +418,9 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         SliverStickyHeader(
           header: Container(
             height: 60.0,
-            color: Theme.of(context).primaryColor,
+            color: Theme
+                .of(context)
+                .primaryColor,
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             alignment: Alignment.centerLeft,
             child: const Text(
@@ -419,7 +434,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 ListTile(
                   subtitle: Text(project.pdpChapter?.label ?? 'N/A'),
                   title:
-                      const Text('Philippine Development Plan (PDP) Chapter'),
+                  const Text('Philippine Development Plan (PDP) Chapter'),
                 ),
                 ListTile(
                   subtitle: Text(
@@ -435,7 +450,9 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         SliverStickyHeader(
           header: Container(
             height: 60.0,
-            color: Theme.of(context).primaryColor,
+            color: Theme
+                .of(context)
+                .primaryColor,
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             alignment: Alignment.centerLeft,
             child: const Text(
@@ -450,7 +467,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 subtitle: Text(project.updates ?? 'N/A'),
                 onTap: () async {
                   await Clipboard.setData(
-                          ClipboardData(text: project.updates ?? ''))
+                      ClipboardData(text: project.updates ?? ''))
                       .then((_) {
                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                         content: Text("Updates copied to clipboard")));
@@ -469,7 +486,9 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         SliverStickyHeader(
           header: Container(
             height: 60.0,
-            color: Theme.of(context).primaryColor,
+            color: Theme
+                .of(context)
+                .primaryColor,
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             alignment: Alignment.centerLeft,
             child: const Text(
@@ -504,7 +523,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   ),
                   onTap: () async {
                     await Clipboard.setData(
-                            ClipboardData(text: project.risk ?? ''))
+                        ClipboardData(text: project.risk ?? ''))
                         .then((_) {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                           content: Text(
@@ -517,7 +536,9 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         SliverStickyHeader(
           header: Container(
             height: 60.0,
-            color: Theme.of(context).primaryColor,
+            color: Theme
+                .of(context)
+                .primaryColor,
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             alignment: Alignment.centerLeft,
             child: const Text(
@@ -541,7 +562,9 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         SliverStickyHeader(
           header: Container(
             height: 60.0,
-            color: Theme.of(context).primaryColor,
+            color: Theme
+                .of(context)
+                .primaryColor,
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             alignment: Alignment.centerLeft,
             child: const Text(
@@ -565,7 +588,9 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         SliverStickyHeader(
           header: Container(
             height: 60.0,
-            color: Theme.of(context).primaryColor,
+            color: Theme
+                .of(context)
+                .primaryColor,
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             alignment: Alignment.centerLeft,
             child: const Text(
@@ -589,7 +614,9 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         SliverStickyHeader(
           header: Container(
             height: 60.0,
-            color: Theme.of(context).primaryColor,
+            color: Theme
+                .of(context)
+                .primaryColor,
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             alignment: Alignment.centerLeft,
             child: const Text(
@@ -613,7 +640,9 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         SliverStickyHeader(
           header: Container(
             height: 60.0,
-            color: Theme.of(context).primaryColor,
+            color: Theme
+                .of(context)
+                .primaryColor,
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             alignment: Alignment.centerLeft,
             child: const Text(
@@ -653,7 +682,9 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         SliverStickyHeader(
           header: Container(
             height: 60.0,
-            color: Theme.of(context).primaryColor,
+            color: Theme
+                .of(context)
+                .primaryColor,
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             alignment: Alignment.centerLeft,
             child: const Text(
@@ -705,7 +736,9 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         SliverStickyHeader(
           header: Container(
             height: 60.0,
-            color: Theme.of(context).primaryColor,
+            color: Theme
+                .of(context)
+                .primaryColor,
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             alignment: Alignment.centerLeft,
             child: const Text(
@@ -729,7 +762,9 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         SliverStickyHeader(
           header: Container(
             height: 60.0,
-            color: Theme.of(context).primaryColor,
+            color: Theme
+                .of(context)
+                .primaryColor,
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             alignment: Alignment.centerLeft,
             child: const Text(
@@ -748,7 +783,9 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         SliverStickyHeader(
           header: Container(
             height: 60.0,
-            color: Theme.of(context).primaryColor,
+            color: Theme
+                .of(context)
+                .primaryColor,
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             alignment: Alignment.centerLeft,
             child: const Text(
@@ -767,7 +804,9 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         SliverStickyHeader(
           header: Container(
             height: 60.0,
-            color: Theme.of(context).primaryColor,
+            color: Theme
+                .of(context)
+                .primaryColor,
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             alignment: Alignment.centerLeft,
             child: const Text(
@@ -784,7 +823,9 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         SliverStickyHeader(
           header: Container(
             height: 60.0,
-            color: Theme.of(context).primaryColor,
+            color: Theme
+                .of(context)
+                .primaryColor,
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             alignment: Alignment.centerLeft,
             child: const Text(
@@ -804,7 +845,9 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         SliverStickyHeader(
           header: Container(
             height: 60.0,
-            color: Theme.of(context).primaryColor,
+            color: Theme
+                .of(context)
+                .primaryColor,
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             alignment: Alignment.centerLeft,
             child: const Text(
@@ -824,7 +867,9 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         SliverStickyHeader(
           header: Container(
             height: 60.0,
-            color: Theme.of(context).primaryColor,
+            color: Theme
+                .of(context)
+                .primaryColor,
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             alignment: Alignment.centerLeft,
             child: const Text(
@@ -852,7 +897,9 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
       padding: const EdgeInsets.all(8.0),
       child: Table(
         border:
-            TableBorder.all(color: Theme.of(context).primaryColor, width: 0.5),
+        TableBorder.all(color: Theme
+            .of(context)
+            .primaryColor, width: 0.5),
         defaultVerticalAlignment: TableCellVerticalAlignment.middle,
         children: <TableRow>[
           const TableRow(
@@ -959,7 +1006,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   child: InkWell(
                     onTap: () async {
                       await Clipboard.setData(
-                              ClipboardData(text: e.y2022.toString() ?? ''))
+                          ClipboardData(text: e.y2022.toString() ?? ''))
                           .then((_) {
                         ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
@@ -979,7 +1026,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   child: InkWell(
                     onTap: () async {
                       await Clipboard.setData(
-                              ClipboardData(text: e.y2023.toString() ?? ''))
+                          ClipboardData(text: e.y2023.toString() ?? ''))
                           .then((_) {
                         ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
@@ -999,7 +1046,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   child: InkWell(
                     onTap: () async {
                       await Clipboard.setData(
-                              ClipboardData(text: e.y2024.toString() ?? ''))
+                          ClipboardData(text: e.y2024.toString() ?? ''))
                           .then((_) {
                         ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
@@ -1019,7 +1066,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   child: InkWell(
                     onTap: () async {
                       await Clipboard.setData(
-                              ClipboardData(text: e.y2025.toString() ?? ''))
+                          ClipboardData(text: e.y2025.toString() ?? ''))
                           .then((_) {
                         ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
@@ -1039,7 +1086,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   child: InkWell(
                     onTap: () async {
                       await Clipboard.setData(
-                              ClipboardData(text: e.y2026.toString() ?? ''))
+                          ClipboardData(text: e.y2026.toString() ?? ''))
                           .then((_) {
                         ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
@@ -1059,7 +1106,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   child: InkWell(
                     onTap: () async {
                       await Clipboard.setData(
-                              ClipboardData(text: e.y2027.toString() ?? ''))
+                          ClipboardData(text: e.y2027.toString() ?? ''))
                           .then((_) {
                         ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
@@ -1079,7 +1126,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   child: InkWell(
                     onTap: () async {
                       await Clipboard.setData(
-                              ClipboardData(text: e.y2028.toString() ?? ''))
+                          ClipboardData(text: e.y2028.toString() ?? ''))
                           .then((_) {
                         ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
@@ -1099,7 +1146,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   child: InkWell(
                     onTap: () async {
                       await Clipboard.setData(
-                              ClipboardData(text: e.y2029.toString() ?? ''))
+                          ClipboardData(text: e.y2029.toString() ?? ''))
                           .then((_) {
                         ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
@@ -1248,7 +1295,9 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
       padding: const EdgeInsets.all(8.0),
       child: Table(
         border:
-            TableBorder.all(color: Theme.of(context).primaryColor, width: 0.5),
+        TableBorder.all(color: Theme
+            .of(context)
+            .primaryColor, width: 0.5),
         defaultVerticalAlignment: TableCellVerticalAlignment.middle,
         children: <TableRow>[
           const TableRow(
@@ -1355,7 +1404,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   child: InkWell(
                     onTap: () async {
                       await Clipboard.setData(
-                              ClipboardData(text: e.y2022.toString() ?? ''))
+                          ClipboardData(text: e.y2022.toString() ?? ''))
                           .then((_) {
                         ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
@@ -1375,7 +1424,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   child: InkWell(
                     onTap: () async {
                       await Clipboard.setData(
-                              ClipboardData(text: e.y2023.toString() ?? ''))
+                          ClipboardData(text: e.y2023.toString() ?? ''))
                           .then((_) {
                         ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
@@ -1395,7 +1444,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   child: InkWell(
                     onTap: () async {
                       await Clipboard.setData(
-                              ClipboardData(text: e.y2024.toString() ?? ''))
+                          ClipboardData(text: e.y2024.toString() ?? ''))
                           .then((_) {
                         ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
@@ -1415,7 +1464,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   child: InkWell(
                     onTap: () async {
                       await Clipboard.setData(
-                              ClipboardData(text: e.y2025.toString() ?? ''))
+                          ClipboardData(text: e.y2025.toString() ?? ''))
                           .then((_) {
                         ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
@@ -1435,7 +1484,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   child: InkWell(
                     onTap: () async {
                       await Clipboard.setData(
-                              ClipboardData(text: e.y2026.toString() ?? ''))
+                          ClipboardData(text: e.y2026.toString() ?? ''))
                           .then((_) {
                         ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
@@ -1455,7 +1504,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   child: InkWell(
                     onTap: () async {
                       await Clipboard.setData(
-                              ClipboardData(text: e.y2027.toString() ?? ''))
+                          ClipboardData(text: e.y2027.toString() ?? ''))
                           .then((_) {
                         ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
@@ -1475,7 +1524,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   child: InkWell(
                     onTap: () async {
                       await Clipboard.setData(
-                              ClipboardData(text: e.y2028.toString() ?? ''))
+                          ClipboardData(text: e.y2028.toString() ?? ''))
                           .then((_) {
                         ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
@@ -1495,7 +1544,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   child: InkWell(
                     onTap: () async {
                       await Clipboard.setData(
-                              ClipboardData(text: e.y2029.toString() ?? ''))
+                          ClipboardData(text: e.y2029.toString() ?? ''))
                           .then((_) {
                         ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
@@ -1645,7 +1694,9 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
       padding: const EdgeInsets.all(8.0),
       child: Table(
         border: TableBorder.all(
-          color: Theme.of(context).primaryColor,
+          color: Theme
+              .of(context)
+              .primaryColor,
           width: 0.5,
         ),
         children: [
@@ -1698,8 +1749,8 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 child: InkWell(
                   onTap: () async {
                     await Clipboard.setData(ClipboardData(
-                            text: financialAccomplishment.nep2023.toString() ??
-                                ''))
+                        text: financialAccomplishment.nep2023.toString() ??
+                            ''))
                         .then((_) {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                           content: Text("Value copied to clipboard")));
@@ -1720,8 +1771,8 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 child: InkWell(
                   onTap: () async {
                     await Clipboard.setData(ClipboardData(
-                            text: financialAccomplishment.gaa2023.toString() ??
-                                ''))
+                        text: financialAccomplishment.gaa2023.toString() ??
+                            ''))
                         .then((_) {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                           content: Text("Value copied to clipboard")));
@@ -1742,9 +1793,9 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 child: InkWell(
                   onTap: () async {
                     await Clipboard.setData(ClipboardData(
-                            text: financialAccomplishment.disbursement2023
-                                    .toString() ??
-                                ''))
+                        text: financialAccomplishment.disbursement2023
+                            .toString() ??
+                            ''))
                         .then((_) {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                           content: Text("Value copied to clipboard")));
@@ -1775,8 +1826,8 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 child: InkWell(
                   onTap: () async {
                     await Clipboard.setData(ClipboardData(
-                            text: financialAccomplishment.nep2024.toString() ??
-                                ''))
+                        text: financialAccomplishment.nep2024.toString() ??
+                            ''))
                         .then((_) {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                           content: Text("Value copied to clipboard")));
@@ -1797,8 +1848,8 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 child: InkWell(
                   onTap: () async {
                     await Clipboard.setData(ClipboardData(
-                            text: financialAccomplishment.gaa2024.toString() ??
-                                ''))
+                        text: financialAccomplishment.gaa2024.toString() ??
+                            ''))
                         .then((_) {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                           content: Text("Value copied to clipboard")));
@@ -1819,9 +1870,9 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 child: InkWell(
                   onTap: () async {
                     await Clipboard.setData(ClipboardData(
-                            text: financialAccomplishment.disbursement2024
-                                    .toString() ??
-                                ''))
+                        text: financialAccomplishment.disbursement2024
+                            .toString() ??
+                            ''))
                         .then((_) {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                           content: Text("Value copied to clipboard")));
@@ -1852,8 +1903,8 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 child: InkWell(
                   onTap: () async {
                     await Clipboard.setData(ClipboardData(
-                            text: financialAccomplishment.nep2025.toString() ??
-                                ''))
+                        text: financialAccomplishment.nep2025.toString() ??
+                            ''))
                         .then((_) {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                           content: Text("Value copied to clipboard")));
@@ -1874,8 +1925,8 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 child: InkWell(
                   onTap: () async {
                     await Clipboard.setData(ClipboardData(
-                            text: financialAccomplishment.gaa2025.toString() ??
-                                ''))
+                        text: financialAccomplishment.gaa2025.toString() ??
+                            ''))
                         .then((_) {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                           content: Text("Value copied to clipboard")));
@@ -1896,9 +1947,9 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 child: InkWell(
                   onTap: () async {
                     await Clipboard.setData(ClipboardData(
-                            text: financialAccomplishment.disbursement2025
-                                    .toString() ??
-                                ''))
+                        text: financialAccomplishment.disbursement2025
+                            .toString() ??
+                            ''))
                         .then((_) {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                           content: Text("Value copied to clipboard")));
@@ -1929,8 +1980,8 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 child: InkWell(
                   onTap: () async {
                     await Clipboard.setData(ClipboardData(
-                            text: financialAccomplishment.nep2026.toString() ??
-                                ''))
+                        text: financialAccomplishment.nep2026.toString() ??
+                            ''))
                         .then((_) {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                           content: Text("Value copied to clipboard")));
@@ -1951,8 +2002,8 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 child: InkWell(
                   onTap: () async {
                     await Clipboard.setData(ClipboardData(
-                            text: financialAccomplishment.gaa2026.toString() ??
-                                ''))
+                        text: financialAccomplishment.gaa2026.toString() ??
+                            ''))
                         .then((_) {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                           content: Text("Value copied to clipboard")));
@@ -1973,9 +2024,9 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 child: InkWell(
                   onTap: () async {
                     await Clipboard.setData(ClipboardData(
-                            text: financialAccomplishment.disbursement2026
-                                    .toString() ??
-                                ''))
+                        text: financialAccomplishment.disbursement2026
+                            .toString() ??
+                            ''))
                         .then((_) {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                           content: Text("Value copied to clipboard")));
@@ -2006,8 +2057,8 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 child: InkWell(
                   onTap: () async {
                     await Clipboard.setData(ClipboardData(
-                            text: financialAccomplishment.nep2027.toString() ??
-                                ''))
+                        text: financialAccomplishment.nep2027.toString() ??
+                            ''))
                         .then((_) {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                           content: Text("Value copied to clipboard")));
@@ -2028,8 +2079,8 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 child: InkWell(
                   onTap: () async {
                     await Clipboard.setData(ClipboardData(
-                            text: financialAccomplishment.gaa2027.toString() ??
-                                ''))
+                        text: financialAccomplishment.gaa2027.toString() ??
+                            ''))
                         .then((_) {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                           content: Text("Value copied to clipboard")));
@@ -2050,9 +2101,9 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 child: InkWell(
                   onTap: () async {
                     await Clipboard.setData(ClipboardData(
-                            text: financialAccomplishment.disbursement2027
-                                    .toString() ??
-                                ''))
+                        text: financialAccomplishment.disbursement2027
+                            .toString() ??
+                            ''))
                         .then((_) {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                           content: Text("Value copied to clipboard")));
@@ -2083,8 +2134,8 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 child: InkWell(
                   onTap: () async {
                     await Clipboard.setData(ClipboardData(
-                            text: financialAccomplishment.nep2028.toString() ??
-                                ''))
+                        text: financialAccomplishment.nep2028.toString() ??
+                            ''))
                         .then((_) {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                           content: Text("Value copied to clipboard")));
@@ -2105,8 +2156,8 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 child: InkWell(
                   onTap: () async {
                     await Clipboard.setData(ClipboardData(
-                            text: financialAccomplishment.gaa2028.toString() ??
-                                ''))
+                        text: financialAccomplishment.gaa2028.toString() ??
+                            ''))
                         .then((_) {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                           content: Text("Value copied to clipboard")));
@@ -2127,9 +2178,9 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 child: InkWell(
                   onTap: () async {
                     await Clipboard.setData(ClipboardData(
-                            text: financialAccomplishment.disbursement2028
-                                    .toString() ??
-                                ''))
+                        text: financialAccomplishment.disbursement2028
+                            .toString() ??
+                            ''))
                         .then((_) {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                           content: Text("Value copied to clipboard")));
@@ -2212,7 +2263,9 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
           width: 360,
           padding: EdgeInsets.zero,
           decoration: BoxDecoration(
-            color: Theme.of(context).canvasColor,
+            color: Theme
+                .of(context)
+                .canvasColor,
             border: Border.all(color: Colors.grey, width: 0.5),
             borderRadius: BorderRadius.circular(8.0),
           ),
@@ -2243,16 +2296,22 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                         final comment = data[index];
 
                         print(
-                            ref.watch(currentUserProvider)?.id ?? 'NO USER ID');
+                            ref
+                                .watch(currentUserProvider)
+                                ?.id ?? 'NO USER ID');
+
+                        return MessageBubble(comment: comment);
 
                         // if the user added the comment, display on the right
                         if (comment.userId ==
-                            ref.watch(currentUserProvider)?.id) {
+                            ref
+                                .watch(currentUserProvider)
+                                ?.id) {
                           return ListTile(
                             leading: Text(
                               ref.watch(dateFormatterProvider).format(
-                                    comment.updatedAt,
-                                  ),
+                                comment.updatedAt,
+                              ),
                             ),
                             title: Text(
                               comment.user.fullname ?? 'NO USER',
@@ -2272,8 +2331,8 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                           subtitle: Text(comment.comment),
                           trailing: Text(
                             ref.watch(dateFormatterProvider).format(
-                                  comment.updatedAt,
-                                ),
+                              comment.updatedAt,
+                            ),
                           ),
                         );
                       },
