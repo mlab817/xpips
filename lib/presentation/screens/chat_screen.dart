@@ -2,10 +2,11 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pips/application/providers/dateformatter_provider.dart';
+import 'package:pips/domain/models/chatroom.dart';
 
+import '../../../application/app_router.dart';
 import '../../../data/responses/responses.dart';
 import '../../../presentation/controllers/controllers.dart';
-import '../../../application/app_router.dart';
 import '../../../presentation/widgets/loading_dialog.dart';
 import '../../../presentation/widgets/logout_button.dart';
 
@@ -20,7 +21,10 @@ class ChatScreen extends ConsumerStatefulWidget {
 class _ChatScreenState extends ConsumerState<ChatScreen> {
   @override
   Widget build(BuildContext context) {
-    final chatsAsync = ref.watch(chatMessagesProvider);
+    final chatsAsync = ref.watch(chatRoomsProvider);
+
+    final currentPage = chatsAsync.value?.meta.pagination.current ?? 1;
+    final lastPage = chatsAsync.value?.meta.pagination.last ?? 1;
 
     return Scaffold(
       appBar: AppBar(
@@ -29,34 +33,71 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           LogoutButton(),
         ],
       ),
-      body: chatsAsync.when(
-        data: (data) {
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: _buildList(data),
-          );
-        },
-        error: (error, stackTrace) {
-          return _buildError(error);
-        },
-        loading: () {
-          return const LoadingOverlay();
-        },
-      ),
+      body: Column(children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            vertical: 8.0,
+            horizontal: 16.0,
+          ),
+          child: Row(
+            children: [
+              Text('Page $currentPage of $lastPage'),
+              const Spacer(),
+              IconButton(
+                  onPressed: currentPage > 1
+                      ? () {
+                          ref
+                              .read(chatsRequestControllerProvider.notifier)
+                              .previousPage();
+                        }
+                      : null,
+                  icon: const Icon(Icons.chevron_left)),
+              IconButton(
+                  onPressed: currentPage < lastPage
+                      ? () {
+                          ref
+                              .read(chatsRequestControllerProvider.notifier)
+                              .nextPage();
+                        }
+                      : null,
+                  icon: const Icon(Icons.chevron_right)),
+            ],
+          ),
+        ),
+        Expanded(
+          child: chatsAsync.when(
+            data: (data) {
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: _buildList(data),
+              );
+            },
+            error: (error, stackTrace) {
+              return _buildError(error);
+            },
+            loading: () {
+              return const LoadingOverlay();
+            },
+          ),
+        ),
+      ]),
     );
   }
 
   Widget _buildList(ChatRoomsResponse data) {
     final chats = data.data;
 
+    if (chats.isEmpty) {
+      return Container();
+    }
+
     return ListView.builder(
         itemCount: chats.length,
         itemBuilder: (context, index) {
-          final chat = chats[index];
-          final comment =
-              chat.lastComment != null && chat.lastComment!.isNotEmpty
-                  ? chat.lastComment!.first.comment
-                  : 'NO COMMENT';
+          final ChatRoom chat = chats[index];
+          final comment = chat.lastComment != null
+              ? chat.lastComment!.comment
+              : 'NO COMMENT';
 
           return ListTile(
             title: Text(chat.title),
@@ -69,7 +110,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
             trailing: chat.lastComment != null
                 ? Text(ref
                     .watch(dateFormatterProvider)
-                    .format(chat.lastComment!.first.createdAt))
+                    .format(chat.lastComment!.createdAt))
                 : null,
             onTap: () {
               // ref.read(selectedProjectProvider.notifier).update(project);
@@ -96,13 +137,10 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           const SizedBox(
             height: 20,
           ),
-          const SizedBox(
-            height: 20,
-          ),
-          ElevatedButton(
+          FilledButton(
             onPressed: () {
               // reload chat rooms
-              ref.read(chatsControllerProvider.notifier).get();
+              ref.invalidate(chatRoomsProvider);
             },
             child: const Text('Try Again'),
           ),
