@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pips/presentation/controllers/theme_controller.dart';
 
 import '../../application/app_router.dart';
@@ -61,9 +62,17 @@ class _MainScreenState extends ConsumerState<MainScreen> {
         final Notifications notification =
             Notifications.fromJson(jsonDecode(next.value?.data));
 
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(
-                "${notification.data.message} from ${notification.data.sender}")));
+        Fluttertoast.showToast(
+          msg: "${notification.data.message} from ${notification.data.sender}",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 3,
+          backgroundColor: Colors.black45,
+          textColor: Colors.white,
+          fontSize: 16.0,
+          webShowClose: true,
+          webBgColor: Theme.of(context).primaryColor,
+        );
       }
     });
 
