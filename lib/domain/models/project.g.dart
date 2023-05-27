@@ -28,6 +28,7 @@ _$_Project _$$_ProjectFromJson(Map<String, dynamic> json) => _$_Project(
       notes: json['notes'] as String?,
       permissions:
           Permissions.fromJson(json['permissions'] as Map<String, dynamic>),
+      commentsCount: json['comments_count'] as int,
     );
 
 Map<String, dynamic> _$$_ProjectToJson(_$_Project instance) =>
@@ -46,6 +47,7 @@ Map<String, dynamic> _$$_ProjectToJson(_$_Project instance) =>
       'contact_information': instance.contactInformation,
       'notes': instance.notes,
       'permissions': instance.permissions,
+      'comments_count': instance.commentsCount,
     };
 
 _$_Permissions _$$_PermissionsFromJson(Map<String, dynamic> json) =>

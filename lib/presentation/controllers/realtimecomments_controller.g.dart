@@ -7,7 +7,7 @@ part of 'realtimecomments_controller.dart';
 // **************************************************************************
 
 String _$realTimeCommentsStreamHash() =>
-    r'7f275c0b62ca2933390269d2a784a288ff943cdc';
+    r'8f2f41927f0369fe674c021092f84d08d5956e4d';
 
 /// Copied from Dart SDK
 class _SystemHash {

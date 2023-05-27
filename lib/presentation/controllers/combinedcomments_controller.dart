@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:dart_pusher_channels/dart_pusher_channels.dart';
 import 'package:flutter/foundation.dart';
+import 'package:pips/presentation/controllers/newcommentstream_controller.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../data/responses/comment_response.dart';
@@ -48,6 +49,15 @@ Stream<List<Comment>> combinedComments(CombinedCommentsRef ref,
     var newComment = CommentResponse.fromJson(jsonDecode(event.data));
 
     comments.add(newComment.comment);
+
+    yield comments;
+  }
+
+  await for (final comment in ref.watch(newCommentLocalStreamProvider.stream)) {
+    print('comment added from local post');
+    print(comment);
+
+    comments.add(comment);
 
     yield comments;
   }

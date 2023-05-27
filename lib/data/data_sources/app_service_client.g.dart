@@ -261,7 +261,7 @@ class _AppServiceClient implements AppServiceClient {
   }
 
   @override
-  Future<ChatRoomsResponse> getChats(ProjectsRequest request) async {
+  Future<ChatRoomsResponse> getChats(ChatsRequest request) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     queryParameters.addAll(request.toJson());

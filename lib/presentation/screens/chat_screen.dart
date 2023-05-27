@@ -29,6 +29,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Chats'),
+        scrolledUnderElevation: 0.0,
         actions: const [
           LogoutButton(),
         ],

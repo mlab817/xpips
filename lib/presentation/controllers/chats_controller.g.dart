@@ -21,12 +21,12 @@ final chatRoomsProvider = FutureProvider<ChatRoomsResponse>.internal(
 
 typedef ChatRoomsRef = FutureProviderRef<ChatRoomsResponse>;
 String _$chatsRequestControllerHash() =>
-    r'f334efdf4b09ede4d9e19c8c4f068281646d0629';
+    r'e1316c1ee9e7a10a7a63be6bcfcc1f50b2409b8d';
 
 /// See also [ChatsRequestController].
 @ProviderFor(ChatsRequestController)
 final chatsRequestControllerProvider =
-    NotifierProvider<ChatsRequestController, ProjectsRequest>.internal(
+    NotifierProvider<ChatsRequestController, ChatsRequest>.internal(
   ChatsRequestController.new,
   name: r'chatsRequestControllerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -36,5 +36,5 @@ final chatsRequestControllerProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$ChatsRequestController = Notifier<ProjectsRequest>;
+typedef _$ChatsRequestController = Notifier<ChatsRequest>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions

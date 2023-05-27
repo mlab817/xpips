@@ -11,6 +11,8 @@ Stream<ChannelReadEvent> realTimeCommentsStream(RealTimeCommentsStreamRef ref,
     {required String uuid}) {
   final PusherChannelsClient client = ref.watch(pusherClientProvider);
 
+  client.connect();
+
   final String channel = "projects.$uuid.comments";
 
   // declare and create the channel

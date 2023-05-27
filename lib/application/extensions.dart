@@ -1,16 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pips/domain/models/models.dart';
 
 import '../data/requests/updateprofile_request.dart';
-import '../domain/models/financial_accomplishment.dart';
-import '../domain/models/fs_cost.dart';
-import '../domain/models/fs_investment.dart';
-import '../domain/models/fullproject.dart';
-import '../domain/models/preset.dart';
-import '../domain/models/rap_cost.dart';
-import '../domain/models/regional_investment.dart';
-import '../domain/models/row_cost.dart';
-import '../domain/models/user.dart';
 
 extension UserToProfileRequest on User {
   UpdateProfileRequest toUpdateProfileRequest() {
@@ -210,5 +202,11 @@ class TotalRow {
       y2029: 0,
       grandTotal: 0,
     );
+  }
+}
+
+extension ToQuickResource on User {
+  UserQuickResource toQuickResource() {
+    return UserQuickResource(id: id, fullname: "$firstName $lastName");
   }
 }

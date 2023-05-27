@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:pips/data/requests/projects_request.dart';
+import 'package:pips/data/requests/chats_request.dart';
 import 'package:pips/data/responses/responses.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -19,7 +19,7 @@ Future<ChatRoomsResponse> chatRooms(ChatRoomsRef ref) async {
 @Riverpod(keepAlive: true)
 class ChatsRequestController extends _$ChatsRequestController {
   @override
-  ProjectsRequest build() => ProjectsRequest.initial();
+  ChatsRequest build() => ChatsRequest.initial();
 
   void update({
     int? perPage,
@@ -38,5 +38,9 @@ class ChatsRequestController extends _$ChatsRequestController {
 
   void nextPage() {
     state = state.copyWith(page: state.page + 1);
+  }
+
+  void updateQuery(String q) {
+    state = state.copyWith(q: q);
   }
 }

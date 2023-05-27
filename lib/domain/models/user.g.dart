@@ -21,6 +21,7 @@ _$_User _$$_UserFromJson(Map<String, dynamic> json) => _$_User(
       office: json['office'] == null
           ? null
           : Office.fromJson(json['office'] as Map<String, dynamic>),
+      avatar: json['avatar'] as String?,
     );
 
 Map<String, dynamic> _$$_UserToJson(_$_User instance) => <String, dynamic>{
@@ -36,4 +37,5 @@ Map<String, dynamic> _$$_UserToJson(_$_User instance) => <String, dynamic>{
       'image_url': instance.imageUrl,
       'name': instance.name,
       'office': instance.office,
+      'avatar': instance.avatar,
     };

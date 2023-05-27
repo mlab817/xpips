@@ -23,7 +23,7 @@ mixin _$Comment {
   int get id => throw _privateConstructorUsedError;
   String get comment => throw _privateConstructorUsedError;
   @JsonKey(name: "user_id")
-  int get userId => throw _privateConstructorUsedError;
+  int? get userId => throw _privateConstructorUsedError;
   @JsonKey(name: "updated_at")
   DateTime get updatedAt => throw _privateConstructorUsedError;
   @JsonKey(name: "created_at")
@@ -31,7 +31,9 @@ mixin _$Comment {
   @JsonKey(name: "is_resolved")
   bool get isResolved => throw _privateConstructorUsedError;
   @JsonKey(name: "user")
-  UserQuickResource get user => throw _privateConstructorUsedError;
+  UserQuickResource? get user => throw _privateConstructorUsedError;
+  bool? get isSent => throw _privateConstructorUsedError;
+  String? get localId => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -46,13 +48,15 @@ abstract class $CommentCopyWith<$Res> {
   $Res call(
       {int id,
       String comment,
-      @JsonKey(name: "user_id") int userId,
+      @JsonKey(name: "user_id") int? userId,
       @JsonKey(name: "updated_at") DateTime updatedAt,
       @JsonKey(name: "created_at") DateTime createdAt,
       @JsonKey(name: "is_resolved") bool isResolved,
-      @JsonKey(name: "user") UserQuickResource user});
+      @JsonKey(name: "user") UserQuickResource? user,
+      bool? isSent,
+      String? localId});
 
-  $UserQuickResourceCopyWith<$Res> get user;
+  $UserQuickResourceCopyWith<$Res>? get user;
 }
 
 /// @nodoc
@@ -70,11 +74,13 @@ class _$CommentCopyWithImpl<$Res, $Val extends Comment>
   $Res call({
     Object? id = null,
     Object? comment = null,
-    Object? userId = null,
+    Object? userId = freezed,
     Object? updatedAt = null,
     Object? createdAt = null,
     Object? isResolved = null,
-    Object? user = null,
+    Object? user = freezed,
+    Object? isSent = freezed,
+    Object? localId = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -85,10 +91,10 @@ class _$CommentCopyWithImpl<$Res, $Val extends Comment>
           ? _value.comment
           : comment // ignore: cast_nullable_to_non_nullable
               as String,
-      userId: null == userId
+      userId: freezed == userId
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
-              as int,
+              as int?,
       updatedAt: null == updatedAt
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
@@ -101,17 +107,29 @@ class _$CommentCopyWithImpl<$Res, $Val extends Comment>
           ? _value.isResolved
           : isResolved // ignore: cast_nullable_to_non_nullable
               as bool,
-      user: null == user
+      user: freezed == user
           ? _value.user
           : user // ignore: cast_nullable_to_non_nullable
-              as UserQuickResource,
+              as UserQuickResource?,
+      isSent: freezed == isSent
+          ? _value.isSent
+          : isSent // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      localId: freezed == localId
+          ? _value.localId
+          : localId // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 
   @override
   @pragma('vm:prefer-inline')
-  $UserQuickResourceCopyWith<$Res> get user {
-    return $UserQuickResourceCopyWith<$Res>(_value.user, (value) {
+  $UserQuickResourceCopyWith<$Res>? get user {
+    if (_value.user == null) {
+      return null;
+    }
+
+    return $UserQuickResourceCopyWith<$Res>(_value.user!, (value) {
       return _then(_value.copyWith(user: value) as $Val);
     });
   }
@@ -127,14 +145,16 @@ abstract class _$$_CommentCopyWith<$Res> implements $CommentCopyWith<$Res> {
   $Res call(
       {int id,
       String comment,
-      @JsonKey(name: "user_id") int userId,
+      @JsonKey(name: "user_id") int? userId,
       @JsonKey(name: "updated_at") DateTime updatedAt,
       @JsonKey(name: "created_at") DateTime createdAt,
       @JsonKey(name: "is_resolved") bool isResolved,
-      @JsonKey(name: "user") UserQuickResource user});
+      @JsonKey(name: "user") UserQuickResource? user,
+      bool? isSent,
+      String? localId});
 
   @override
-  $UserQuickResourceCopyWith<$Res> get user;
+  $UserQuickResourceCopyWith<$Res>? get user;
 }
 
 /// @nodoc
@@ -149,11 +169,13 @@ class __$$_CommentCopyWithImpl<$Res>
   $Res call({
     Object? id = null,
     Object? comment = null,
-    Object? userId = null,
+    Object? userId = freezed,
     Object? updatedAt = null,
     Object? createdAt = null,
     Object? isResolved = null,
-    Object? user = null,
+    Object? user = freezed,
+    Object? isSent = freezed,
+    Object? localId = freezed,
   }) {
     return _then(_$_Comment(
       id: null == id
@@ -164,10 +186,10 @@ class __$$_CommentCopyWithImpl<$Res>
           ? _value.comment
           : comment // ignore: cast_nullable_to_non_nullable
               as String,
-      userId: null == userId
+      userId: freezed == userId
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
-              as int,
+              as int?,
       updatedAt: null == updatedAt
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
@@ -180,10 +202,18 @@ class __$$_CommentCopyWithImpl<$Res>
           ? _value.isResolved
           : isResolved // ignore: cast_nullable_to_non_nullable
               as bool,
-      user: null == user
+      user: freezed == user
           ? _value.user
           : user // ignore: cast_nullable_to_non_nullable
-              as UserQuickResource,
+              as UserQuickResource?,
+      isSent: freezed == isSent
+          ? _value.isSent
+          : isSent // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      localId: freezed == localId
+          ? _value.localId
+          : localId // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -194,11 +224,13 @@ class _$_Comment implements _Comment {
   _$_Comment(
       {required this.id,
       required this.comment,
-      @JsonKey(name: "user_id") required this.userId,
+      @JsonKey(name: "user_id") this.userId,
       @JsonKey(name: "updated_at") required this.updatedAt,
       @JsonKey(name: "created_at") required this.createdAt,
       @JsonKey(name: "is_resolved") required this.isResolved,
-      @JsonKey(name: "user") required this.user});
+      @JsonKey(name: "user") this.user,
+      this.isSent,
+      this.localId});
 
   factory _$_Comment.fromJson(Map<String, dynamic> json) =>
       _$$_CommentFromJson(json);
@@ -209,7 +241,7 @@ class _$_Comment implements _Comment {
   final String comment;
   @override
   @JsonKey(name: "user_id")
-  final int userId;
+  final int? userId;
   @override
   @JsonKey(name: "updated_at")
   final DateTime updatedAt;
@@ -221,11 +253,15 @@ class _$_Comment implements _Comment {
   final bool isResolved;
   @override
   @JsonKey(name: "user")
-  final UserQuickResource user;
+  final UserQuickResource? user;
+  @override
+  final bool? isSent;
+  @override
+  final String? localId;
 
   @override
   String toString() {
-    return 'Comment(id: $id, comment: $comment, userId: $userId, updatedAt: $updatedAt, createdAt: $createdAt, isResolved: $isResolved, user: $user)';
+    return 'Comment(id: $id, comment: $comment, userId: $userId, updatedAt: $updatedAt, createdAt: $createdAt, isResolved: $isResolved, user: $user, isSent: $isSent, localId: $localId)';
   }
 
   @override
@@ -242,13 +278,15 @@ class _$_Comment implements _Comment {
                 other.createdAt == createdAt) &&
             (identical(other.isResolved, isResolved) ||
                 other.isResolved == isResolved) &&
-            (identical(other.user, user) || other.user == user));
+            (identical(other.user, user) || other.user == user) &&
+            (identical(other.isSent, isSent) || other.isSent == isSent) &&
+            (identical(other.localId, localId) || other.localId == localId));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType, id, comment, userId, updatedAt, createdAt, isResolved, user);
+  int get hashCode => Object.hash(runtimeType, id, comment, userId, updatedAt,
+      createdAt, isResolved, user, isSent, localId);
 
   @JsonKey(ignore: true)
   @override
@@ -266,14 +304,15 @@ class _$_Comment implements _Comment {
 
 abstract class _Comment implements Comment {
   factory _Comment(
-          {required final int id,
-          required final String comment,
-          @JsonKey(name: "user_id") required final int userId,
-          @JsonKey(name: "updated_at") required final DateTime updatedAt,
-          @JsonKey(name: "created_at") required final DateTime createdAt,
-          @JsonKey(name: "is_resolved") required final bool isResolved,
-          @JsonKey(name: "user") required final UserQuickResource user}) =
-      _$_Comment;
+      {required final int id,
+      required final String comment,
+      @JsonKey(name: "user_id") final int? userId,
+      @JsonKey(name: "updated_at") required final DateTime updatedAt,
+      @JsonKey(name: "created_at") required final DateTime createdAt,
+      @JsonKey(name: "is_resolved") required final bool isResolved,
+      @JsonKey(name: "user") final UserQuickResource? user,
+      final bool? isSent,
+      final String? localId}) = _$_Comment;
 
   factory _Comment.fromJson(Map<String, dynamic> json) = _$_Comment.fromJson;
 
@@ -283,7 +322,7 @@ abstract class _Comment implements Comment {
   String get comment;
   @override
   @JsonKey(name: "user_id")
-  int get userId;
+  int? get userId;
   @override
   @JsonKey(name: "updated_at")
   DateTime get updatedAt;
@@ -295,7 +334,11 @@ abstract class _Comment implements Comment {
   bool get isResolved;
   @override
   @JsonKey(name: "user")
-  UserQuickResource get user;
+  UserQuickResource? get user;
+  @override
+  bool? get isSent;
+  @override
+  String? get localId;
   @override
   @JsonKey(ignore: true)
   _$$_CommentCopyWith<_$_Comment> get copyWith =>

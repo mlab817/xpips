@@ -48,6 +48,8 @@ mixin _$Project {
   String? get notes => throw _privateConstructorUsedError;
   @JsonKey(name: "permissions")
   Permissions get permissions => throw _privateConstructorUsedError;
+  @JsonKey(name: "comments_count")
+  int get commentsCount => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -73,7 +75,8 @@ abstract class $ProjectCopyWith<$Res> {
       @JsonKey(name: "is_read") bool isRead,
       @JsonKey(name: "contact_information") String? contactInformation,
       @JsonKey(name: "notes") String? notes,
-      @JsonKey(name: "permissions") Permissions permissions});
+      @JsonKey(name: "permissions") Permissions permissions,
+      @JsonKey(name: "comments_count") int commentsCount});
 
   $OptionCopyWith<$Res>? get spatialCoverage;
   $OfficeCopyWith<$Res>? get office;
@@ -108,6 +111,7 @@ class _$ProjectCopyWithImpl<$Res, $Val extends Project>
     Object? contactInformation = freezed,
     Object? notes = freezed,
     Object? permissions = null,
+    Object? commentsCount = null,
   }) {
     return _then(_value.copyWith(
       uuid: null == uuid
@@ -166,6 +170,10 @@ class _$ProjectCopyWithImpl<$Res, $Val extends Project>
           ? _value.permissions
           : permissions // ignore: cast_nullable_to_non_nullable
               as Permissions,
+      commentsCount: null == commentsCount
+          ? _value.commentsCount
+          : commentsCount // ignore: cast_nullable_to_non_nullable
+              as int,
     ) as $Val);
   }
 
@@ -235,7 +243,8 @@ abstract class _$$_ProjectCopyWith<$Res> implements $ProjectCopyWith<$Res> {
       @JsonKey(name: "is_read") bool isRead,
       @JsonKey(name: "contact_information") String? contactInformation,
       @JsonKey(name: "notes") String? notes,
-      @JsonKey(name: "permissions") Permissions permissions});
+      @JsonKey(name: "permissions") Permissions permissions,
+      @JsonKey(name: "comments_count") int commentsCount});
 
   @override
   $OptionCopyWith<$Res>? get spatialCoverage;
@@ -271,6 +280,7 @@ class __$$_ProjectCopyWithImpl<$Res>
     Object? contactInformation = freezed,
     Object? notes = freezed,
     Object? permissions = null,
+    Object? commentsCount = null,
   }) {
     return _then(_$_Project(
       uuid: null == uuid
@@ -329,6 +339,10 @@ class __$$_ProjectCopyWithImpl<$Res>
           ? _value.permissions
           : permissions // ignore: cast_nullable_to_non_nullable
               as Permissions,
+      commentsCount: null == commentsCount
+          ? _value.commentsCount
+          : commentsCount // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -350,7 +364,8 @@ class _$_Project implements _Project {
       @JsonKey(name: "is_read") required this.isRead,
       @JsonKey(name: "contact_information") this.contactInformation,
       @JsonKey(name: "notes") this.notes,
-      @JsonKey(name: "permissions") required this.permissions});
+      @JsonKey(name: "permissions") required this.permissions,
+      @JsonKey(name: "comments_count") required this.commentsCount});
 
   factory _$_Project.fromJson(Map<String, dynamic> json) =>
       _$$_ProjectFromJson(json);
@@ -397,10 +412,13 @@ class _$_Project implements _Project {
   @override
   @JsonKey(name: "permissions")
   final Permissions permissions;
+  @override
+  @JsonKey(name: "comments_count")
+  final int commentsCount;
 
   @override
   String toString() {
-    return 'Project(uuid: $uuid, title: $title, totalCost: $totalCost, isLocked: $isLocked, updatedAt: $updatedAt, pipolCode: $pipolCode, description: $description, spatialCoverage: $spatialCoverage, office: $office, user: $user, isRead: $isRead, contactInformation: $contactInformation, notes: $notes, permissions: $permissions)';
+    return 'Project(uuid: $uuid, title: $title, totalCost: $totalCost, isLocked: $isLocked, updatedAt: $updatedAt, pipolCode: $pipolCode, description: $description, spatialCoverage: $spatialCoverage, office: $office, user: $user, isRead: $isRead, contactInformation: $contactInformation, notes: $notes, permissions: $permissions, commentsCount: $commentsCount)';
   }
 
   @override
@@ -429,7 +447,9 @@ class _$_Project implements _Project {
                 other.contactInformation == contactInformation) &&
             (identical(other.notes, notes) || other.notes == notes) &&
             (identical(other.permissions, permissions) ||
-                other.permissions == permissions));
+                other.permissions == permissions) &&
+            (identical(other.commentsCount, commentsCount) ||
+                other.commentsCount == commentsCount));
   }
 
   @JsonKey(ignore: true)
@@ -449,7 +469,8 @@ class _$_Project implements _Project {
       isRead,
       contactInformation,
       notes,
-      permissions);
+      permissions,
+      commentsCount);
 
   @JsonKey(ignore: true)
   @override
@@ -494,7 +515,9 @@ abstract class _Project implements Project {
       @JsonKey(name: "notes")
           final String? notes,
       @JsonKey(name: "permissions")
-          required final Permissions permissions}) = _$_Project;
+          required final Permissions permissions,
+      @JsonKey(name: "comments_count")
+          required final int commentsCount}) = _$_Project;
 
   factory _Project.fromJson(Map<String, dynamic> json) = _$_Project.fromJson;
 
@@ -540,6 +563,9 @@ abstract class _Project implements Project {
   @override
   @JsonKey(name: "permissions")
   Permissions get permissions;
+  @override
+  @JsonKey(name: "comments_count")
+  int get commentsCount;
   @override
   @JsonKey(ignore: true)
   _$$_ProjectCopyWith<_$_Project> get copyWith =>

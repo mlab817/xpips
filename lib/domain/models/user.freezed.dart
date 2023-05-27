@@ -43,6 +43,8 @@ mixin _$User {
   String? get name => throw _privateConstructorUsedError;
   @JsonKey(name: "office")
   Office? get office => throw _privateConstructorUsedError;
+  @JsonKey(name: "avatar")
+  String? get avatar => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -66,7 +68,8 @@ abstract class $UserCopyWith<$Res> {
       @JsonKey(name: "contact_number") String? contactNumber,
       @JsonKey(name: "image_url") String? imageUrl,
       String? name,
-      @JsonKey(name: "office") Office? office});
+      @JsonKey(name: "office") Office? office,
+      @JsonKey(name: "avatar") String? avatar});
 
   $OfficeCopyWith<$Res>? get office;
 }
@@ -96,6 +99,7 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
     Object? imageUrl = freezed,
     Object? name = freezed,
     Object? office = freezed,
+    Object? avatar = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -146,6 +150,10 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
           ? _value.office
           : office // ignore: cast_nullable_to_non_nullable
               as Office?,
+      avatar: freezed == avatar
+          ? _value.avatar
+          : avatar // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 
@@ -180,7 +188,8 @@ abstract class _$$_UserCopyWith<$Res> implements $UserCopyWith<$Res> {
       @JsonKey(name: "contact_number") String? contactNumber,
       @JsonKey(name: "image_url") String? imageUrl,
       String? name,
-      @JsonKey(name: "office") Office? office});
+      @JsonKey(name: "office") Office? office,
+      @JsonKey(name: "avatar") String? avatar});
 
   @override
   $OfficeCopyWith<$Res>? get office;
@@ -207,6 +216,7 @@ class __$$_UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res, _$_User>
     Object? imageUrl = freezed,
     Object? name = freezed,
     Object? office = freezed,
+    Object? avatar = freezed,
   }) {
     return _then(_$_User(
       id: null == id
@@ -257,6 +267,10 @@ class __$$_UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res, _$_User>
           ? _value.office
           : office // ignore: cast_nullable_to_non_nullable
               as Office?,
+      avatar: freezed == avatar
+          ? _value.avatar
+          : avatar // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -276,7 +290,8 @@ class _$_User implements _User {
       @JsonKey(name: "contact_number") this.contactNumber,
       @JsonKey(name: "image_url") this.imageUrl,
       this.name,
-      @JsonKey(name: "office") this.office});
+      @JsonKey(name: "office") this.office,
+      @JsonKey(name: "avatar") this.avatar});
 
   factory _$_User.fromJson(Map<String, dynamic> json) => _$$_UserFromJson(json);
 
@@ -315,6 +330,9 @@ class _$_User implements _User {
   @override
   @JsonKey(name: "office")
   final Office? office;
+  @override
+  @JsonKey(name: "avatar")
+  final String? avatar;
 
   @override
   bool operator ==(dynamic other) {
@@ -339,7 +357,8 @@ class _$_User implements _User {
             (identical(other.imageUrl, imageUrl) ||
                 other.imageUrl == imageUrl) &&
             (identical(other.name, name) || other.name == name) &&
-            (identical(other.office, office) || other.office == office));
+            (identical(other.office, office) || other.office == office) &&
+            (identical(other.avatar, avatar) || other.avatar == avatar));
   }
 
   @JsonKey(ignore: true)
@@ -357,7 +376,8 @@ class _$_User implements _User {
       contactNumber,
       imageUrl,
       name,
-      office);
+      office,
+      avatar);
 
   @JsonKey(ignore: true)
   @override
@@ -386,7 +406,8 @@ abstract class _User implements User {
       @JsonKey(name: "contact_number") final String? contactNumber,
       @JsonKey(name: "image_url") final String? imageUrl,
       final String? name,
-      @JsonKey(name: "office") final Office? office}) = _$_User;
+      @JsonKey(name: "office") final Office? office,
+      @JsonKey(name: "avatar") final String? avatar}) = _$_User;
 
   factory _User.fromJson(Map<String, dynamic> json) = _$_User.fromJson;
 
@@ -425,6 +446,9 @@ abstract class _User implements User {
   @override
   @JsonKey(name: "office")
   Office? get office;
+  @override
+  @JsonKey(name: "avatar")
+  String? get avatar;
   @override
   @JsonKey(ignore: true)
   _$$_UserCopyWith<_$_User> get copyWith => throw _privateConstructorUsedError;

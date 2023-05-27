@@ -3,12 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:pips/application/providers/searchhistory_provider.dart';
-import 'package:pips/domain/models/pagination.dart';
 import 'package:pips/domain/models/pipsstatus.dart';
 import 'package:pips/presentation/controllers/options_controller.dart';
 
 import '../../application/app_router.dart';
-import '../../domain/models/project.dart';
 import '../controllers/home_controller.dart';
 import '../widgets/project_list_tile.dart';
 
@@ -27,9 +25,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   final TextEditingController _searchController = TextEditingController();
 
-  List<Project>? _projects;
-  Pagination? _pagination;
-
   void _showFilters() {
     final optionsAsync = ref.watch(optionsControllerProvider);
 
@@ -38,7 +33,29 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         enableDrag: true,
         context: context,
         builder: (context) {
-          return Container();
+          return optionsAsync.when(
+              data: (data) {
+                return Column(children: [
+                  Row(
+                    children: [
+                      const Text('Apply Filters'),
+                      const Spacer(),
+                      IconButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        icon: const Icon(Icons.close),
+                      ),
+                    ],
+                  ),
+                ]);
+              },
+              error: (error, stacktrace) {
+                return Center(
+                  child: Text(error.toString()),
+                );
+              },
+              loading: () => const CircularProgressIndicator());
         });
   }
 
@@ -321,7 +338,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       const SizedBox(
                         width: 10,
                       ),
-                      _pagination != null ? _buildPageSelector() : Container(),
+                      _buildPageSelector(),
                     ],
                   ),
                 ),
@@ -344,11 +361,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     return Expanded(
       child: projectsAsync.when(
         data: (data) {
-          setState(() {
-            _projects = data.data;
-            _pagination = data.meta.pagination;
-          });
-
           return SlidableAutoCloseBehavior(
             closeWhenOpened: true,
             child: ListView.builder(
@@ -369,30 +381,48 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   Widget _buildPageSelector() {
-    if (_pagination == null) {
-      return Container();
-    }
+    final valueAsync = ref.watch(homeScreenControllerProvider);
 
-    final lastPage = _pagination!.last;
+    return valueAsync.when(
+      data: (data) {
+        final int currentPage = data.meta.pagination.current;
+        final int lastPage = data.meta.pagination.last;
 
-    return DropdownButton(
-        value: _page,
-        focusColor: Colors.transparent,
-        underline: Container(),
-        items: List.generate(lastPage, (index) {
-          return DropdownMenuItem<int>(
-              value: index + 1,
-              child: Text("Page ${index + 1} of ${_pagination!.last}"));
-        }),
-        onChanged: (int? newValue) {
-          setState(() {
-            _page = newValue!;
-          });
-
-          ref
-              .read(projectsRequestControllerProvider.notifier)
-              .update(page: newValue);
-        });
+        return DropdownButton(
+            value: currentPage,
+            focusColor: Colors.transparent,
+            underline: Container(),
+            items: List.generate(lastPage, (index) {
+              final currentValue = index + 1;
+              return DropdownMenuItem<int>(
+                  enabled: currentValue != currentPage,
+                  // disable when currently selected
+                  value: currentValue,
+                  child: Text("Page $currentValue of $lastPage"));
+            }),
+            onChanged: (int? newValue) {
+              ref
+                  .read(projectsRequestControllerProvider.notifier)
+                  .update(page: newValue);
+            });
+      },
+      error: (error, stacktrace) {
+        return Text(error.toString());
+      },
+      loading: () => const Row(
+        children: <Widget>[
+          SizedBox(
+            height: 20,
+            width: 20,
+            child: CircularProgressIndicator(),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Text('Loading...'),
+        ],
+      ),
+    );
   }
 
   Widget _buildSearchBox() {

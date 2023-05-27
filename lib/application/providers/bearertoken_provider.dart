@@ -1,8 +1,6 @@
-import 'dart:convert';
-
-import 'package:flutter/foundation.dart';
-import 'package:pips/application/providers/sharedpreferences.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+import 'sharedpreferences.dart';
 
 part 'bearertoken_provider.g.dart';
 

@@ -24,6 +24,7 @@ class Project with _$Project {
     @JsonKey(name: "contact_information") String? contactInformation,
     @JsonKey(name: "notes") String? notes,
     @JsonKey(name: "permissions") required Permissions permissions,
+    @JsonKey(name: "comments_count") required int commentsCount,
   }) = _Project;
 
   factory Project.fromJson(Map<String, dynamic> json) =>

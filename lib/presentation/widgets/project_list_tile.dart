@@ -229,11 +229,27 @@ class _ProjectListTileState extends ConsumerState<ProjectListTile> {
         tileColor: _project.isRead
             ? Colors.transparent
             : Theme.of(context).hoverColor.withAlpha(9),
-        trailing: Text(formatDate(_project.updatedAt)),
-        leading: CircleAvatar(
-          child: Text(
-            _project.user?.fullname?.substring(0, 2).toUpperCase() ?? 'NA',
+        trailing: Padding(
+          padding: const EdgeInsets.only(top: 8.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text(formatDate(_project.updatedAt)),
+            ],
           ),
+        ),
+        leading: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Tooltip(
+              message: _project.user?.fullname ?? 'NA',
+              child: CircleAvatar(
+                child: Text(
+                  _project.user?.avatar ?? 'NA',
+                ),
+              ),
+            ),
+          ],
         ),
         subtitle: Text(
           _project.title,
@@ -241,9 +257,33 @@ class _ProjectListTileState extends ConsumerState<ProjectListTile> {
           overflow: TextOverflow.ellipsis,
           style: Theme.of(context).textTheme.bodyMedium,
         ),
-        title: Text(
-          _project.office?.acronym.toUpperCase() ?? 'OFFICE',
-          style: Theme.of(context).textTheme.titleSmall,
+        title: Padding(
+          padding: const EdgeInsets.all(0.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Text(
+                    _project.office?.acronym.toUpperCase() ?? 'OFFICE',
+                    style: Theme.of(context).textTheme.titleSmall,
+                  ),
+                  const Spacer(),
+                  if (_project.commentsCount > 0)
+                    Badge(
+                      label: Text(
+                        _project.commentsCount.toString(),
+                        style: const TextStyle(fontSize: 8.0),
+                      ),
+                      child: const Icon(
+                        Icons.chat_bubble_outline,
+                        size: 20.0,
+                      ),
+                    ),
+                ],
+              ),
+            ],
+          ),
         ),
         onTap: _showDialog,
       ),

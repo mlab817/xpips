@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pips/application/providers/dateformatter_provider.dart';
+import 'package:pips/presentation/controllers/currentuser_controller.dart';
 
 import '../../domain/models/models.dart';
 
-class MessageBubble extends StatefulWidget {
+class MessageBubble extends ConsumerStatefulWidget {
   const MessageBubble({Key? key, required this.comment}) : super(key: key);
 
   final Comment comment;
 
   @override
-  State<MessageBubble> createState() => _MessageBubbleState();
+  ConsumerState<MessageBubble> createState() => _MessageBubbleState();
 }
 
-class _MessageBubbleState extends State<MessageBubble>
+class _MessageBubbleState extends ConsumerState<MessageBubble>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _animation;
@@ -49,20 +52,71 @@ class _MessageBubbleState extends State<MessageBubble>
 
   @override
   Widget build(BuildContext context) {
+    final currentUserId = ref.watch(currentUserProvider)?.id;
+    final comment = widget.comment;
+
+    // if the user added the comment, display on the right
+    if (comment.userId == currentUserId) {
+      return ListTile(
+        title: Row(
+          children: [
+            Text(
+              ref.watch(dateFormatterProvider).format(widget.comment.createdAt),
+              style: Theme.of(context).textTheme.labelSmall,
+            ),
+            const Spacer(),
+            Container(
+              padding: const EdgeInsets.symmetric(
+                vertical: 4.0,
+                horizontal: 8.0,
+              ),
+              decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor,
+                  borderRadius: BorderRadius.circular(50)),
+              child: Text(
+                widget.comment.comment,
+                style: const TextStyle(
+                  fontSize: 14,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    // default: display on the left
     return SizeTransition(
       sizeFactor: _animation,
       child: ListTile(
         title: Row(
           children: [
-            const Icon(Icons.person),
+            Tooltip(
+              message: widget.comment.user?.fullname,
+              child: const Icon(Icons.person),
+            ),
             const SizedBox(width: 8),
             Container(
-              padding: const EdgeInsets.all(8.0),
-              decoration: BoxDecoration(color: Theme.of(context).primaryColor),
+              padding: const EdgeInsets.symmetric(
+                vertical: 4.0,
+                horizontal: 8.0,
+              ),
+              decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor,
+                  borderRadius: BorderRadius.circular(50)),
               child: Text(
                 widget.comment.comment,
-                style: const TextStyle(fontSize: 16),
+                style: const TextStyle(
+                  fontSize: 14,
+                  color: Colors.white,
+                ),
               ),
+            ),
+            const Spacer(),
+            Text(
+              ref.watch(dateFormatterProvider).format(widget.comment.createdAt),
+              style: Theme.of(context).textTheme.labelSmall,
             ),
           ],
         ),

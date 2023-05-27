@@ -13,4 +13,8 @@ class UserQuickResource with _$UserQuickResource {
 
   factory UserQuickResource.fromJson(Map<String, dynamic> json) =>
       _$UserQuickResourceFromJson(json);
+
+  static UserQuickResource initial() {
+    return UserQuickResource(id: 1, fullname: '');
+  }
 }

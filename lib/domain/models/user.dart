@@ -5,7 +5,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'office.dart';
 
 part 'user.freezed.dart';
-
 part 'user.g.dart';
 
 @freezed
@@ -23,6 +22,7 @@ class User with _$User {
     @JsonKey(name: "image_url") String? imageUrl,
     String? name,
     @JsonKey(name: "office") Office? office,
+    @JsonKey(name: "avatar") String? avatar,
   }) = _User;
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);

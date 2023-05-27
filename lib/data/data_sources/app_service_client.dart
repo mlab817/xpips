@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:pips/data/requests/chats_request.dart';
 import 'package:pips/data/requests/updatepassword_request.dart';
 import 'package:retrofit/http.dart';
 
@@ -75,7 +76,7 @@ abstract class AppServiceClient {
   Future<ChatRoomResponse> getChatRoom(@Path('id') int id);
 
   @GET('/chats')
-  Future<ChatRoomsResponse> getChats(@Queries() ProjectsRequest request);
+  Future<ChatRoomsResponse> getChats(@Queries() ChatsRequest request);
 
   @GET('/pips-statuses')
   Future<PipsStatusResponse> getPipsStatuses();
