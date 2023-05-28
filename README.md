@@ -1,4 +1,4 @@
-![logo](https://github.com/mlab817/xpips/blob/main/assets/logo.png?raw=true =150x150)
+<img src="https://github.com/mlab817/xpips/blob/main/assets/logo.png?raw=true" width="150">
 
 # PIPS Cross-Platform
 
