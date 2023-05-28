@@ -1,8 +1,18 @@
-<img src="https://github.com/mlab817/xpips/blob/main/assets/logo.png?raw=true" width="150">
+<p align="center">
+<img src="https://github.com/mlab817/xpips/blob/main/assets/logo.png?raw=true" width="100">
+</p>
 
-# PIPS Cross-Platform
+<p align="center">
+Developed by [Mark Lester Bolotaolo](https://github.com/mlab817)
+</p>
 
-A new Flutter project for PIPS app.
+# About PIPS
+
+Public Investment Program System (or PIPS) is the official database system for the priority programs and projects of the Department of Agriculture (Philippines) for submission to the National Economic and Development Authority (NEDA) for inclusion the Public Investment Program (PIP) and the Three-Year Rolling Infrastructure Program (TRIP).
+
+It is accessible by authorized investment programming coordinators from the various operating units of the Department.
+
+It is created using Dart/Flutter.
 
 ## Packages Used
 
@@ -24,3 +34,5 @@ A new Flutter project for PIPS app.
 - `package_info_plus` to determine current app version
 - `image_network` for working around CORS error for images displayed in canvas for web
 - `fluttertoast` for displaying toasts
+
+
