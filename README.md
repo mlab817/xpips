@@ -1,4 +1,4 @@
-![logo](assets/logo.png =150x150)
+![logo](https://github.com/mlab817/xpips/blob/main/assets/logo.png?raw=true =150x150)
 
 # PIPS Cross-Platform
 
