@@ -1,4 +1,4 @@
-![logo](assets/logo.png)
+![logo](assets/logo.png =150x150)
 
 # PIPS Cross-Platform
 
