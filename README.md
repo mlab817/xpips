@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-Developed by [Mark Lester Bolotaolo](https://github.com/mlab817)
+Developed by <a href="https://github.com/mlab817">Mark Lester Bolotaolo</a>
 </p>
 
 # About PIPS
