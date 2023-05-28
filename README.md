@@ -1,3 +1,5 @@
+![logo](assets/logo.png)
+
 # PIPS Cross-Platform
 
 A new Flutter project for PIPS app.
