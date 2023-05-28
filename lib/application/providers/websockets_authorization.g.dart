@@ -7,7 +7,7 @@ part of 'websockets_authorization.dart';
 // **************************************************************************
 
 String _$endpointAuthorizationDelegateHash() =>
-    r'83eba16c588b262409928d676846ed8c9a5792ed';
+    r'8d6ddf1b35471450da5cdc27fb0c63d79891807e';
 
 /// See also [endpointAuthorizationDelegate].
 @ProviderFor(endpointAuthorizationDelegate)

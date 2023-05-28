@@ -4,6 +4,7 @@ import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pips/application/providers/onesignal_provider.dart';
 import 'package:pips/presentation/controllers/currentuser_controller.dart';
 import 'package:pips/presentation/controllers/theme_controller.dart';
 
@@ -19,6 +20,17 @@ class MyApp extends ConsumerWidget {
     print("currentUser $currentUser");
 
     final AppRouter appRouter = AppRouter(isAuthenticated: currentUser != null);
+
+    final onesignalAsync = ref.watch(onesignalProvider);
+
+    onesignalAsync.when(data: (data) {
+      print('loaded onesignal');
+    }, error: (error, stacktrace) {
+      print(error);
+      print(stacktrace);
+    }, loading: () {
+      print('loading onesignal');
+    });
 
     return MaterialApp.router(
       title: 'PIPS',

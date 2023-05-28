@@ -3,10 +3,15 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'config.g.dart';
 
 class Config {
-  static const String domain = 'pips.da.gov.ph';
-  static const String baseUrl = 'https://$domain';
-  static const String baseApiUrl = 'https://api.$domain';
-  static const String oneSignalAppId = "248df894-4145-4507-97c9-4a279924177e";
+  final String _domain = 'pips.da.gov.ph';
+  final String _oneSignalAppId = 'f601fb30-7df7-437e-a51f-be3f72997245';
+
+  String get domain => _domain;
+  String get baseUrl => 'https://$domain';
+  String get baseApiUrl => 'https://api.$domain';
+  String get wsAuthUrl => "$baseApiUrl/api/broadcasting/auth";
+  String get generatePdfBaseUrl => "$baseUrl/generate-pdf/";
+  String get oneSignalAppId => _oneSignalAppId;
 }
 
 @Riverpod(keepAlive: true)

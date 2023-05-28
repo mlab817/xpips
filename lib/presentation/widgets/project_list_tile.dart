@@ -24,7 +24,7 @@ class _ProjectListTileState extends ConsumerState<ProjectListTile> {
   late Project _project;
 
   Future<void> _openInNewWindow() async {
-    final rawUrl = "${Config.baseUrl}/generate-pdf/${_project.uuid}";
+    final rawUrl = ref.watch(configProvider).generatePdfBaseUrl + _project.uuid;
     final url = Uri.parse(rawUrl);
     //
     if (await canLaunchUrl(url)) {
