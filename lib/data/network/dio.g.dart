@@ -1,24 +1,23 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'upload_repository.dart';
+part of 'dio.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$uploadRepositoryHash() => r'1c7da4582ab673ef29b02a1848d0dbc76cd99049';
+String _$dioHash() => r'0a5ff92700d02dd4feaa131551ac0fcb564ccf0e';
 
-/// See also [uploadRepository].
-@ProviderFor(uploadRepository)
-final uploadRepositoryProvider = Provider<UploadRepository>.internal(
-  uploadRepository,
-  name: r'uploadRepositoryProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$uploadRepositoryHash,
+/// See also [dio].
+@ProviderFor(dio)
+final dioProvider = Provider<Dio>.internal(
+  dio,
+  name: r'dioProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$dioHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef UploadRepositoryRef = ProviderRef<UploadRepository>;
+typedef DioRef = ProviderRef<Dio>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions

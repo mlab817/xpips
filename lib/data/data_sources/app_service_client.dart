@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:pips/data/requests/chats_request.dart';
 import 'package:pips/data/requests/updatepassword_request.dart';
-import 'package:retrofit/http.dart';
+import 'package:retrofit/retrofit.dart';
 
 import '../../application/config.dart';
 import '../../data/requests/pagination_request.dart';
@@ -36,7 +36,7 @@ import '../responses/upload_response.dart';
 
 part 'app_service_client.g.dart';
 
-@RestApi(baseUrl: Config.baseApiUrl)
+@RestApi(baseUrl: Config.apiUrl)
 abstract class AppServiceClient {
   factory AppServiceClient(Dio dio, {String baseUrl}) = _AppServiceClient;
 
@@ -93,6 +93,7 @@ abstract class AppServiceClient {
   @POST("/upload")
   Future<UploadResponse> upload({
     @Part() required File file,
+    @SendProgress() ProgressCallback? sendProgress,
   });
 
   @POST('/request-reactivation')

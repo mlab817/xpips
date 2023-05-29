@@ -1,67 +1,52 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../application/config.dart';
 import '../../application/providers/bearertoken_provider.dart';
 
-class DioFactory extends Notifier<Dio> {
-  Dio getDio() {
-    Dio dio = Dio();
+part 'dio.g.dart';
 
-    // retrieve token from shared_prefs
-    final token = ref.watch(bearerTokenProvider);
+@Riverpod(keepAlive: true)
+Dio dio(DioRef ref) {
+  Dio dio = Dio();
 
-    if (kDebugMode) {
-      print("token $token");
-    }
+  // retrieve token from shared_prefs
+  final token = ref.watch(bearerTokenProvider);
 
-    Map<String, String> headers = {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'Authorization': 'Bearer ${token.toString()}',
-    };
-
-    dio.options = BaseOptions(
-      baseUrl: Config.baseUrl,
-      headers: headers,
-      connectTimeout: const Duration(seconds: 60),
-      sendTimeout: const Duration(seconds: 60),
-    );
-
-    if (kReleaseMode) {
-      print("release mode no logs");
-    } else {
-      dio.interceptors.add(PrettyDioLogger(
-        request: true,
-        requestHeader: true,
-        requestBody: true,
-        // responseBody: false,
-        // responseHeader: true,
-        // responseBody: true,
-        compact: true,
-        error: true,
-      ));
-    }
-
-    return dio;
+  if (kDebugMode) {
+    print("token $token");
   }
 
-  @override
-  build() {
-    return getDio();
+  Map<String, String> headers = {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    'Authorization': 'Bearer ${token.toString()}',
+  };
+
+  // this will also rebuild if baseApiUrl changes
+  dio.options = BaseOptions(
+    baseUrl: ref.watch(configProvider).baseApiUrl,
+    headers: headers,
+    connectTimeout: const Duration(seconds: 60),
+    sendTimeout: const Duration(seconds: 60),
+  );
+
+  if (kReleaseMode) {
+    print("release mode no logs");
+  } else {
+    dio.interceptors.add(PrettyDioLogger(
+      request: true,
+      requestHeader: true,
+      requestBody: true,
+      // responseBody: false,
+      // responseHeader: true,
+      // responseBody: true,
+      compact: true,
+      error: true,
+    ));
   }
+
+  return dio;
 }
-
-// create factory provider by injecting shared prefs
-final dioFactoryProvider = NotifierProvider<DioFactory, Dio>(() {
-  return DioFactory();
-});
-
-// create dio provider to access the instance created by DioFactory
-final dioProvider = Provider<Dio>((ref) {
-  final dioFactory = ref.watch(dioFactoryProvider);
-
-  return dioFactory;
-});

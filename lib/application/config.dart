@@ -12,6 +12,8 @@ class Config {
   String get wsAuthUrl => "$baseApiUrl/api/broadcasting/auth";
   String get generatePdfBaseUrl => "$baseUrl/generate-pdf/";
   String get oneSignalAppId => _oneSignalAppId;
+
+  static const String apiUrl = 'https://api.pips.da.gov.ph';
 }
 
 @Riverpod(keepAlive: true)

@@ -7,7 +7,7 @@ part of 'pusher_client.dart';
 // **************************************************************************
 
 String _$pusherChannelsOptionsHash() =>
-    r'59aa1b324fb07c3f86b5f9eeb9e0f5f536cdef21';
+    r'ee8e4ef0321a583876dc39546a357844698c092c';
 
 /// See also [pusherChannelsOptions].
 @ProviderFor(pusherChannelsOptions)

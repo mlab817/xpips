@@ -23,10 +23,12 @@ abstract class UploadRepository {
 class UploadRepositoryImplementer implements UploadRepository {
   final AppServiceClient client;
   final Dio dio;
+  final String baseUrl;
 
   UploadRepositoryImplementer({
     required this.client,
     required this.dio,
+    required this.baseUrl,
   });
 
   @override
@@ -58,7 +60,7 @@ class UploadRepositoryImplementer implements UploadRepository {
     formData.files.add(fileEntry);
 
     return dio
-        .post("${Config.baseApiUrl}/upload", data: formData)
+        .post("$baseUrl/upload", data: formData)
         .then((response) => UploadResponse.fromJson(response.data));
   }
 }
@@ -66,5 +68,7 @@ class UploadRepositoryImplementer implements UploadRepository {
 @Riverpod(keepAlive: true)
 UploadRepository uploadRepository(UploadRepositoryRef ref) =>
     UploadRepositoryImplementer(
-        client: ref.watch(appServiceClientProvider),
-        dio: ref.watch(dioProvider));
+      client: ref.watch(appServiceClientProvider),
+      dio: ref.watch(dioProvider),
+      baseUrl: ref.watch(configProvider).baseApiUrl,
+    );

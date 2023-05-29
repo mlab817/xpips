@@ -1,5 +1,4 @@
 import 'package:dart_pusher_channels/dart_pusher_channels.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../application/config.dart';
@@ -8,16 +7,16 @@ part 'pusher_client.g.dart';
 
 @Riverpod(keepAlive: true)
 PusherChannelsOptions pusherChannelsOptions(PusherChannelsOptionsRef ref) {
-  return const PusherChannelsOptions.fromHost(
+  return PusherChannelsOptions.fromHost(
 // usually: ws or wss
     scheme: 'wss',
-    host: Config.domain,
+    host: ref.watch(configProvider).domain,
     key: '1b421e8d437e47b9eee3',
 // decide if to send additional metadata in query parameters of the url
     shouldSupplyMetadataQueries: true,
     port: 443,
 // apply custom metadata if needed
-    metadata: PusherChannelsOptionsMetadata.byDefault(),
+    metadata: const PusherChannelsOptionsMetadata.byDefault(),
   );
 }
 

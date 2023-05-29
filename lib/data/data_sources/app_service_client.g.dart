@@ -12,7 +12,9 @@ class _AppServiceClient implements AppServiceClient {
   _AppServiceClient(
     this._dio, {
     this.baseUrl,
-  });
+  }) {
+    baseUrl ??= 'https://api.pips.da.gov.ph';
+  }
 
   final Dio _dio;
 
@@ -376,9 +378,13 @@ class _AppServiceClient implements AppServiceClient {
   }
 
   @override
-  Future<UploadResponse> upload({required File file}) async {
+  Future<UploadResponse> upload({
+    required File file,
+    void Function(int, int)? sendProgress,
+  }) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
+    queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     final _data = FormData();
     _data.files.add(MapEntry(
@@ -399,6 +405,7 @@ class _AppServiceClient implements AppServiceClient {
               '/upload',
               queryParameters: queryParameters,
               data: _data,
+              onSendProgress: sendProgress,
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     final value = UploadResponse.fromJson(_result.data!);
