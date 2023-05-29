@@ -61,6 +61,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(_titles[_currentIndex]),
+        automaticallyImplyLeading: false,
       ),
       drawer: Platform.isAndroid
           ? Drawer(

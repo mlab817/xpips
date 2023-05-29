@@ -90,6 +90,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       appBar: AppBar(
         scrolledUnderElevation: 0.0,
         title: const Text('Home'),
+        automaticallyImplyLeading: false,
         actions: [
           IconButton(
             onPressed: _showFilters,
