@@ -5,8 +5,10 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:pips/application/providers/searchhistory_provider.dart';
 import 'package:pips/domain/models/pipsstatus.dart';
 import 'package:pips/presentation/controllers/options_controller.dart';
+import 'package:pips/presentation/screens/pipolstatus_controller.dart';
 
 import '../../application/app_router.dart';
+import '../../data/repositories/pipolstatus_repository.dart';
 import '../controllers/home_controller.dart';
 import '../widgets/project_list_tile.dart';
 
@@ -21,9 +23,12 @@ class HomeScreen extends ConsumerStatefulWidget {
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   int _page = 1;
   final int _perPage = 25;
-  PipsStatus? _pipsStatus = PipsStatus(id: 1, name: 'Draft', projectsCount: 0);
+  PipsStatus? _pipsStatus;
+  PipolStatus? _pipolStatus;
 
   final TextEditingController _searchController = TextEditingController();
+
+  bool _showAll = true;
 
   void _showFilters() {
     final optionsAsync = ref.watch(optionsControllerProvider);
@@ -83,6 +88,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     double width = size.width;
 
     final menuAsync = ref.watch(pipsStatusControllerProvider);
+    final pipolAsync = ref.watch(pipolStatusControllerProvider);
 
     final projectsRequest = ref.watch(projectsRequestControllerProvider);
 
@@ -103,6 +109,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ? Drawer(
               child: menuAsync.when(
                 data: (data) {
+                  if (menuAsync.isRefreshing) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+
                   return ListView.builder(
                     shrinkWrap: true,
                     itemCount: data.data.length + 1,
@@ -111,11 +123,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         return ListTile(
                           title: const Text('All'),
                           dense: true,
-                          selected: ref
-                                  .watch(projectsRequestControllerProvider)
-                                  .pipsStatuses
-                                  ?.isEmpty ??
-                              false,
+                          selected: _showAll,
                           selectedTileColor: Theme.of(context)
                               .colorScheme
                               .primary
@@ -126,6 +134,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               bottomRight: Radius.circular(50),
                             ),
                           ),
+                          onTap: () {
+                            setState(() {
+                              _showAll = true;
+                            });
+
+                            ref
+                                .read(
+                                    projectsRequestControllerProvider.notifier)
+                                .update(
+                              pipsStatuses: [],
+                              pipolStatuses: [],
+                              page: 1,
+                            );
+                          },
                         );
                       }
 
@@ -215,6 +237,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             ref
                                 .read(pipsStatusControllerProvider.notifier)
                                 .get();
+
+                            ref.invalidate(pipolStatusControllerProvider);
                           },
                           icon: const Icon(Icons.refresh),
                           tooltip: 'Reload',
@@ -232,11 +256,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           bottomRight: Radius.circular(50),
                         ),
                       ),
-                      selected: ref
-                              .watch(projectsRequestControllerProvider)
-                              .pipsStatuses
-                              ?.isEmpty ??
-                          false,
+                      selected: _showAll,
                       title: const Text('ALL'),
                       selectedTileColor: Theme.of(context)
                           .colorScheme
@@ -245,6 +265,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       onTap: () {
                         setState(() {
                           _pipsStatus = null;
+                          _pipolStatus = null;
                         });
 
                         // set pips status to current id and reset to page 1
@@ -252,9 +273,21 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             .read(projectsRequestControllerProvider.notifier)
                             .update(
                           pipsStatuses: [],
+                          pipolStatuses: [],
                           page: 1,
                         );
                       },
+                    ),
+                    // PIPS STATUS MENU
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        'PIPS STATUS',
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodySmall
+                            ?.apply(color: Colors.black54),
+                      ),
                     ),
                     menuAsync.when(
                       data: (data) {
@@ -284,6 +317,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               onTap: () {
                                 setState(() {
                                   _pipsStatus = data.data[index];
+                                  _showAll = false;
                                 });
 
                                 // set pips status to current id and reset to page 1
@@ -291,7 +325,74 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                     .read(projectsRequestControllerProvider
                                         .notifier)
                                     .update(
-                                        pipsStatuses: [data.data[index].id],
+                                  pipsStatuses: [data.data[index].id],
+                                  pipolStatuses: [], // clear pipol status
+                                  page: 1,
+                                );
+                              },
+                            );
+                          },
+                        );
+                      },
+                      error: (error, stackTrace) => Center(
+                        child: Text(error.toString()),
+                      ),
+                      loading: () => const Center(
+                        child: Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: CircularProgressIndicator(),
+                        ),
+                      ),
+                    ),
+                    // PIPOL STATUS MENU
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        'PIPOL STATUS',
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodySmall
+                            ?.apply(color: Colors.black54),
+                      ),
+                    ),
+                    pipolAsync.when(
+                      data: (data) {
+                        return ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: data.data.length,
+                          itemBuilder: (context, index) {
+                            return ListTile(
+                              dense: true,
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.only(
+                                  topRight: Radius.circular(50),
+                                  bottomRight: Radius.circular(50),
+                                ),
+                              ),
+                              selected: projectsRequest.pipolStatuses != null &&
+                                  projectsRequest.pipolStatuses!.isNotEmpty &&
+                                  projectsRequest.pipolStatuses![0] ==
+                                      data.data[index].id,
+                              title: Text(data.data[index].name),
+                              trailing: Text(
+                                  data.data[index].projectsCount.toString()),
+                              selectedTileColor: Theme.of(context)
+                                  .colorScheme
+                                  .primary
+                                  .withOpacity(0.2),
+                              onTap: () {
+                                setState(() {
+                                  _pipolStatus = data.data[index];
+                                  _showAll = false;
+                                });
+
+                                // set pips status to current id and reset to page 1
+                                ref
+                                    .read(projectsRequestControllerProvider
+                                        .notifier)
+                                    .update(
+                                        pipolStatuses: [data.data[index].id],
+                                        pipsStatuses: [], // clear pips status
                                         page: 1);
                               },
                             );

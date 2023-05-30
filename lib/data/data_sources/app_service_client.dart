@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:pips/data/requests/chats_request.dart';
-import 'package:pips/data/requests/updatepassword_request.dart';
+import '../../data/requests/chats_request.dart';
+import '../../data/requests/updatepassword_request.dart';
 import 'package:retrofit/retrofit.dart';
 
 import '../../application/config.dart';
@@ -14,6 +14,7 @@ import '../../data/responses/createproject_response.dart';
 import '../../data/responses/newcomment_response.dart';
 import '../../domain/models/login_credentials.dart';
 import '../../domain/models/notifications.dart';
+import '../repositories/pipolstatus_repository.dart';
 import '../requests/comment_request.dart';
 import '../requests/fullproject_request.dart';
 import '../requests/projects_request.dart';
@@ -117,4 +118,7 @@ abstract class AppServiceClient {
 
   @POST('/update-password')
   Future<void> updatePassword(@Body() UpdatePasswordRequest request);
+
+  @GET('/pipol-statuses')
+  Future<PipolStatusResponse> getPipolStatuses();
 }
