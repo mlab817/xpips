@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../domain/models/models.dart';
 import '../../../controllers/controllers.dart';
-import '../../../screens/papform_screen.dart';
+import '../../papform_screen.dart';
 import '../empty_indicator.dart';
 import '../select_dialog_content.dart';
 import '../success_indicator.dart';

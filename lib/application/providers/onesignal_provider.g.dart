@@ -6,7 +6,7 @@ part of 'onesignal_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$onesignalHash() => r'e51bb8c02f1a591796a865925fa3ff6133355758';
+String _$onesignalHash() => r'b979dd37cc23be60da2f25015a417224018af17e';
 
 /// See also [onesignal].
 @ProviderFor(onesignal)

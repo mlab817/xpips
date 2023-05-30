@@ -66,7 +66,7 @@ class _MessageBubbleState extends ConsumerState<MessageBubble>
             ),
             const Spacer(),
             Container(
-              width: 120,
+              width: 180,
               padding: const EdgeInsets.symmetric(
                 vertical: 4.0,
                 horizontal: 12.0,
@@ -99,7 +99,7 @@ class _MessageBubbleState extends ConsumerState<MessageBubble>
             ),
             const SizedBox(width: 8),
             Container(
-              width: 120,
+              width: 180,
               padding: const EdgeInsets.symmetric(
                 vertical: 4.0,
                 horizontal: 8.0,

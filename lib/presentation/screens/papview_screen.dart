@@ -136,7 +136,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
           ),
           IconButton(
             onPressed: () {
-              // TODO: route to edit
+              AutoRouter.of(context).push(PapEditRoute(uuid: widget.uuid));
             },
             icon: const Icon(Icons.edit),
             tooltip: 'Edit',
@@ -460,14 +460,6 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
               ListTile(
                 title: const Text('Updates'),
                 subtitle: Text(project.updates ?? 'N/A'),
-                onTap: () async {
-                  await Clipboard.setData(
-                          ClipboardData(text: project.updates ?? ''))
-                      .then((_) {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                        content: Text("Updates copied to clipboard")));
-                  });
-                },
               ),
               ListTile(
                 title: const Text('As of'),
@@ -704,6 +696,14 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
               ListTile(
                 title: const Text('Updates'),
                 subtitle: Text(project.updates ?? 'N/A'),
+                onTap: () async {
+                  await Clipboard.setData(
+                          ClipboardData(text: project.updates ?? ''))
+                      .then((_) {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text("Updates copied to clipboard")));
+                  });
+                },
               ),
               ListTile(
                 title: const Text('As of'),

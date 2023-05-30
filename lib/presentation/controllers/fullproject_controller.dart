@@ -1,7 +1,10 @@
+import 'package:pips/application/extensions.dart';
+import 'package:pips/data/repositories/repositories.dart';
+import 'package:pips/data/responses/project_response.dart';
+import 'package:pips/presentation/controllers/controllers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../domain/models/models.dart';
-import 'options_controller.dart';
 
 part 'fullproject_controller.g.dart';
 

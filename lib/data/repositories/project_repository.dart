@@ -1,9 +1,11 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../application/providers/appserviceclient_provider.dart';
 import '../data_sources/app_service_client.dart';
 import '../requests/requests.dart';
 import '../responses/responses.dart';
+
+part 'project_repository.g.dart';
 
 abstract class ProjectRepository {
   Future<ProjectsResponse> getAll(ProjectsRequest input);
@@ -40,8 +42,9 @@ class ProjectRepositoryImplementer implements ProjectRepository {
   }
 }
 
-final projectRepositoryProvider = Provider<ProjectRepositoryImplementer>((ref) {
+@Riverpod(keepAlive: true)
+ProjectRepository projectRepository(ProjectRepositoryRef ref) {
   return ProjectRepositoryImplementer(
     client: ref.watch(appServiceClientProvider),
   );
-});
+}

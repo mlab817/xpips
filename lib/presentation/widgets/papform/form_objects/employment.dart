@@ -5,7 +5,9 @@ import '../../../controllers/fullproject_controller.dart';
 import '../get_input_decoration.dart';
 
 class EmploymentGenerated extends ConsumerStatefulWidget {
-  const EmploymentGenerated({Key? key}) : super(key: key);
+  const EmploymentGenerated({
+    Key? key,
+  }) : super(key: key);
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _EmploymentGenerated();

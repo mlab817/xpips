@@ -14,21 +14,21 @@ import 'package:pips/presentation/widgets/papform/form_objects/update_office.dar
 
 import '../../data/requests/fullproject_request.dart';
 import '../../domain/models/option.dart';
-import '../widgets/papform/empty_indicator.dart';
-import '../widgets/papform/form_objects/physical_status.dart';
-import '../widgets/papform/form_objects/update_description.dart';
-import '../widgets/papform/form_objects/update_financial_accomplishment.dart';
-import '../widgets/papform/form_objects/update_fs_cost.dart';
-import '../widgets/papform/form_objects/update_infra_sectors.dart';
-import '../widgets/papform/form_objects/update_investment_cost.dart';
-import '../widgets/papform/form_objects/update_pap.dart';
-import '../widgets/papform/form_objects/update_pip.dart';
-import '../widgets/papform/form_objects/update_rap.dart';
-import '../widgets/papform/form_objects/update_regional_cost.dart';
-import '../widgets/papform/form_objects/update_title.dart';
-import '../widgets/papform/get_input_decoration.dart';
-import '../widgets/papform/select_dialog_content.dart';
-import '../widgets/papform/success_indicator.dart';
+import 'papform/empty_indicator.dart';
+import 'papform/form_objects/physical_status.dart';
+import 'papform/form_objects/update_description.dart';
+import 'papform/form_objects/update_financial_accomplishment.dart';
+import 'papform/form_objects/update_fs_cost.dart';
+import 'papform/form_objects/update_infra_sectors.dart';
+import 'papform/form_objects/update_investment_cost.dart';
+import 'papform/form_objects/update_pap.dart';
+import 'papform/form_objects/update_pip.dart';
+import 'papform/form_objects/update_rap.dart';
+import 'papform/form_objects/update_regional_cost.dart';
+import 'papform/form_objects/update_title.dart';
+import 'papform/get_input_decoration.dart';
+import 'papform/select_dialog_content.dart';
+import 'papform/success_indicator.dart';
 
 enum Status {
   error,
@@ -36,15 +36,16 @@ enum Status {
   neutral,
 }
 
-@RoutePage()
-class NewPapScreen extends ConsumerStatefulWidget {
-  const NewPapScreen({Key? key}) : super(key: key);
+class PapForm extends ConsumerStatefulWidget {
+  const PapForm({Key? key, this.uuid}) : super(key: key);
+
+  final String? uuid;
 
   @override
-  ConsumerState<NewPapScreen> createState() => _NewPapStateScreen();
+  ConsumerState<PapForm> createState() => _PapForm();
 }
 
-class _NewPapStateScreen extends ConsumerState<NewPapScreen> {
+class _PapForm extends ConsumerState<PapForm> {
   late ScrollController _scrollController;
 
   // for reviewers use only
@@ -338,54 +339,27 @@ class _NewPapStateScreen extends ConsumerState<NewPapScreen> {
       _buildComments(),
     ];
 
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+    return Column(
+      children: [
+        // TODO: Update to form progress
+        LinearProgressIndicator(
+          value: _scrollPercentage,
         ),
-        title: const Text('New Program/Project'),
-        actions: [
-          FilledButton(
-            onPressed: () async {
-              // TODO: handle submit
-              FullProjectRequest projectToSubmit =
-                  FullProjectRequest.fromFullProject(
-                      ref.watch(fullProjectControllerProvider));
-
-              debugPrint(projectToSubmit.toJson().toString());
-
-              // TODO: handle form submission
-            },
-            child: const Text('Save'),
-          ),
-          const SizedBox(width: 16),
-        ],
-      ),
-      body: Column(
-        children: [
-          // TODO: Update to form progress
-          LinearProgressIndicator(
-            value: _scrollPercentage,
-          ),
-          Expanded(
-            // update if linear progress indicator resizes
-            child: SingleChildScrollView(
-              controller: _scrollController,
-              physics: const ClampingScrollPhysics(),
-              child: Padding(
-                padding: const EdgeInsets.only(right: 20),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: children,
-                ),
+        Expanded(
+          // update if linear progress indicator resizes
+          child: SingleChildScrollView(
+            controller: _scrollController,
+            physics: const ClampingScrollPhysics(),
+            child: Padding(
+              padding: const EdgeInsets.only(right: 20),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: children,
               ),
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -1537,7 +1511,10 @@ class _NewPapStateScreen extends ConsumerState<NewPapScreen> {
 class RegularProgram extends ConsumerWidget {
   const RegularProgram({
     super.key,
+    this.uuid,
   });
+
+  final String? uuid;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

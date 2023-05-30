@@ -9,7 +9,6 @@ part 'onesignal_provider.g.dart';
 @Riverpod(keepAlive: true)
 Future<void> onesignal(OnesignalRef ref) async {
   bool requiresConsent = false;
-  String debugLabelString = '';
 
   // only run this code when the platform is android
   if (Platform.isAndroid) {
@@ -20,8 +19,6 @@ Future<void> onesignal(OnesignalRef ref) async {
     OneSignal.shared
         .setNotificationOpenedHandler((OSNotificationOpenedResult result) {
       print('NOTIFICATION OPENED HANDLER CALLED WITH: $result');
-      debugLabelString =
-          "Opened notification: \n${result.notification.jsonRepresentation().replaceAll("\\n", "\n")}";
     });
 
     OneSignal.shared.setNotificationWillShowInForegroundHandler(
@@ -30,16 +27,10 @@ Future<void> onesignal(OnesignalRef ref) async {
 
       /// Display Notification, send null to not display
       event.complete(null);
-
-      debugLabelString =
-          "Notification received in foreground notification: \n${event.notification.jsonRepresentation().replaceAll("\\n", "\n")}";
     });
 
     OneSignal.shared
-        .setInAppMessageClickedHandler((OSInAppMessageAction action) {
-      debugLabelString =
-          "In App Message Clicked: \n${action.jsonRepresentation().replaceAll("\\n", "\n")}";
-    });
+        .setInAppMessageClickedHandler((OSInAppMessageAction action) {});
 
     OneSignal.shared
         .setSubscriptionObserver((OSSubscriptionStateChanges changes) {

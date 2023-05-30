@@ -26,10 +26,11 @@ class UpdateFundingSourceAndImplementation extends ConsumerWidget {
   }
 
   Widget _buildFundingSource(context, ref) {
-    final fundingSource = ref.watch(
-        fullProjectControllerProvider.select((state) => state.fundingSource));
+    final fundingSource = ref
+        .watch(fullProjectControllerProvider)
+        .select((state) => state.fundingSource);
     final type =
-        ref.watch(fullProjectControllerProvider.select((state) => state.type));
+        ref.watch(fullProjectControllerProvider).select((state) => state.type);
 
     return ListTile(
       title: const Text('Main Funding Source'),
@@ -48,8 +49,9 @@ class UpdateFundingSourceAndImplementation extends ConsumerWidget {
   }
 
   Future<void> _selectFundingSource(context, ref) async {
-    final fundingSource = ref.watch(
-        fullProjectControllerProvider.select((value) => value.fundingSource));
+    final fundingSource = ref
+        .watch(fullProjectControllerProvider)
+        .select((value) => value.fundingSource);
 
     final response = await showDialog(
       context: context,
@@ -102,10 +104,11 @@ class UpdateFundingSourceAndImplementation extends ConsumerWidget {
   }
 
   Widget _buildFundingSources(context, ref) {
-    final fundingSources = ref.watch(
-        fullProjectControllerProvider.select((value) => value.fundingSources));
+    final fundingSources = ref
+        .watch(fullProjectControllerProvider)
+        .select((value) => value.fundingSources);
     final type =
-        ref.watch(fullProjectControllerProvider.select((value) => value.type));
+        ref.watch(fullProjectControllerProvider).select((value) => value.type);
 
     return ListTile(
       enabled: type?.value != 1,
@@ -124,8 +127,9 @@ class UpdateFundingSourceAndImplementation extends ConsumerWidget {
   }
 
   Future<void> _selectFundingSources(context, ref) async {
-    final fundingSources = ref.watch(
-        fullProjectControllerProvider.select((value) => value.fundingSources));
+    final fundingSources = ref
+        .watch(fullProjectControllerProvider)
+        .select((value) => value.fundingSources);
 
     final response = await showDialog(
       context: context,
@@ -179,10 +183,11 @@ class UpdateFundingSourceAndImplementation extends ConsumerWidget {
   }
 
   Widget _buildImplementationMode(context, ref) {
-    final implementationMode = ref.watch(fullProjectControllerProvider
-        .select((state) => state.implementationMode));
+    final implementationMode = ref
+        .watch(fullProjectControllerProvider)
+        .select((state) => state.implementationMode);
     final type =
-        ref.watch(fullProjectControllerProvider.select((state) => state.type));
+        ref.watch(fullProjectControllerProvider).select((state) => state.type);
 
     return ListTile(
       title: const Text('Mode of Implementation'),
@@ -201,8 +206,9 @@ class UpdateFundingSourceAndImplementation extends ConsumerWidget {
   }
 
   Future<void> _selectImplementationMode(context, ref) async {
-    final implementationMode = ref.watch(fullProjectControllerProvider
-        .select((state) => state.implementationMode));
+    final implementationMode = ref
+        .watch(fullProjectControllerProvider)
+        .select((state) => state.implementationMode);
 
     final response = await showDialog(
       context: context,
@@ -255,8 +261,9 @@ class UpdateFundingSourceAndImplementation extends ConsumerWidget {
   }
 
   Widget _buildFundingInstitutions(context, ref) {
-    final fundingInstitutions = ref.watch(fullProjectControllerProvider
-        .select((state) => state.fundingInstitutions));
+    final fundingInstitutions = ref
+        .watch(fullProjectControllerProvider)
+        .select((state) => state.fundingInstitutions);
 
     return ListTile(
       title: const Text('Funding Institutions'),
@@ -274,8 +281,9 @@ class UpdateFundingSourceAndImplementation extends ConsumerWidget {
   }
 
   Future<void> _selectFundingInstitutions(context, ref) async {
-    final fundingInstitutions = ref.watch(fullProjectControllerProvider
-        .select((state) => state.fundingInstitutions));
+    final fundingInstitutions = ref
+        .watch(fullProjectControllerProvider)
+        .select((state) => state.fundingInstitutions);
 
     final response = await showDialog(
         context: context,

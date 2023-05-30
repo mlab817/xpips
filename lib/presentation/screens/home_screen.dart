@@ -428,13 +428,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: Row(
                     children: [
-                      Text(
-                        _pipsStatus?.name.toUpperCase() ?? 'ALL',
-                        style: Theme.of(context).textTheme.titleLarge?.apply(
-                              letterSpacingFactor: 2,
-                              color: Theme.of(context).primaryColor,
-                            ),
-                      ),
+                      _buildTitle(),
                       _buildSearchBox(),
                       const Spacer(),
                       const SizedBox(
@@ -463,6 +457,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     return Expanded(
       child: projectsAsync.when(
         data: (data) {
+          if (data.data.isEmpty) {
+            return const Center(
+              child: Text('NO PROJECTS HERE.'),
+            );
+          }
+
           return SlidableAutoCloseBehavior(
             closeWhenOpened: true,
             child: ListView.builder(
@@ -527,6 +527,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     );
   }
 
+  Widget _buildTitle() {
+    final label = _showAll
+        ? 'ALL'
+        : (_pipsStatus != null
+            ? _pipsStatus?.name.toUpperCase()
+            : _pipolStatus?.name.toUpperCase() ?? '');
+
+    return Text(
+      label!,
+      style: Theme.of(context).textTheme.titleLarge?.apply(
+            letterSpacingFactor: 2,
+            color: Theme.of(context).primaryColor,
+          ),
+    );
+  }
+
   Widget _buildSearchBox() {
     return Expanded(
       child: TextFormField(
@@ -558,35 +574,5 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         },
       ),
     );
-  }
-
-  Widget _buildStatusSelector() {
-    final menuAsync = ref.watch(pipsStatusControllerProvider);
-
-    return menuAsync.when(
-        data: (data) {
-          return DropdownButton<PipsStatus>(
-              value: _pipsStatus,
-              focusColor: Colors.transparent,
-              underline: Container(),
-              items: List.generate(data.data.length, (index) {
-                return DropdownMenuItem<PipsStatus>(
-                    value: data.data[index],
-                    child: Text(data.data[index].name.toUpperCase()));
-              }),
-              onChanged: (PipsStatus? newValue) {
-                setState(() {
-                  _pipsStatus = newValue!;
-                });
-
-                ref
-                    .read(projectsRequestControllerProvider.notifier)
-                    .update(pipsStatuses: [newValue!.id]);
-              });
-        },
-        error: (error, stacktrace) {
-          return Container();
-        },
-        loading: () => const Text('Loading'));
   }
 }

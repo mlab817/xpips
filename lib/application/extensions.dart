@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pips/domain/models/models.dart';
 
 import '../data/requests/updateprofile_request.dart';
+import '../data/responses/project_response.dart';
 
 extension UserToProfileRequest on User {
   UpdateProfileRequest toUpdateProfileRequest() {
@@ -209,4 +210,8 @@ extension ToQuickResource on User {
   UserQuickResource toQuickResource() {
     return UserQuickResource(id: id, fullname: "$firstName $lastName");
   }
+}
+
+extension ToFullProject on ProjectResponse {
+  FullProject toFullProject() => project;
 }
