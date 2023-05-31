@@ -1,8 +1,8 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:pips/data/network/dio.dart';
 import 'package:pips/data/responses/upload_response.dart';
@@ -15,9 +15,7 @@ import '../data_sources/app_service_client.dart';
 part 'upload_repository.g.dart';
 
 abstract class UploadRepository {
-  Future<UploadResponse> upload(File file);
-
-  Future<UploadResponse> webUpload(Uint8List file);
+  Future<UploadResponse?> upload(PlatformFile file);
 }
 
 class UploadRepositoryImplementer implements UploadRepository {
@@ -32,8 +30,30 @@ class UploadRepositoryImplementer implements UploadRepository {
   });
 
   @override
-  Future<UploadResponse> upload(File file, {String? fileName}) async {
-    return client.upload(file: file);
+  Future<UploadResponse?> upload(PlatformFile file, {String? fileName}) async {
+    if (kIsWeb) {
+      FormData formData = FormData();
+
+      if (file.bytes != null) {
+        final multipartFile = MultipartFile.fromBytes(file.bytes!.toList(),
+            filename: fileName ?? 'Authorization Form.pdf');
+        MapEntry<String, MultipartFile> fileEntry =
+        MapEntry('file', multipartFile);
+        // implement Dio upload
+        formData.files.add(fileEntry);
+
+        return dio
+            .post("$baseUrl/upload", data: formData)
+            .then((response) => UploadResponse.fromJson(response.data));
+      }
+    } else {
+      // path is not null on
+      if (file.path != null) {
+        return client.upload(file: File(file.path!));
+      }
+    }
+
+
     // TODO: review progress implementation
     //     onSendProgress: (int sent, int total) {
     //   streamController.add(((sent / total) * 100).round());
@@ -47,22 +67,6 @@ class UploadRepositoryImplementer implements UploadRepository {
     //   return data;
     // }).whenComplete(() => streamController.close());
   }
-
-  @override
-  Future<UploadResponse> webUpload(Uint8List file, {String? fileName}) async {
-    print('kIsWeb upload repo triggered');
-    FormData formData = FormData();
-
-    final multipartFile = MultipartFile.fromBytes(file,
-        filename: fileName ?? 'Authorization Form.pdf');
-    MapEntry<String, MultipartFile> fileEntry = MapEntry('file', multipartFile);
-    // implement Dio upload
-    formData.files.add(fileEntry);
-
-    return dio
-        .post("$baseUrl/upload", data: formData)
-        .then((response) => UploadResponse.fromJson(response.data));
-  }
 }
 
 @Riverpod(keepAlive: true)
@@ -70,5 +74,7 @@ UploadRepository uploadRepository(UploadRepositoryRef ref) =>
     UploadRepositoryImplementer(
       client: ref.watch(appServiceClientProvider),
       dio: ref.watch(dioProvider),
-      baseUrl: ref.watch(configProvider).baseApiUrl,
+      baseUrl: ref
+          .watch(configProvider)
+          .baseApiUrl,
     );

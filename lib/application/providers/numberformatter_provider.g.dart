@@ -6,7 +6,7 @@ part of 'numberformatter_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$numberFormatterHash() => r'94c2a7f3768b62b13153f6c7ad39cacfb400f8ef';
+String _$numberFormatterHash() => r'6575178414bf47964ab001909e75944f1e10df07';
 
 /// See also [numberFormatter].
 @ProviderFor(numberFormatter)

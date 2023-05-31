@@ -43,13 +43,13 @@ final reactivationRequestControllerProvider = AutoDisposeNotifierProvider<
 typedef _$ReactivationRequestController
     = AutoDisposeNotifier<ReactivationRequest>;
 String _$reactivationFileUploadControllerHash() =>
-    r'f965c76d6d418bf79f6eab48c070df1d37da19c1';
+    r'0d3915dd4a876fd70bd1cd98b49d098a319c828f';
 
 /// See also [ReactivationFileUploadController].
 @ProviderFor(ReactivationFileUploadController)
 final reactivationFileUploadControllerProvider =
     AutoDisposeAsyncNotifierProvider<ReactivationFileUploadController,
-        UploadResponse>.internal(
+        UploadResponse?>.internal(
   ReactivationFileUploadController.new,
   name: r'reactivationFileUploadControllerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -60,5 +60,5 @@ final reactivationFileUploadControllerProvider =
 );
 
 typedef _$ReactivationFileUploadController
-    = AutoDisposeAsyncNotifier<UploadResponse>;
+    = AutoDisposeAsyncNotifier<UploadResponse?>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions

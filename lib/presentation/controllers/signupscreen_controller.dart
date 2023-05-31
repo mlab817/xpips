@@ -1,7 +1,6 @@
 import 'dart:async';
-import 'dart:io';
 
-import 'package:flutter/foundation.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:pips/data/requests/signup_request.dart';
 import 'package:pips/data/responses/responses.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -66,7 +65,7 @@ class SignupController extends _$SignupController {
 @Riverpod(keepAlive: true)
 class AuthorizationFileUploadController
     extends _$AuthorizationFileUploadController {
-  Future<UploadResponse?> upload(File file) async {
+  Future<UploadResponse?> upload(PlatformFile file) async {
     print('AuthorizationFileUploadController triggered');
 
     final repository = ref.watch(uploadRepositoryProvider);
@@ -78,16 +77,16 @@ class AuthorizationFileUploadController
     return repository.upload(file);
   }
 
-  Future<UploadResponse?> webUpload(Uint8List file) async {
+  Future<UploadResponse?> webUpload(PlatformFile file) async {
     print('AuthorizationFileUploadController triggered');
 
     final repository = ref.watch(uploadRepositoryProvider);
 
     state = const AsyncLoading();
 
-    state = await AsyncValue.guard(() => repository.webUpload(file));
+    state = await AsyncValue.guard(() => repository.upload(file));
 
-    return repository.webUpload(file);
+    return repository.upload(file);
   }
 
   @override

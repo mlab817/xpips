@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:auto_route/annotations.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -121,9 +119,7 @@ class _RequestReactivationScreenState
                             final response = await ref
                                 .read(reactivationFileUploadControllerProvider
                                     .notifier)
-                                .upload(File.fromRawPath(
-                                  result.files.first.bytes!,
-                                ));
+                                .upload(result.files.first);
                           }
                         },
                       ),

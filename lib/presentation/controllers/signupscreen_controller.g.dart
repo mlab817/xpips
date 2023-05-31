@@ -40,7 +40,7 @@ final signupControllerProvider =
 
 typedef _$SignupController = AutoDisposeAsyncNotifier<void>;
 String _$authorizationFileUploadControllerHash() =>
-    r'5a6f9ff17f162ee998274442a299f681d728969f';
+    r'0f57badfbd41538238fe77309b11c61190fe7c14';
 
 /// See also [AuthorizationFileUploadController].
 @ProviderFor(AuthorizationFileUploadController)

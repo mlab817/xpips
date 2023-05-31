@@ -17,14 +17,18 @@ class CostField extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return TextFormField(
       // controller: controller,
-      initialValue: value ?? '',
+      initialValue: value != null
+          ? ref.watch(numberFormatterProvider).format(num.tryParse(value!))
+          : '',
       decoration: ref.watch(inputDecorationProvider),
       textAlign: TextAlign.right,
       textAlignVertical: TextAlignVertical.center,
       expands: false,
       enabled: enabled ?? true,
       onChanged: onChanged,
+      keyboardType: TextInputType.number,
       inputFormatters: [
+        FilteringTextInputFormatter.digitsOnly,
         NumericTextFormatter(ref),
       ],
     );
@@ -40,13 +44,13 @@ class NumericTextFormatter extends TextInputFormatter {
   TextEditingValue formatEditUpdate(
       TextEditingValue oldValue, TextEditingValue newValue) {
     if (newValue.text.isEmpty) {
-      return newValue.copyWith(text: '');
+      return newValue.copyWith(text: '0');
     } else if (newValue.text.compareTo(oldValue.text) != 0) {
       final int selectionIndexFromTheRight =
           newValue.text.length - newValue.selection.end;
       final f = ref.watch(numberFormatterProvider);
       final number =
-          int.parse(newValue.text.replaceAll(f.symbols.GROUP_SEP, ''));
+          double.parse(newValue.text.replaceAll(f.symbols.GROUP_SEP, ''));
       final newString = f.format(number);
       return TextEditingValue(
         text: newString,

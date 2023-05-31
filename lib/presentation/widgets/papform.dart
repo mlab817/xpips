@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pips/presentation/controllers/fullproject_controller.dart';
 import 'package:pips/presentation/controllers/options_controller.dart';
 import 'package:pips/presentation/widgets/papform/form_objects/approval_level.dart';
+import 'package:pips/presentation/widgets/papform/form_objects/attachments.dart';
 import 'package:pips/presentation/widgets/papform/form_objects/employment.dart';
 import 'package:pips/presentation/widgets/papform/form_objects/fs_information.dart';
 import 'package:pips/presentation/widgets/papform/form_objects/funding_source_implementation.dart';
@@ -196,6 +197,9 @@ class _PapForm extends ConsumerState<PapForm> {
       UpdateFinancialAccomplishment(uuid: widget.uuid),
       const Divider(),
       _buildRemarks(),
+      const Divider(),
+      const FormSectionHeader(title: 'Attachments'),
+      Attachments(uuid: widget.uuid),
       const Divider(),
       _buildNotes(),
     ];

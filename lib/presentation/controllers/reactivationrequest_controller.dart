@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:pips/data/requests/reactivation_request.dart';
 import 'package:pips/data/responses/reactivation_response.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -32,7 +32,7 @@ class ReactivationRequestController extends _$ReactivationRequestController {
 @riverpod
 class ReactivationFileUploadController
     extends _$ReactivationFileUploadController {
-  Future<void> upload(File file) async {
+  Future<void> upload(PlatformFile file) async {
     final repository = ref.watch(uploadRepositoryProvider);
 
     state = const AsyncLoading();
@@ -41,7 +41,7 @@ class ReactivationFileUploadController
   }
 
   @override
-  FutureOr<UploadResponse> build() async => Future.value(state.value);
+  FutureOr<UploadResponse?> build() async => Future.value(state.value);
 }
 
 // define a future provider

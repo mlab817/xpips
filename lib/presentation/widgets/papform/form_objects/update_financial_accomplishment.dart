@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pips/application/providers/numberformatter_provider.dart';
 
 import '../../../controllers/controllers.dart';
 import '../cost_field.dart';
@@ -209,6 +210,54 @@ class UpdateFinancialAccomplishment extends ConsumerWidget {
               value:
                   project.financialAccomplishment.disbursement2028.toString(),
               onChanged: (String value) {},
+            ),
+          ),
+        ],
+      ),
+      DataRow(
+        cells: <DataCell>[
+          DataCell(
+            SizedBox(width: columnWidth, child: const Text("TOTAL")),
+          ),
+          DataCell(
+            Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: SizedBox(
+                width: double.infinity,
+                child: Text(
+                  ref
+                      .watch(numberFormatterProvider)
+                      .format(project.financialAccomplishment.nepTotal),
+                  textAlign: TextAlign.end,
+                ),
+              ),
+            ),
+          ),
+          DataCell(
+            Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: SizedBox(
+                width: double.infinity,
+                child: Text(
+                  ref
+                      .watch(numberFormatterProvider)
+                      .format(project.financialAccomplishment.gaaTotal),
+                  textAlign: TextAlign.end,
+                ),
+              ),
+            ),
+          ),
+          DataCell(
+            Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: SizedBox(
+                width: double.infinity,
+                child: Text(
+                  ref.watch(numberFormatterProvider).format(
+                      project.financialAccomplishment.disbursementTotal),
+                  textAlign: TextAlign.end,
+                ),
+              ),
             ),
           ),
         ],

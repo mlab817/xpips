@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:auto_route/auto_route.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
@@ -49,254 +47,258 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
         elevation: 0,
       ),
       body: Center(
-        child: SizedBox(
-          width: width <= 400 ? width : 400,
-          child: Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          child: TextFormField(
-                            initialValue: ref
-                                .watch(signupRequestControllerProvider)
-                                .firstName,
-                            decoration: const InputDecoration(
-                              label: Text('First Name'),
-                            ),
-                            onChanged: (String? value) {
-                              ref
-                                  .read(
-                                      signupRequestControllerProvider.notifier)
-                                  .update(firstName: value);
-                            },
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Expanded(
-                          child: TextFormField(
-                            decoration: const InputDecoration(
-                              label: Text('Last Name'),
-                            ),
-                            onChanged: (String? value) {
-                              ref
-                                  .read(
-                                      signupRequestControllerProvider.notifier)
-                                  .update(lastName: value);
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    TextFormField(
-                      decoration: const InputDecoration(
-                        label: Text('Position/Designation'),
-                      ),
-                      onChanged: (String? value) {
-                        ref
-                            .read(signupRequestControllerProvider.notifier)
-                            .update(position: value);
-                      },
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    TextFormField(
-                      decoration: const InputDecoration(
-                        label: Text('Email Address'),
-                      ),
-                      onChanged: (String? value) {
-                        ref
-                            .read(signupRequestControllerProvider.notifier)
-                            .update(email: value);
-                      },
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    TextFormField(
-                      decoration: const InputDecoration(
-                        label: Text('Contact Number'),
-                      ),
-                      onChanged: (String? value) {
-                        ref
-                            .read(signupRequestControllerProvider.notifier)
-                            .update(contactNumber: value);
-                      },
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    TextFormField(
-                      decoration: const InputDecoration(
-                        label: Text('Username'),
-                      ),
-                      onChanged: (String? value) {
-                        ref
-                            .read(signupRequestControllerProvider.notifier)
-                            .update(username: value);
-                      },
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    TextFormField(
-                      decoration: InputDecoration(
-                          label: const Text('Password'),
-                          suffix: InkWell(
-                            onTap: () {
-                              setState(() {
-                                _obscuredPassword = !_obscuredPassword;
-                              });
-                            },
-                            child: Icon(!_obscuredPassword
-                                ? Icons.visibility_off
-                                : Icons.visibility),
-                          )),
-                      obscureText: _obscuredPassword,
-                      onChanged: (String? value) {
-                        ref
-                            .read(signupRequestControllerProvider.notifier)
-                            .update(password: value);
-                      },
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    InkWell(
-                      onTap: () {
-                        showModalBottomSheet(
-                          useSafeArea: true,
-                          isScrollControlled: true,
-                          context: context,
-                          builder: (BuildContext context) {
-                            return OfficeBottomSheet(
-                                onSelect: (Office? office) {
-                              // set the office
-                              setState(() {
-                                _office = office;
-                              });
-                              Navigator.of(context).pop();
-                            });
-                          },
-                        );
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 16.0),
-                        child: Row(
-                          children: [
-                            Text(
-                              _office != null ? _office!.name : 'Select Office',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleMedium
-                                  ?.apply(
-                                      color: Theme.of(context).primaryColor),
-                            ),
-                            const Spacer(),
-                            const Icon(Icons.arrow_drop_down_sharp),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    InkWell(
-                      onTap: _pickFile,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Text(
-                                  'Authorization Form',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleMedium
-                                      ?.apply(
-                                          color:
-                                              Theme.of(context).primaryColor),
-                                ),
-                                const Spacer(),
+        child: SingleChildScrollView(
+          child: SizedBox(
+            width: width <= 400 ? width : 400,
+            child: Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextFormField(
+                              initialValue: ref
+                                  .watch(signupRequestControllerProvider)
+                                  .firstName,
+                              decoration: const InputDecoration(
+                                label: Text('First Name'),
+                              ),
+                              onChanged: (String? value) {
                                 ref
-                                        .watch(
-                                            authorizationFileUploadControllerProvider)
-                                        .isLoading
-                                    ? const CircularProgressIndicator()
-                                    : const Icon(Icons.attach_file),
-                              ],
+                                    .read(signupRequestControllerProvider
+                                        .notifier)
+                                    .update(firstName: value);
+                              },
                             ),
-                            ref
-                                .watch(
-                                    authorizationFileUploadControllerProvider)
-                                .when(data: (data) {
-                              return Text(
-                                data?.path ?? 'NO FILE',
-                                textAlign: TextAlign.start,
-                              );
-                            }, error: (error, stacktrace) {
-                              return Text(error.toString());
-                            }, loading: () {
-                              return Container();
-                            }),
-                          ],
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          Expanded(
+                            child: TextFormField(
+                              decoration: const InputDecoration(
+                                label: Text('Last Name'),
+                              ),
+                              onChanged: (String? value) {
+                                ref
+                                    .read(signupRequestControllerProvider
+                                        .notifier)
+                                    .update(lastName: value);
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      TextFormField(
+                        decoration: const InputDecoration(
+                          label: Text('Position/Designation'),
+                        ),
+                        onChanged: (String? value) {
+                          ref
+                              .read(signupRequestControllerProvider.notifier)
+                              .update(position: value);
+                        },
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      TextFormField(
+                        decoration: const InputDecoration(
+                          label: Text('Email Address'),
+                        ),
+                        onChanged: (String? value) {
+                          ref
+                              .read(signupRequestControllerProvider.notifier)
+                              .update(email: value);
+                        },
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      TextFormField(
+                        decoration: const InputDecoration(
+                          label: Text('Contact Number'),
+                        ),
+                        onChanged: (String? value) {
+                          ref
+                              .read(signupRequestControllerProvider.notifier)
+                              .update(contactNumber: value);
+                        },
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      TextFormField(
+                        decoration: const InputDecoration(
+                          label: Text('Username'),
+                        ),
+                        onChanged: (String? value) {
+                          ref
+                              .read(signupRequestControllerProvider.notifier)
+                              .update(username: value);
+                        },
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      TextFormField(
+                        decoration: InputDecoration(
+                            label: const Text('Password'),
+                            suffix: InkWell(
+                              onTap: () {
+                                setState(() {
+                                  _obscuredPassword = !_obscuredPassword;
+                                });
+                              },
+                              child: Icon(!_obscuredPassword
+                                  ? Icons.visibility_off
+                                  : Icons.visibility),
+                            )),
+                        obscureText: _obscuredPassword,
+                        onChanged: (String? value) {
+                          ref
+                              .read(signupRequestControllerProvider.notifier)
+                              .update(password: value);
+                        },
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      InkWell(
+                        onTap: () {
+                          showModalBottomSheet(
+                            useSafeArea: true,
+                            isScrollControlled: true,
+                            context: context,
+                            builder: (BuildContext context) {
+                              return OfficeBottomSheet(
+                                  onSelect: (Office? office) {
+                                // set the office
+                                setState(() {
+                                  _office = office;
+                                });
+                                Navigator.of(context).pop();
+                              });
+                            },
+                          );
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 16.0),
+                          child: Row(
+                            children: [
+                              Text(
+                                _office != null
+                                    ? _office!.name
+                                    : 'Select Office',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleMedium
+                                    ?.apply(
+                                        color: Theme.of(context).primaryColor),
+                              ),
+                              const Spacer(),
+                              const Icon(Icons.arrow_drop_down_sharp),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: SizedBox(
-                        width: double.infinity,
-                        child: FilledButton(
-                          // disable if file is being uploaded
-                          onPressed: ref
-                                  .watch(signupControllerProvider)
-                                  .isLoading
-                              ? null
-                              : () {
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      InkWell(
+                        onTap: _pickFile,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 16.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Text(
+                                    'Authorization Form',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium
+                                        ?.apply(
+                                            color:
+                                                Theme.of(context).primaryColor),
+                                  ),
+                                  const Spacer(),
                                   ref
-                                      .read(signupControllerProvider.notifier)
-                                      .submit();
-                                },
-                          child: ref.watch(signupControllerProvider).isLoading
-                              ? const SizedBox(
-                                  width: 20,
-                                  height: 20,
-                                  child: CircularProgressIndicator())
-                              : const Text('Sign up'),
+                                          .watch(
+                                              authorizationFileUploadControllerProvider)
+                                          .isLoading
+                                      ? const CircularProgressIndicator()
+                                      : const Icon(Icons.attach_file),
+                                ],
+                              ),
+                              ref
+                                  .watch(
+                                      authorizationFileUploadControllerProvider)
+                                  .when(data: (data) {
+                                return Text(
+                                  data?.path ?? 'NO FILE',
+                                  textAlign: TextAlign.start,
+                                );
+                              }, error: (error, stacktrace) {
+                                return Text(error.toString());
+                              }, loading: () {
+                                return Container();
+                              }),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    const Divider(),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: SizedBox(
-                        width: double.infinity,
-                        child: TextButton(
-                          onPressed: () {
-                            AutoRouter.of(context).push(const LoginRoute());
-                          },
-                          child: const Text('Back to Login'),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: FilledButton(
+                            // disable if file is being uploaded
+                            onPressed: ref
+                                    .watch(signupControllerProvider)
+                                    .isLoading
+                                ? null
+                                : () {
+                                    ref
+                                        .read(signupControllerProvider.notifier)
+                                        .submit();
+                                  },
+                            child: ref.watch(signupControllerProvider).isLoading
+                                ? const SizedBox(
+                                    width: 20,
+                                    height: 20,
+                                    child: CircularProgressIndicator())
+                                : const Text('Sign up'),
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                      const Divider(),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: TextButton(
+                            onPressed: () {
+                              AutoRouter.of(context).push(const LoginRoute());
+                            },
+                            child: const Text('Back to Login'),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -321,23 +323,10 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
       /// files uploaded on web do not have access to path so the file is the one
       /// being stored in memory. so web has access to bytes whereas other platforms
       /// have access to path
-      if (kIsWeb) {
-        print('kIsWeb');
 
-        var webFile = result.files.first.bytes!;
-
-        ref
-            .read(authorizationFileUploadControllerProvider.notifier)
-            .webUpload(webFile);
-      } else {
-        var uploaded = result.files.first;
-
-        var fileForUpload = File(uploaded.path!);
-
-        ref
-            .read(authorizationFileUploadControllerProvider.notifier)
-            .upload(fileForUpload);
-      }
+      ref
+          .read(authorizationFileUploadControllerProvider.notifier)
+          .upload(result.files.first);
     } else {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

@@ -15,6 +15,12 @@ abstract class _$AppRouter extends RootStackRouter {
 
   @override
   final Map<String, PageFactory> pagesMap = {
+    NewPapRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const NewPapScreen(),
+      );
+    },
     ChatRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -43,6 +49,18 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const NotificationsScreen(),
+      );
+    },
+    PapEditRoute.name: (routeData) {
+      final pathParams = routeData.inheritedPathParams;
+      final args = routeData.argsAs<PapEditRouteArgs>(
+          orElse: () => PapEditRouteArgs(uuid: pathParams.getString('uuid')));
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: PapEditScreen(
+          key: args.key,
+          uuid: args.uuid,
+        ),
       );
     },
     ForgotPasswordRoute.name: (routeData) {
@@ -87,25 +105,21 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const SplashScreen(),
       );
     },
-    PapEditRoute.name: (routeData) {
-      final pathParams = routeData.inheritedPathParams;
-      final args = routeData.argsAs<PapEditRouteArgs>(
-          orElse: () => PapEditRouteArgs(uuid: pathParams.getString('uuid')));
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: PapEditScreen(
-          key: args.key,
-          uuid: args.uuid,
-        ),
-      );
-    },
-    NewPapRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const NewPapScreen(),
-      );
-    },
   };
+}
+
+/// generated route for
+/// [NewPapScreen]
+class NewPapRoute extends PageRouteInfo<void> {
+  const NewPapRoute({List<PageRouteInfo>? children})
+      : super(
+          NewPapRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'NewPapRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
@@ -176,6 +190,45 @@ class NotificationsRoute extends PageRouteInfo<void> {
   static const String name = 'NotificationsRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [PapEditScreen]
+class PapEditRoute extends PageRouteInfo<PapEditRouteArgs> {
+  PapEditRoute({
+    Key? key,
+    required String uuid,
+    List<PageRouteInfo>? children,
+  }) : super(
+          PapEditRoute.name,
+          args: PapEditRouteArgs(
+            key: key,
+            uuid: uuid,
+          ),
+          rawPathParams: {'uuid': uuid},
+          initialChildren: children,
+        );
+
+  static const String name = 'PapEditRoute';
+
+  static const PageInfo<PapEditRouteArgs> page =
+      PageInfo<PapEditRouteArgs>(name);
+}
+
+class PapEditRouteArgs {
+  const PapEditRouteArgs({
+    this.key,
+    required this.uuid,
+  });
+
+  final Key? key;
+
+  final String uuid;
+
+  @override
+  String toString() {
+    return 'PapEditRouteArgs{key: $key, uuid: $uuid}';
+  }
 }
 
 /// generated route for
@@ -283,59 +336,6 @@ class SplashRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'SplashRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [PapEditScreen]
-class PapEditRoute extends PageRouteInfo<PapEditRouteArgs> {
-  PapEditRoute({
-    Key? key,
-    required String uuid,
-    List<PageRouteInfo>? children,
-  }) : super(
-          PapEditRoute.name,
-          args: PapEditRouteArgs(
-            key: key,
-            uuid: uuid,
-          ),
-          rawPathParams: {'uuid': uuid},
-          initialChildren: children,
-        );
-
-  static const String name = 'PapEditRoute';
-
-  static const PageInfo<PapEditRouteArgs> page =
-      PageInfo<PapEditRouteArgs>(name);
-}
-
-class PapEditRouteArgs {
-  const PapEditRouteArgs({
-    this.key,
-    required this.uuid,
-  });
-
-  final Key? key;
-
-  final String uuid;
-
-  @override
-  String toString() {
-    return 'PapEditRouteArgs{key: $key, uuid: $uuid}';
-  }
-}
-
-/// generated route for
-/// [NewPapScreen]
-class NewPapRoute extends PageRouteInfo<void> {
-  const NewPapRoute({List<PageRouteInfo>? children})
-      : super(
-          NewPapRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'NewPapRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
