@@ -9,17 +9,18 @@ import '../success_indicator.dart';
 class UpdateOffice extends ConsumerWidget {
   const UpdateOffice({
     Key? key,
+    this.uuid,
   }) : super(key: key);
+
+  final String? uuid;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    debugPrint('rebuilding updateOffice');
-
-    final office = ref
-        .watch(fullProjectControllerProvider.select((value) => value.office));
+    final office = ref.watch(
+        fullProjectControllerProvider(uuid).select((value) => value.office));
 
     return ListTile(
-      title: const Text('Office'),
+      title: const Text('Office (Encoder)'),
       subtitle:
           office != null ? Text(office.acronym) : const Text('Select one'),
       trailing:
@@ -31,8 +32,8 @@ class UpdateOffice extends ConsumerWidget {
   }
 
   Future<void> _selectOffice(context, ref) async {
-    final office = ref
-        .watch(fullProjectControllerProvider.select((value) => value.office));
+    final office = ref.watch(
+        fullProjectControllerProvider(uuid).select((value) => value.office));
     final officesAsync = ref.watch(officesProvider);
 
     final Office? response = await showDialog(
@@ -86,6 +87,8 @@ class UpdateOffice extends ConsumerWidget {
           );
         });
 
-    ref.read(fullProjectControllerProvider.notifier).update(office: response);
+    ref
+        .read(fullProjectControllerProvider(uuid).notifier)
+        .update(office: response);
   }
 }

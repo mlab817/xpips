@@ -6,7 +6,10 @@ import '../../../controllers/fullproject_controller.dart';
 class UpdatePip extends ConsumerStatefulWidget {
   const UpdatePip({
     Key? key,
+    this.uuid,
   }) : super(key: key);
+
+  final String? uuid;
 
   @override
   ConsumerState createState() => _UpdatePipState();
@@ -15,8 +18,8 @@ class UpdatePip extends ConsumerStatefulWidget {
 class _UpdatePipState extends ConsumerState<UpdatePip> {
   @override
   Widget build(BuildContext context) {
-    final pip =
-        ref.watch(fullProjectControllerProvider.select((value) => value.pip));
+    final pip = ref.watch(fullProjectControllerProvider(widget.uuid)
+        .select((value) => value.pip));
 
     return SwitchListTile(
         value: pip ?? false,
@@ -66,6 +69,8 @@ class _UpdatePipState extends ConsumerState<UpdatePip> {
           );
         });
 
-    ref.read(fullProjectControllerProvider.notifier).update(pip: response);
+    ref
+        .read(fullProjectControllerProvider(widget.uuid).notifier)
+        .update(pip: response);
   }
 }

@@ -6,7 +6,7 @@ part of 'viewpap_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$projectHash() => r'233c50e25eb5fe43ebaa7362b9ea4d06efa464c0';
+String _$projectHash() => r'f4174e2c215cb76ca03b735bcbb4d88bcf97d72a';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -42,7 +42,7 @@ class ProjectFamily extends Family<AsyncValue<ProjectResponse>> {
 
   /// See also [project].
   ProjectProvider call({
-    required String uuid,
+    String? uuid,
   }) {
     return ProjectProvider(
       uuid: uuid,
@@ -77,7 +77,7 @@ class ProjectFamily extends Family<AsyncValue<ProjectResponse>> {
 class ProjectProvider extends FutureProvider<ProjectResponse> {
   /// See also [project].
   ProjectProvider({
-    required this.uuid,
+    this.uuid,
   }) : super.internal(
           (ref) => project(
             ref,
@@ -93,7 +93,7 @@ class ProjectProvider extends FutureProvider<ProjectResponse> {
           allTransitiveDependencies: ProjectFamily._allTransitiveDependencies,
         );
 
-  final String uuid;
+  final String? uuid;
 
   @override
   bool operator ==(Object other) {

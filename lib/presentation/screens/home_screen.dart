@@ -6,6 +6,7 @@ import 'package:pips/application/providers/searchhistory_provider.dart';
 import 'package:pips/domain/models/pipsstatus.dart';
 import 'package:pips/presentation/controllers/options_controller.dart';
 import 'package:pips/presentation/screens/pipolstatus_controller.dart';
+import 'package:pips/presentation/widgets/loading_dialog.dart';
 
 import '../../application/app_router.dart';
 import '../../data/repositories/pipolstatus_repository.dart';
@@ -40,27 +41,30 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         builder: (context) {
           return optionsAsync.when(
               data: (data) {
-                return Column(children: [
-                  Row(
-                    children: [
-                      const Text('Apply Filters'),
-                      const Spacer(),
-                      IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        icon: const Icon(Icons.close),
-                      ),
-                    ],
-                  ),
-                ]);
+                return SizedBox(
+                  width: double.infinity,
+                  child: Column(children: [
+                    Row(
+                      children: [
+                        const Text('Apply Filters'),
+                        const Spacer(),
+                        IconButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          icon: const Icon(Icons.close),
+                        ),
+                      ],
+                    ),
+                  ]),
+                );
               },
               error: (error, stacktrace) {
                 return Center(
                   child: Text(error.toString()),
                 );
               },
-              loading: () => const CircularProgressIndicator());
+              loading: () => const LoadingOverlay());
         });
   }
 
@@ -116,6 +120,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   }
 
                   return ListView.builder(
+                    physics: const ClampingScrollPhysics(),
                     shrinkWrap: true,
                     itemCount: data.data.length + 1,
                     itemBuilder: (context, index) {
@@ -292,6 +297,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     menuAsync.when(
                       data: (data) {
                         return ListView.builder(
+                          physics: const ClampingScrollPhysics(),
                           shrinkWrap: true,
                           itemCount: data.data.length,
                           itemBuilder: (context, index) {

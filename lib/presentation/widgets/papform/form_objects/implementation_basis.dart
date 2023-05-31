@@ -8,7 +8,9 @@ import '../select_dialog_content.dart';
 import '../success_indicator.dart';
 
 class ImplementationBasis extends ConsumerWidget {
-  const ImplementationBasis({Key? key}) : super(key: key);
+  const ImplementationBasis({Key? key, this.uuid}) : super(key: key);
+
+  final String? uuid;
 
   Future<void> _selectBases(BuildContext context, WidgetRef ref) async {
     final optionsAsync = ref.watch(optionsControllerProvider);
@@ -17,7 +19,7 @@ class ImplementationBasis extends ConsumerWidget {
       context: context,
       builder: (context) {
         List<Option> selected =
-            ref.watch(fullProjectControllerProvider).bases.toList();
+            ref.watch(fullProjectControllerProvider(uuid)).bases.toList();
 
         return AlertDialog(
           contentPadding: const EdgeInsets.symmetric(vertical: 16),
@@ -58,13 +60,13 @@ class ImplementationBasis extends ConsumerWidget {
       },
     );
 
-    ref.read(fullProjectControllerProvider.notifier).update(bases: response);
+    ref.read(fullProjectControllerProvider(uuid).notifier).update(bases: response);
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final bases =
-        ref.watch(fullProjectControllerProvider.select((value) => value.bases));
+        ref.watch(fullProjectControllerProvider(uuid).select((value) => value.bases));
 
     return ListTile(
         title: const Text('Basis for Implementation'),

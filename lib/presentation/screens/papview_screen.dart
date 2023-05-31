@@ -46,32 +46,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // final pusherClient = ref.watch(pusherClientProvider);
-    //
-    // final allChannels = <Channel>[
-    //   pusherClient.publicChannel('PIPSv3.Public'),
-    // ];
-    //
-    // pusherClient.onConnectionEstablished.listen((_) {
-    //   for (final channel in allChannels) {
-    //     channel.subscribeIfNotUnsubscribed();
-    //   }
-    // });
-    //
-    // final subscription = pusherClient
-    //     .publicChannel('PIPSv3.Public')
-    //     .bindToAll()
-    //     .listen((event) {});
-    //
-    // subscription.onData((ChannelReadEvent event) {
-    //   debugPrint(
-    //     event.toString(),
-    //   );
-    // });
-
     final projectProfileAsync = ref.watch(projectProvider(uuid: widget.uuid));
-
-    // ref.watch(realTimeCommentsProvider);
 
     return Scaffold(
       appBar: AppBar(

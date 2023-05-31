@@ -9,7 +9,10 @@ import '../cost_field.dart';
 class UpdateRegionalCost extends ConsumerStatefulWidget {
   const UpdateRegionalCost({
     Key? key,
+    this.uuid,
   }) : super(key: key);
+
+  final String? uuid;
 
   @override
   ConsumerState createState() => _UpdateRegionalCostState();
@@ -90,7 +93,7 @@ class _UpdateRegionalCostState extends ConsumerState<UpdateRegionalCost> {
   }
 
   List<DataRow> _buildRows(BuildContext context, WidgetRef ref) {
-    final project = ref.watch(fullProjectControllerProvider);
+    final project = ref.watch(fullProjectControllerProvider(widget.uuid));
 
     final columnWidth = (MediaQuery.of(context).size.width - 128) / 10;
 
@@ -122,7 +125,7 @@ class _UpdateRegionalCostState extends ConsumerState<UpdateRegionalCost> {
                   );
                   updatedInvestments[index] = updatedRegionalInvestment;
 
-                  ref.read(fullProjectControllerProvider.notifier).update(
+                  ref.read(fullProjectControllerProvider(widget.uuid).notifier).update(
                         regions: updatedInvestments,
                       );
                 },
@@ -142,7 +145,7 @@ class _UpdateRegionalCostState extends ConsumerState<UpdateRegionalCost> {
                   );
                   updatedInvestments[index] = updatedRegionalInvestment;
 
-                  ref.read(fullProjectControllerProvider.notifier).update(
+                  ref.read(fullProjectControllerProvider(widget.uuid).notifier).update(
                         regions: updatedInvestments,
                       );
                 },
@@ -162,7 +165,7 @@ class _UpdateRegionalCostState extends ConsumerState<UpdateRegionalCost> {
                   );
                   updatedInvestments[index] = updatedRegionalInvestment;
 
-                  ref.read(fullProjectControllerProvider.notifier).update(
+                  ref.read(fullProjectControllerProvider(widget.uuid).notifier).update(
                         regions: updatedInvestments,
                       );
                 },
@@ -182,7 +185,7 @@ class _UpdateRegionalCostState extends ConsumerState<UpdateRegionalCost> {
                   );
                   updatedInvestments[index] = updatedRegionalInvestment;
 
-                  ref.read(fullProjectControllerProvider.notifier).update(
+                  ref.read(fullProjectControllerProvider(widget.uuid).notifier).update(
                         regions: updatedInvestments,
                       );
                 },
@@ -202,7 +205,7 @@ class _UpdateRegionalCostState extends ConsumerState<UpdateRegionalCost> {
                   );
                   updatedInvestments[index] = updatedRegionalInvestment;
 
-                  ref.read(fullProjectControllerProvider.notifier).update(
+                  ref.read(fullProjectControllerProvider(widget.uuid).notifier).update(
                         regions: updatedInvestments,
                       );
                 },
@@ -222,7 +225,7 @@ class _UpdateRegionalCostState extends ConsumerState<UpdateRegionalCost> {
                   );
                   updatedInvestments[index] = updatedRegionalInvestment;
 
-                  ref.read(fullProjectControllerProvider.notifier).update(
+                  ref.read(fullProjectControllerProvider(widget.uuid).notifier).update(
                         regions: updatedInvestments,
                       );
                 },
@@ -242,7 +245,7 @@ class _UpdateRegionalCostState extends ConsumerState<UpdateRegionalCost> {
                   );
                   updatedInvestments[index] = updatedRegionalInvestment;
 
-                  ref.read(fullProjectControllerProvider.notifier).update(
+                  ref.read(fullProjectControllerProvider(widget.uuid).notifier).update(
                         regions: updatedInvestments,
                       );
                 },
@@ -262,7 +265,7 @@ class _UpdateRegionalCostState extends ConsumerState<UpdateRegionalCost> {
                   );
                   updatedInvestments[index] = updatedRegionalInvestment;
 
-                  ref.read(fullProjectControllerProvider.notifier).update(
+                  ref.read(fullProjectControllerProvider(widget.uuid).notifier).update(
                         regions: updatedInvestments,
                       );
                 },
@@ -295,7 +298,7 @@ class _UpdateRegionalCostState extends ConsumerState<UpdateRegionalCost> {
           width: columnWidth,
           child: Text(
             ref.watch(numberFormatterProvider).format(ref
-                .watch(fullProjectControllerProvider)
+                .watch(fullProjectControllerProvider(widget.uuid))
                 .regionalInvestmentTotalRow
                 .y2022),
             textAlign: TextAlign.right,
@@ -307,7 +310,7 @@ class _UpdateRegionalCostState extends ConsumerState<UpdateRegionalCost> {
           width: columnWidth,
           child: Text(
             ref.watch(numberFormatterProvider).format(ref
-                .watch(fullProjectControllerProvider)
+                .watch(fullProjectControllerProvider(widget.uuid))
                 .regionalInvestmentTotalRow
                 .y2023),
             textAlign: TextAlign.right,
@@ -319,7 +322,7 @@ class _UpdateRegionalCostState extends ConsumerState<UpdateRegionalCost> {
           width: columnWidth,
           child: Text(
             ref.watch(numberFormatterProvider).format(ref
-                .watch(fullProjectControllerProvider)
+                .watch(fullProjectControllerProvider(widget.uuid))
                 .regionalInvestmentTotalRow
                 .y2024),
             textAlign: TextAlign.right,
@@ -331,7 +334,7 @@ class _UpdateRegionalCostState extends ConsumerState<UpdateRegionalCost> {
           width: columnWidth,
           child: Text(
             ref.watch(numberFormatterProvider).format(ref
-                .watch(fullProjectControllerProvider)
+                .watch(fullProjectControllerProvider(widget.uuid))
                 .regionalInvestmentTotalRow
                 .y2025),
             textAlign: TextAlign.right,
@@ -343,7 +346,7 @@ class _UpdateRegionalCostState extends ConsumerState<UpdateRegionalCost> {
           width: columnWidth,
           child: Text(
             ref.watch(numberFormatterProvider).format(ref
-                .watch(fullProjectControllerProvider)
+                .watch(fullProjectControllerProvider(widget.uuid))
                 .regionalInvestmentTotalRow
                 .y2026),
             textAlign: TextAlign.right,
@@ -355,7 +358,7 @@ class _UpdateRegionalCostState extends ConsumerState<UpdateRegionalCost> {
           width: columnWidth,
           child: Text(
             ref.watch(numberFormatterProvider).format(ref
-                .watch(fullProjectControllerProvider)
+                .watch(fullProjectControllerProvider(widget.uuid))
                 .regionalInvestmentTotalRow
                 .y2027),
             textAlign: TextAlign.right,
@@ -367,7 +370,7 @@ class _UpdateRegionalCostState extends ConsumerState<UpdateRegionalCost> {
           width: columnWidth,
           child: Text(
             ref.watch(numberFormatterProvider).format(ref
-                .watch(fullProjectControllerProvider)
+                .watch(fullProjectControllerProvider(widget.uuid))
                 .regionalInvestmentTotalRow
                 .y2028),
             textAlign: TextAlign.right,
@@ -379,7 +382,7 @@ class _UpdateRegionalCostState extends ConsumerState<UpdateRegionalCost> {
           width: columnWidth,
           child: Text(
             ref.watch(numberFormatterProvider).format(ref
-                .watch(fullProjectControllerProvider)
+                .watch(fullProjectControllerProvider(widget.uuid))
                 .regionalInvestmentTotalRow
                 .y2029),
             textAlign: TextAlign.right,
@@ -391,7 +394,7 @@ class _UpdateRegionalCostState extends ConsumerState<UpdateRegionalCost> {
           width: columnWidth,
           child: Text(
             ref.watch(numberFormatterProvider).format(ref
-                .watch(fullProjectControllerProvider)
+                .watch(fullProjectControllerProvider(widget.uuid))
                 .regionalInvestmentTotalRow
                 .grandTotal),
             textAlign: TextAlign.right,

@@ -88,7 +88,9 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     PapEditRoute.name: (routeData) {
-      final args = routeData.argsAs<PapEditRouteArgs>();
+      final pathParams = routeData.inheritedPathParams;
+      final args = routeData.argsAs<PapEditRouteArgs>(
+          orElse: () => PapEditRouteArgs(uuid: pathParams.getString('uuid')));
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: PapEditScreen(
@@ -298,6 +300,7 @@ class PapEditRoute extends PageRouteInfo<PapEditRouteArgs> {
             key: key,
             uuid: uuid,
           ),
+          rawPathParams: {'uuid': uuid},
           initialChildren: children,
         );
 

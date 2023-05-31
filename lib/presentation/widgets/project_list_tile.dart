@@ -24,7 +24,8 @@ class _ProjectListTileState extends ConsumerState<ProjectListTile> {
   late Project _project;
 
   Future<void> _openInNewWindow() async {
-    final rawUrl = ref.watch(configProvider).generatePdfBaseUrl + _project.uuid;
+    final rawUrl =
+        "${ref.watch(configProvider).generatePdfBaseUrl}/${_project.uuid}";
     final url = Uri.parse(rawUrl);
     //
     if (await canLaunchUrl(url)) {
@@ -136,12 +137,21 @@ class _ProjectListTileState extends ConsumerState<ProjectListTile> {
           ),
           actions: [
             IconButton(
-              onPressed: _project.permissions.delete ? () {} : null,
+              onPressed: _project.permissions.delete
+                  ? () {
+                      _confirmDelete();
+                    }
+                  : null,
               icon: const Icon(Icons.delete),
               tooltip: 'Delete',
             ),
             IconButton(
-              onPressed: _project.permissions.update ? () {} : null,
+              onPressed: _project.permissions.update
+                  ? () {
+                      AutoRouter.of(context)
+                          .push(PapEditRoute(uuid: _project.uuid));
+                    }
+                  : null,
               icon: const Icon(Icons.edit),
               tooltip: 'Edit',
             ),
@@ -186,8 +196,6 @@ class _ProjectListTileState extends ConsumerState<ProjectListTile> {
           SlidableAction(
             onPressed: _project.permissions.view
                 ? (context) {
-                    ref.read(projectProvider(uuid: _project.uuid));
-
                     AutoRouter.of(context)
                         .push(PapViewRoute(uuid: _project.uuid));
                   }
@@ -207,7 +215,12 @@ class _ProjectListTileState extends ConsumerState<ProjectListTile> {
             icon: Icons.picture_as_pdf,
           ),
           SlidableAction(
-            onPressed: _project.permissions.update ? (context) {} : null,
+            onPressed: _project.permissions.update
+                ? (context) {
+                    AutoRouter.of(context)
+                        .push(PapEditRoute(uuid: _project.uuid));
+                  }
+                : null,
             backgroundColor: const Color(0xFF21B7CA),
             foregroundColor: Colors.white,
             icon: Icons.edit,

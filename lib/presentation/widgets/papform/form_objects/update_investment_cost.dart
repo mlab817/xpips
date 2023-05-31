@@ -10,14 +10,17 @@ import '../cost_field.dart';
 class UpdateInvestmentCost extends ConsumerStatefulWidget {
   const UpdateInvestmentCost({
     Key? key,
+    this.uuid,
   }) : super(key: key);
+
+  final String? uuid;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
       _UpdateInvestmentCost();
 }
 
-class _UpdateInvestmentCost extends ConsumerState {
+class _UpdateInvestmentCost extends ConsumerState<UpdateInvestmentCost> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -185,7 +188,7 @@ class _UpdateInvestmentCost extends ConsumerState {
         MediaQuery.of(context).size.width - 128; // remove horizontal margins
     final columnWidth = windowWidth / 10;
 
-    final project = ref.watch(fullProjectControllerProvider);
+    final project = ref.watch(fullProjectControllerProvider(widget.uuid));
 
     List<FsInvestment> fsInvestments = project.fsInvestments;
 
@@ -217,7 +220,9 @@ class _UpdateInvestmentCost extends ConsumerState {
                   );
                   updatedInvestments[index] = updatedFsInvestment;
 
-                  ref.read(fullProjectControllerProvider.notifier).update(
+                  ref
+                      .read(fullProjectControllerProvider(widget.uuid).notifier)
+                      .update(
                         fsInvestments: updatedInvestments,
                       );
                 },
@@ -237,7 +242,9 @@ class _UpdateInvestmentCost extends ConsumerState {
                   );
                   updatedInvestments[index] = updatedFsInvestment;
 
-                  ref.read(fullProjectControllerProvider.notifier).update(
+                  ref
+                      .read(fullProjectControllerProvider(widget.uuid).notifier)
+                      .update(
                         fsInvestments: updatedInvestments,
                       );
                 },
@@ -257,7 +264,9 @@ class _UpdateInvestmentCost extends ConsumerState {
                   );
                   updatedInvestments[index] = updatedFsInvestment;
 
-                  ref.read(fullProjectControllerProvider.notifier).update(
+                  ref
+                      .read(fullProjectControllerProvider(widget.uuid).notifier)
+                      .update(
                         fsInvestments: updatedInvestments,
                       );
                 },
@@ -277,7 +286,9 @@ class _UpdateInvestmentCost extends ConsumerState {
                   );
                   updatedInvestments[index] = updatedFsInvestment;
 
-                  ref.read(fullProjectControllerProvider.notifier).update(
+                  ref
+                      .read(fullProjectControllerProvider(widget.uuid).notifier)
+                      .update(
                         fsInvestments: updatedInvestments,
                       );
                 },
@@ -297,7 +308,9 @@ class _UpdateInvestmentCost extends ConsumerState {
                   );
                   updatedInvestments[index] = updatedFsInvestment;
 
-                  ref.read(fullProjectControllerProvider.notifier).update(
+                  ref
+                      .read(fullProjectControllerProvider(widget.uuid).notifier)
+                      .update(
                         fsInvestments: updatedInvestments,
                       );
                 },
@@ -317,7 +330,9 @@ class _UpdateInvestmentCost extends ConsumerState {
                   );
                   updatedInvestments[index] = updatedFsInvestment;
 
-                  ref.read(fullProjectControllerProvider.notifier).update(
+                  ref
+                      .read(fullProjectControllerProvider(widget.uuid).notifier)
+                      .update(
                         fsInvestments: updatedInvestments,
                       );
                 },
@@ -337,7 +352,9 @@ class _UpdateInvestmentCost extends ConsumerState {
                   );
                   updatedInvestments[index] = updatedFsInvestment;
 
-                  ref.read(fullProjectControllerProvider.notifier).update(
+                  ref
+                      .read(fullProjectControllerProvider(widget.uuid).notifier)
+                      .update(
                         fsInvestments: updatedInvestments,
                       );
                 },
@@ -357,7 +374,9 @@ class _UpdateInvestmentCost extends ConsumerState {
                   );
                   updatedInvestments[index] = updatedFsInvestment;
 
-                  ref.read(fullProjectControllerProvider.notifier).update(
+                  ref
+                      .read(fullProjectControllerProvider(widget.uuid).notifier)
+                      .update(
                         fsInvestments: updatedInvestments,
                       );
                 },
@@ -396,7 +415,7 @@ class _UpdateInvestmentCost extends ConsumerState {
             padding: const EdgeInsets.all(4.0),
             child: Text(
               ref.watch(numberFormatterProvider).format(ref
-                  .watch(fullProjectControllerProvider)
+                  .watch(fullProjectControllerProvider(widget.uuid))
                   .fsInvestmentTotalRow
                   .y2022),
               textAlign: TextAlign.right,
@@ -410,7 +429,7 @@ class _UpdateInvestmentCost extends ConsumerState {
           width: columnWidth,
           child: Text(
             ref.watch(numberFormatterProvider).format(ref
-                .watch(fullProjectControllerProvider)
+                .watch(fullProjectControllerProvider(widget.uuid))
                 .fsInvestmentTotalRow
                 .y2023),
             textAlign: TextAlign.right,
@@ -423,7 +442,7 @@ class _UpdateInvestmentCost extends ConsumerState {
           width: columnWidth,
           child: Text(
             ref.watch(numberFormatterProvider).format(ref
-                .watch(fullProjectControllerProvider)
+                .watch(fullProjectControllerProvider(widget.uuid))
                 .fsInvestmentTotalRow
                 .y2024),
             textAlign: TextAlign.right,
@@ -436,7 +455,7 @@ class _UpdateInvestmentCost extends ConsumerState {
           width: columnWidth,
           child: Text(
             ref.watch(numberFormatterProvider).format(ref
-                .watch(fullProjectControllerProvider)
+                .watch(fullProjectControllerProvider(widget.uuid))
                 .fsInvestmentTotalRow
                 .y2025),
             textAlign: TextAlign.right,
@@ -449,7 +468,7 @@ class _UpdateInvestmentCost extends ConsumerState {
           width: columnWidth,
           child: Text(
             ref.watch(numberFormatterProvider).format(ref
-                .watch(fullProjectControllerProvider)
+                .watch(fullProjectControllerProvider(widget.uuid))
                 .fsInvestmentTotalRow
                 .y2026),
             textAlign: TextAlign.right,
@@ -462,7 +481,7 @@ class _UpdateInvestmentCost extends ConsumerState {
           width: columnWidth,
           child: Text(
             ref.watch(numberFormatterProvider).format(ref
-                .watch(fullProjectControllerProvider)
+                .watch(fullProjectControllerProvider(widget.uuid))
                 .fsInvestmentTotalRow
                 .y2027),
             textAlign: TextAlign.right,
@@ -475,7 +494,7 @@ class _UpdateInvestmentCost extends ConsumerState {
           width: columnWidth,
           child: Text(
             ref.watch(numberFormatterProvider).format(ref
-                .watch(fullProjectControllerProvider)
+                .watch(fullProjectControllerProvider(widget.uuid))
                 .fsInvestmentTotalRow
                 .y2028),
             textAlign: TextAlign.right,
@@ -488,7 +507,7 @@ class _UpdateInvestmentCost extends ConsumerState {
           width: columnWidth,
           child: Text(
             ref.watch(numberFormatterProvider).format(ref
-                .watch(fullProjectControllerProvider)
+                .watch(fullProjectControllerProvider(widget.uuid))
                 .fsInvestmentTotalRow
                 .y2029),
             textAlign: TextAlign.right,
@@ -501,7 +520,7 @@ class _UpdateInvestmentCost extends ConsumerState {
           width: columnWidth,
           child: Text(
             ref.watch(numberFormatterProvider).format(ref
-                .watch(fullProjectControllerProvider)
+                .watch(fullProjectControllerProvider(widget.uuid))
                 .fsInvestmentTotalRow
                 .grandTotal),
             textAlign: TextAlign.right,

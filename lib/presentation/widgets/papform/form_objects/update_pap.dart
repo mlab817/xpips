@@ -8,10 +8,12 @@ import '../select_dialog_content.dart';
 import '../success_indicator.dart';
 
 class UpdatePap extends ConsumerWidget {
-  const UpdatePap({Key? key}) : super(key: key);
+  const UpdatePap({Key? key, this.uuid}) : super(key: key);
+
+  final String? uuid;
 
   Future<void> _selectType(BuildContext context, WidgetRef ref) async {
-    final project = ref.watch(fullProjectControllerProvider);
+    final project = ref.watch(fullProjectControllerProvider(uuid));
     final optionsAsync = ref.watch(optionsControllerProvider);
 
     final response = await showDialog(
@@ -57,13 +59,15 @@ class UpdatePap extends ConsumerWidget {
       },
     );
 
-    ref.read(fullProjectControllerProvider.notifier).update(type: response);
+    ref
+        .read(fullProjectControllerProvider(uuid).notifier)
+        .update(type: response);
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final type =
-        ref.watch(fullProjectControllerProvider.select((value) => value.type));
+    final type = ref.watch(
+        fullProjectControllerProvider(uuid).select((value) => value.type));
 
     return ListTile(
         title: const Text('Program or Project'),

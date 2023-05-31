@@ -9,14 +9,17 @@ import '../cost_field.dart';
 class UpdateFinancialAccomplishment extends ConsumerWidget {
   const UpdateFinancialAccomplishment({
     Key? key,
+    this.uuid,
   }) : super(key: key);
+
+  final String? uuid;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final width = MediaQuery.of(context).size.width;
     final windowWidth = width - 128;
     final columnWidth = windowWidth / 4;
-    final project = ref.watch(fullProjectControllerProvider);
+    final project = ref.watch(fullProjectControllerProvider(uuid));
 
     final columns = <DataColumn>[
       DataColumn(

@@ -1,33 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pips/presentation/widgets/papform/cancel_button.dart';
+import 'package:pips/presentation/widgets/papform/update_button.dart';
 
 import '../../../../domain/models/models.dart';
 import '../../../controllers/controllers.dart';
-import '../../papform_screen.dart';
 import '../empty_indicator.dart';
 import '../select_dialog_content.dart';
 import '../success_indicator.dart';
 
-class UpdateInfraSectors extends ConsumerStatefulWidget {
+class UpdateInfraSectors extends ConsumerWidget {
   const UpdateInfraSectors({
     Key? key,
+    required this.uuid,
   }) : super(key: key);
 
-  @override
-  ConsumerState createState() => _UpdateInfraSectorsState();
-}
+  final String uuid;
 
-class _UpdateInfraSectorsState extends ConsumerState<UpdateInfraSectors> {
   @override
-  Widget build(BuildContext context) {
-    return _buildInfraSectors();
-  }
-
-  Widget _buildInfraSectors() {
-    final infrastructureSectors = ref.watch(fullProjectControllerProvider
-        .select((value) => value.infrastructureSectors));
-    final trip =
-        ref.watch(fullProjectControllerProvider.select((value) => value.trip));
+  Widget build(BuildContext context, WidgetRef ref) {
+    final infrastructureSectors = ref
+        .watch(fullProjectControllerProvider(uuid)
+            .select((value) => value.infrastructureSectors))
+        .toList();
+    final trip = ref.watch(
+        fullProjectControllerProvider(uuid).select((value) => value.trip));
 
     return ListTile(
       enabled: trip ?? false,
@@ -39,12 +36,14 @@ class _UpdateInfraSectorsState extends ConsumerState<UpdateInfraSectors> {
           ? Text(
               infrastructureSectors.map((element) => element.label).join(', '))
           : const Text('Select as many as applicable'),
-      onTap: _selectInfraSectors,
+      onTap: () {
+        _selectInfraSectors(context, ref);
+      },
     );
   }
 
-  Future<void> _selectInfraSectors() async {
-    final infrastructureSectors = ref.watch(fullProjectControllerProvider
+  Future<void> _selectInfraSectors(BuildContext context, WidgetRef ref) async {
+    final infrastructureSectors = ref.watch(fullProjectControllerProvider(uuid)
         .select((value) => value.infrastructureSectors));
     final optionsAsync = ref.watch(optionsControllerProvider);
 
@@ -63,15 +62,21 @@ class _UpdateInfraSectorsState extends ConsumerState<UpdateInfraSectors> {
                     multiple: true,
                     selected: selected,
                     onChanged: (value) {
-                      selected = value;
+                      // selected = value;
                     },
                   );
                 },
-                error: (error, stackTrace) => Container(),
+                error: (error, stackTrace) {
+                  return Center(
+                    child: Text(error.toString()),
+                  );
+                },
                 loading: () => const CircularProgressIndicator()),
             actions: [
-              buildCancel(context),
-              buildUpdate(context, () {
+              CancelButton(onPressed: () {
+                Navigator.pop(context);
+              }),
+              UpdateButton(onPressed: () {
                 Navigator.pop(context, selected);
               })
             ],
@@ -79,7 +84,7 @@ class _UpdateInfraSectorsState extends ConsumerState<UpdateInfraSectors> {
         });
 
     ref
-        .read(fullProjectControllerProvider.notifier)
+        .read(fullProjectControllerProvider(uuid).notifier)
         .update(infrastructureSectors: response);
   }
 }

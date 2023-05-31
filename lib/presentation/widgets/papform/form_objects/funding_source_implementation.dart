@@ -10,7 +10,10 @@ import '../success_indicator.dart';
 class UpdateFundingSourceAndImplementation extends ConsumerWidget {
   const UpdateFundingSourceAndImplementation({
     Key? key,
+    this.uuid,
   }) : super(key: key);
+
+  final String? uuid;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -26,11 +29,10 @@ class UpdateFundingSourceAndImplementation extends ConsumerWidget {
   }
 
   Widget _buildFundingSource(context, ref) {
-    final fundingSource = ref
-        .watch(fullProjectControllerProvider)
-        .select((state) => state.fundingSource);
-    final type =
-        ref.watch(fullProjectControllerProvider).select((state) => state.type);
+    final fundingSource = ref.watch(fullProjectControllerProvider(uuid)
+        .select((value) => value.fundingSource));
+    final type = ref.watch(
+        fullProjectControllerProvider(uuid).select((value) => value.type));
 
     return ListTile(
       title: const Text('Main Funding Source'),
@@ -49,9 +51,8 @@ class UpdateFundingSourceAndImplementation extends ConsumerWidget {
   }
 
   Future<void> _selectFundingSource(context, ref) async {
-    final fundingSource = ref
-        .watch(fullProjectControllerProvider)
-        .select((value) => value.fundingSource);
+    final fundingSource = ref.watch(fullProjectControllerProvider(uuid)
+        .select((value) => value.fundingSource));
 
     final response = await showDialog(
       context: context,
@@ -99,16 +100,15 @@ class UpdateFundingSourceAndImplementation extends ConsumerWidget {
     );
 
     ref
-        .read(fullProjectControllerProvider.notifier)
+        .read(fullProjectControllerProvider(uuid).notifier)
         .update(fundingSource: response);
   }
 
   Widget _buildFundingSources(context, ref) {
-    final fundingSources = ref
-        .watch(fullProjectControllerProvider)
-        .select((value) => value.fundingSources);
-    final type =
-        ref.watch(fullProjectControllerProvider).select((value) => value.type);
+    final fundingSources = ref.watch(fullProjectControllerProvider(uuid)
+        .select((value) => value.fundingSources));
+    final type = ref.watch(
+        fullProjectControllerProvider(uuid).select((value) => value.type));
 
     return ListTile(
       enabled: type?.value != 1,
@@ -127,9 +127,8 @@ class UpdateFundingSourceAndImplementation extends ConsumerWidget {
   }
 
   Future<void> _selectFundingSources(context, ref) async {
-    final fundingSources = ref
-        .watch(fullProjectControllerProvider)
-        .select((value) => value.fundingSources);
+    final fundingSources = ref.watch(fullProjectControllerProvider(uuid)
+        .select((value) => value.fundingSources));
 
     final response = await showDialog(
       context: context,
@@ -178,16 +177,15 @@ class UpdateFundingSourceAndImplementation extends ConsumerWidget {
     );
 
     ref
-        .read(fullProjectControllerProvider.notifier)
+        .read(fullProjectControllerProvider(uuid).notifier)
         .update(fundingSources: response);
   }
 
   Widget _buildImplementationMode(context, ref) {
-    final implementationMode = ref
-        .watch(fullProjectControllerProvider)
-        .select((state) => state.implementationMode);
-    final type =
-        ref.watch(fullProjectControllerProvider).select((state) => state.type);
+    final implementationMode = ref.watch(fullProjectControllerProvider(uuid)
+        .select((value) => value.implementationMode));
+    final type = ref.watch(
+        fullProjectControllerProvider(uuid).select((value) => value.type));
 
     return ListTile(
       title: const Text('Mode of Implementation'),
@@ -206,9 +204,8 @@ class UpdateFundingSourceAndImplementation extends ConsumerWidget {
   }
 
   Future<void> _selectImplementationMode(context, ref) async {
-    final implementationMode = ref
-        .watch(fullProjectControllerProvider)
-        .select((state) => state.implementationMode);
+    final implementationMode = ref.watch(fullProjectControllerProvider(uuid)
+        .select((value) => value.implementationMode));
 
     final response = await showDialog(
       context: context,
@@ -256,14 +253,13 @@ class UpdateFundingSourceAndImplementation extends ConsumerWidget {
     );
 
     ref
-        .read(fullProjectControllerProvider.notifier)
+        .read(fullProjectControllerProvider(uuid).notifier)
         .update(implementationMode: response);
   }
 
   Widget _buildFundingInstitutions(context, ref) {
-    final fundingInstitutions = ref
-        .watch(fullProjectControllerProvider)
-        .select((state) => state.fundingInstitutions);
+    final fundingInstitutions = ref.watch(fullProjectControllerProvider(uuid)
+        .select((value) => value.fundingInstitutions));
 
     return ListTile(
       title: const Text('Funding Institutions'),
@@ -281,9 +277,8 @@ class UpdateFundingSourceAndImplementation extends ConsumerWidget {
   }
 
   Future<void> _selectFundingInstitutions(context, ref) async {
-    final fundingInstitutions = ref
-        .watch(fullProjectControllerProvider)
-        .select((state) => state.fundingInstitutions);
+    final fundingInstitutions = ref.watch(fullProjectControllerProvider(uuid)
+        .select((value) => value.fundingInstitutions));
 
     final response = await showDialog(
         context: context,
@@ -329,7 +324,7 @@ class UpdateFundingSourceAndImplementation extends ConsumerWidget {
         });
 
     ref
-        .read(fullProjectControllerProvider.notifier)
+        .read(fullProjectControllerProvider(uuid).notifier)
         .update(fundingInstitutions: response);
   }
 }

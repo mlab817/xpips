@@ -7,7 +7,9 @@ import '../get_input_decoration.dart';
 import '../success_indicator.dart';
 
 class UpdateDescription extends ConsumerStatefulWidget {
-  const UpdateDescription({super.key});
+  const UpdateDescription({super.key, this.uuid});
+
+  final String? uuid;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _UpdateDescription();
@@ -32,14 +34,12 @@ class _UpdateDescription extends ConsumerState<UpdateDescription> {
 
   @override
   Widget build(BuildContext context) {
-    final description = ref.watch(
-        fullProjectControllerProvider.select((value) => value.description));
-
     return ListTile(
       title: const Text('Description'),
       subtitle: TextFormField(
         focusNode: _node,
-        initialValue: description,
+        initialValue: ref.watch(fullProjectControllerProvider(widget.uuid)
+            .select((value) => value.description)),
         decoration: getTextInputDecoration(
           hintText: 'Description',
         ),
@@ -48,11 +48,18 @@ class _UpdateDescription extends ConsumerState<UpdateDescription> {
         style: Theme.of(context).textTheme.bodyMedium,
         onChanged: (String value) {
           ref
-              .read(fullProjectControllerProvider.notifier)
+              .read(fullProjectControllerProvider(widget.uuid).notifier)
               .update(description: value);
         },
       ),
-      trailing: description != null && description.isNotEmpty
+      trailing: ref.watch(fullProjectControllerProvider(widget.uuid)
+                      .select((value) => value.description)) !=
+                  null &&
+              ref
+                      .watch(fullProjectControllerProvider(widget.uuid)
+                          .select((value) => value.description))
+                      ?.isNotEmpty !=
+                  null
           ? const SuccessIndicator()
           : const EmptyIndicator(),
       onTap: () {

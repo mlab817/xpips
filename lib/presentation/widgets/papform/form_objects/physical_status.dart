@@ -12,7 +12,10 @@ import '../success_indicator.dart';
 class PhysicalStatus extends ConsumerWidget {
   PhysicalStatus({
     Key? key,
+    this.uuid,
   }) : super(key: key);
+
+  final String? uuid;
 
   final FocusNode _updateNode = FocusNode();
 
@@ -34,10 +37,10 @@ class PhysicalStatus extends ConsumerWidget {
 
   /// TRIP only
   Widget _buildCategory(context, ref) {
-    final trip =
-        ref.watch(fullProjectControllerProvider.select((value) => value.trip));
-    final category = ref
-        .watch(fullProjectControllerProvider.select((value) => value.category));
+    final trip = ref.watch(
+        fullProjectControllerProvider(uuid).select((value) => value.trip));
+    final category = ref.watch(
+        fullProjectControllerProvider(uuid).select((value) => value.category));
 
     return ListTile(
       enabled: trip ?? false,
@@ -55,8 +58,8 @@ class PhysicalStatus extends ConsumerWidget {
   ///
   ///
   Future<void> _selectCategory(context, ref) async {
-    final category = ref
-        .watch(fullProjectControllerProvider.select((value) => value.category));
+    final category = ref.watch(
+        fullProjectControllerProvider(uuid).select((value) => value.category));
     final optionsAsync = ref.watch(optionsControllerProvider);
 
     final response = await showDialog(
@@ -101,14 +104,16 @@ class PhysicalStatus extends ConsumerWidget {
       },
     );
 
-    ref.read(fullProjectControllerProvider.notifier).update(category: response);
+    ref
+        .read(fullProjectControllerProvider(uuid).notifier)
+        .update(category: response);
   }
 
   Widget _buildReadiness(context, ref) {
-    final trip =
-        ref.watch(fullProjectControllerProvider.select((value) => value.trip));
-    final projectStatus = ref.watch(
-        fullProjectControllerProvider.select((value) => value.projectStatus));
+    final trip = ref.watch(
+        fullProjectControllerProvider(uuid).select((value) => value.trip));
+    final projectStatus = ref.watch(fullProjectControllerProvider(uuid)
+        .select((value) => value.projectStatus));
 
     return ListTile(
       enabled: trip ?? false,
@@ -126,8 +131,8 @@ class PhysicalStatus extends ConsumerWidget {
   }
 
   Future<void> _selectReadiness(context, ref) async {
-    final projectStatus = ref.watch(
-        fullProjectControllerProvider.select((value) => value.projectStatus));
+    final projectStatus = ref.watch(fullProjectControllerProvider(uuid)
+        .select((value) => value.projectStatus));
     final optionsAsync = ref.watch(optionsControllerProvider);
 
     final response = await showDialog(
@@ -174,13 +179,13 @@ class PhysicalStatus extends ConsumerWidget {
 
     // TODO: update category
     ref
-        .read(fullProjectControllerProvider.notifier)
+        .read(fullProjectControllerProvider(uuid).notifier)
         .update(projectStatus: response);
   }
 
   Widget _buildUpdates(context, ref) {
-    final updates = ref
-        .watch(fullProjectControllerProvider.select((value) => value.updates));
+    final updates = ref.watch(
+        fullProjectControllerProvider(uuid).select((value) => value.updates));
 
     return ListTile(
       title: const Text('Updates'),
@@ -196,7 +201,7 @@ class PhysicalStatus extends ConsumerWidget {
         style: Theme.of(context).textTheme.bodyMedium,
         onChanged: (String value) {
           ref
-              .read(fullProjectControllerProvider.notifier)
+              .read(fullProjectControllerProvider(uuid).notifier)
               .update(updates: value);
         },
       ),
@@ -212,8 +217,8 @@ class PhysicalStatus extends ConsumerWidget {
   ///
   ///
   Widget _buildUpdatesAsOf(context, ref) {
-    final asOf =
-        ref.watch(fullProjectControllerProvider.select((state) => state.asOf));
+    final asOf = ref.watch(
+        fullProjectControllerProvider(uuid).select((state) => state.asOf));
 
     return ListTile(
       title: const Text('As of'),
@@ -231,8 +236,8 @@ class PhysicalStatus extends ConsumerWidget {
   ///
   ///
   Future<void> _selectUpdatesAsOf(context, ref) async {
-    final asOf =
-        ref.watch(fullProjectControllerProvider.select((state) => state.asOf));
+    final asOf = ref.watch(
+        fullProjectControllerProvider(uuid).select((state) => state.asOf));
 
     final DateTime? result = await showDatePicker(
       context: context,
@@ -241,14 +246,14 @@ class PhysicalStatus extends ConsumerWidget {
       lastDate: DateTime.now(),
     );
 
-    ref.read(fullProjectControllerProvider.notifier).update(asOf: result);
+    ref.read(fullProjectControllerProvider(uuid).notifier).update(asOf: result);
   }
 
   Widget _buildStart(context, ref) {
     final startYear = ref.watch(
-        fullProjectControllerProvider.select((value) => value.startYear));
-    final type =
-        ref.watch(fullProjectControllerProvider.select((state) => state.type));
+        fullProjectControllerProvider(uuid).select((value) => value.startYear));
+    final type = ref.watch(
+        fullProjectControllerProvider(uuid).select((state) => state.type));
 
     return ListTile(
       title: const Text('Start of Project Implementation'),
@@ -274,9 +279,9 @@ class PhysicalStatus extends ConsumerWidget {
   ///
   Future<void> _selectStart(context, ref) async {
     final startYear = ref.watch(
-        fullProjectControllerProvider.select((state) => state.startYear));
-    final endYear = ref
-        .watch(fullProjectControllerProvider.select((state) => state.endYear));
+        fullProjectControllerProvider(uuid).select((state) => state.startYear));
+    final endYear = ref.watch(
+        fullProjectControllerProvider(uuid).select((state) => state.endYear));
     final optionsAsync = ref.watch(optionsControllerProvider);
 
     final response = await showDialog(
@@ -329,7 +334,9 @@ class PhysicalStatus extends ConsumerWidget {
     if (endYear != null &&
         response != null &&
         endYear.value < response!.value) {
-      ref.read(fullProjectControllerProvider.notifier).update(endYear: null);
+      ref
+          .read(fullProjectControllerProvider(uuid).notifier)
+          .update(endYear: null);
 
       _showSnackbar(
           message:
@@ -337,17 +344,17 @@ class PhysicalStatus extends ConsumerWidget {
     }
 
     ref
-        .read(fullProjectControllerProvider.notifier)
+        .read(fullProjectControllerProvider(uuid).notifier)
         .update(startYear: response);
   }
 
   Widget _buildEnd(context, ref) {
     final startYear = ref.watch(
-        fullProjectControllerProvider.select((state) => state.startYear));
-    final endYear = ref
-        .watch(fullProjectControllerProvider.select((state) => state.endYear));
-    final type =
-        ref.watch(fullProjectControllerProvider.select((state) => state.type));
+        fullProjectControllerProvider(uuid).select((state) => state.startYear));
+    final endYear = ref.watch(
+        fullProjectControllerProvider(uuid).select((state) => state.endYear));
+    final type = ref.watch(
+        fullProjectControllerProvider(uuid).select((state) => state.type));
 
     return ListTile(
       enabled: startYear != null,
@@ -373,8 +380,8 @@ class PhysicalStatus extends ConsumerWidget {
   }
 
   Future<void> _selectEnd(context, ref) async {
-    final endYear = ref
-        .watch(fullProjectControllerProvider.select((state) => state.endYear));
+    final endYear = ref.watch(
+        fullProjectControllerProvider(uuid).select((state) => state.endYear));
     final optionsAsync = ref.watch(optionsControllerProvider);
 
     final response = await showDialog(
@@ -422,7 +429,9 @@ class PhysicalStatus extends ConsumerWidget {
           );
         });
 
-    ref.read(fullProjectControllerProvider.notifier).update(endYear: response);
+    ref
+        .read(fullProjectControllerProvider(uuid).notifier)
+        .update(endYear: response);
   }
 
   void _showSnackbar({required String message}) {

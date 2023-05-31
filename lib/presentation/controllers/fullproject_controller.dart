@@ -1,6 +1,3 @@
-import 'package:pips/application/extensions.dart';
-import 'package:pips/data/repositories/repositories.dart';
-import 'package:pips/data/responses/project_response.dart';
 import 'package:pips/presentation/controllers/controllers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -138,46 +135,56 @@ class FullProjectController extends _$FullProjectController {
   }
 
   @override
-  FullProject build() {
-    // initialize fsInvestments and regionalInvestments
-    final options = ref.watch(optionsControllerProvider);
-    List<FsInvestment> fsInvestments = [];
-    List<RegionalInvestment> regions = [];
+  FullProject build(String? uuid) {
+    final asyncProject = ref.watch(projectProvider(uuid: uuid));
 
-    options.when(
-      data: (data) {
-        for (var fs in data.data.fundingSources ?? []) {
-          fsInvestments.add(FsInvestment.initial().copyWith(
-            fundingSource: fs,
-          ));
-        }
+    // // initialize fsInvestments and regionalInvestments
+    // final options = ref.watch(optionsControllerProvider);
+    // List<FsInvestment> fsInvestments = [];
+    // List<RegionalInvestment> regions = [];
+    //
+    // options.when(
+    //   data: (data) {
+    //     for (var fs in data.data.fundingSources ?? []) {
+    //       fsInvestments.add(FsInvestment.initial().copyWith(
+    //         fundingSource: fs,
+    //       ));
+    //     }
+    //
+    //     for (var region in data.data.regions ?? []) {
+    //       regions.add(RegionalInvestment.initial().copyWith(region: region));
+    //     }
+    //   },
+    //   error: (error, stacktrace) {},
+    //   loading: () {},
+    // );
+    //
+    // // initialize the full project model
+    // FullProject defaultProject = FullProject(
+    //   bases: [],
+    //   operatingUnits: [],
+    //   pdpChapters: [],
+    //   agenda: [],
+    //   sdgs: [],
+    //   fsCost: FsCost.initial(),
+    //   rowCost: RowCost.initial(),
+    //   rapCost: RapCost.initial(),
+    //   prerequisites: [],
+    //   locations: [],
+    //   infrastructureSectors: [],
+    //   fundingInstitutions: [],
+    //   fundingSources: [],
+    //   fsInvestments: fsInvestments,
+    //   regions: regions,
+    //   financialAccomplishment: FinancialAccomplishment.initial(),
+    // );
+    //
+    // if (asyncProject.hasValue) {
+    //   return asyncProject.value?.project ?? defaultProject;
+    // }
 
-        for (var region in data.data.regions ?? []) {
-          regions.add(RegionalInvestment.initial().copyWith(region: region));
-        }
-      },
-      error: (error, stacktrace) {},
-      loading: () {},
-    );
+    assert(asyncProject.value?.project != null, 'Project cannot be null');
 
-    // initialize the full project model
-    return FullProject(
-      bases: [],
-      operatingUnits: [],
-      pdpChapters: [],
-      agenda: [],
-      sdgs: [],
-      fsCost: FsCost.initial(),
-      rowCost: RowCost.initial(),
-      rapCost: RapCost.initial(),
-      prerequisites: [],
-      locations: [],
-      infrastructureSectors: [],
-      fundingInstitutions: [],
-      fundingSources: [],
-      fsInvestments: fsInvestments,
-      regions: regions,
-      financialAccomplishment: FinancialAccomplishment.initial(),
-    );
+    return asyncProject.value!.project;
   }
 }

@@ -8,8 +8,11 @@ part 'viewpap_controller.g.dart';
 
 // return async value for pap
 @Riverpod(keepAlive: true)
-Future<ProjectResponse> project(ProjectRef ref, {required String uuid}) async {
+Future<ProjectResponse> project(ProjectRef ref, {String? uuid}) async {
   final repository = ref.watch(projectRepositoryProvider);
+
+  // if uuid is null, set the uuid to 'new'
+  uuid ??= 'new';
 
   return repository.get(uuid);
 }

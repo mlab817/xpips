@@ -8,7 +8,10 @@ import '../cost_field.dart';
 class UpdateFsCost extends ConsumerStatefulWidget {
   const UpdateFsCost({
     Key? key,
+    this.uuid,
   }) : super(key: key);
+
+  final String? uuid;
 
   @override
   ConsumerState createState() => _UpdateFsCostState();
@@ -57,8 +60,8 @@ class _UpdateFsCostState extends ConsumerState<UpdateFsCost> {
   }
 
   List<DataRow> _buildRows(double columnWidth) {
-    final fsCost = ref
-        .watch(fullProjectControllerProvider.select((value) => value.fsCost));
+    final fsCost = ref.watch(fullProjectControllerProvider(widget.uuid)
+        .select((value) => value.fsCost));
 
     final total = fsCost?.total ?? 0;
 
@@ -70,8 +73,11 @@ class _UpdateFsCostState extends ConsumerState<UpdateFsCost> {
             child: CostField(
               value: fsCost?.y2023?.toString(),
               onChanged: (String value) {
-                ref.read(fullProjectControllerProvider.notifier).update(
-                    fsCost: fsCost?.copyWith(y2023: double.tryParse(value)));
+                ref
+                    .read(fullProjectControllerProvider(widget.uuid).notifier)
+                    .update(
+                        fsCost:
+                            fsCost?.copyWith(y2023: double.tryParse(value)));
               },
             ),
           )),
@@ -80,8 +86,11 @@ class _UpdateFsCostState extends ConsumerState<UpdateFsCost> {
             child: CostField(
               value: fsCost?.y2024?.toString(),
               onChanged: (String value) {
-                ref.read(fullProjectControllerProvider.notifier).update(
-                    fsCost: fsCost?.copyWith(y2024: double.tryParse(value)));
+                ref
+                    .read(fullProjectControllerProvider(widget.uuid).notifier)
+                    .update(
+                        fsCost:
+                            fsCost?.copyWith(y2024: double.tryParse(value)));
               },
             ),
           )),
@@ -90,8 +99,11 @@ class _UpdateFsCostState extends ConsumerState<UpdateFsCost> {
             child: CostField(
               value: fsCost?.y2025?.toString(),
               onChanged: (String value) {
-                ref.read(fullProjectControllerProvider.notifier).update(
-                    fsCost: fsCost?.copyWith(y2025: double.tryParse(value)));
+                ref
+                    .read(fullProjectControllerProvider(widget.uuid).notifier)
+                    .update(
+                        fsCost:
+                            fsCost?.copyWith(y2025: double.tryParse(value)));
               },
             ),
           )),
@@ -100,8 +112,11 @@ class _UpdateFsCostState extends ConsumerState<UpdateFsCost> {
             child: CostField(
               value: fsCost?.y2026?.toString(),
               onChanged: (String value) {
-                ref.read(fullProjectControllerProvider.notifier).update(
-                    fsCost: fsCost?.copyWith(y2026: double.tryParse(value)));
+                ref
+                    .read(fullProjectControllerProvider(widget.uuid).notifier)
+                    .update(
+                        fsCost:
+                            fsCost?.copyWith(y2026: double.tryParse(value)));
               },
             ),
           )),
@@ -110,8 +125,11 @@ class _UpdateFsCostState extends ConsumerState<UpdateFsCost> {
             child: CostField(
               value: fsCost?.y2027?.toString(),
               onChanged: (String value) {
-                ref.read(fullProjectControllerProvider.notifier).update(
-                    fsCost: fsCost?.copyWith(y2027: double.tryParse(value)));
+                ref
+                    .read(fullProjectControllerProvider(widget.uuid).notifier)
+                    .update(
+                        fsCost:
+                            fsCost?.copyWith(y2027: double.tryParse(value)));
               },
             ),
           )),
@@ -120,8 +138,11 @@ class _UpdateFsCostState extends ConsumerState<UpdateFsCost> {
             child: CostField(
               value: fsCost?.y2028?.toString(),
               onChanged: (String value) {
-                ref.read(fullProjectControllerProvider.notifier).update(
-                    fsCost: fsCost?.copyWith(y2028: double.tryParse(value)));
+                ref
+                    .read(fullProjectControllerProvider(widget.uuid).notifier)
+                    .update(
+                        fsCost:
+                            fsCost?.copyWith(y2028: double.tryParse(value)));
               },
             ),
           )),

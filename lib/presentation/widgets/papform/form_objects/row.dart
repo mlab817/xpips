@@ -6,7 +6,9 @@ import '../../../controllers/controllers.dart';
 import '../get_input_decoration.dart';
 
 class UpdateRow extends ConsumerWidget {
-  const UpdateRow({Key? key}) : super(key: key);
+  const UpdateRow({Key? key, this.uuid}) : super(key: key);
+
+  final String? uuid;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -22,10 +24,10 @@ class UpdateRow extends ConsumerWidget {
 
   // CIP only
   Widget _buildRow(ref) {
-    final hasRow = ref
-        .watch(fullProjectControllerProvider.select((state) => state.hasRow));
-    final cip =
-        ref.watch(fullProjectControllerProvider.select((state) => state.cip));
+    final hasRow = ref.watch(
+        fullProjectControllerProvider(uuid).select((state) => state.hasRow));
+    final cip = ref.watch(
+        fullProjectControllerProvider(uuid).select((state) => state.cip));
 
     return SwitchListTile(
       title: const Text('With Right of Way Component?'),
@@ -33,7 +35,7 @@ class UpdateRow extends ConsumerWidget {
       onChanged: cip ?? false
           ? (bool value) {
               ref
-                  .read(fullProjectControllerProvider.notifier)
+                  .read(fullProjectControllerProvider(uuid).notifier)
                   .update(hasRow: value);
             }
           : null,
@@ -93,7 +95,7 @@ class UpdateRow extends ConsumerWidget {
   }
 
   Widget _buildRowAffectedHouseholds(ref) {
-    final rowAffectedHouseholds = ref.watch(fullProjectControllerProvider
+    final rowAffectedHouseholds = ref.watch(fullProjectControllerProvider(uuid)
         .select((value) => value.rowAffectedHouseholds));
 
     return ListTile(
@@ -107,7 +109,7 @@ class UpdateRow extends ConsumerWidget {
         decoration: getTextInputDecoration(),
         onChanged: (String value) {
           ref
-              .read(fullProjectControllerProvider.notifier)
+              .read(fullProjectControllerProvider(uuid).notifier)
               .update(rowAffectedHouseholds: int.tryParse(value));
         },
       ),

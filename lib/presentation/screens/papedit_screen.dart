@@ -1,16 +1,15 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pips/presentation/controllers/controllers.dart';
-import 'package:pips/presentation/widgets/loading_dialog.dart';
 
 import '../../application/app_router.dart';
 import '../controllers/viewpap_controller.dart';
-import '../widgets/papform_screen.dart';
+import '../widgets/loading_dialog.dart';
+import '../widgets/papform.dart';
 
 @RoutePage()
 class PapEditScreen extends ConsumerStatefulWidget {
-  const PapEditScreen({super.key, required this.uuid});
+  const PapEditScreen({super.key, @PathParam('uuid') required this.uuid});
 
   final String uuid;
 
@@ -33,15 +32,19 @@ class _PapEditScreenState extends ConsumerState<PapEditScreen> {
         ),
         title: const Text('Edit PAP'),
       ),
-      body: projectAsync.when(data: (data) {
-        return const PapForm();
-      }, error: (error, stacktrace) {
-        return Center(
-          child: Text(error.toString()),
-        );
-      }, loading: () {
-        return const LoadingOverlay();
-      }),
+      body: projectAsync.when(
+        data: (data) {
+          return PapForm(
+            uuid: widget.uuid,
+          );
+        },
+        error: (error, stacktrace) {
+          return Center(
+            child: Text(error.toString()),
+          );
+        },
+        loading: () => const LoadingOverlay(),
+      ),
     );
   }
 }
