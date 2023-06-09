@@ -38,19 +38,10 @@ class UpdateProfileRequestController extends _$UpdateProfileRequestController {
       contactNumber: contactNumber ?? state.contactNumber,
     );
   }
-}
 
-@riverpod
-class UpdateProfileController extends _$UpdateProfileController {
-  Future<void> updateProfile() async {
-    final repository = ref.read(authRepositoryProvider);
-    final request = ref.read(updateProfileRequestControllerProvider);
+  Future<UpdateProfileResponse> updateInServer() async {
+    final repository = ref.watch(authRepositoryProvider);
 
-    state = const AsyncLoading();
-
-    state = await AsyncValue.guard(() => repository.updateProfile(request));
+    return repository.updateProfile(state);
   }
-
-  @override
-  FutureOr<UpdateProfileResponse> build() => Future.value(state.value);
 }

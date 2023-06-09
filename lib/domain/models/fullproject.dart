@@ -48,7 +48,7 @@ class FullProject with _$FullProject {
     @JsonKey(name: "pdp_chapter_id") int? pdpChapterId,
     @JsonKey(name: "pdp_chapter") Option? pdpChapter,
     @JsonKey(name: "pdp_chapters") required List<Option> pdpChapters,
-    @JsonKey(name: "risk") String? risk,
+    @JsonKey(name: "implementation_risk") String? risk,
     @JsonKey(name: "agenda") required List<Option> agenda,
     @JsonKey(name: "sdgs") required List<Option> sdgs,
     @JsonKey(name: "gad_id") int? gadId,
@@ -82,7 +82,8 @@ class FullProject with _$FullProject {
     @JsonKey(name: "implementation_mode") Option? implementationMode,
     @JsonKey(name: "pure_grant") bool? pureGrant,
     @JsonKey(name: "fs_investments") required List<FsInvestment> fsInvestments,
-    @JsonKey(name: "regions") required List<RegionalInvestment> regions,
+    @JsonKey(name: "regional_investments")
+    required List<RegionalInvestment> regionalInvestments,
     @JsonKey(name: "implementation_mode_id") int? implementationModeId,
     @JsonKey(name: "project_status_id") int? projectStatusId,
     @JsonKey(name: "category_id") int? categoryId,
@@ -105,11 +106,33 @@ class FullProject with _$FullProject {
     @JsonKey(name: "remarks") String? remarks,
     @JsonKey(name: "uacs_code") String? uacsCode,
     @JsonKey(name: "financial_accomplishment")
-    required FinancialAccomplishment financialAccomplishment,
+    FinancialAccomplishment? financialAccomplishment,
     @JsonKey(name: "contact_information") String? contactInformation,
     @JsonKey(name: "notes") String? notes,
+    @JsonKey(name: "icc_resubmission") bool? iccResubmission,
   }) = _FullProject;
 
   factory FullProject.fromJson(Map<String, Object?> json) =>
       _$FullProjectFromJson(json);
+
+  static FullProject initial() {
+    return FullProject(
+      bases: [],
+      operatingUnits: [],
+      pdpChapters: [],
+      agenda: [],
+      sdgs: [],
+      prerequisites: [],
+      locations: [],
+      infrastructureSectors: [],
+      fundingInstitutions: [],
+      fundingSources: [],
+      fsInvestments: [],
+      regionalInvestments: [],
+      rapCost: RapCost.initial(),
+      rowCost: RowCost.initial(),
+      fsCost: FsCost.initial(),
+      financialAccomplishment: FinancialAccomplishment.initial(),
+    );
+  }
 }

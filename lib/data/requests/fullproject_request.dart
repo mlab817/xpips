@@ -160,8 +160,8 @@ class FullProjectRequest {
   @JsonKey(name: "fs_investments")
   List<FsInvestment> fsInvestments;
 
-  @JsonKey(name: "regions")
-  List<RegionalInvestment> regions;
+  @JsonKey(name: "regional_investments")
+  List<RegionalInvestment> regionalInvestments;
 
   @JsonKey(name: "project_status_id")
   int? projectStatusId;
@@ -249,7 +249,7 @@ class FullProjectRequest {
     this.employedMale,
     this.employedFemale,
     fsInvestments,
-    regions,
+    regionalInvestments,
     this.officeId,
     financialAccomplishment,
   })  : infrastructureSectors = infrastructureSectors ?? [],
@@ -263,7 +263,7 @@ class FullProjectRequest {
         locations = locations ?? [],
         fundingSources = fundingSources ?? [],
         fsInvestments = fsInvestments ?? [],
-        regions = regions ?? [],
+        regionalInvestments = regionalInvestments ?? [],
         financialAccomplishment = financialAccomplishment ?? [];
 
   factory FullProjectRequest.fromFullProject(FullProject fullProject) {
@@ -315,7 +315,7 @@ class FullProjectRequest {
       employedMale: fullProject.employedMale,
       employedFemale: fullProject.employedFemale,
       fsInvestments: fullProject.fsInvestments,
-      regions: fullProject.regions,
+      regionalInvestments: fullProject.regionalInvestments,
       officeId: fullProject.office?.id,
       financialAccomplishment: fullProject.financialAccomplishment,
     );

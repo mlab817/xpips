@@ -22,6 +22,7 @@ Option _$OptionFromJson(Map<String, dynamic> json) {
 mixin _$Option {
   String get label => throw _privateConstructorUsedError;
   int get value => throw _privateConstructorUsedError;
+  String? get description => throw _privateConstructorUsedError;
   List<Option>? get children => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -34,7 +35,8 @@ abstract class $OptionCopyWith<$Res> {
   factory $OptionCopyWith(Option value, $Res Function(Option) then) =
       _$OptionCopyWithImpl<$Res, Option>;
   @useResult
-  $Res call({String label, int value, List<Option>? children});
+  $Res call(
+      {String label, int value, String? description, List<Option>? children});
 }
 
 /// @nodoc
@@ -52,6 +54,7 @@ class _$OptionCopyWithImpl<$Res, $Val extends Option>
   $Res call({
     Object? label = null,
     Object? value = null,
+    Object? description = freezed,
     Object? children = freezed,
   }) {
     return _then(_value.copyWith(
@@ -63,6 +66,10 @@ class _$OptionCopyWithImpl<$Res, $Val extends Option>
           ? _value.value
           : value // ignore: cast_nullable_to_non_nullable
               as int,
+      description: freezed == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String?,
       children: freezed == children
           ? _value.children
           : children // ignore: cast_nullable_to_non_nullable
@@ -77,7 +84,8 @@ abstract class _$$_OptionCopyWith<$Res> implements $OptionCopyWith<$Res> {
       __$$_OptionCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String label, int value, List<Option>? children});
+  $Res call(
+      {String label, int value, String? description, List<Option>? children});
 }
 
 /// @nodoc
@@ -92,6 +100,7 @@ class __$$_OptionCopyWithImpl<$Res>
   $Res call({
     Object? label = null,
     Object? value = null,
+    Object? description = freezed,
     Object? children = freezed,
   }) {
     return _then(_$_Option(
@@ -103,6 +112,10 @@ class __$$_OptionCopyWithImpl<$Res>
           ? _value.value
           : value // ignore: cast_nullable_to_non_nullable
               as int,
+      description: freezed == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String?,
       children: freezed == children
           ? _value._children
           : children // ignore: cast_nullable_to_non_nullable
@@ -115,7 +128,10 @@ class __$$_OptionCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_Option implements _Option {
   _$_Option(
-      {required this.label, required this.value, final List<Option>? children})
+      {required this.label,
+      required this.value,
+      this.description,
+      final List<Option>? children})
       : _children = children;
 
   factory _$_Option.fromJson(Map<String, dynamic> json) =>
@@ -125,6 +141,8 @@ class _$_Option implements _Option {
   final String label;
   @override
   final int value;
+  @override
+  final String? description;
   final List<Option>? _children;
   @override
   List<Option>? get children {
@@ -137,7 +155,7 @@ class _$_Option implements _Option {
 
   @override
   String toString() {
-    return 'Option(label: $label, value: $value, children: $children)';
+    return 'Option(label: $label, value: $value, description: $description, children: $children)';
   }
 
   @override
@@ -147,12 +165,14 @@ class _$_Option implements _Option {
             other is _$_Option &&
             (identical(other.label, label) || other.label == label) &&
             (identical(other.value, value) || other.value == value) &&
+            (identical(other.description, description) ||
+                other.description == description) &&
             const DeepCollectionEquality().equals(other._children, _children));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, label, value,
+  int get hashCode => Object.hash(runtimeType, label, value, description,
       const DeepCollectionEquality().hash(_children));
 
   @JsonKey(ignore: true)
@@ -173,6 +193,7 @@ abstract class _Option implements Option {
   factory _Option(
       {required final String label,
       required final int value,
+      final String? description,
       final List<Option>? children}) = _$_Option;
 
   factory _Option.fromJson(Map<String, dynamic> json) = _$_Option.fromJson;
@@ -181,6 +202,8 @@ abstract class _Option implements Option {
   String get label;
   @override
   int get value;
+  @override
+  String? get description;
   @override
   List<Option>? get children;
   @override

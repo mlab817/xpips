@@ -8,6 +8,7 @@ class Option with _$Option {
   factory Option({
     required String label,
     required int value,
+    String? description,
     List<Option>? children,
   }) = _Option;
 

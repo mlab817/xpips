@@ -8,7 +8,6 @@ import '../presentation/screens/login_screen.dart';
 import '../presentation/screens/main_screen.dart';
 import '../presentation/screens/newpap_screen.dart';
 import '../presentation/screens/notifications_screen.dart';
-import '../presentation/screens/papedit_screen.dart';
 import '../presentation/screens/papview_screen.dart';
 import '../presentation/screens/requestreactivation_screen.dart';
 import '../presentation/screens/settings_screen.dart';
@@ -59,10 +58,6 @@ class AppRouter extends _$AppRouter implements AutoRouteGuard {
         AutoRoute(
           path: '/project/:uuid',
           page: PapViewRoute.page,
-        ),
-        AutoRoute(
-          path: '/project/:uuid/edit',
-          page: PapEditRoute.page,
         ),
         AutoRoute(
           path: '/request-reactivation',

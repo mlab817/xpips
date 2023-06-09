@@ -3,6 +3,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:pips/application/extensions.dart';
 
 import '../controllers/reactivationrequest_controller.dart';
 
@@ -61,6 +62,18 @@ class _RequestReactivationScreenState
       _uploadedPath = next.value?.path;
     });
 
+    ref.listen(requestReactivationControllerProvider, (previous, next) {
+      if (next.hasError) {
+        next.showSnackbarOnError(context);
+      }
+      if (next.hasValue) {
+        next.showSnackbarOnSuccess(context);
+      }
+    });
+
+    final submissionAsync =
+        ref.watch(requestReactivationControllerProvider.future);
+
     // TODO: add email and upload
     return Scaffold(
       body: Center(
@@ -79,7 +92,10 @@ class _RequestReactivationScreenState
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      const Text('Request for Account Reactivation'),
+                      const Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Text('REQUEST FOR ACCOUNT REACTIVATION'),
+                      ),
                       TextFormField(
                         controller: _emailController,
                         decoration: const InputDecoration(
@@ -109,8 +125,12 @@ class _RequestReactivationScreenState
                         trailing: const Icon(Icons.attach_file),
                         onTap: () async {
                           // select file
-                          FilePickerResult? result = await FilePicker.platform
-                              .pickFiles(allowMultiple: false);
+                          FilePickerResult? result =
+                              await FilePicker.platform.pickFiles(
+                            allowMultiple: false,
+                            type: FileType.custom,
+                            allowedExtensions: ['pdf'],
+                          );
 
                           if (result != null) {
                             debugPrint('result is not null');
@@ -129,11 +149,22 @@ class _RequestReactivationScreenState
                       SizedBox(
                         width: double.infinity,
                         child: FilledButton(
-                          onPressed: () {
-                            if (_formKey.currentState!.validate()) {
-                              ref.read(requestReactivationProvider);
-                            }
-                          },
+                          onPressed: _emailController.text.isNotEmpty &&
+                                  ref
+                                      .watch(
+                                          reactivationRequestControllerProvider)
+                                      .authorization
+                                      .isNotEmpty
+                              ? () {
+                                  if (_formKey.currentState!.validate()) {
+                                    ref
+                                        .read(
+                                            requestReactivationControllerProvider
+                                                .notifier)
+                                        .submit();
+                                  }
+                                }
+                              : null,
                           child: const Text('Submit'),
                         ),
                       ),

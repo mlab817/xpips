@@ -9,6 +9,7 @@ part 'financial_accomplishment.g.dart';
 @freezed
 class FinancialAccomplishment with _$FinancialAccomplishment {
   factory FinancialAccomplishment({
+    @JsonKey(name: "id") int? id,
     @JsonKey(name: "nep_2023") double? nep2023,
     @JsonKey(name: "nep_2024") double? nep2024,
     @JsonKey(name: "nep_2025") double? nep2025,

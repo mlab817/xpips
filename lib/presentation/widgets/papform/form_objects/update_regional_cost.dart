@@ -97,10 +97,10 @@ class _UpdateRegionalCostState extends ConsumerState<UpdateRegionalCost> {
 
     final columnWidth = (MediaQuery.of(context).size.width - 128) / 10;
 
-    // check if there are already existing regions
-    final regions = project.regions;
+    // check if there are already existing regionalInvestments
+    final regionalInvestments = project.regionalInvestments;
 
-    return regions.map((regionalInvestment) {
+    return regionalInvestments.map((regionalInvestment) {
       final label = regionalInvestment.region?.label ?? 'REGION';
 
       return DataRow(
@@ -118,15 +118,17 @@ class _UpdateRegionalCostState extends ConsumerState<UpdateRegionalCost> {
                 value: regionalInvestment.y2022.toString(),
                 onChanged: (String value) {
                   //
-                  final updatedInvestments = [...project.regions];
+                  final updatedInvestments = [...project.regionalInvestments];
                   final index = updatedInvestments.indexOf(regionalInvestment);
                   final updatedRegionalInvestment = regionalInvestment.copyWith(
                     y2022: double.parse(value),
                   );
                   updatedInvestments[index] = updatedRegionalInvestment;
 
-                  ref.read(fullProjectControllerProvider(widget.uuid).notifier).update(
-                        regions: updatedInvestments,
+                  ref
+                      .read(fullProjectControllerProvider(widget.uuid).notifier)
+                      .update(
+                        regionalInvestments: updatedInvestments,
                       );
                 },
               ),
@@ -138,15 +140,17 @@ class _UpdateRegionalCostState extends ConsumerState<UpdateRegionalCost> {
               child: CostField(
                 value: regionalInvestment.y2023.toString(),
                 onChanged: (String value) {
-                  final updatedInvestments = [...project.regions];
+                  final updatedInvestments = [...project.regionalInvestments];
                   final index = updatedInvestments.indexOf(regionalInvestment);
                   final updatedRegionalInvestment = regionalInvestment.copyWith(
                     y2023: double.parse(value),
                   );
                   updatedInvestments[index] = updatedRegionalInvestment;
 
-                  ref.read(fullProjectControllerProvider(widget.uuid).notifier).update(
-                        regions: updatedInvestments,
+                  ref
+                      .read(fullProjectControllerProvider(widget.uuid).notifier)
+                      .update(
+                        regionalInvestments: updatedInvestments,
                       );
                 },
               ),
@@ -158,15 +162,17 @@ class _UpdateRegionalCostState extends ConsumerState<UpdateRegionalCost> {
               child: CostField(
                 value: regionalInvestment.y2024.toString(),
                 onChanged: (String value) {
-                  final updatedInvestments = [...project.regions];
+                  final updatedInvestments = [...project.regionalInvestments];
                   final index = updatedInvestments.indexOf(regionalInvestment);
                   final updatedRegionalInvestment = regionalInvestment.copyWith(
                     y2024: double.parse(value),
                   );
                   updatedInvestments[index] = updatedRegionalInvestment;
 
-                  ref.read(fullProjectControllerProvider(widget.uuid).notifier).update(
-                        regions: updatedInvestments,
+                  ref
+                      .read(fullProjectControllerProvider(widget.uuid).notifier)
+                      .update(
+                        regionalInvestments: updatedInvestments,
                       );
                 },
               ),
@@ -178,15 +184,17 @@ class _UpdateRegionalCostState extends ConsumerState<UpdateRegionalCost> {
               child: CostField(
                 value: regionalInvestment.y2025.toString(),
                 onChanged: (String value) {
-                  final updatedInvestments = [...project.regions];
+                  final updatedInvestments = [...project.regionalInvestments];
                   final index = updatedInvestments.indexOf(regionalInvestment);
                   final updatedRegionalInvestment = regionalInvestment.copyWith(
                     y2025: double.parse(value),
                   );
                   updatedInvestments[index] = updatedRegionalInvestment;
 
-                  ref.read(fullProjectControllerProvider(widget.uuid).notifier).update(
-                        regions: updatedInvestments,
+                  ref
+                      .read(fullProjectControllerProvider(widget.uuid).notifier)
+                      .update(
+                        regionalInvestments: updatedInvestments,
                       );
                 },
               ),
@@ -198,15 +206,17 @@ class _UpdateRegionalCostState extends ConsumerState<UpdateRegionalCost> {
               child: CostField(
                 value: regionalInvestment.y2026.toString(),
                 onChanged: (String value) {
-                  final updatedInvestments = [...project.regions];
+                  final updatedInvestments = [...project.regionalInvestments];
                   final index = updatedInvestments.indexOf(regionalInvestment);
                   final updatedRegionalInvestment = regionalInvestment.copyWith(
                     y2026: double.parse(value),
                   );
                   updatedInvestments[index] = updatedRegionalInvestment;
 
-                  ref.read(fullProjectControllerProvider(widget.uuid).notifier).update(
-                        regions: updatedInvestments,
+                  ref
+                      .read(fullProjectControllerProvider(widget.uuid).notifier)
+                      .update(
+                        regionalInvestments: updatedInvestments,
                       );
                 },
               ),
@@ -218,15 +228,17 @@ class _UpdateRegionalCostState extends ConsumerState<UpdateRegionalCost> {
               child: CostField(
                 value: regionalInvestment.y2027.toString(),
                 onChanged: (String value) {
-                  final updatedInvestments = [...project.regions];
+                  final updatedInvestments = [...project.regionalInvestments];
                   final index = updatedInvestments.indexOf(regionalInvestment);
                   final updatedRegionalInvestment = regionalInvestment.copyWith(
                     y2027: double.parse(value),
                   );
                   updatedInvestments[index] = updatedRegionalInvestment;
 
-                  ref.read(fullProjectControllerProvider(widget.uuid).notifier).update(
-                        regions: updatedInvestments,
+                  ref
+                      .read(fullProjectControllerProvider(widget.uuid).notifier)
+                      .update(
+                        regionalInvestments: updatedInvestments,
                       );
                 },
               ),
@@ -238,15 +250,17 @@ class _UpdateRegionalCostState extends ConsumerState<UpdateRegionalCost> {
               child: CostField(
                 value: regionalInvestment.y2028.toString(),
                 onChanged: (String value) {
-                  final updatedInvestments = [...project.regions];
+                  final updatedInvestments = [...project.regionalInvestments];
                   final index = updatedInvestments.indexOf(regionalInvestment);
                   final updatedRegionalInvestment = regionalInvestment.copyWith(
                     y2028: double.parse(value),
                   );
                   updatedInvestments[index] = updatedRegionalInvestment;
 
-                  ref.read(fullProjectControllerProvider(widget.uuid).notifier).update(
-                        regions: updatedInvestments,
+                  ref
+                      .read(fullProjectControllerProvider(widget.uuid).notifier)
+                      .update(
+                        regionalInvestments: updatedInvestments,
                       );
                 },
               ),
@@ -258,15 +272,17 @@ class _UpdateRegionalCostState extends ConsumerState<UpdateRegionalCost> {
               child: CostField(
                 value: regionalInvestment.y2029.toString(),
                 onChanged: (String value) {
-                  final updatedInvestments = [...project.regions];
+                  final updatedInvestments = [...project.regionalInvestments];
                   final index = updatedInvestments.indexOf(regionalInvestment);
                   final updatedRegionalInvestment = regionalInvestment.copyWith(
                     y2029: double.parse(value),
                   );
                   updatedInvestments[index] = updatedRegionalInvestment;
 
-                  ref.read(fullProjectControllerProvider(widget.uuid).notifier).update(
-                        regions: updatedInvestments,
+                  ref
+                      .read(fullProjectControllerProvider(widget.uuid).notifier)
+                      .update(
+                        regionalInvestments: updatedInvestments,
                       );
                 },
               ),

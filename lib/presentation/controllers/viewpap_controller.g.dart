@@ -6,7 +6,7 @@ part of 'viewpap_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$projectHash() => r'f4174e2c215cb76ca03b735bcbb4d88bcf97d72a';
+String _$projectHash() => r'753acc616945c06e9396d6d4a17fa326bf184df9';
 
 /// Copied from Dart SDK
 class _SystemHash {

@@ -20,6 +20,8 @@ RegionalInvestment _$RegionalInvestmentFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$RegionalInvestment {
+  @JsonKey(name: "id")
+  int? get id => throw _privateConstructorUsedError;
   @JsonKey(name: "region_id")
   int? get regionId => throw _privateConstructorUsedError;
   @JsonKey(name: "region")
@@ -54,7 +56,8 @@ abstract class $RegionalInvestmentCopyWith<$Res> {
       _$RegionalInvestmentCopyWithImpl<$Res, RegionalInvestment>;
   @useResult
   $Res call(
-      {@JsonKey(name: "region_id") int? regionId,
+      {@JsonKey(name: "id") int? id,
+      @JsonKey(name: "region_id") int? regionId,
       @JsonKey(name: "region") Option? region,
       @JsonKey(name: "y2022") double? y2022,
       @JsonKey(name: "y2023") double? y2023,
@@ -81,6 +84,7 @@ class _$RegionalInvestmentCopyWithImpl<$Res, $Val extends RegionalInvestment>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = freezed,
     Object? regionId = freezed,
     Object? region = freezed,
     Object? y2022 = freezed,
@@ -93,6 +97,10 @@ class _$RegionalInvestmentCopyWithImpl<$Res, $Val extends RegionalInvestment>
     Object? y2029 = freezed,
   }) {
     return _then(_value.copyWith(
+      id: freezed == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int?,
       regionId: freezed == regionId
           ? _value.regionId
           : regionId // ignore: cast_nullable_to_non_nullable
@@ -158,7 +166,8 @@ abstract class _$$_RegionalInvestmentCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {@JsonKey(name: "region_id") int? regionId,
+      {@JsonKey(name: "id") int? id,
+      @JsonKey(name: "region_id") int? regionId,
       @JsonKey(name: "region") Option? region,
       @JsonKey(name: "y2022") double? y2022,
       @JsonKey(name: "y2023") double? y2023,
@@ -184,6 +193,7 @@ class __$$_RegionalInvestmentCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = freezed,
     Object? regionId = freezed,
     Object? region = freezed,
     Object? y2022 = freezed,
@@ -196,6 +206,10 @@ class __$$_RegionalInvestmentCopyWithImpl<$Res>
     Object? y2029 = freezed,
   }) {
     return _then(_$_RegionalInvestment(
+      id: freezed == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int?,
       regionId: freezed == regionId
           ? _value.regionId
           : regionId // ignore: cast_nullable_to_non_nullable
@@ -244,7 +258,8 @@ class __$$_RegionalInvestmentCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_RegionalInvestment implements _RegionalInvestment {
   _$_RegionalInvestment(
-      {@JsonKey(name: "region_id") this.regionId,
+      {@JsonKey(name: "id") this.id,
+      @JsonKey(name: "region_id") this.regionId,
       @JsonKey(name: "region") this.region,
       @JsonKey(name: "y2022") this.y2022,
       @JsonKey(name: "y2023") this.y2023,
@@ -258,6 +273,9 @@ class _$_RegionalInvestment implements _RegionalInvestment {
   factory _$_RegionalInvestment.fromJson(Map<String, dynamic> json) =>
       _$$_RegionalInvestmentFromJson(json);
 
+  @override
+  @JsonKey(name: "id")
+  final int? id;
   @override
   @JsonKey(name: "region_id")
   final int? regionId;
@@ -294,6 +312,7 @@ class _$_RegionalInvestment implements _RegionalInvestment {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_RegionalInvestment &&
+            (identical(other.id, id) || other.id == id) &&
             (identical(other.regionId, regionId) ||
                 other.regionId == regionId) &&
             (identical(other.region, region) || other.region == region) &&
@@ -309,8 +328,8 @@ class _$_RegionalInvestment implements _RegionalInvestment {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, regionId, region, y2022, y2023,
-      y2024, y2025, y2026, y2027, y2028, y2029);
+  int get hashCode => Object.hash(runtimeType, id, regionId, region, y2022,
+      y2023, y2024, y2025, y2026, y2027, y2028, y2029);
 
   @JsonKey(ignore: true)
   @override
@@ -329,7 +348,8 @@ class _$_RegionalInvestment implements _RegionalInvestment {
 
 abstract class _RegionalInvestment implements RegionalInvestment {
   factory _RegionalInvestment(
-      {@JsonKey(name: "region_id") final int? regionId,
+      {@JsonKey(name: "id") final int? id,
+      @JsonKey(name: "region_id") final int? regionId,
       @JsonKey(name: "region") final Option? region,
       @JsonKey(name: "y2022") final double? y2022,
       @JsonKey(name: "y2023") final double? y2023,
@@ -343,6 +363,9 @@ abstract class _RegionalInvestment implements RegionalInvestment {
   factory _RegionalInvestment.fromJson(Map<String, dynamic> json) =
       _$_RegionalInvestment.fromJson;
 
+  @override
+  @JsonKey(name: "id")
+  int? get id;
   @override
   @JsonKey(name: "region_id")
   int? get regionId;

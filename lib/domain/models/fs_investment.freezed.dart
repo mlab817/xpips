@@ -20,6 +20,8 @@ FsInvestment _$FsInvestmentFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$FsInvestment {
+  @JsonKey(name: "id")
+  int? get id => throw _privateConstructorUsedError;
   @JsonKey(name: "funding_source_id")
   int? get fundingSourceId => throw _privateConstructorUsedError;
   @JsonKey(name: "funding_source")
@@ -54,7 +56,8 @@ abstract class $FsInvestmentCopyWith<$Res> {
       _$FsInvestmentCopyWithImpl<$Res, FsInvestment>;
   @useResult
   $Res call(
-      {@JsonKey(name: "funding_source_id") int? fundingSourceId,
+      {@JsonKey(name: "id") int? id,
+      @JsonKey(name: "funding_source_id") int? fundingSourceId,
       @JsonKey(name: "funding_source") Option? fundingSource,
       @JsonKey(name: "y2022") double? y2022,
       @JsonKey(name: "y2023") double? y2023,
@@ -81,6 +84,7 @@ class _$FsInvestmentCopyWithImpl<$Res, $Val extends FsInvestment>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = freezed,
     Object? fundingSourceId = freezed,
     Object? fundingSource = freezed,
     Object? y2022 = freezed,
@@ -93,6 +97,10 @@ class _$FsInvestmentCopyWithImpl<$Res, $Val extends FsInvestment>
     Object? y2029 = freezed,
   }) {
     return _then(_value.copyWith(
+      id: freezed == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int?,
       fundingSourceId: freezed == fundingSourceId
           ? _value.fundingSourceId
           : fundingSourceId // ignore: cast_nullable_to_non_nullable
@@ -158,7 +166,8 @@ abstract class _$$_FsInvestmentCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {@JsonKey(name: "funding_source_id") int? fundingSourceId,
+      {@JsonKey(name: "id") int? id,
+      @JsonKey(name: "funding_source_id") int? fundingSourceId,
       @JsonKey(name: "funding_source") Option? fundingSource,
       @JsonKey(name: "y2022") double? y2022,
       @JsonKey(name: "y2023") double? y2023,
@@ -184,6 +193,7 @@ class __$$_FsInvestmentCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = freezed,
     Object? fundingSourceId = freezed,
     Object? fundingSource = freezed,
     Object? y2022 = freezed,
@@ -196,6 +206,10 @@ class __$$_FsInvestmentCopyWithImpl<$Res>
     Object? y2029 = freezed,
   }) {
     return _then(_$_FsInvestment(
+      id: freezed == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int?,
       fundingSourceId: freezed == fundingSourceId
           ? _value.fundingSourceId
           : fundingSourceId // ignore: cast_nullable_to_non_nullable
@@ -244,7 +258,8 @@ class __$$_FsInvestmentCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_FsInvestment implements _FsInvestment {
   _$_FsInvestment(
-      {@JsonKey(name: "funding_source_id") this.fundingSourceId,
+      {@JsonKey(name: "id") this.id,
+      @JsonKey(name: "funding_source_id") this.fundingSourceId,
       @JsonKey(name: "funding_source") this.fundingSource,
       @JsonKey(name: "y2022") this.y2022,
       @JsonKey(name: "y2023") this.y2023,
@@ -258,6 +273,9 @@ class _$_FsInvestment implements _FsInvestment {
   factory _$_FsInvestment.fromJson(Map<String, dynamic> json) =>
       _$$_FsInvestmentFromJson(json);
 
+  @override
+  @JsonKey(name: "id")
+  final int? id;
   @override
   @JsonKey(name: "funding_source_id")
   final int? fundingSourceId;
@@ -294,6 +312,7 @@ class _$_FsInvestment implements _FsInvestment {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_FsInvestment &&
+            (identical(other.id, id) || other.id == id) &&
             (identical(other.fundingSourceId, fundingSourceId) ||
                 other.fundingSourceId == fundingSourceId) &&
             (identical(other.fundingSource, fundingSource) ||
@@ -310,8 +329,8 @@ class _$_FsInvestment implements _FsInvestment {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, fundingSourceId, fundingSource,
-      y2022, y2023, y2024, y2025, y2026, y2027, y2028, y2029);
+  int get hashCode => Object.hash(runtimeType, id, fundingSourceId,
+      fundingSource, y2022, y2023, y2024, y2025, y2026, y2027, y2028, y2029);
 
   @JsonKey(ignore: true)
   @override
@@ -329,7 +348,8 @@ class _$_FsInvestment implements _FsInvestment {
 
 abstract class _FsInvestment implements FsInvestment {
   factory _FsInvestment(
-      {@JsonKey(name: "funding_source_id") final int? fundingSourceId,
+      {@JsonKey(name: "id") final int? id,
+      @JsonKey(name: "funding_source_id") final int? fundingSourceId,
       @JsonKey(name: "funding_source") final Option? fundingSource,
       @JsonKey(name: "y2022") final double? y2022,
       @JsonKey(name: "y2023") final double? y2023,
@@ -343,6 +363,9 @@ abstract class _FsInvestment implements FsInvestment {
   factory _FsInvestment.fromJson(Map<String, dynamic> json) =
       _$_FsInvestment.fromJson;
 
+  @override
+  @JsonKey(name: "id")
+  int? get id;
   @override
   @JsonKey(name: "funding_source_id")
   int? get fundingSourceId;

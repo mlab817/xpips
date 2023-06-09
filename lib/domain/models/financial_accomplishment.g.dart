@@ -9,6 +9,7 @@ part of 'financial_accomplishment.dart';
 _$_FinancialAccomplishment _$$_FinancialAccomplishmentFromJson(
         Map<String, dynamic> json) =>
     _$_FinancialAccomplishment(
+      id: json['id'] as int?,
       nep2023: (json['nep_2023'] as num?)?.toDouble(),
       nep2024: (json['nep_2024'] as num?)?.toDouble(),
       nep2025: (json['nep_2025'] as num?)?.toDouble(),
@@ -32,6 +33,7 @@ _$_FinancialAccomplishment _$$_FinancialAccomplishmentFromJson(
 Map<String, dynamic> _$$_FinancialAccomplishmentToJson(
         _$_FinancialAccomplishment instance) =>
     <String, dynamic>{
+      'id': instance.id,
       'nep_2023': instance.nep2023,
       'nep_2024': instance.nep2024,
       'nep_2025': instance.nep2025,

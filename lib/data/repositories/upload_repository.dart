@@ -52,20 +52,6 @@ class UploadRepositoryImplementer implements UploadRepository {
         return client.upload(file: File(file.path!));
       }
     }
-
-
-    // TODO: review progress implementation
-    //     onSendProgress: (int sent, int total) {
-    //   streamController.add(((sent / total) * 100).round());
-    // }).then((Response response) async {
-    //   // handle response
-    //   final data = UploadResponse.fromJson(response.data);
-
-    //   print('then is executed with data: $data');
-    //   print(data.path);
-
-    //   return data;
-    // }).whenComplete(() => streamController.close());
   }
 }
 

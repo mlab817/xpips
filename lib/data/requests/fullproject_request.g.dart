@@ -67,7 +67,7 @@ FullProjectRequest _$FullProjectRequestFromJson(Map<String, dynamic> json) =>
       employedMale: json['employed_male'] as int?,
       employedFemale: json['employed_female'] as int?,
       fsInvestments: json['fs_investments'],
-      regions: json['regions'],
+      regionalInvestments: json['regional_investments'],
       officeId: json['office_id'] as int?,
       financialAccomplishment: json['financial_accomplishment'],
     )
@@ -137,7 +137,7 @@ Map<String, dynamic> _$FullProjectRequestToJson(FullProjectRequest instance) =>
       'implementation_mode_id': instance.implementationModeId,
       'pure_grant': instance.pureGrant,
       'fs_investments': instance.fsInvestments,
-      'regions': instance.regions,
+      'regional_investments': instance.regionalInvestments,
       'project_status_id': instance.projectStatusId,
       'category_id': instance.categoryId,
       'readiness_level_id': instance.readinessLevelId,

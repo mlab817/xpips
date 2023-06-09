@@ -7,8 +7,8 @@ import '../cost_field.dart';
 
 // TODO: update setting value
 
-class UpdateFinancialAccomplishment extends ConsumerWidget {
-  const UpdateFinancialAccomplishment({
+class UpdatefinancialAccomplishment extends ConsumerWidget {
+  const UpdatefinancialAccomplishment({
     Key? key,
     this.uuid,
   }) : super(key: key);
@@ -65,21 +65,39 @@ class UpdateFinancialAccomplishment extends ConsumerWidget {
           ),
           DataCell(
             CostField(
-              value: project.financialAccomplishment.nep2023.toString(),
-              onChanged: (String value) {},
+              value: project.financialAccomplishment?.nep2023.toString(),
+              onChanged: (String value) {
+                ref.read(fullProjectControllerProvider(uuid).notifier).update(
+                    financialAccomplishment: ref
+                        .watch(fullProjectControllerProvider(uuid))
+                        .financialAccomplishment
+                        ?.copyWith(nep2023: double.tryParse(value)));
+              },
             ),
           ),
           DataCell(
             CostField(
-              value: project.financialAccomplishment.gaa2023.toString(),
-              onChanged: (String value) {},
+              value: project.financialAccomplishment?.gaa2023.toString(),
+              onChanged: (String value) {
+                ref.read(fullProjectControllerProvider(uuid).notifier).update(
+                    financialAccomplishment: ref
+                        .watch(fullProjectControllerProvider(uuid))
+                        .financialAccomplishment
+                        ?.copyWith(gaa2023: double.tryParse(value)));
+              },
             ),
           ),
           DataCell(
             CostField(
               value:
-                  project.financialAccomplishment.disbursement2023.toString(),
-              onChanged: (String value) {},
+                  project.financialAccomplishment?.disbursement2023.toString(),
+              onChanged: (String value) {
+                ref.read(fullProjectControllerProvider(uuid).notifier).update(
+                    financialAccomplishment: ref
+                        .watch(fullProjectControllerProvider(uuid))
+                        .financialAccomplishment
+                        ?.copyWith(disbursement2023: double.tryParse(value)));
+              },
             ),
           ),
         ],
@@ -91,21 +109,39 @@ class UpdateFinancialAccomplishment extends ConsumerWidget {
           ),
           DataCell(
             CostField(
-              value: project.financialAccomplishment.nep2024.toString(),
-              onChanged: (String value) {},
+              value: project.financialAccomplishment?.nep2024.toString(),
+              onChanged: (String value) {
+                ref.read(fullProjectControllerProvider(uuid).notifier).update(
+                    financialAccomplishment: ref
+                        .watch(fullProjectControllerProvider(uuid))
+                        .financialAccomplishment
+                        ?.copyWith(nep2024: double.tryParse(value)));
+              },
             ),
           ),
           DataCell(
             CostField(
-              value: project.financialAccomplishment.gaa2024.toString(),
-              onChanged: (String value) {},
+              value: project.financialAccomplishment?.gaa2024.toString(),
+              onChanged: (String value) {
+                ref.read(fullProjectControllerProvider(uuid).notifier).update(
+                    financialAccomplishment: ref
+                        .watch(fullProjectControllerProvider(uuid))
+                        .financialAccomplishment
+                        ?.copyWith(gaa2024: double.tryParse(value)));
+              },
             ),
           ),
           DataCell(
             CostField(
               value:
-                  project.financialAccomplishment.disbursement2024.toString(),
-              onChanged: (String value) {},
+                  project.financialAccomplishment?.disbursement2024.toString(),
+              onChanged: (String value) {
+                ref.read(fullProjectControllerProvider(uuid).notifier).update(
+                    financialAccomplishment: ref
+                        .watch(fullProjectControllerProvider(uuid))
+                        .financialAccomplishment
+                        ?.copyWith(disbursement2024: double.tryParse(value)));
+              },
             ),
           ),
         ],
@@ -117,21 +153,39 @@ class UpdateFinancialAccomplishment extends ConsumerWidget {
           ),
           DataCell(
             CostField(
-              value: project.financialAccomplishment.nep2025.toString(),
-              onChanged: (String value) {},
+              value: project.financialAccomplishment?.nep2025.toString(),
+              onChanged: (String value) {
+                ref.read(fullProjectControllerProvider(uuid).notifier).update(
+                    financialAccomplishment: ref
+                        .watch(fullProjectControllerProvider(uuid))
+                        .financialAccomplishment
+                        ?.copyWith(nep2025: double.tryParse(value)));
+              },
             ),
           ),
           DataCell(
             CostField(
-              value: project.financialAccomplishment.gaa2025.toString(),
-              onChanged: (String value) {},
+              value: project.financialAccomplishment?.gaa2025.toString(),
+              onChanged: (String value) {
+                ref.read(fullProjectControllerProvider(uuid).notifier).update(
+                    financialAccomplishment: ref
+                        .watch(fullProjectControllerProvider(uuid))
+                        .financialAccomplishment
+                        ?.copyWith(gaa2025: double.tryParse(value)));
+              },
             ),
           ),
           DataCell(
             CostField(
               value:
-                  project.financialAccomplishment.disbursement2025.toString(),
-              onChanged: (String value) {},
+                  project.financialAccomplishment?.disbursement2025.toString(),
+              onChanged: (String value) {
+                ref.read(fullProjectControllerProvider(uuid).notifier).update(
+                    financialAccomplishment: ref
+                        .watch(fullProjectControllerProvider(uuid))
+                        .financialAccomplishment
+                        ?.copyWith(disbursement2025: double.tryParse(value)));
+              },
             ),
           ),
         ],
@@ -143,21 +197,39 @@ class UpdateFinancialAccomplishment extends ConsumerWidget {
           ),
           DataCell(
             CostField(
-              value: project.financialAccomplishment.nep2026.toString(),
-              onChanged: (String value) {},
+              value: project.financialAccomplishment?.nep2026.toString(),
+              onChanged: (String value) {
+                ref.read(fullProjectControllerProvider(uuid).notifier).update(
+                    financialAccomplishment: ref
+                        .watch(fullProjectControllerProvider(uuid))
+                        .financialAccomplishment
+                        ?.copyWith(nep2026: double.tryParse(value)));
+              },
             ),
           ),
           DataCell(
             CostField(
-              value: project.financialAccomplishment.gaa2026.toString(),
-              onChanged: (String value) {},
+              value: project.financialAccomplishment?.gaa2026.toString(),
+              onChanged: (String value) {
+                ref.read(fullProjectControllerProvider(uuid).notifier).update(
+                    financialAccomplishment: ref
+                        .watch(fullProjectControllerProvider(uuid))
+                        .financialAccomplishment
+                        ?.copyWith(gaa2026: double.tryParse(value)));
+              },
             ),
           ),
           DataCell(
             CostField(
               value:
-                  project.financialAccomplishment.disbursement2026.toString(),
-              onChanged: (String value) {},
+                  project.financialAccomplishment?.disbursement2026.toString(),
+              onChanged: (String value) {
+                ref.read(fullProjectControllerProvider(uuid).notifier).update(
+                    financialAccomplishment: ref
+                        .watch(fullProjectControllerProvider(uuid))
+                        .financialAccomplishment
+                        ?.copyWith(disbursement2026: double.tryParse(value)));
+              },
             ),
           ),
         ],
@@ -169,21 +241,39 @@ class UpdateFinancialAccomplishment extends ConsumerWidget {
           ),
           DataCell(
             CostField(
-              value: project.financialAccomplishment.nep2027.toString(),
-              onChanged: (String value) {},
+              value: project.financialAccomplishment?.nep2027.toString(),
+              onChanged: (String value) {
+                ref.read(fullProjectControllerProvider(uuid).notifier).update(
+                    financialAccomplishment: ref
+                        .watch(fullProjectControllerProvider(uuid))
+                        .financialAccomplishment
+                        ?.copyWith(nep2027: double.tryParse(value)));
+              },
             ),
           ),
           DataCell(
             CostField(
-              value: project.financialAccomplishment.gaa2027.toString(),
-              onChanged: (String value) {},
+              value: project.financialAccomplishment?.gaa2027.toString(),
+              onChanged: (String value) {
+                ref.read(fullProjectControllerProvider(uuid).notifier).update(
+                    financialAccomplishment: ref
+                        .watch(fullProjectControllerProvider(uuid))
+                        .financialAccomplishment
+                        ?.copyWith(gaa2027: double.tryParse(value)));
+              },
             ),
           ),
           DataCell(
             CostField(
               value:
-                  project.financialAccomplishment.disbursement2027.toString(),
-              onChanged: (String value) {},
+                  project.financialAccomplishment?.disbursement2027.toString(),
+              onChanged: (String value) {
+                ref.read(fullProjectControllerProvider(uuid).notifier).update(
+                    financialAccomplishment: ref
+                        .watch(fullProjectControllerProvider(uuid))
+                        .financialAccomplishment
+                        ?.copyWith(disbursement2027: double.tryParse(value)));
+              },
             ),
           ),
         ],
@@ -195,21 +285,39 @@ class UpdateFinancialAccomplishment extends ConsumerWidget {
           ),
           DataCell(
             CostField(
-              value: project.financialAccomplishment.nep2028.toString(),
-              onChanged: (String value) {},
+              value: project.financialAccomplishment?.nep2028.toString(),
+              onChanged: (String value) {
+                ref.read(fullProjectControllerProvider(uuid).notifier).update(
+                    financialAccomplishment: ref
+                        .watch(fullProjectControllerProvider(uuid))
+                        .financialAccomplishment
+                        ?.copyWith(nep2028: double.tryParse(value)));
+              },
             ),
           ),
           DataCell(
             CostField(
-              value: project.financialAccomplishment.gaa2028.toString(),
-              onChanged: (String value) {},
+              value: project.financialAccomplishment?.gaa2028.toString(),
+              onChanged: (String value) {
+                ref.read(fullProjectControllerProvider(uuid).notifier).update(
+                    financialAccomplishment: ref
+                        .watch(fullProjectControllerProvider(uuid))
+                        .financialAccomplishment
+                        ?.copyWith(gaa2028: double.tryParse(value)));
+              },
             ),
           ),
           DataCell(
             CostField(
               value:
-                  project.financialAccomplishment.disbursement2028.toString(),
-              onChanged: (String value) {},
+                  project.financialAccomplishment?.disbursement2028.toString(),
+              onChanged: (String value) {
+                ref.read(fullProjectControllerProvider(uuid).notifier).update(
+                    financialAccomplishment: ref
+                        .watch(fullProjectControllerProvider(uuid))
+                        .financialAccomplishment
+                        ?.copyWith(disbursement2028: double.tryParse(value)));
+              },
             ),
           ),
         ],
@@ -227,7 +335,7 @@ class UpdateFinancialAccomplishment extends ConsumerWidget {
                 child: Text(
                   ref
                       .watch(numberFormatterProvider)
-                      .format(project.financialAccomplishment.nepTotal),
+                      .format(project.financialAccomplishment?.nepTotal),
                   textAlign: TextAlign.end,
                 ),
               ),
@@ -241,7 +349,7 @@ class UpdateFinancialAccomplishment extends ConsumerWidget {
                 child: Text(
                   ref
                       .watch(numberFormatterProvider)
-                      .format(project.financialAccomplishment.gaaTotal),
+                      .format(project.financialAccomplishment?.gaaTotal),
                   textAlign: TextAlign.end,
                 ),
               ),
@@ -254,7 +362,7 @@ class UpdateFinancialAccomplishment extends ConsumerWidget {
                 width: double.infinity,
                 child: Text(
                   ref.watch(numberFormatterProvider).format(
-                      project.financialAccomplishment.disbursementTotal),
+                      project.financialAccomplishment?.disbursementTotal),
                   textAlign: TextAlign.end,
                 ),
               ),

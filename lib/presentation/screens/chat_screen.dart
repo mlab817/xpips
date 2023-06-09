@@ -117,7 +117,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
             onTap: () {
               // ref.read(selectedProjectProvider.notifier).update(project);
 
-              AutoRouter.of(context).push(PapViewRoute(uuid: chat.uuid));
+              // AutoRouter.of(context).push(PapViewRoute(title: project.title, uuid: chat.uuid));
             },
           );
         });

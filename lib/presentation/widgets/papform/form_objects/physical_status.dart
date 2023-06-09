@@ -292,26 +292,28 @@ class PhysicalStatus extends ConsumerWidget {
           return AlertDialog(
             title: const Text('Start of Project Implementation'),
             contentPadding: const EdgeInsets.symmetric(vertical: 16),
-            content: optionsAsync.when(
-              data: (data) {
-                final years = data.data.years
-                        ?.where((element) => (element.value.toInt() <= 2028))
-                        .toList() ??
-                    [];
+            content: Container(
+              child: optionsAsync.when(
+                data: (data) {
+                  final years = data.data.years
+                          ?.where((element) => (element.value.toInt() <= 2028))
+                          .toList() ??
+                      [];
 
-                return SelectDialogContent(
-                  options: years,
-                  multiple: false,
-                  selected: selected,
-                  onChanged: (value) {
-                    selected = value;
-                  },
-                );
-              },
-              error: (error, stacktrace) {
-                return Container();
-              },
-              loading: () => const CircularProgressIndicator(),
+                  return SelectDialogContent(
+                    options: years,
+                    multiple: false,
+                    selected: selected,
+                    onChanged: (value) {
+                      selected = value;
+                    },
+                  );
+                },
+                error: (error, stacktrace) {
+                  return Container();
+                },
+                loading: () => const CircularProgressIndicator(),
+              ),
             ),
             actions: [
               TextButton(

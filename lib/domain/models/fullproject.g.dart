@@ -59,7 +59,7 @@ _$_FullProject _$$_FullProjectFromJson(Map<String, dynamic> json) =>
       pdpChapters: (json['pdp_chapters'] as List<dynamic>)
           .map((e) => Option.fromJson(e as Map<String, dynamic>))
           .toList(),
-      risk: json['risk'] as String?,
+      risk: json['implementation_risk'] as String?,
       agenda: (json['agenda'] as List<dynamic>)
           .map((e) => Option.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -127,7 +127,7 @@ _$_FullProject _$$_FullProjectFromJson(Map<String, dynamic> json) =>
       fsInvestments: (json['fs_investments'] as List<dynamic>)
           .map((e) => FsInvestment.fromJson(e as Map<String, dynamic>))
           .toList(),
-      regions: (json['regions'] as List<dynamic>)
+      regionalInvestments: (json['regional_investments'] as List<dynamic>)
           .map((e) => RegionalInvestment.fromJson(e as Map<String, dynamic>))
           .toList(),
       implementationModeId: json['implementation_mode_id'] as int?,
@@ -169,10 +169,13 @@ _$_FullProject _$$_FullProjectFromJson(Map<String, dynamic> json) =>
           : User.fromJson(json['user'] as Map<String, dynamic>),
       remarks: json['remarks'] as String?,
       uacsCode: json['uacs_code'] as String?,
-      financialAccomplishment: FinancialAccomplishment.fromJson(
-          json['financial_accomplishment'] as Map<String, dynamic>),
+      financialAccomplishment: json['financial_accomplishment'] == null
+          ? null
+          : FinancialAccomplishment.fromJson(
+              json['financial_accomplishment'] as Map<String, dynamic>),
       contactInformation: json['contact_information'] as String?,
       notes: json['notes'] as String?,
+      iccResubmission: json['icc_resubmission'] as bool?,
     );
 
 Map<String, dynamic> _$$_FullProjectToJson(_$_FullProject instance) =>
@@ -207,7 +210,7 @@ Map<String, dynamic> _$$_FullProjectToJson(_$_FullProject instance) =>
       'pdp_chapter_id': instance.pdpChapterId,
       'pdp_chapter': instance.pdpChapter,
       'pdp_chapters': instance.pdpChapters,
-      'risk': instance.risk,
+      'implementation_risk': instance.risk,
       'agenda': instance.agenda,
       'sdgs': instance.sdgs,
       'gad_id': instance.gadId,
@@ -239,7 +242,7 @@ Map<String, dynamic> _$$_FullProjectToJson(_$_FullProject instance) =>
       'implementation_mode': instance.implementationMode,
       'pure_grant': instance.pureGrant,
       'fs_investments': instance.fsInvestments,
-      'regions': instance.regions,
+      'regional_investments': instance.regionalInvestments,
       'implementation_mode_id': instance.implementationModeId,
       'project_status_id': instance.projectStatusId,
       'category_id': instance.categoryId,
@@ -264,4 +267,5 @@ Map<String, dynamic> _$$_FullProjectToJson(_$_FullProject instance) =>
       'financial_accomplishment': instance.financialAccomplishment,
       'contact_information': instance.contactInformation,
       'notes': instance.notes,
+      'icc_resubmission': instance.iccResubmission,
     };

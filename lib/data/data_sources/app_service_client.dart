@@ -33,6 +33,7 @@ import '../responses/project_response.dart';
 import '../responses/projects_response.dart';
 import '../responses/reactivation_response.dart';
 import '../responses/signup_response.dart';
+import '../responses/updatefinancialaccomplishment_response.dart';
 import '../responses/updateprofile_response.dart';
 import '../responses/updateproject_response.dart';
 import '../responses/upload_response.dart';
@@ -127,4 +128,8 @@ abstract class AppServiceClient {
 
   @GET('/pipol-statuses')
   Future<PipolStatusResponse> getPipolStatuses();
+
+  @PUT('/financial-accomplishment/{id}')
+  Future<UpdateFinancialAccomplishmentResponse> updateFinancialAccomplishment(
+      @Path('id') int id, @Body() Map<String, dynamic> payload);
 }

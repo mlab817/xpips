@@ -5,6 +5,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:pips/application/providers/searchhistory_provider.dart';
 import 'package:pips/domain/models/pipsstatus.dart';
 import 'package:pips/presentation/controllers/options_controller.dart';
+import 'package:pips/presentation/screens/newpap_screen.dart';
 import 'package:pips/presentation/screens/pipolstatus_controller.dart';
 import 'package:pips/presentation/widgets/loading_dialog.dart';
 
@@ -22,8 +23,6 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
-  int _page = 1;
-  final int _perPage = 25;
   PipsStatus? _pipsStatus;
   PipolStatus? _pipolStatus;
 
@@ -32,46 +31,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   bool _showAll = true;
 
   void _showFilters() {
-    final optionsAsync = ref.watch(optionsControllerProvider);
-
     showModalBottomSheet(
-        showDragHandle: true,
-        enableDrag: true,
-        context: context,
-        builder: (context) {
-          return optionsAsync.when(
-              data: (data) {
-                return SizedBox(
-                  width: double.infinity,
-                  child: Column(children: [
-                    Row(
-                      children: [
-                        const Text('Apply Filters'),
-                        const Spacer(),
-                        IconButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          icon: const Icon(Icons.close),
-                        ),
-                      ],
-                    ),
-                  ]),
-                );
-              },
-              error: (error, stacktrace) {
-                return Center(
-                  child: Text(error.toString()),
-                );
-              },
-              loading: () => const LoadingOverlay());
-        });
+      showDragHandle: true,
+      enableDrag: true,
+      context: context,
+      builder: (context) => const ProjectRequestBottomSheet(),
+    );
   }
 
   @override
   void initState() {
     super.initState();
 
+    // initialize list of search history
     Future.delayed(Duration.zero, () {
       ref.read(searchHistoryProvider.notifier).retrieve();
       _searchController.text =
@@ -95,6 +67,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final pipolAsync = ref.watch(pipolStatusControllerProvider);
 
     final projectsRequest = ref.watch(projectsRequestControllerProvider);
+
+    // trigger optionsAsync so that showBottomSheet is available any time
+    ref.watch(optionsControllerProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -239,10 +214,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         ),
                         IconButton(
                           onPressed: () {
-                            ref
-                                .read(pipsStatusControllerProvider.notifier)
-                                .get();
+                            // reload the pips status
+                            ref.invalidate(pipsStatusControllerProvider);
 
+                            // reload pipol Status
                             ref.invalidate(pipolStatusControllerProvider);
                           },
                           icon: const Icon(Icons.refresh),
@@ -291,7 +266,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         style: Theme.of(context)
                             .textTheme
                             .bodySmall
-                            ?.apply(color: Colors.black54),
+                            ?.apply(color: Theme.of(context).primaryColor),
                       ),
                     ),
                     menuAsync.when(
@@ -358,11 +333,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         style: Theme.of(context)
                             .textTheme
                             .bodySmall
-                            ?.apply(color: Colors.black54),
+                            ?.apply(color: Theme.of(context).primaryColor),
                       ),
                     ),
                     pipolAsync.when(
                       data: (data) {
+                        if (data.data.isEmpty) {
+                          return const Center(
+                            child: Text('NO ITEMS TO SHOW.'),
+                          );
+                        }
+
                         return ListView.builder(
                           shrinkWrap: true,
                           itemCount: data.data.length,
@@ -482,21 +463,39 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
           );
         },
-        error: (error, _) => Center(child: Text(error.toString())),
+        error: (error, _) => Center(
+            child: Column(
+          children: [
+            Text(error.toString()),
+            const SizedBox(
+              height: 10,
+            ),
+            FilledButton(
+              onPressed: () {
+                // refresh the provider
+                ref.invalidate(homeScreenControllerProvider);
+              },
+              child: const Text('TRY AGAIN'),
+            ),
+          ],
+        )),
         loading: () => const Center(child: CircularProgressIndicator()),
       ),
     );
   }
 
   Widget _buildPageSelector() {
-    final valueAsync = ref.watch(homeScreenControllerProvider);
+    // get the current value of the home screen provider as "last page"
+    final valueAsync = ref.watch(homeScreenControllerProvider).value;
 
-    return valueAsync.when(
-      data: (data) {
-        final int currentPage = data.meta.pagination.current;
-        final int lastPage = data.meta.pagination.last;
+    // get the currentPage from request provider
+    final currentPage = ref.watch(projectsRequestControllerProvider).page;
 
-        return DropdownButton(
+    // get the last page from homescreencontroller and assign 1 if it has no value
+    final int lastPage = valueAsync?.meta.pagination.last ?? 1;
+
+    return valueAsync != null
+        ? DropdownButton(
             value: currentPage,
             focusColor: Colors.transparent,
             underline: Container(),
@@ -512,25 +511,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ref
                   .read(projectsRequestControllerProvider.notifier)
                   .update(page: newValue);
-            });
-      },
-      error: (error, stacktrace) {
-        return Text(error.toString());
-      },
-      loading: () => const Row(
-        children: <Widget>[
-          SizedBox(
-            height: 20,
-            width: 20,
-            child: CircularProgressIndicator(),
-          ),
-          SizedBox(
-            width: 10,
-          ),
-          Text('Loading...'),
-        ],
-      ),
-    );
+            })
+        : Container();
   }
 
   Widget _buildTitle() {
@@ -579,6 +561,403 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ref.read(projectsRequestControllerProvider.notifier).update(q: value);
         },
       ),
+    );
+  }
+}
+
+class ProjectRequestBottomSheet extends ConsumerStatefulWidget {
+  const ProjectRequestBottomSheet({super.key});
+
+  @override
+  ConsumerState<ProjectRequestBottomSheet> createState() =>
+      _ProjectRequestBottomSheetState();
+}
+
+class _ProjectRequestBottomSheetState
+    extends ConsumerState<ProjectRequestBottomSheet> {
+  @override
+  Widget build(BuildContext context) {
+    final optionsAsync = ref.watch(optionsControllerProvider);
+
+    // state of selections
+    var selection = ref.watch(projectsRequestControllerProvider);
+
+    return Scaffold(
+      appBar: AppBar(
+        scrolledUnderElevation: 0.0,
+        title: const Text('APPLY FILTERS'),
+        automaticallyImplyLeading: false,
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text('DISMISS'),
+          ),
+        ],
+      ),
+      body: optionsAsync.when(
+          data: (data) {
+            return SizedBox(
+              width: double.infinity,
+              child: SingleChildScrollView(
+                physics: const ClampingScrollPhysics(),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(
+                        'OFFICES',
+                        textAlign: TextAlign.start,
+                      ),
+                    ),
+                    Wrap(
+                      children: data.data.offices?.map((office) {
+                            return Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Checkbox(
+                                    value: selection.offices
+                                            ?.contains(office.value) ??
+                                        false,
+                                    onChanged: (bool? value) {
+                                      print('value: $value');
+
+                                      final updatedSelection = ref
+                                              .watch(
+                                                  projectsRequestControllerProvider)
+                                              .offices
+                                              ?.toList() ??
+                                          [];
+
+                                      if (value != null && value) {
+                                        updatedSelection.add(office.value);
+                                      } else {
+                                        updatedSelection.remove(office.value);
+                                      }
+                                      //
+                                      ref
+                                          .read(
+                                              projectsRequestControllerProvider
+                                                  .notifier)
+                                          .update(offices: updatedSelection);
+                                    }),
+                                Text(office.label),
+                              ],
+                            );
+                          }).toList() ??
+                          [],
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(
+                        'TYPE',
+                        textAlign: TextAlign.start,
+                      ),
+                    ),
+                    Wrap(
+                      children: data.data.types?.map((type) {
+                            return Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Checkbox(
+                                    value:
+                                        selection.types?.contains(type.value) ??
+                                            false,
+                                    onChanged: (bool? value) {
+                                      print('value: $value');
+
+                                      final updatedSelection = ref
+                                              .watch(
+                                                  projectsRequestControllerProvider)
+                                              .offices
+                                              ?.toList() ??
+                                          [];
+
+                                      if (value != null && value) {
+                                        updatedSelection.add(type.value);
+                                      } else {
+                                        updatedSelection.remove(type.value);
+                                      }
+                                      //
+                                      ref
+                                          .read(
+                                              projectsRequestControllerProvider
+                                                  .notifier)
+                                          .update(types: updatedSelection);
+                                    }),
+                                Text(type.label),
+                              ],
+                            );
+                          }).toList() ??
+                          [],
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(
+                        'SPATIAL COVERAGE',
+                        textAlign: TextAlign.start,
+                      ),
+                    ),
+                    Wrap(
+                      children: data.data.spatialCoverages
+                              ?.map((spatialCoverage) {
+                            return Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Checkbox(
+                                    value: selection.spatialCoverages
+                                            ?.contains(spatialCoverage.value) ??
+                                        false,
+                                    onChanged: (bool? value) {
+                                      print('value: $value');
+
+                                      final updatedSelection = ref
+                                              .watch(
+                                                  projectsRequestControllerProvider)
+                                              .spatialCoverages
+                                              ?.toList() ??
+                                          [];
+
+                                      if (value != null && value) {
+                                        updatedSelection
+                                            .add(spatialCoverage.value);
+                                      } else {
+                                        updatedSelection
+                                            .remove(spatialCoverage.value);
+                                      }
+                                      //
+                                      ref
+                                          .read(
+                                              projectsRequestControllerProvider
+                                                  .notifier)
+                                          .update(
+                                              spatialCoverages:
+                                                  updatedSelection);
+                                    }),
+                                Text(spatialCoverage.label),
+                              ],
+                            );
+                          }).toList() ??
+                          [],
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(
+                        'PROGRAMMING DOCUMENTS',
+                        textAlign: TextAlign.start,
+                      ),
+                    ),
+                    Wrap(
+                      children: [
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Checkbox(
+                              tristate: true,
+                              value: ref
+                                  .watch(projectsRequestControllerProvider)
+                                  .pip,
+                              onChanged: (bool? value) {
+                                ref
+                                    .read(projectsRequestControllerProvider
+                                        .notifier)
+                                    .update(pip: value);
+                              },
+                            ),
+                            const Text('PIP'),
+                          ],
+                        ),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Checkbox(
+                              tristate: true,
+                              value: ref
+                                  .watch(projectsRequestControllerProvider)
+                                  .cip,
+                              onChanged: (bool? value) {
+                                ref
+                                    .read(projectsRequestControllerProvider
+                                        .notifier)
+                                    .update(cip: value);
+                              },
+                            ),
+                            const Text('CIP'),
+                          ],
+                        ),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Checkbox(
+                              tristate: true,
+                              value: ref
+                                  .watch(projectsRequestControllerProvider)
+                                  .trip,
+                              onChanged: (bool? value) {
+                                ref
+                                    .read(projectsRequestControllerProvider
+                                        .notifier)
+                                    .update(trip: value);
+                              },
+                            ),
+                            const Text('TRIP'),
+                          ],
+                        ),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Checkbox(
+                              tristate: true,
+                              value: ref
+                                  .watch(projectsRequestControllerProvider)
+                                  .rdip,
+                              onChanged: (bool? value) {
+                                ref
+                                    .read(projectsRequestControllerProvider
+                                        .notifier)
+                                    .update(rdip: value);
+                              },
+                            ),
+                            const Text('RDIP'),
+                          ],
+                        ),
+                      ],
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(
+                        'MAIN FUNDING SOURCE',
+                        textAlign: TextAlign.start,
+                      ),
+                    ),
+                    Wrap(
+                      children: data.data.fundingSources?.map((fundingSource) {
+                            return Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Checkbox(
+                                  value: ref
+                                          .watch(
+                                              projectsRequestControllerProvider)
+                                          .fundingSources
+                                          ?.contains(fundingSource.value) ??
+                                      false,
+                                  onChanged: (bool? value) {
+                                    final updatedSelection = ref
+                                            .watch(
+                                                projectsRequestControllerProvider)
+                                            .fundingSources
+                                            ?.toList() ??
+                                        [];
+
+                                    if (value != null && value) {
+                                      updatedSelection.add(fundingSource.value);
+                                    } else {
+                                      updatedSelection
+                                          .remove(fundingSource.value);
+                                    }
+                                    //
+                                    ref
+                                        .read(projectsRequestControllerProvider
+                                            .notifier)
+                                        .update(
+                                            fundingSources: updatedSelection);
+                                  },
+                                ),
+                                Text(fundingSource.label),
+                              ],
+                            );
+                          }).toList() ??
+                          [],
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(
+                        'PAP STATUS',
+                        textAlign: TextAlign.start,
+                      ),
+                    ),
+                    Wrap(
+                      children: data.data.projectStatuses?.map((projectStatus) {
+                            return Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Checkbox(
+                                  value: ref
+                                          .watch(
+                                              projectsRequestControllerProvider)
+                                          .projectStatuses
+                                          ?.contains(projectStatus.value) ??
+                                      false,
+                                  onChanged: (bool? value) {
+                                    final updatedSelection = ref
+                                            .watch(
+                                                projectsRequestControllerProvider)
+                                            .projectStatuses
+                                            ?.toList() ??
+                                        [];
+
+                                    if (value != null && value) {
+                                      updatedSelection.add(projectStatus.value);
+                                    } else {
+                                      updatedSelection
+                                          .remove(projectStatus.value);
+                                    }
+
+                                    ref
+                                        .read(projectsRequestControllerProvider
+                                            .notifier)
+                                        .update(
+                                            projectStatuses: updatedSelection);
+                                  },
+                                ),
+                                Text(projectStatus.label),
+                              ],
+                            );
+                          }).toList() ??
+                          [],
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+          error: (error, stacktrace) {
+            return Center(
+              child: Column(
+                children: [
+                  Text(error.toString()),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  FilledButton(
+                    onPressed: () {
+                      ref.invalidate(optionsControllerProvider);
+                    },
+                    child: const Text('TRY AGAIN'),
+                  ),
+                ],
+              ),
+            );
+          },
+          loading: () => const LoadingOverlay()),
     );
   }
 }

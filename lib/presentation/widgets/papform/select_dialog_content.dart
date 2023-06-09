@@ -39,13 +39,14 @@ class _SelectDialogContentState extends State<SelectDialogContent> {
     return SizedBox(
       width: double.maxFinite,
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Flexible(
             child: ListView.builder(
               physics: const ClampingScrollPhysics(),
               itemCount: widget.options.length,
               itemBuilder: (context, index) {
-                final option = widget.options[index];
+                final Option option = widget.options[index];
 
                 if (widget.multiple) {
                   if (widget.options[index].children != null &&
@@ -58,6 +59,9 @@ class _SelectDialogContentState extends State<SelectDialogContent> {
                         CheckboxListTile(
                             value: _selected?.contains(option) ?? false,
                             title: Text(option.label),
+                            subtitle: option.description != null
+                                ? Text(option.description!)
+                                : null,
                             onChanged: (bool? value) {
                               debugPrint(value.toString());
 

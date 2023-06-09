@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pips/presentation/widgets/papform/cancel_button.dart';
 
 import '../../../../application/extensions.dart';
 import '../../../../application/providers/numberformatter_provider.dart';
@@ -23,26 +24,81 @@ class UpdateInvestmentCost extends ConsumerStatefulWidget {
 class _UpdateInvestmentCost extends ConsumerState<UpdateInvestmentCost> {
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: DataTable(
-          dataRowMaxHeight: 40,
-          dataRowMinHeight: 40,
-          columnSpacing: 1,
-          border: TableBorder.all(
-            color: Colors.grey,
-            width: 0.5,
-            borderRadius: BorderRadius.circular(16),
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SizedBox(
+            width: double.infinity,
+            child: DataTable(
+              dataRowMaxHeight: 40,
+              dataRowMinHeight: 40,
+              columnSpacing: 1,
+              border: TableBorder.all(
+                color: Colors.grey,
+                width: 0.5,
+                borderRadius: BorderRadius.circular(16),
+              ),
+              columns: _buildColumns(context),
+              rows: [
+                ..._buildRows(context, ref),
+                _buildTotalRow(context, ref),
+              ],
+            ),
           ),
-          columns: _buildColumns(context),
-          rows: [
-            ..._buildRows(context, ref),
-            _buildTotalRow(context, ref),
-          ],
         ),
-      ),
+        TextButton(
+          onPressed: () async {
+            // ask user to provide a funding source
+            final response = await showDialog(
+                context: context,
+                builder: (context) {
+                  final options = ref.watch(optionsControllerProvider).value;
+
+                  if (options?.data.fundingSources != null) {
+                    return AlertDialog(
+                      title: const Text('Select Funding Source'),
+                      actions: [
+                        CancelButton(onPressed: () {
+                          Navigator.pop(context);
+                        }),
+                        FilledButton(
+                            onPressed: () {
+                              Navigator.pop(
+                                  context, null); // TODO: return value
+                            },
+                            child: const Text('CONFIRM')),
+                      ],
+                    );
+                  } else {
+                    return const AlertDialog(
+                      content: Text('Failed to load funding sources'),
+                    );
+                  }
+                });
+
+            if (response != null) {
+              // add row
+              final currentInvestment = ref
+                  .watch(fullProjectControllerProvider(widget.uuid))
+                  .fsInvestments
+                  .toList();
+
+              final updatedInvestment = [
+                ...currentInvestment,
+                FsInvestment.initial()
+              ];
+
+              ref
+                  .read(fullProjectControllerProvider(widget.uuid).notifier)
+                  .update(
+                    fsInvestments: updatedInvestment,
+                  );
+            }
+          },
+          child: const Text('Add Row'),
+        ),
+      ],
     );
   }
 
@@ -388,7 +444,7 @@ class _UpdateInvestmentCost extends ConsumerState<UpdateInvestmentCost> {
             SizedBox(
               width: columnWidth,
               child: Text(
-                fsInvestment.total.toString(),
+                ref.watch(numberFormatterProvider).format(fsInvestment.total),
                 textAlign: TextAlign.end,
                 style: Theme.of(context).textTheme.bodyLarge,
               ),

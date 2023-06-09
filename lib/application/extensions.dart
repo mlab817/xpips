@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pips/domain/models/models.dart';
 
+import '../data/requests/newproject_request.dart';
 import '../data/requests/updateprofile_request.dart';
 import '../data/responses/project_response.dart';
+import '../domain/models/simple_project.dart';
 
 extension UserToProfileRequest on User {
   UpdateProfileRequest toUpdateProfileRequest() {
@@ -48,7 +50,7 @@ extension ApplyPresets on FullProject {
       fundingInstitutions: [],
       fundingSources: [],
       fsInvestments: <FsInvestment>[],
-      regions: <RegionalInvestment>[],
+      regionalInvestments: <RegionalInvestment>[],
       financialAccomplishment: FinancialAccomplishment(),
       typeId: preset.typeId,
       type: preset.type,
@@ -124,11 +126,12 @@ extension CalculateTotalEmployment on FullProject {
 
 extension FullProjectRegionalInvestmentTotal on FullProject {
   TotalRow _regionalInvestmentTotalRow() {
-    if (regions.isEmpty) {
+    if (regionalInvestments.isEmpty) {
       return TotalRow.initial();
     }
 
-    return regions.fold(TotalRow.initial(), (previousValue, element) {
+    return regionalInvestments.fold(TotalRow.initial(),
+        (previousValue, element) {
       return TotalRow(
           y2022: previousValue.y2022 + (element.y2022 ?? 0),
           y2023: previousValue.y2023 + (element.y2023 ?? 0),
@@ -214,4 +217,18 @@ extension ToQuickResource on User {
 
 extension ToFullProject on ProjectResponse {
   FullProject toFullProject() => project;
+}
+
+// convert simple project to request form prior to submission
+extension ToSimpleProjectRequest on SimpleProject {
+  NewProjectRequest toRequest() {
+    return NewProjectRequest(
+      title: title,
+      typeId: type!.value,
+      regularProgram: regularProgram,
+      bases: bases.map((e) => e.value).toList(),
+      description: description,
+      totalCost: totalCost,
+    );
+  }
 }

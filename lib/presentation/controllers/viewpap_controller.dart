@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:pips/data/repositories/project_repository.dart';
 import 'package:pips/data/responses/project_response.dart';
+import 'package:pips/domain/models/models.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'viewpap_controller.g.dart';
@@ -11,8 +12,11 @@ part 'viewpap_controller.g.dart';
 Future<ProjectResponse> project(ProjectRef ref, {String? uuid}) async {
   final repository = ref.watch(projectRepositoryProvider);
 
+  if (uuid == null) {
+    return Future.value(ProjectResponse(project: FullProject.initial()));
+  }
+
   // if uuid is null, set the uuid to 'new'
-  uuid ??= 'new';
 
   return repository.get(uuid);
 }

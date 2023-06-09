@@ -34,6 +34,6 @@ class ProjectsRequest with _$ProjectsRequest {
       _$ProjectsRequestFromJson(json);
 
   static ProjectsRequest initial() {
-    return ProjectsRequest(perPage: 25, page: 1);
+    return ProjectsRequest(perPage: 1, page: 1); // TODO: return to 25
   }
 }

@@ -12,7 +12,7 @@ import '../../data/responses/upload_response.dart';
 part 'reactivationrequest_controller.g.dart';
 
 // define a simple state provider for a class
-@riverpod
+@Riverpod(keepAlive: true)
 class ReactivationRequestController extends _$ReactivationRequestController {
   @override
   ReactivationRequest build() {
@@ -46,8 +46,27 @@ class ReactivationFileUploadController
 
 // define a future provider
 @riverpod
-Future<ReactivationResponse> requestReactivation(RequestReactivationRef ref) {
-  return ref
-      .watch(authRepositoryProvider)
-      .requestReactivation(ref.watch(reactivationRequestControllerProvider));
+Future<ReactivationResponse> requestReactivation(
+    RequestReactivationRef ref) async {
+  final payload = ref.watch(reactivationRequestControllerProvider);
+
+  return ref.watch(authRepositoryProvider).requestReactivation(payload);
+}
+
+@Riverpod(keepAlive: true)
+class RequestReactivationController extends _$RequestReactivationController {
+  Future<ReactivationResponse> submit() async {
+    final repo = ref.watch(authRepositoryProvider);
+    final payload = ref.watch(reactivationRequestControllerProvider);
+
+    state = const AsyncLoading();
+
+    state = await AsyncValue.guard(() => repo.requestReactivation(payload));
+
+    return repo.requestReactivation(payload);
+  }
+
+  //
+  @override
+  FutureOr<ReactivationResponse> build() => Future.value(state.value);
 }

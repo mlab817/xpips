@@ -25,6 +25,8 @@ class _UpdateProfileScreenState extends ConsumerState<UpdateProfileScreen> {
   late TextEditingController _positionController;
   late TextEditingController _contactNumberController;
 
+  bool _isLoading = false;
+
   @override
   void initState() {
     super.initState();
@@ -80,29 +82,6 @@ class _UpdateProfileScreenState extends ConsumerState<UpdateProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    ref.listen(updateProfileControllerProvider, (previous, next) {
-      debugPrint('updateProfileControllerProvider triggered');
-      //
-      if (next.hasValue && previous != next) {
-        final value = next.value;
-
-// show snackbar
-        if (value != null) {
-          if (value.success) {
-            ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Successfully updated profile!')));
-
-            // update user info
-            final user = value.user;
-
-            ref.read(authRepositoryProvider).setUser(user);
-
-            // do something with the user
-          }
-        }
-      }
-    });
-
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
@@ -203,25 +182,27 @@ class _UpdateProfileScreenState extends ConsumerState<UpdateProfileScreen> {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: FilledButton(
-                          onPressed: ref
-                                  .watch(updateProfileControllerProvider)
-                                  .isLoading
-                              ? null
-                              : () {
-                                  //
-                                  ref
-                                      .read(updateProfileControllerProvider
-                                          .notifier)
-                                      .updateProfile();
-                                },
-                          child: ref
-                                  .watch(updateProfileControllerProvider)
-                                  .isLoading
-                              ? const SizedBox(
-                                  width: 20,
-                                  height: 20,
-                                  child: CircularProgressIndicator())
-                              : const Text('Update Profile'),
+                          onPressed: () async {
+                            try {
+                              final response = await ref
+                                  .watch(updateProfileRequestControllerProvider
+                                      .notifier)
+                                  .updateInServer();
+
+                              if (!mounted) return;
+
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(
+                                content: Text(response.toString()),
+                              ));
+                            } catch (error) {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(
+                                content: Text(error.toString()),
+                              ));
+                            }
+                          },
+                          child: const Text('Update Profile'),
                         ),
                       ),
                     ],

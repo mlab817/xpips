@@ -1,7 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:pips/application/providers/appserviceclient_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../application/providers/appserviceclient_provider.dart';
 import '../data_sources/app_service_client.dart';
 
 part 'pipolstatus_repository.freezed.dart';

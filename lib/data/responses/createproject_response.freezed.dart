@@ -21,8 +21,9 @@ CreateProjectResponse _$CreateProjectResponseFromJson(
 
 /// @nodoc
 mixin _$CreateProjectResponse {
-  FullProject get data => throw _privateConstructorUsedError;
-  String get status => throw _privateConstructorUsedError;
+  Project get data => throw _privateConstructorUsedError;
+  String get message => throw _privateConstructorUsedError;
+  bool get success => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -36,9 +37,9 @@ abstract class $CreateProjectResponseCopyWith<$Res> {
           $Res Function(CreateProjectResponse) then) =
       _$CreateProjectResponseCopyWithImpl<$Res, CreateProjectResponse>;
   @useResult
-  $Res call({FullProject data, String status});
+  $Res call({Project data, String message, bool success});
 
-  $FullProjectCopyWith<$Res> get data;
+  $ProjectCopyWith<$Res> get data;
 }
 
 /// @nodoc
@@ -56,24 +57,29 @@ class _$CreateProjectResponseCopyWithImpl<$Res,
   @override
   $Res call({
     Object? data = null,
-    Object? status = null,
+    Object? message = null,
+    Object? success = null,
   }) {
     return _then(_value.copyWith(
       data: null == data
           ? _value.data
           : data // ignore: cast_nullable_to_non_nullable
-              as FullProject,
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
+              as Project,
+      message: null == message
+          ? _value.message
+          : message // ignore: cast_nullable_to_non_nullable
               as String,
+      success: null == success
+          ? _value.success
+          : success // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 
   @override
   @pragma('vm:prefer-inline')
-  $FullProjectCopyWith<$Res> get data {
-    return $FullProjectCopyWith<$Res>(_value.data, (value) {
+  $ProjectCopyWith<$Res> get data {
+    return $ProjectCopyWith<$Res>(_value.data, (value) {
       return _then(_value.copyWith(data: value) as $Val);
     });
   }
@@ -87,10 +93,10 @@ abstract class _$$_CreateProjectResponseCopyWith<$Res>
       __$$_CreateProjectResponseCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({FullProject data, String status});
+  $Res call({Project data, String message, bool success});
 
   @override
-  $FullProjectCopyWith<$Res> get data;
+  $ProjectCopyWith<$Res> get data;
 }
 
 /// @nodoc
@@ -105,17 +111,22 @@ class __$$_CreateProjectResponseCopyWithImpl<$Res>
   @override
   $Res call({
     Object? data = null,
-    Object? status = null,
+    Object? message = null,
+    Object? success = null,
   }) {
     return _then(_$_CreateProjectResponse(
       data: null == data
           ? _value.data
           : data // ignore: cast_nullable_to_non_nullable
-              as FullProject,
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
+              as Project,
+      message: null == message
+          ? _value.message
+          : message // ignore: cast_nullable_to_non_nullable
               as String,
+      success: null == success
+          ? _value.success
+          : success // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -123,19 +134,22 @@ class __$$_CreateProjectResponseCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$_CreateProjectResponse implements _CreateProjectResponse {
-  _$_CreateProjectResponse({required this.data, required this.status});
+  _$_CreateProjectResponse(
+      {required this.data, required this.message, required this.success});
 
   factory _$_CreateProjectResponse.fromJson(Map<String, dynamic> json) =>
       _$$_CreateProjectResponseFromJson(json);
 
   @override
-  final FullProject data;
+  final Project data;
   @override
-  final String status;
+  final String message;
+  @override
+  final bool success;
 
   @override
   String toString() {
-    return 'CreateProjectResponse(data: $data, status: $status)';
+    return 'CreateProjectResponse(data: $data, message: $message, success: $success)';
   }
 
   @override
@@ -144,12 +158,13 @@ class _$_CreateProjectResponse implements _CreateProjectResponse {
         (other.runtimeType == runtimeType &&
             other is _$_CreateProjectResponse &&
             (identical(other.data, data) || other.data == data) &&
-            (identical(other.status, status) || other.status == status));
+            (identical(other.message, message) || other.message == message) &&
+            (identical(other.success, success) || other.success == success));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, data, status);
+  int get hashCode => Object.hash(runtimeType, data, message, success);
 
   @JsonKey(ignore: true)
   @override
@@ -168,16 +183,19 @@ class _$_CreateProjectResponse implements _CreateProjectResponse {
 
 abstract class _CreateProjectResponse implements CreateProjectResponse {
   factory _CreateProjectResponse(
-      {required final FullProject data,
-      required final String status}) = _$_CreateProjectResponse;
+      {required final Project data,
+      required final String message,
+      required final bool success}) = _$_CreateProjectResponse;
 
   factory _CreateProjectResponse.fromJson(Map<String, dynamic> json) =
       _$_CreateProjectResponse.fromJson;
 
   @override
-  FullProject get data;
+  Project get data;
   @override
-  String get status;
+  String get message;
+  @override
+  bool get success;
   @override
   @JsonKey(ignore: true)
   _$$_CreateProjectResponseCopyWith<_$_CreateProjectResponse> get copyWith =>

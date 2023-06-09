@@ -93,7 +93,7 @@ class AuthRepositoryImplementer implements AuthRepository {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 AuthRepository authRepository(AuthRepositoryRef ref) =>
     AuthRepositoryImplementer(
       client: ref.watch(appServiceClientProvider),

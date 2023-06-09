@@ -10,6 +10,7 @@ part 'regional_investment.g.dart';
 @freezed
 class RegionalInvestment with _$RegionalInvestment {
   factory RegionalInvestment({
+    @JsonKey(name: "id") int? id,
     @JsonKey(name: "region_id") int? regionId,
     @JsonKey(name: "region") Option? region,
     @JsonKey(name: "y2022") double? y2022,

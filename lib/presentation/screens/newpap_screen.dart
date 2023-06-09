@@ -1,11 +1,11 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pips/presentation/controllers/controllers.dart';
-import 'package:pips/presentation/widgets/loading_dialog.dart';
-import 'package:pips/presentation/widgets/papform.dart';
+import 'package:pips/application/extensions.dart';
+import 'package:pips/data/repositories/repositories.dart';
 
-import '../../data/requests/fullproject_request.dart';
+import '../../domain/models/option.dart';
+import '../../presentation/controllers/controllers.dart';
 
 @RoutePage()
 class NewPapScreen extends ConsumerStatefulWidget {
@@ -18,7 +18,11 @@ class NewPapScreen extends ConsumerStatefulWidget {
 class _NewPapScreenState extends ConsumerState<NewPapScreen> {
   @override
   Widget build(BuildContext context) {
-    final projectAsync = ref.watch(projectProvider(uuid: 'new'));
+    final optionsAsync = ref.watch(optionsControllerProvider).value;
+    final simpleProject = ref.watch(simpleProjectProvider);
+
+    print('simple project: ');
+    print(simpleProject);
 
     return Scaffold(
       appBar: AppBar(
@@ -30,34 +34,207 @@ class _NewPapScreenState extends ConsumerState<NewPapScreen> {
         ),
         title: const Text('New Program/Project'),
         actions: [
+          const Text('Please complete all fields'),
+          const SizedBox(
+            width: 10,
+          ),
+          // enable if valid
           FilledButton(
-            onPressed: () async {
-              // TODO: handle submit
-              FullProjectRequest projectToSubmit =
-                  FullProjectRequest.fromFullProject(
-                      ref.watch(fullProjectControllerProvider(null)));
+            onPressed: ref.watch(simpleProjectControllerStateProvider).isValid
+                ? () async {
+                    try {
+                      final projectToSubmit =
+                          ref.watch(simpleProjectProvider).toRequest();
 
-              debugPrint(projectToSubmit.toJson().toString());
+                      print(projectToSubmit);
 
-              // TODO: handle form submission
-            },
+                      final response = await ref
+                          .watch(projectRepositoryProvider)
+                          .post(projectToSubmit);
+
+                      if (!mounted) return;
+
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text(response.message.toString())));
+                    } catch (err) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text(err.toString())));
+                    }
+                  }
+                : null,
             child: const Text('Save'),
           ),
           const SizedBox(width: 16),
         ],
       ),
-      body: projectAsync.when(
-          data: (data) {
-            return const PapForm(
-              uuid: 'new',
-            );
-          },
-          error: (error, stacktrace) {
-            return Center(
-              child: Text(error.toString()),
-            );
-          },
-          loading: () => const LoadingOverlay()),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('PAP Title'),
+              const SizedBox(height: 10),
+              TextFormField(
+                initialValue: simpleProject.title,
+                decoration: const InputDecoration(
+                  hintText:
+                      'PAP title should match the title to be submitted to the DBM.',
+                ),
+                onChanged: (String? value) {
+                  ref
+                      .read(simpleProjectControllerStateProvider.notifier)
+                      .update(title: value);
+                },
+              ),
+              const SizedBox(height: 30),
+              const Text('Program or Project'),
+              const SizedBox(height: 10),
+              Row(
+                children: optionsAsync?.data.types
+                        ?.map((type) => Flexible(
+                              child: InkWell(
+                                onTap: () {
+                                  //
+                                  ref
+                                      .read(simpleProjectControllerStateProvider
+                                          .notifier)
+                                      .update(type: type);
+                                },
+                                child: Row(
+                                  children: [
+                                    Radio<Option>(
+                                      groupValue: simpleProject.type,
+                                      value: type,
+                                      onChanged: (Option? value) {
+                                        ref
+                                            .read(
+                                                simpleProjectControllerStateProvider
+                                                    .notifier)
+                                            .update(type: value);
+                                      },
+                                    ),
+                                    Text(type.label),
+                                  ],
+                                ),
+                              ),
+                            ))
+                        .toList() ??
+                    [],
+              ),
+              const SizedBox(height: 30),
+              const Text('Is it a regular program?'),
+              const SizedBox(height: 10),
+              InkWell(
+                onTap: () {
+                  ref
+                      .read(simpleProjectControllerStateProvider.notifier)
+                      .update(
+                          regularProgram: !ref
+                              .read(simpleProjectControllerStateProvider)
+                              .project
+                              .regularProgram);
+                },
+                child: Row(
+                  children: [
+                    Checkbox(
+                      value: simpleProject.regularProgram,
+                      onChanged: (bool? value) {
+                        ref
+                            .read(simpleProjectControllerStateProvider.notifier)
+                            .update(regularProgram: value);
+                      },
+                    ),
+                    const Text('Regular Program'),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 30),
+              const Text('Basis for Implementation'),
+              const SizedBox(height: 10),
+              Column(
+                  children: optionsAsync?.data.bases?.map(
+                        (basis) {
+                          return InkWell(
+                            onTap: () {
+                              final curSelection = simpleProject.bases
+                                  .toList(); // copy the current selection
+
+                              if (simpleProject.bases.contains(basis)) {
+                                curSelection.add(basis);
+                              } else {
+                                curSelection.remove(basis);
+                              }
+
+                              ref
+                                  .read(simpleProjectControllerStateProvider
+                                      .notifier)
+                                  .update(bases: curSelection);
+                            },
+                            child: Row(
+                              children: [
+                                Checkbox(
+                                  value: simpleProject.bases.contains(basis),
+                                  onChanged: (bool? value) {
+                                    final curSelection = simpleProject.bases
+                                        .toList(); // copy the current selection
+
+                                    if (value ?? false) {
+                                      curSelection.add(basis);
+                                    } else {
+                                      curSelection.remove(basis);
+                                    }
+
+                                    ref
+                                        .read(
+                                            simpleProjectControllerStateProvider
+                                                .notifier)
+                                        .update(bases: curSelection);
+                                  },
+                                ),
+                                Flexible(
+                                  child: Text(
+                                    basis.label,
+                                    maxLines: 2,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      ).toList() ??
+                      []),
+              const SizedBox(height: 30),
+              const Text('Description'),
+              const SizedBox(height: 10),
+              TextFormField(
+                initialValue: simpleProject.description,
+                decoration: const InputDecoration(hintText: ''),
+                minLines: 3,
+                maxLines: 3,
+                onChanged: (String? value) {
+                  //
+                  ref
+                      .read(simpleProjectControllerStateProvider.notifier)
+                      .update(description: value);
+                },
+              ),
+              const SizedBox(height: 30),
+              const Text('Total Cost (in absolute PHP)'),
+              const SizedBox(height: 10),
+              TextFormField(
+                initialValue: simpleProject.totalCost.toString(),
+                onChanged: (String? value) {
+                  ref
+                      .read(simpleProjectControllerStateProvider.notifier)
+                      .update(totalCost: double.tryParse(value ?? ''));
+                },
+              ),
+              const SizedBox(height: 30),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

@@ -7,6 +7,7 @@ import '../requests/newproject_request.dart';
 import '../requests/requests.dart';
 import '../responses/patchproject_response.dart';
 import '../responses/responses.dart';
+import '../responses/updatefinancialaccomplishment_response.dart';
 
 part 'project_repository.g.dart';
 
@@ -28,6 +29,8 @@ abstract class ProjectRepository {
   // patch
   // we use string, dynamic for payload because we will only post one key-value pair at a time
   Future<PatchProjectResponse> patch(String uuid, Map<String, dynamic> payload);
+
+  Future<UpdateFinancialAccomplishmentResponse> updateFa(int id, Map<String, dynamic> payload);
 }
 
 class ProjectRepositoryImplementer implements ProjectRepository {
@@ -65,6 +68,11 @@ class ProjectRepositoryImplementer implements ProjectRepository {
   Future<PatchProjectResponse> patch(
       String uuid, Map<String, dynamic> payload) async {
     return await client.patchProject(uuid, payload);
+  }
+  
+  @override
+  Future<UpdateFinancialAccomplishmentResponse> updateFa(int id, Map<String, dynamic> payload) async {
+    return await client.updateFinancialAccomplishment(id, payload);
   }
 }
 

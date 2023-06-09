@@ -68,47 +68,115 @@ class _ProjectListTileState extends ConsumerState<ProjectListTile> {
   }
 
   void _showDialog() {
-    showDialog(
+    showGeneralDialog(
       context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text(
-            _project.title,
-            overflow: TextOverflow.ellipsis,
-          ),
-          content: SizedBox(
+      barrierDismissible: true,
+      barrierLabel: 'Label',
+      pageBuilder: (context, _, __) {
+        return Dialog(
+          child: Container(
+            padding: const EdgeInsets.all(16),
             width: double.infinity,
+            height: double.infinity,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
+                AppBar(
+                  title: Text(
+                    _project.title,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  backgroundColor: Colors.transparent,
+                  actions: [
+                    IconButton(
+                      onPressed: _project.permissions.delete
+                          ? () {
+                              _confirmDelete();
+                            }
+                          : null,
+                      icon: const Icon(Icons.delete),
+                      tooltip: 'Delete',
+                    ),
+                    IconButton(
+                      onPressed: _openInNewWindow,
+                      icon: const Icon(Icons.picture_as_pdf),
+                      tooltip: 'PDF',
+                    ),
+                    IconButton(
+                      onPressed: _project.permissions.view
+                          ? () {
+                              ref.read(projectProvider(uuid: _project.uuid));
+                              AutoRouter.of(context).push(PapViewRoute(
+                                uuid: _project.uuid,
+                              ));
+                            }
+                          : null,
+                      icon: const Icon(Icons.visibility),
+                      tooltip: 'View',
+                    ),
+                  ],
+                ),
+                const Divider(),
+                Container(
                   padding: const EdgeInsets.all(8.0),
+                  width: double.infinity,
+                  height: 40,
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8.0)),
                   child: Text(
-                    "PAP of ${_project.office?.acronym ?? 'NO OFFICE'}",
+                    "Office: ${_project.office?.acronym ?? 'NO OFFICE'}",
                     textAlign: TextAlign.start,
                   ),
                 ),
-                Padding(
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
                   padding: const EdgeInsets.all(8.0),
+                  width: double.infinity,
+                  height: 90,
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8.0)),
                   child: Text(
                     "Description: ${_project.description ?? 'No description'}",
                     textAlign: TextAlign.start,
                   ),
                 ),
-                Padding(
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
                   padding: const EdgeInsets.all(8.0),
+                  width: double.infinity,
+                  height: 40,
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8.0)),
                   child: Text(
                     'PIPOL Code: ${_project.pipolCode ?? 'N/A'}',
                     textAlign: TextAlign.start,
                   ),
                 ),
-                Padding(
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
                   padding: const EdgeInsets.all(8.0),
+                  width: double.infinity,
+                  height: 40,
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8.0)),
                   child: Text(
                     'Total Cost: PHP ${ref.watch(numberFormatterProvider).format(_project.totalCost)}',
                     textAlign: TextAlign.start,
                   ),
+                ),
+                const SizedBox(
+                  height: 10,
                 ),
                 Container(
                   padding: const EdgeInsets.all(8.0),
@@ -135,43 +203,6 @@ class _ProjectListTileState extends ConsumerState<ProjectListTile> {
               ],
             ),
           ),
-          actions: [
-            IconButton(
-              onPressed: _project.permissions.delete
-                  ? () {
-                      _confirmDelete();
-                    }
-                  : null,
-              icon: const Icon(Icons.delete),
-              tooltip: 'Delete',
-            ),
-            IconButton(
-              onPressed: _project.permissions.update
-                  ? () {
-                      AutoRouter.of(context)
-                          .push(PapEditRoute(uuid: _project.uuid));
-                    }
-                  : null,
-              icon: const Icon(Icons.edit),
-              tooltip: 'Edit',
-            ),
-            IconButton(
-              onPressed: _openInNewWindow,
-              icon: const Icon(Icons.picture_as_pdf),
-              tooltip: 'PDF',
-            ),
-            IconButton(
-              onPressed: _project.permissions.view
-                  ? () {
-                      ref.read(projectProvider(uuid: _project.uuid));
-                      AutoRouter.of(context)
-                          .push(PapViewRoute(uuid: _project.uuid));
-                    }
-                  : null,
-              icon: const Icon(Icons.visibility),
-              tooltip: 'View',
-            ),
-          ],
         );
       },
     );
@@ -196,8 +227,9 @@ class _ProjectListTileState extends ConsumerState<ProjectListTile> {
           SlidableAction(
             onPressed: _project.permissions.view
                 ? (context) {
-                    AutoRouter.of(context)
-                        .push(PapViewRoute(uuid: _project.uuid));
+                    AutoRouter.of(context).push(PapViewRoute(
+                      uuid: _project.uuid,
+                    ));
                   }
                 : null,
             backgroundColor: Colors.grey,
@@ -217,8 +249,9 @@ class _ProjectListTileState extends ConsumerState<ProjectListTile> {
           SlidableAction(
             onPressed: _project.permissions.update
                 ? (context) {
-                    AutoRouter.of(context)
-                        .push(PapEditRoute(uuid: _project.uuid));
+                    AutoRouter.of(context).push(PapViewRoute(
+                      uuid: _project.uuid,
+                    ));
                   }
                 : null,
             backgroundColor: const Color(0xFF21B7CA),

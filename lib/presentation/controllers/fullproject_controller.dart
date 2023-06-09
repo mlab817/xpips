@@ -7,67 +7,70 @@ part 'fullproject_controller.g.dart';
 
 @Riverpod(keepAlive: true)
 class FullProjectController extends _$FullProjectController {
-  void update({
-    String? title,
-    Option? type,
-    List<Option>? bases,
-    Office? office,
-    List<Option>? operatingUnits,
-    List<Option>? locations,
-    bool? regularProgram,
-    double? totalCost,
-    Option? pdpChapter,
-    Option? spatialCoverage,
-    String? description,
-    FsCost? fsCost,
-    List<Option>? infrastructureSectors,
-    bool? pip,
-    List<FsInvestment>? fsInvestments,
-    List<RegionalInvestment>? regions,
-    bool? iccable,
-    bool? cip,
-    bool? rdip,
-    Option? approvalLevel,
-    List<Option>? pdpChapters,
-    List<Option>? sdgs,
-    Option? cipType,
-    bool? trip,
-    bool? covid,
-    DateTime? approvalLevelDate,
-    String? expectedOutputs,
-    String? remarks,
-    bool? research,
-    List<Option>? prerequisites,
-    bool? hasRow,
-    bool? hasRap,
-    bool? hasRowRap,
-    RowCost? rowCost,
-    RapCost? rapCost,
-    int? employedMale,
-    int? employedFemale,
-    Option? fundingSource,
-    String? risk,
-    Option? gad,
-    List<Option>? agenda,
-    Option? typology,
-    Option? preparationDocument,
-    bool? fsNeedsAssistance,
-    Option? fsStatus,
-    DateTime? fsCompletionDate,
-    int? rowAffectedHouseholds,
-    int? rapAffectedHouseholds,
-    List<Option>? fundingSources,
-    Option? implementationMode,
-    List<Option>? fundingInstitutions,
-    Option? category,
-    Option? projectStatus,
-    String? updates,
-    Option? endYear,
-    Option? startYear,
-    DateTime? asOf,
-    String? uacsCode,
-    bool? pureGrant,
-  }) {
+  void update(
+      {String? title,
+      Option? type,
+      List<Option>? bases,
+      Office? office,
+      List<Option>? operatingUnits,
+      List<Option>? locations,
+      bool? regularProgram,
+      double? totalCost,
+      Option? pdpChapter,
+      Option? spatialCoverage,
+      String? description,
+      FsCost? fsCost,
+      List<Option>? infrastructureSectors,
+      bool? pip,
+      List<FsInvestment>? fsInvestments,
+      List<RegionalInvestment>? regionalInvestments,
+      bool? iccable,
+      bool? cip,
+      bool? rdip,
+      Option? approvalLevel,
+      List<Option>? pdpChapters,
+      List<Option>? sdgs,
+      Option? cipType,
+      bool? trip,
+      bool? covid,
+      DateTime? approvalLevelDate,
+      String? expectedOutputs,
+      String? remarks,
+      bool? research,
+      List<Option>? prerequisites,
+      bool? hasRow,
+      bool? hasRap,
+      bool? hasRowRap,
+      RowCost? rowCost,
+      RapCost? rapCost,
+      int? employedMale,
+      int? employedFemale,
+      Option? fundingSource,
+      String? risk,
+      Option? gad,
+      List<Option>? agenda,
+      Option? typology,
+      Option? preparationDocument,
+      bool? fsNeedsAssistance,
+      Option? fsStatus,
+      DateTime? fsCompletionDate,
+      int? rowAffectedHouseholds,
+      int? rapAffectedHouseholds,
+      List<Option>? fundingSources,
+      Option? implementationMode,
+      List<Option>? fundingInstitutions,
+      Option? category,
+      Option? projectStatus,
+      String? updates,
+      Option? endYear,
+      Option? startYear,
+      DateTime? asOf,
+      String? uacsCode,
+      bool? pureGrant,
+      FinancialAccomplishment? financialAccomplishment,
+      String? notes,
+      String? contactInformation,
+      bool? iccResubmission}) {
     state = state.copyWith(
       title: title ?? state.title,
       type: type ?? state.type,
@@ -85,7 +88,7 @@ class FullProjectController extends _$FullProjectController {
           infrastructureSectors ?? state.infrastructureSectors,
       pip: pip ?? state.pip,
       fsInvestments: fsInvestments ?? state.fsInvestments,
-      regions: regions ?? state.regions,
+      regionalInvestments: regionalInvestments ?? state.regionalInvestments,
       iccable: iccable ?? state.iccable,
       cip: cip ?? state.cip,
       rdip: rdip ?? state.rdip,
@@ -131,7 +134,94 @@ class FullProjectController extends _$FullProjectController {
       asOf: asOf ?? state.asOf,
       uacsCode: uacsCode ?? state.uacsCode,
       pureGrant: pureGrant ?? state.pureGrant,
+      financialAccomplishment:
+          financialAccomplishment ?? state.financialAccomplishment,
+      notes: notes ?? state.notes,
+      contactInformation: contactInformation ?? state.contactInformation,
+      iccResubmission: iccResubmission ?? state.iccResubmission,
     );
+  }
+
+  void addRegionalInvestment({
+    required RegionalInvestment regionalInvestment,
+  }) {
+    final currentRegionalInvestments = state.regionalInvestments.toList();
+
+    currentRegionalInvestments.add(regionalInvestment);
+
+    state = state.copyWith(regionalInvestments: currentRegionalInvestments);
+  }
+
+  void updateRegionalInvestment({
+    required RegionalInvestment regionalInvestment,
+  }) {
+    final currentRegionalInvestments = state.regionalInvestments.toList();
+
+    int index = currentRegionalInvestments
+        .indexWhere((element) => element.id == regionalInvestment.id);
+
+    // if found
+    if (index != -1) {
+      currentRegionalInvestments[index] = regionalInvestment;
+    }
+
+    state = state.copyWith(regionalInvestments: currentRegionalInvestments);
+  }
+
+  void removeRegionalInvestment({
+    required RegionalInvestment regionalInvestment,
+  }) {
+    final currentRegionalInvestments = state.regionalInvestments.toList();
+
+    int index = currentRegionalInvestments
+        .indexWhere((element) => element.id == regionalInvestment.id);
+
+    // if found
+    if (index != -1) {
+      currentRegionalInvestments.removeAt(index);
+    }
+
+    state = state.copyWith(regionalInvestments: currentRegionalInvestments);
+  }
+
+  void addFsInvestment({
+    required FsInvestment fsInvestment,
+  }) {
+    final currentFsInvestments = state.fsInvestments.toList();
+
+    currentFsInvestments.add(fsInvestment);
+
+    state = state.copyWith(fsInvestments: currentFsInvestments);
+  }
+
+  void updateFsInvestment({required FsInvestment fsInvestment}) {
+    final currentInvestments = state.fsInvestments;
+
+    int index = currentInvestments
+        .indexWhere((element) => element.id == fsInvestment.id);
+
+    // if found
+    if (index != -1) {
+      currentInvestments[index] = fsInvestment;
+    }
+
+    state = state.copyWith(fsInvestments: currentInvestments);
+  }
+
+  void removeFsInvestment({
+    required FsInvestment fsInvestment,
+  }) {
+    final currentInvestments = state.fsInvestments.toList();
+
+    int index = currentInvestments
+        .indexWhere((element) => element.id == fsInvestment.id);
+
+    // if found
+    if (index != -1) {
+      currentInvestments.removeAt(index);
+    }
+
+    state = state.copyWith(fsInvestments: currentInvestments);
   }
 
   @override

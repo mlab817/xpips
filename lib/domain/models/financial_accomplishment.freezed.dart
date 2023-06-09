@@ -21,6 +21,8 @@ FinancialAccomplishment _$FinancialAccomplishmentFromJson(
 
 /// @nodoc
 mixin _$FinancialAccomplishment {
+  @JsonKey(name: "id")
+  int? get id => throw _privateConstructorUsedError;
   @JsonKey(name: "nep_2023")
   double? get nep2023 => throw _privateConstructorUsedError;
   @JsonKey(name: "nep_2024")
@@ -71,7 +73,8 @@ abstract class $FinancialAccomplishmentCopyWith<$Res> {
       _$FinancialAccomplishmentCopyWithImpl<$Res, FinancialAccomplishment>;
   @useResult
   $Res call(
-      {@JsonKey(name: "nep_2023") double? nep2023,
+      {@JsonKey(name: "id") int? id,
+      @JsonKey(name: "nep_2023") double? nep2023,
       @JsonKey(name: "nep_2024") double? nep2024,
       @JsonKey(name: "nep_2025") double? nep2025,
       @JsonKey(name: "nep_2026") double? nep2026,
@@ -105,6 +108,7 @@ class _$FinancialAccomplishmentCopyWithImpl<$Res,
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = freezed,
     Object? nep2023 = freezed,
     Object? nep2024 = freezed,
     Object? nep2025 = freezed,
@@ -125,6 +129,10 @@ class _$FinancialAccomplishmentCopyWithImpl<$Res,
     Object? disbursement2028 = freezed,
   }) {
     return _then(_value.copyWith(
+      id: freezed == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int?,
       nep2023: freezed == nep2023
           ? _value.nep2023
           : nep2023 // ignore: cast_nullable_to_non_nullable
@@ -210,7 +218,8 @@ abstract class _$$_FinancialAccomplishmentCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {@JsonKey(name: "nep_2023") double? nep2023,
+      {@JsonKey(name: "id") int? id,
+      @JsonKey(name: "nep_2023") double? nep2023,
       @JsonKey(name: "nep_2024") double? nep2024,
       @JsonKey(name: "nep_2025") double? nep2025,
       @JsonKey(name: "nep_2026") double? nep2026,
@@ -242,6 +251,7 @@ class __$$_FinancialAccomplishmentCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = freezed,
     Object? nep2023 = freezed,
     Object? nep2024 = freezed,
     Object? nep2025 = freezed,
@@ -262,6 +272,10 @@ class __$$_FinancialAccomplishmentCopyWithImpl<$Res>
     Object? disbursement2028 = freezed,
   }) {
     return _then(_$_FinancialAccomplishment(
+      id: freezed == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int?,
       nep2023: freezed == nep2023
           ? _value.nep2023
           : nep2023 // ignore: cast_nullable_to_non_nullable
@@ -342,7 +356,8 @@ class __$$_FinancialAccomplishmentCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_FinancialAccomplishment extends _FinancialAccomplishment {
   _$_FinancialAccomplishment(
-      {@JsonKey(name: "nep_2023") this.nep2023,
+      {@JsonKey(name: "id") this.id,
+      @JsonKey(name: "nep_2023") this.nep2023,
       @JsonKey(name: "nep_2024") this.nep2024,
       @JsonKey(name: "nep_2025") this.nep2025,
       @JsonKey(name: "nep_2026") this.nep2026,
@@ -365,6 +380,9 @@ class _$_FinancialAccomplishment extends _FinancialAccomplishment {
   factory _$_FinancialAccomplishment.fromJson(Map<String, dynamic> json) =>
       _$$_FinancialAccomplishmentFromJson(json);
 
+  @override
+  @JsonKey(name: "id")
+  final int? id;
   @override
   @JsonKey(name: "nep_2023")
   final double? nep2023;
@@ -425,6 +443,7 @@ class _$_FinancialAccomplishment extends _FinancialAccomplishment {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_FinancialAccomplishment &&
+            (identical(other.id, id) || other.id == id) &&
             (identical(other.nep2023, nep2023) || other.nep2023 == nep2023) &&
             (identical(other.nep2024, nep2024) || other.nep2024 == nep2024) &&
             (identical(other.nep2025, nep2025) || other.nep2025 == nep2025) &&
@@ -453,26 +472,28 @@ class _$_FinancialAccomplishment extends _FinancialAccomplishment {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      nep2023,
-      nep2024,
-      nep2025,
-      nep2026,
-      nep2027,
-      nep2028,
-      gaa2023,
-      gaa2024,
-      gaa2025,
-      gaa2026,
-      gaa2027,
-      gaa2028,
-      disbursement2023,
-      disbursement2024,
-      disbursement2025,
-      disbursement2026,
-      disbursement2027,
-      disbursement2028);
+  int get hashCode => Object.hashAll([
+        runtimeType,
+        id,
+        nep2023,
+        nep2024,
+        nep2025,
+        nep2026,
+        nep2027,
+        nep2028,
+        gaa2023,
+        gaa2024,
+        gaa2025,
+        gaa2026,
+        gaa2027,
+        gaa2028,
+        disbursement2023,
+        disbursement2024,
+        disbursement2025,
+        disbursement2026,
+        disbursement2027,
+        disbursement2028
+      ]);
 
   @JsonKey(ignore: true)
   @override
@@ -492,7 +513,8 @@ class _$_FinancialAccomplishment extends _FinancialAccomplishment {
 
 abstract class _FinancialAccomplishment extends FinancialAccomplishment {
   factory _FinancialAccomplishment(
-          {@JsonKey(name: "nep_2023") final double? nep2023,
+          {@JsonKey(name: "id") final int? id,
+          @JsonKey(name: "nep_2023") final double? nep2023,
           @JsonKey(name: "nep_2024") final double? nep2024,
           @JsonKey(name: "nep_2025") final double? nep2025,
           @JsonKey(name: "nep_2026") final double? nep2026,
@@ -516,6 +538,9 @@ abstract class _FinancialAccomplishment extends FinancialAccomplishment {
   factory _FinancialAccomplishment.fromJson(Map<String, dynamic> json) =
       _$_FinancialAccomplishment.fromJson;
 
+  @override
+  @JsonKey(name: "id")
+  int? get id;
   @override
   @JsonKey(name: "nep_2023")
   double? get nep2023;

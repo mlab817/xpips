@@ -10,6 +10,7 @@ part 'fs_investment.g.dart';
 @freezed
 class FsInvestment with _$FsInvestment {
   factory FsInvestment({
+    @JsonKey(name: "id") int? id,
     @JsonKey(name: "funding_source_id") int? fundingSourceId,
     @JsonKey(name: "funding_source") Option? fundingSource,
     @JsonKey(name: "y2022") double? y2022,

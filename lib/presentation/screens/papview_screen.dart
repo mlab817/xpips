@@ -1,30 +1,39 @@
 import 'dart:math';
 
-import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 import 'package:intl/intl.dart';
-import 'package:pips/application/app_router.dart';
-import 'package:pips/presentation/controllers/currentuser_controller.dart';
-import 'package:pips/presentation/controllers/newcommentstream_controller.dart';
-import 'package:pips/presentation/widgets/message_bubble.dart';
 
+import '../../application/app_router.dart';
 import '../../application/extensions.dart';
 import '../../application/providers/numberformatter_provider.dart';
 import '../../data/repositories/repositories.dart';
 import '../../data/requests/requests.dart';
 import '../../data/responses/responses.dart';
 import '../../domain/models/models.dart';
+import '../../presentation/controllers/currentuser_controller.dart';
+import '../../presentation/controllers/newcommentstream_controller.dart';
+import '../../presentation/widgets/message_bubble.dart';
+import '../../presentation/widgets/papform/form_objects/update_notes.dart';
 import '../controllers/combinedcomments_controller.dart';
 import '../controllers/controllers.dart';
+import '../controllers/patchproject_controller.dart';
+import '../widgets/papform/common/radioeditor.dart';
+import '../widgets/papform/common/texteditor.dart';
+import '../widgets/papform/form_objects/financial_accomplishment.dart';
+import '../widgets/papform/form_objects/total_project_cost.dart';
+import '../widgets/papform/form_objects/update_indicator.dart';
+import '../widgets/papform/form_objects/update_pap.dart';
 
 @RoutePage()
 class PapViewScreen extends ConsumerStatefulWidget {
-  const PapViewScreen({Key? key, @PathParam('uuid') required this.uuid})
-      : super(key: key);
+  const PapViewScreen({
+    Key? key,
+    @PathParam('uuid') required this.uuid,
+  }) : super(key: key);
 
   final String uuid;
 
@@ -58,11 +67,18 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
           icon: const Icon(Icons.arrow_back),
         ),
         title: Text(
-          projectProfileAsync.value?.project.title ?? 'No Project Selected',
+          projectProfileAsync.value?.project.title ?? 'NO TITLE',
           overflow: TextOverflow.ellipsis,
         ),
         // scrolledUnderElevation: 0.0,
         actions: [
+          IconButton(
+            onPressed: () {
+              //
+            },
+            icon: const Icon(Icons.refresh),
+            tooltip: 'Reload',
+          ),
           IconButton(
             onPressed: () async {
               // todo: handle confirm delete
@@ -108,13 +124,6 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
             },
             icon: const Icon(Icons.delete),
             tooltip: 'Delete',
-          ),
-          IconButton(
-            onPressed: () {
-              AutoRouter.of(context).push(PapEditRoute(uuid: widget.uuid));
-            },
-            icon: const Icon(Icons.edit),
-            tooltip: 'Edit',
           ),
         ],
       ),
@@ -168,7 +177,8 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
   }
 
   Widget _buildShow(ProjectResponse response) {
-    final FullProject project = response.project;
+    final FullProject project =
+        ref.watch(fullProjectControllerProvider(widget.uuid));
 
     return CustomScrollView(
       physics: const ClampingScrollPhysics(),
@@ -182,58 +192,96 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
             alignment: Alignment.centerLeft,
             child: const Text(
               'General Information',
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w700,
+              ),
             ),
           ),
           sliver: SliverList(
-            delegate: SliverChildListDelegate([
-              ListTile(
-                subtitle: Text(project.title ?? 'N/A'),
-                title: const Text('Title'),
-                onTap: () async {
-                  await Clipboard.setData(
-                          ClipboardData(text: project.title ?? ''))
-                      .then((_) {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                        content: Text("Title copied to clipboard")));
-                  });
-                },
-              ),
-              ListTile(
-                subtitle: Text(project.type?.label ?? 'N/A'),
-                title: const Text('Program or Project'),
-              ),
-              ListTile(
-                subtitle: Text(project.regularProgram != null &&
-                        project.regularProgram == true
-                    ? 'Yes'
-                    : 'No'),
-                title: const Text('Regular Program'),
-              ),
-              ListTile(
-                subtitle: Text(
-                  project.bases.map((e) => e.label).join(', '),
+            delegate: SliverChildListDelegate(
+              [
+                TextEditor(
+                  project: project,
+                  fieldLabel: 'Title',
+                  oldValue: project.title ?? '',
+                  onSubmit: (String newValue) {
+                    //
+                    final Map<String, dynamic> payload = {
+                      'title': newValue,
+                    };
+
+                    ref
+                        .read(patchProjectControllerProvider.notifier)
+                        .submit(uuid: project.uuid!, payload: payload);
+
+                    // update the provider
+                    ref
+                        .read(fullProjectControllerProvider(project.uuid)
+                            .notifier)
+                        .update(title: newValue);
+
+                    // close
+                    Navigator.pop(context);
+                  },
                 ),
-                title: const Text('Basis for Implementation'),
-              ),
-              ListTile(
-                subtitle: Text(project.description ?? 'N/A'),
-                title: const Text('Description'),
-                onTap: () async {
-                  await Clipboard.setData(
-                          ClipboardData(text: project.description ?? ''))
-                      .then((_) {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                        content: Text("Description copied to clipboard")));
-                  });
-                },
-              ),
-              ListTile(
-                subtitle: Text(
-                    "PHP ${ref.watch(numberFormatterProvider).format(project.totalCost)}"),
-                title: const Text('Total Project Cost'),
-              ),
-            ]),
+                UpdatePap(project: project),
+                RadioEditor(
+                  project: project,
+                  fieldLabel: 'Regular Program',
+                  oldValue: project.regularProgram ?? false,
+                  onSubmit: (bool value) {
+                    final Map<String, dynamic> payload = {
+                      'regular_program': value,
+                    };
+
+                    ref
+                        .read(patchProjectControllerProvider.notifier)
+                        .submit(uuid: project.uuid!, payload: payload);
+
+                    // update the provider
+                    ref
+                        .read(fullProjectControllerProvider(project.uuid)
+                            .notifier)
+                        .update(regularProgram: value);
+
+                    // close
+                    Navigator.pop(context);
+                  },
+                ),
+                ListTile(
+                  subtitle: Text(
+                    project.bases.map((e) => e.label).join(', '),
+                  ),
+                  title: const Text('Basis for Implementation'),
+                ),
+                TextEditor(
+                  project: project,
+                  fieldLabel: 'Description',
+                  oldValue: project.description ?? '',
+                  onSubmit: (String newValue) {
+                    //
+                    final Map<String, dynamic> payload = {
+                      'description': newValue,
+                    };
+
+                    ref
+                        .read(patchProjectControllerProvider.notifier)
+                        .submit(uuid: project.uuid!, payload: payload);
+
+                    // update the provider
+                    ref
+                        .read(fullProjectControllerProvider(project.uuid)
+                            .notifier)
+                        .update(description: newValue);
+
+                    // close
+                    Navigator.pop(context);
+                  },
+                ),
+                TotalProjectCost(project: project),
+              ],
+            ),
           ),
         ),
         // Implementing Offices/Units
@@ -304,12 +352,28 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
           ),
           sliver: SliverList(
             delegate: SliverChildListDelegate([
-              ListTile(
-                subtitle: Text(
-                    project.iccable != null && project.iccable == true
-                        ? 'Yes'
-                        : 'No'),
-                title: const Text('Requires ICC submission?'),
+              RadioEditor(
+                project: project,
+                fieldLabel: 'Requires ICC submission',
+                oldValue: project.iccable ?? false,
+                onSubmit: (bool value) {
+                  final Map<String, dynamic> payload = {
+                    'iccable': value,
+                  };
+
+                  ref
+                      .read(patchProjectControllerProvider.notifier)
+                      .submit(uuid: project.uuid!, payload: payload);
+
+                  // update the provider
+                  ref
+                      .read(
+                          fullProjectControllerProvider(project.uuid).notifier)
+                      .update(iccable: value);
+
+                  // close
+                  Navigator.pop(context);
+                },
               ),
               ListTile(
                 subtitle: Text(project.approvalLevel?.label ?? 'N/A'),
@@ -338,52 +402,152 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
           ),
           sliver: SliverList(
             delegate: SliverChildListDelegate([
-              ListTile(
-                subtitle: Text(
-                    project.pip != null && project.pip == true ? 'Yes' : 'No'),
-                title: const Text('Public Investment Program (PIP)'),
+              RadioEditor(
+                project: project,
+                fieldLabel: 'Public Investment Program (PIP)',
+                oldValue: project.pip ?? false,
+                onSubmit: (bool value) {
+                  final Map<String, dynamic> payload = {
+                    'pip': value,
+                  };
+
+                  ref
+                      .read(patchProjectControllerProvider.notifier)
+                      .submit(uuid: project.uuid!, payload: payload);
+
+                  // update the provider
+                  ref
+                      .read(
+                          fullProjectControllerProvider(project.uuid).notifier)
+                      .update(pip: value);
+
+                  // close
+                  Navigator.pop(context);
+                },
               ),
               ListTile(
                 subtitle: Text(project.typology?.label ?? 'N/A'),
                 title: const Text('Typology of PIP'),
               ),
-              ListTile(
-                subtitle: Text(
-                    project.cip != null && project.cip == true ? 'Yes' : 'No'),
-                title: const Text('Core Investment Programs/Projects (CIP)'),
+              RadioEditor(
+                project: project,
+                fieldLabel: 'Core Investment Programs/Projects (CIP)',
+                oldValue: project.cip ?? false,
+                onSubmit: (bool value) {
+                  final Map<String, dynamic> payload = {
+                    'cip': value,
+                  };
+
+                  ref
+                      .read(patchProjectControllerProvider.notifier)
+                      .submit(uuid: project.uuid!, payload: payload);
+
+                  // update the provider
+                  ref
+                      .read(
+                          fullProjectControllerProvider(project.uuid).notifier)
+                      .update(cip: value);
+
+                  // close
+                  Navigator.pop(context);
+                },
               ),
               ListTile(
                 subtitle: Text(project.cipType?.label ?? 'N/A'),
                 title: const Text('Type of CIP'),
               ),
-              ListTile(
-                subtitle: Text(project.trip != null && project.trip == true
-                    ? 'Yes'
-                    : 'No'),
-                title: const Text(
-                    'Three-year Rolling Infastracture Program(TRIP)'),
+              RadioEditor(
+                project: project,
+                fieldLabel: 'Core Investment Programs/Projects (CIP)',
+                oldValue: project.trip ?? false,
+                onSubmit: (bool value) {
+                  final Map<String, dynamic> payload = {
+                    'trip': value,
+                  };
+
+                  ref
+                      .read(patchProjectControllerProvider.notifier)
+                      .submit(uuid: project.uuid!, payload: payload);
+
+                  // update the provider
+                  ref
+                      .read(
+                          fullProjectControllerProvider(project.uuid).notifier)
+                      .update(trip: value);
+
+                  // close
+                  Navigator.pop(context);
+                },
               ),
-              ListTile(
-                subtitle: Text(
-                    project.research != null && project.research == true
-                        ? 'Yes'
-                        : 'No'),
-                title: const Text(
-                    'Is it a Research and Development Program/Project?'),
+              RadioEditor(
+                project: project,
+                fieldLabel: 'Is it a Research and Development Program/Project?',
+                oldValue: project.research ?? false,
+                onSubmit: (bool value) {
+                  final Map<String, dynamic> payload = {
+                    'research': value,
+                  };
+
+                  ref
+                      .read(patchProjectControllerProvider.notifier)
+                      .submit(uuid: project.uuid!, payload: payload);
+
+                  // update the provider
+                  ref
+                      .read(
+                          fullProjectControllerProvider(project.uuid).notifier)
+                      .update(research: value);
+
+                  // close
+                  Navigator.pop(context);
+                },
               ),
-              ListTile(
-                subtitle: Text(project.covid != null && project.covid == true
-                    ? 'Yes'
-                    : 'No'),
-                title: const Text(
-                    'Is it responsive to COVID-19/New Normal Intervention?'),
+              RadioEditor(
+                project: project,
+                fieldLabel:
+                    'Is it responsive to COVID-19/New Normal Intervention?',
+                oldValue: project.covid ?? false,
+                onSubmit: (bool value) {
+                  final Map<String, dynamic> payload = {
+                    'covid': value,
+                  };
+
+                  ref
+                      .read(patchProjectControllerProvider.notifier)
+                      .submit(uuid: project.uuid!, payload: payload);
+
+                  // update the provider
+                  ref
+                      .read(
+                          fullProjectControllerProvider(project.uuid).notifier)
+                      .update(covid: value);
+
+                  // close
+                  Navigator.pop(context);
+                },
               ),
-              ListTile(
-                subtitle: Text(project.rdip != null && project.rdip == true
-                    ? 'Yes'
-                    : 'No'),
-                title:
-                    const Text('Is the Program/Project included in the RDIP?'),
+              RadioEditor(
+                project: project,
+                fieldLabel: 'Is the Program/Project included in the RDIP?',
+                oldValue: project.rdip ?? false,
+                onSubmit: (bool value) {
+                  final Map<String, dynamic> payload = {
+                    'rdip': value,
+                  };
+
+                  ref
+                      .read(patchProjectControllerProvider.notifier)
+                      .submit(uuid: project.uuid!, payload: payload);
+
+                  // update the provider
+                  ref
+                      .read(
+                          fullProjectControllerProvider(project.uuid).notifier)
+                      .update(rdip: value);
+
+                  // close
+                  Navigator.pop(context);
+                },
               ),
             ]),
           ),
@@ -426,32 +590,6 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             alignment: Alignment.centerLeft,
             child: const Text(
-              'Physical Updates and Status',
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-          sliver: SliverList(
-            delegate: SliverChildListDelegate([
-              ListTile(
-                title: const Text('Updates'),
-                subtitle: Text(project.updates ?? 'N/A'),
-              ),
-              ListTile(
-                title: const Text('As of'),
-                subtitle: Text(project.asOf != null
-                    ? DateFormat.yMMMd().format(project.asOf!)
-                    : 'N/A'),
-              ),
-            ]),
-          ),
-        ),
-        SliverStickyHeader(
-          header: Container(
-            height: 60.0,
-            color: Theme.of(context).primaryColor,
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            alignment: Alignment.centerLeft,
-            child: const Text(
               'Main Infrastructure Sector/Subsector',
               style: TextStyle(color: Colors.white),
             ),
@@ -474,22 +612,30 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   project.prerequisites.map((e) => e.label).join(', '),
                 ),
               ),
-              ListTile(
-                  title: const Text(
-                    'Implementation Risks and Mitigation Strategies',
-                  ),
-                  subtitle: Text(
-                    project.risk ?? 'N/A',
-                  ),
-                  onTap: () async {
-                    await Clipboard.setData(
-                            ClipboardData(text: project.risk ?? ''))
-                        .then((_) {
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                          content: Text(
-                              "Implementation risks and mitigation strategies copied to clipboard")));
-                    });
-                  }),
+              TextEditor(
+                project: project,
+                fieldLabel: 'Implementation Risks and Mitigation Strategies',
+                oldValue: project.risk ?? 'NO DATA',
+                onSubmit: (String newValue) {
+                  //
+                  final Map<String, dynamic> payload = {
+                    'implementation_risk': newValue,
+                  };
+
+                  ref
+                      .read(patchProjectControllerProvider.notifier)
+                      .submit(uuid: project.uuid!, payload: payload);
+
+                  // update the provider
+                  ref
+                      .read(
+                          fullProjectControllerProvider(project.uuid).notifier)
+                      .update(risk: newValue);
+
+                  // close
+                  Navigator.pop(context);
+                },
+              ),
             ]),
           ),
         ),
@@ -506,14 +652,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
           ),
           sliver: SliverList(
             delegate: SliverChildListDelegate([
-              ListTile(
-                title: const Text(
-                  'Indicator',
-                ),
-                subtitle: Text(
-                  project.expectedOutputs ?? 'N/A',
-                ),
-              ),
+              UpdateIndicator(project: project),
             ]),
           ),
         ),
@@ -658,26 +797,51 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   project.projectStatus?.label ?? 'N/A',
                 ),
               ),
-              ListTile(
-                title: const Text(
-                  'Will require resubmission to the ICC?',
-                ),
-                subtitle: Text(
-                  project.iccable != null && project.iccable == true
-                      ? 'Yes'
-                      : 'No',
-                ),
+              RadioEditor(
+                project: project,
+                fieldLabel: 'Will require resubmission to the ICC?',
+                oldValue: project.iccResubmission ?? false,
+                onSubmit: (bool value) {
+                  final Map<String, dynamic> payload = {
+                    'icc_resubmission': value,
+                  };
+
+                  ref
+                      .read(patchProjectControllerProvider.notifier)
+                      .submit(uuid: project.uuid!, payload: payload);
+
+                  // update the provider
+                  ref
+                      .read(
+                          fullProjectControllerProvider(project.uuid).notifier)
+                      .update(iccResubmission: value);
+
+                  // close
+                  Navigator.pop(context);
+                },
               ),
-              ListTile(
-                title: const Text('Updates'),
-                subtitle: Text(project.updates ?? 'N/A'),
-                onTap: () async {
-                  await Clipboard.setData(
-                          ClipboardData(text: project.updates ?? ''))
-                      .then((_) {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                        content: Text("Updates copied to clipboard")));
-                  });
+              TextEditor(
+                project: project,
+                fieldLabel: 'Updates',
+                oldValue: project.updates ?? 'NO DATA',
+                onSubmit: (String newValue) {
+                  //
+                  final Map<String, dynamic> payload = {
+                    'updates': newValue,
+                  };
+
+                  ref
+                      .read(patchProjectControllerProvider.notifier)
+                      .submit(uuid: project.uuid!, payload: payload);
+
+                  // update the provider
+                  ref
+                      .read(
+                          fullProjectControllerProvider(project.uuid).notifier)
+                      .update(updates: newValue);
+
+                  // close
+                  Navigator.pop(context);
                 },
               ),
               ListTile(
@@ -728,6 +892,30 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
             delegate: SliverChildListDelegate(
               [
                 _buildRegionalTable(project),
+                // TODO: only enable if current regions < all regions
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: 100,
+                        child: TextButton(
+                          child: const Text('Add'),
+                          onPressed: () {
+                            //
+                            ref
+                                .read(
+                                    fullProjectControllerProvider(project.uuid)
+                                        .notifier)
+                                .addRegionalInvestment(
+                                    regionalInvestment:
+                                        RegionalInvestment.initial());
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
@@ -747,6 +935,28 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
             delegate: SliverChildListDelegate(
               [
                 _buildFinancialTable(project),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: 100,
+                        child: TextButton(
+                          child: const Text('Add'),
+                          onPressed: () {
+                            // TODO: implement navigator
+                            ref
+                                .read(
+                                    fullProjectControllerProvider(project.uuid)
+                                        .notifier)
+                                .addFsInvestment(
+                                    fsInvestment: FsInvestment.initial());
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
@@ -780,12 +990,34 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
             ),
           ),
           sliver: SliverList(
-            delegate: SliverChildListDelegate([
-              ListTile(
-                title: const Text('Contact Information'),
-                subtitle: Text(project.contactInformation ?? 'N/A'),
-              ),
-            ]),
+            delegate: SliverChildListDelegate(
+              [
+                TextEditor(
+                  project: project,
+                  fieldLabel: 'Contact Information',
+                  oldValue: project.contactInformation ?? 'NO DATA',
+                  onSubmit: (String newValue) {
+                    //
+                    final Map<String, dynamic> payload = {
+                      'contact_information': newValue,
+                    };
+
+                    ref
+                        .read(patchProjectControllerProvider.notifier)
+                        .submit(uuid: project.uuid!, payload: payload);
+
+                    // update the provider
+                    ref
+                        .read(fullProjectControllerProvider(project.uuid)
+                            .notifier)
+                        .update(contactInformation: newValue);
+
+                    // close
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            ),
           ),
         ),
         SliverStickyHeader(
@@ -801,10 +1033,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
           ),
           sliver: SliverList(
             delegate: SliverChildListDelegate([
-              ListTile(
-                title: const Text('Attachments'),
-                subtitle: Text(project.notes ?? 'N/A'),
-              ),
+              UpdateNotes(project: project),
             ]),
           ),
         ),
@@ -820,12 +1049,34 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
             ),
           ),
           sliver: SliverList(
-            delegate: SliverChildListDelegate([
-              ListTile(
-                title: const Text('Notes'),
-                subtitle: Text(project.notes ?? 'N/A'),
-              ),
-            ]),
+            delegate: SliverChildListDelegate(
+              [
+                TextEditor(
+                  project: project,
+                  fieldLabel: 'Notes',
+                  oldValue: project.notes ?? 'NO DATA',
+                  onSubmit: (String newValue) {
+                    //
+                    final Map<String, dynamic> payload = {
+                      'notes': newValue,
+                    };
+
+                    ref
+                        .read(patchProjectControllerProvider.notifier)
+                        .submit(uuid: project.uuid!, payload: payload);
+
+                    // update the provider
+                    ref
+                        .read(fullProjectControllerProvider(project.uuid)
+                            .notifier)
+                        .update(notes: newValue);
+
+                    // close
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ],
@@ -833,7 +1084,8 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
   }
 
   Widget _buildRegionalTable(FullProject project) {
-    final List<RegionalInvestment> regionInvestments = project.regions;
+    final List<RegionalInvestment> regionInvestments =
+        project.regionalInvestments;
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -847,7 +1099,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
               TableCell(
                 child: Padding(
                   padding: EdgeInsets.all(8.0),
-                  child: Text('Region'),
+                  child: Text('REGION'),
                 ),
               ),
               TableCell(
@@ -926,8 +1178,17 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 child: Padding(
                   padding: EdgeInsets.all(8.0),
                   child: Text(
-                    'Total',
+                    'TOTAL',
                     textAlign: TextAlign.end,
+                  ),
+                ),
+              ),
+              TableCell(
+                child: Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text(
+                    'ACTIONS',
+                    textAlign: TextAlign.center,
                   ),
                 ),
               ),
@@ -1006,7 +1267,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   child: InkWell(
                     onTap: () async {
                       await Clipboard.setData(
-                              ClipboardData(text: e.y2025.toString() ?? ''))
+                              ClipboardData(text: e.y2025.toString()))
                           .then((_) {
                         ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
@@ -1026,7 +1287,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   child: InkWell(
                     onTap: () async {
                       await Clipboard.setData(
-                              ClipboardData(text: e.y2026.toString() ?? ''))
+                              ClipboardData(text: e.y2026.toString()))
                           .then((_) {
                         ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
@@ -1086,7 +1347,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   child: InkWell(
                     onTap: () async {
                       await Clipboard.setData(
-                              ClipboardData(text: e.y2029.toString() ?? ''))
+                              ClipboardData(text: e.y2029.toString()))
                           .then((_) {
                         ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
@@ -1108,6 +1369,38 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                     child: Text(
                       ref.watch(numberFormatterProvider).format(e.total),
                       textAlign: TextAlign.end,
+                    ),
+                  ),
+                ),
+                TableCell(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        IconButton(
+                          visualDensity: VisualDensity.compact,
+                          icon: const Icon(
+                            Icons.edit,
+                            size: 20,
+                          ),
+                          onPressed: () {},
+                        ),
+                        IconButton(
+                          visualDensity: VisualDensity.compact,
+                          icon: const Icon(Icons.delete, size: 20),
+                          onPressed: () {
+                            //
+                            ref
+                                .read(
+                                    fullProjectControllerProvider(project.uuid)
+                                        .notifier)
+                                .removeRegionalInvestment(
+                                  regionalInvestment: e,
+                                );
+                          },
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -1221,6 +1514,9 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   ),
                 ),
               ),
+              TableCell(
+                child: Container(),
+              ),
             ],
           ),
         ],
@@ -1243,7 +1539,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
               TableCell(
                 child: Padding(
                   padding: EdgeInsets.all(8.0),
-                  child: Text('Funding Source'),
+                  child: Text('FUNDING SOURCE'),
                 ),
               ),
               TableCell(
@@ -1322,8 +1618,17 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 child: Padding(
                   padding: EdgeInsets.all(8.0),
                   child: Text(
-                    'Total',
+                    'TOTAL',
                     textAlign: TextAlign.end,
+                  ),
+                ),
+              ),
+              TableCell(
+                child: Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text(
+                    'ACTIONS',
+                    textAlign: TextAlign.center,
                   ),
                 ),
               ),
@@ -1342,7 +1647,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   child: InkWell(
                     onTap: () async {
                       await Clipboard.setData(
-                              ClipboardData(text: e.y2022.toString() ?? ''))
+                              ClipboardData(text: e.y2022.toString()))
                           .then((_) {
                         ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
@@ -1362,7 +1667,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   child: InkWell(
                     onTap: () async {
                       await Clipboard.setData(
-                              ClipboardData(text: e.y2023.toString() ?? ''))
+                              ClipboardData(text: e.y2023.toString()))
                           .then((_) {
                         ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
@@ -1382,7 +1687,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   child: InkWell(
                     onTap: () async {
                       await Clipboard.setData(
-                              ClipboardData(text: e.y2024.toString() ?? ''))
+                              ClipboardData(text: e.y2024.toString()))
                           .then((_) {
                         ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
@@ -1402,7 +1707,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   child: InkWell(
                     onTap: () async {
                       await Clipboard.setData(
-                              ClipboardData(text: e.y2025.toString() ?? ''))
+                              ClipboardData(text: e.y2025.toString()))
                           .then((_) {
                         ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
@@ -1422,7 +1727,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   child: InkWell(
                     onTap: () async {
                       await Clipboard.setData(
-                              ClipboardData(text: e.y2026.toString() ?? ''))
+                              ClipboardData(text: e.y2026.toString()))
                           .then((_) {
                         ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
@@ -1442,7 +1747,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   child: InkWell(
                     onTap: () async {
                       await Clipboard.setData(
-                              ClipboardData(text: e.y2027.toString() ?? ''))
+                              ClipboardData(text: e.y2027.toString()))
                           .then((_) {
                         ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
@@ -1462,7 +1767,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   child: InkWell(
                     onTap: () async {
                       await Clipboard.setData(
-                              ClipboardData(text: e.y2028.toString() ?? ''))
+                              ClipboardData(text: e.y2028.toString()))
                           .then((_) {
                         ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
@@ -1482,7 +1787,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   child: InkWell(
                     onTap: () async {
                       await Clipboard.setData(
-                              ClipboardData(text: e.y2029.toString() ?? ''))
+                              ClipboardData(text: e.y2029.toString()))
                           .then((_) {
                         ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
@@ -1504,6 +1809,28 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                     child: Text(
                       ref.watch(numberFormatterProvider).format(e.total),
                       textAlign: TextAlign.end,
+                    ),
+                  ),
+                ),
+                TableCell(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        IconButton(
+                            visualDensity: VisualDensity.compact,
+                            icon: const Icon(Icons.edit, size: 20),
+                            onPressed: () {
+                              // TODO: implement edit
+                            }),
+                        IconButton(
+                            visualDensity: VisualDensity.compact,
+                            icon: const Icon(Icons.delete, size: 20),
+                            onPressed: () {
+                              // TODO: implement delete
+                            }),
+                      ],
                     ),
                   ),
                 ),
@@ -1617,6 +1944,12 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   ),
                 ),
               ),
+              TableCell(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(),
+                ),
+              ),
             ],
           ),
         ],
@@ -1625,8 +1958,12 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
   }
 
   Widget _buildFinancialAccomplishments(project) {
-    final FinancialAccomplishment financialAccomplishment =
+    final FinancialAccomplishment? financialAccomplishment =
         project.financialAccomplishment;
+
+    if (financialAccomplishment == null) {
+      return Container();
+    }
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -1671,6 +2008,15 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   ),
                 ),
               ),
+              TableCell(
+                child: Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text(
+                    'Actions',
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
             ],
           ),
           TableRow(
@@ -1707,8 +2053,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 child: InkWell(
                   onTap: () async {
                     await Clipboard.setData(ClipboardData(
-                            text: financialAccomplishment.gaa2023.toString() ??
-                                ''))
+                            text: financialAccomplishment.gaa2023.toString()))
                         .then((_) {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                           content: Text("Value copied to clipboard")));
@@ -1730,8 +2075,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   onTap: () async {
                     await Clipboard.setData(ClipboardData(
                             text: financialAccomplishment.disbursement2023
-                                    .toString() ??
-                                ''))
+                                .toString()))
                         .then((_) {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                           content: Text("Value copied to clipboard")));
@@ -1748,6 +2092,33 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   ),
                 ),
               ),
+              TableCell(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    IconButton(
+                      visualDensity: VisualDensity.compact,
+                      icon: const Icon(
+                        Icons.edit,
+                        size: 20,
+                      ),
+                      onPressed: () {
+                        Navigator.of(context)
+                            .push(MaterialPageRoute(builder: (context) {
+                          return FinancialAccomplishmentForm(
+                            project: project,
+                            year: 2023,
+                            nep: financialAccomplishment.nep2023 ?? 0,
+                            gaa: financialAccomplishment.gaa2023 ?? 0,
+                            disbursement:
+                                financialAccomplishment.disbursement2023 ?? 0,
+                          );
+                        }));
+                      },
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
           TableRow(
@@ -1762,8 +2133,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 child: InkWell(
                   onTap: () async {
                     await Clipboard.setData(ClipboardData(
-                            text: financialAccomplishment.nep2024.toString() ??
-                                ''))
+                            text: financialAccomplishment.nep2024.toString()))
                         .then((_) {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                           content: Text("Value copied to clipboard")));
@@ -1784,8 +2154,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 child: InkWell(
                   onTap: () async {
                     await Clipboard.setData(ClipboardData(
-                            text: financialAccomplishment.gaa2024.toString() ??
-                                ''))
+                            text: financialAccomplishment.gaa2024.toString()))
                         .then((_) {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                           content: Text("Value copied to clipboard")));
@@ -1807,8 +2176,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   onTap: () async {
                     await Clipboard.setData(ClipboardData(
                             text: financialAccomplishment.disbursement2024
-                                    .toString() ??
-                                ''))
+                                .toString()))
                         .then((_) {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                           content: Text("Value copied to clipboard")));
@@ -1825,6 +2193,33 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   ),
                 ),
               ),
+              TableCell(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    IconButton(
+                      visualDensity: VisualDensity.compact,
+                      icon: const Icon(
+                        Icons.edit,
+                        size: 20,
+                      ),
+                      onPressed: () {
+                        Navigator.of(context)
+                            .push(MaterialPageRoute(builder: (context) {
+                          return FinancialAccomplishmentForm(
+                            project: project,
+                            year: 2024,
+                            nep: financialAccomplishment.nep2024 ?? 0,
+                            gaa: financialAccomplishment.gaa2024 ?? 0,
+                            disbursement:
+                                financialAccomplishment.disbursement2024 ?? 0,
+                          );
+                        }));
+                      },
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
           TableRow(
@@ -1839,8 +2234,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 child: InkWell(
                   onTap: () async {
                     await Clipboard.setData(ClipboardData(
-                            text: financialAccomplishment.nep2025.toString() ??
-                                ''))
+                            text: financialAccomplishment.nep2025.toString()))
                         .then((_) {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                           content: Text("Value copied to clipboard")));
@@ -1861,8 +2255,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 child: InkWell(
                   onTap: () async {
                     await Clipboard.setData(ClipboardData(
-                            text: financialAccomplishment.gaa2025.toString() ??
-                                ''))
+                            text: financialAccomplishment.gaa2025.toString()))
                         .then((_) {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                           content: Text("Value copied to clipboard")));
@@ -1884,8 +2277,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   onTap: () async {
                     await Clipboard.setData(ClipboardData(
                             text: financialAccomplishment.disbursement2025
-                                    .toString() ??
-                                ''))
+                                .toString()))
                         .then((_) {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                           content: Text("Value copied to clipboard")));
@@ -1902,6 +2294,33 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   ),
                 ),
               ),
+              TableCell(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    IconButton(
+                      visualDensity: VisualDensity.compact,
+                      icon: const Icon(
+                        Icons.edit,
+                        size: 20,
+                      ),
+                      onPressed: () {
+                        Navigator.of(context)
+                            .push(MaterialPageRoute(builder: (context) {
+                          return FinancialAccomplishmentForm(
+                            project: project,
+                            year: 2025,
+                            nep: financialAccomplishment.nep2025 ?? 0,
+                            gaa: financialAccomplishment.gaa2025 ?? 0,
+                            disbursement:
+                                financialAccomplishment.disbursement2025 ?? 0,
+                          );
+                        }));
+                      },
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
           TableRow(
@@ -1916,8 +2335,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 child: InkWell(
                   onTap: () async {
                     await Clipboard.setData(ClipboardData(
-                            text: financialAccomplishment.nep2026.toString() ??
-                                ''))
+                            text: financialAccomplishment.nep2026.toString()))
                         .then((_) {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                           content: Text("Value copied to clipboard")));
@@ -1938,8 +2356,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 child: InkWell(
                   onTap: () async {
                     await Clipboard.setData(ClipboardData(
-                            text: financialAccomplishment.gaa2026.toString() ??
-                                ''))
+                            text: financialAccomplishment.gaa2026.toString()))
                         .then((_) {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                           content: Text("Value copied to clipboard")));
@@ -1961,8 +2378,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   onTap: () async {
                     await Clipboard.setData(ClipboardData(
                             text: financialAccomplishment.disbursement2026
-                                    .toString() ??
-                                ''))
+                                .toString()))
                         .then((_) {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                           content: Text("Value copied to clipboard")));
@@ -1979,6 +2395,33 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   ),
                 ),
               ),
+              TableCell(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    IconButton(
+                      visualDensity: VisualDensity.compact,
+                      icon: const Icon(
+                        Icons.edit,
+                        size: 20,
+                      ),
+                      onPressed: () {
+                        Navigator.of(context)
+                            .push(MaterialPageRoute(builder: (context) {
+                          return FinancialAccomplishmentForm(
+                            project: project,
+                            year: 2026,
+                            nep: financialAccomplishment.nep2026 ?? 0,
+                            gaa: financialAccomplishment.gaa2026 ?? 0,
+                            disbursement:
+                                financialAccomplishment.disbursement2026 ?? 0,
+                          );
+                        }));
+                      },
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
           TableRow(
@@ -1993,8 +2436,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 child: InkWell(
                   onTap: () async {
                     await Clipboard.setData(ClipboardData(
-                            text: financialAccomplishment.nep2027.toString() ??
-                                ''))
+                            text: financialAccomplishment.nep2027.toString()))
                         .then((_) {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                           content: Text("Value copied to clipboard")));
@@ -2015,8 +2457,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 child: InkWell(
                   onTap: () async {
                     await Clipboard.setData(ClipboardData(
-                            text: financialAccomplishment.gaa2027.toString() ??
-                                ''))
+                            text: financialAccomplishment.gaa2027.toString()))
                         .then((_) {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                           content: Text("Value copied to clipboard")));
@@ -2038,8 +2479,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   onTap: () async {
                     await Clipboard.setData(ClipboardData(
                             text: financialAccomplishment.disbursement2027
-                                    .toString() ??
-                                ''))
+                                .toString()))
                         .then((_) {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                           content: Text("Value copied to clipboard")));
@@ -2056,6 +2496,33 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   ),
                 ),
               ),
+              TableCell(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    IconButton(
+                      visualDensity: VisualDensity.compact,
+                      icon: const Icon(
+                        Icons.edit,
+                        size: 20,
+                      ),
+                      onPressed: () {
+                        Navigator.of(context)
+                            .push(MaterialPageRoute(builder: (context) {
+                          return FinancialAccomplishmentForm(
+                            project: project,
+                            year: 2027,
+                            nep: financialAccomplishment.nep2027 ?? 0,
+                            gaa: financialAccomplishment.gaa2027 ?? 0,
+                            disbursement:
+                                financialAccomplishment.disbursement2027 ?? 0,
+                          );
+                        }));
+                      },
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
           TableRow(
@@ -2070,8 +2537,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 child: InkWell(
                   onTap: () async {
                     await Clipboard.setData(ClipboardData(
-                            text: financialAccomplishment.nep2028.toString() ??
-                                ''))
+                            text: financialAccomplishment.nep2028.toString()))
                         .then((_) {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                           content: Text("Value copied to clipboard")));
@@ -2092,8 +2558,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 child: InkWell(
                   onTap: () async {
                     await Clipboard.setData(ClipboardData(
-                            text: financialAccomplishment.gaa2028.toString() ??
-                                ''))
+                            text: financialAccomplishment.gaa2028.toString()))
                         .then((_) {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                           content: Text("Value copied to clipboard")));
@@ -2132,50 +2597,82 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   ),
                 ),
               ),
+              TableCell(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    IconButton(
+                      visualDensity: VisualDensity.compact,
+                      icon: const Icon(
+                        Icons.edit,
+                        size: 20,
+                      ),
+                      onPressed: () {
+                        Navigator.of(context)
+                            .push(MaterialPageRoute(builder: (context) {
+                          return FinancialAccomplishmentForm(
+                            project: project,
+                            year: 2028,
+                            nep: financialAccomplishment.nep2028 ?? 0,
+                            gaa: financialAccomplishment.gaa2028 ?? 0,
+                            disbursement:
+                                financialAccomplishment.disbursement2028 ?? 0,
+                          );
+                        }));
+                      },
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
           // Totals Row
-          TableRow(children: [
-            const TableCell(
-              child: Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text('Total'),
-              ),
-            ),
-            TableCell(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  ref
-                      .watch(numberFormatterProvider)
-                      .format(financialAccomplishment.nepTotal),
-                  textAlign: TextAlign.end,
+          TableRow(
+            children: [
+              const TableCell(
+                child: Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text('Total'),
                 ),
               ),
-            ),
-            TableCell(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  ref
-                      .watch(numberFormatterProvider)
-                      .format(financialAccomplishment.gaaTotal),
-                  textAlign: TextAlign.end,
+              TableCell(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    ref
+                        .watch(numberFormatterProvider)
+                        .format(financialAccomplishment.nepTotal),
+                    textAlign: TextAlign.end,
+                  ),
                 ),
               ),
-            ),
-            TableCell(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  ref
-                      .watch(numberFormatterProvider)
-                      .format(financialAccomplishment.disbursementTotal),
-                  textAlign: TextAlign.end,
+              TableCell(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    ref
+                        .watch(numberFormatterProvider)
+                        .format(financialAccomplishment.gaaTotal),
+                    textAlign: TextAlign.end,
+                  ),
                 ),
               ),
-            ),
-          ]),
+              TableCell(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    ref
+                        .watch(numberFormatterProvider)
+                        .format(financialAccomplishment.disbursementTotal),
+                    textAlign: TextAlign.end,
+                  ),
+                ),
+              ),
+              TableCell(
+                child: Container(),
+              ),
+            ],
+          ),
         ],
       ),
     );
@@ -2195,7 +2692,11 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         padding: const EdgeInsets.all(8.0),
         child: ConstrainedBox(
           constraints: const BoxConstraints(
-              minHeight: 600, maxHeight: 600, minWidth: 300, maxWidth: 360),
+            minHeight: 600,
+            maxHeight: 600,
+            minWidth: 300,
+            maxWidth: 360,
+          ),
           child: Container(
             height: 600,
             width: 360,
