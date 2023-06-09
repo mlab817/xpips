@@ -17,6 +17,7 @@ import '../../domain/models/notifications.dart';
 import '../repositories/pipolstatus_repository.dart';
 import '../requests/comment_request.dart';
 import '../requests/fullproject_request.dart';
+import '../requests/newproject_request.dart';
 import '../requests/projects_request.dart';
 import '../requests/reactivation_request.dart';
 import '../requests/updateprofile_request.dart';
@@ -26,6 +27,7 @@ import '../responses/login_response.dart';
 import '../responses/notifications_response.dart';
 import '../responses/offices_response.dart';
 import '../responses/options_response.dart';
+import '../responses/patchproject_response.dart';
 import '../responses/pipsstatus_response.dart';
 import '../responses/project_response.dart';
 import '../responses/projects_response.dart';
@@ -52,12 +54,16 @@ abstract class AppServiceClient {
 
   @POST('/projects')
   Future<CreateProjectResponse> createProject(
-      @Body() FullProjectRequest request);
+      @Body() NewProjectRequest request);
 
   /// Notifications API
   @PUT('/projects/{uuid}')
   Future<UpdateProjectResponse> updateProject(
       @Path() String uuid, @Body() FullProjectRequest request);
+
+  @PATCH('/projects/{uuid}')
+  Future<PatchProjectResponse> patchProject(
+      @Path() String uuid, @Body() Map<String, dynamic> data);
 
   @DELETE('/projects/{uuid}')
   Future<DeleteProjectResponse> deleteProject(@Path() String uuid);

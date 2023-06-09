@@ -1,8 +1,11 @@
+import 'package:pips/data/responses/createproject_response.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../application/providers/appserviceclient_provider.dart';
 import '../data_sources/app_service_client.dart';
+import '../requests/newproject_request.dart';
 import '../requests/requests.dart';
+import '../responses/patchproject_response.dart';
 import '../responses/responses.dart';
 
 part 'project_repository.g.dart';
@@ -14,11 +17,17 @@ abstract class ProjectRepository {
   Future<ProjectResponse> get(String uuid);
 
   // create
+  Future<CreateProjectResponse> post(NewProjectRequest request);
 
   // update
+  Future<UpdateProjectResponse> update(String uuid, FullProjectRequest request);
 
   // delete
   Future<DeleteProjectResponse> delete(String uuid);
+
+  // patch
+  // we use string, dynamic for payload because we will only post one key-value pair at a time
+  Future<PatchProjectResponse> patch(String uuid, Map<String, dynamic> payload);
 }
 
 class ProjectRepositoryImplementer implements ProjectRepository {
@@ -39,6 +48,23 @@ class ProjectRepositoryImplementer implements ProjectRepository {
   @override
   Future<DeleteProjectResponse> delete(String uuid) async {
     return client.deleteProject(uuid);
+  }
+
+  @override
+  Future<CreateProjectResponse> post(NewProjectRequest request) async {
+    return await client.createProject(request);
+  }
+
+  @override
+  Future<UpdateProjectResponse> update(
+      String uuid, FullProjectRequest request) async {
+    return await client.updateProject(uuid, request);
+  }
+
+  @override
+  Future<PatchProjectResponse> patch(
+      String uuid, Map<String, dynamic> payload) async {
+    return await client.patchProject(uuid, payload);
   }
 }
 

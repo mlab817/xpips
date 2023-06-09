@@ -13,7 +13,7 @@ class _AppServiceClient implements AppServiceClient {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= 'https://api.pips.da.gov.ph';
+    baseUrl ??= 'https://api.pipsv2.test';
   }
 
   final Dio _dio;
@@ -92,8 +92,7 @@ class _AppServiceClient implements AppServiceClient {
   }
 
   @override
-  Future<CreateProjectResponse> createProject(
-      FullProjectRequest request) async {
+  Future<CreateProjectResponse> createProject(NewProjectRequest request) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -140,6 +139,33 @@ class _AppServiceClient implements AppServiceClient {
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     final value = UpdateProjectResponse.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<PatchProjectResponse> patchProject(
+    String uuid,
+    Map<String, dynamic> data,
+  ) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(data);
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<PatchProjectResponse>(Options(
+      method: 'PATCH',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/projects/${uuid}',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = PatchProjectResponse.fromJson(_result.data!);
     return value;
   }
 
