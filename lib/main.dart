@@ -30,6 +30,8 @@ void main() async {
 
   final sharedPrefs = await SharedPreferences.getInstance();
 
+  HttpOverrides.global = MyHttpOverrides();
+
   runApp(ProviderScope(
     overrides: [
       // override the previous value with the new object
@@ -37,4 +39,14 @@ void main() async {
     ],
     child: const MyApp(),
   ));
+}
+
+// for Android
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+  }
 }
