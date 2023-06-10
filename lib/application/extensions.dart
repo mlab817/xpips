@@ -232,3 +232,12 @@ extension ToSimpleProjectRequest on SimpleProject {
     );
   }
 }
+
+extension ToOption on Office {
+  Option toOption() {
+    return Option(
+      label: acronym,
+      value: id,
+    );
+  }
+}
