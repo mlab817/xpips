@@ -192,7 +192,7 @@ class __$$_OfficeCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_Office implements _Office {
+class _$_Office extends _Office {
   _$_Office(
       {@JsonKey(name: "id") required this.id,
       @JsonKey(name: "name") required this.name,
@@ -201,7 +201,8 @@ class _$_Office implements _Office {
       @JsonKey(name: "head_name") this.headName,
       @JsonKey(name: "head_position") this.headPosition,
       @JsonKey(name: "email") this.email,
-      @JsonKey(name: "phone_number") this.phoneNumber});
+      @JsonKey(name: "phone_number") this.phoneNumber})
+      : super._();
 
   factory _$_Office.fromJson(Map<String, dynamic> json) =>
       _$$_OfficeFromJson(json);
@@ -273,7 +274,7 @@ class _$_Office implements _Office {
   }
 }
 
-abstract class _Office implements Office {
+abstract class _Office extends Office {
   factory _Office(
       {@JsonKey(name: "id") required final int id,
       @JsonKey(name: "name") required final String name,
@@ -283,6 +284,7 @@ abstract class _Office implements Office {
       @JsonKey(name: "head_position") final String? headPosition,
       @JsonKey(name: "email") final String? email,
       @JsonKey(name: "phone_number") final String? phoneNumber}) = _$_Office;
+  _Office._() : super._();
 
   factory _Office.fromJson(Map<String, dynamic> json) = _$_Office.fromJson;
 

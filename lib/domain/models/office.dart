@@ -17,4 +17,10 @@ class Office with _$Office {
   }) = _Office;
 
   factory Office.fromJson(Map<String, dynamic> json) => _$OfficeFromJson(json);
+
+  String get label => acronym;
+
+  int get value => id;
+
+  Office._();
 }
