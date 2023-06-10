@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pips/presentation/widgets/papform/common/editbutton.dart';
 
 import '../../../../application/extensions.dart';
 import '../../../../presentation/controllers/patchproject_controller.dart';
@@ -38,21 +39,24 @@ class _TextEditor extends ConsumerState<TextEditor> {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      subtitle: Text(widget.oldValue),
-      title: Text(widget.fieldLabel),
-      trailing: IconButton(
-        onPressed: () => _edit(),
-        icon: const Icon(
-          Icons.edit,
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: ListTile(
+        tileColor: Theme.of(context).primaryColor.withOpacity(0.1),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        subtitle: Text(widget.oldValue),
+        title: Text(widget.fieldLabel),
+        trailing: EditButton(
+          onPressed: () => _edit(),
         ),
+        onTap: () async {
+          await Clipboard.setData(ClipboardData(text: widget.oldValue))
+              .then((_) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text("${widget.fieldLabel} copied to clipboard")));
+          });
+        },
       ),
-      onTap: () async {
-        await Clipboard.setData(ClipboardData(text: widget.oldValue)).then((_) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text("${widget.fieldLabel} copied to clipboard")));
-        });
-      },
     );
   }
 }

@@ -1,33 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pips/application/providers/dateformatter_provider.dart';
+import 'package:pips/presentation/widgets/papform/common/editbutton.dart';
 
 import '../../../../application/extensions.dart';
-import '../../../../domain/models/option.dart';
 import '../../../../presentation/controllers/patchproject_controller.dart';
 import '../../../../domain/models/fullproject.dart';
-import 'editbutton.dart';
 
-class RadioEditor extends ConsumerStatefulWidget {
-  const RadioEditor({
+class DateEditor extends ConsumerStatefulWidget {
+  const DateEditor({
     super.key,
     required this.project,
     required this.fieldLabel,
     required this.oldValue,
     required this.onSubmit,
-    required this.options,
   });
 
   final FullProject project;
   final String fieldLabel;
-  final Option? oldValue;
-  final List<Option> options;
-  final Function(Option newValue) onSubmit;
+  final DateTime? oldValue;
+  final Function(DateTime newValue) onSubmit;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _RadioEditor();
 }
 
-class _RadioEditor extends ConsumerState<RadioEditor> {
+class _RadioEditor extends ConsumerState<DateEditor> {
   void _edit() {
     Navigator.of(context).push(MaterialPageRoute(builder: (context) {
       return UpdateForm(
@@ -35,7 +33,6 @@ class _RadioEditor extends ConsumerState<RadioEditor> {
         oldValue: widget.oldValue,
         fieldLabel: widget.fieldLabel,
         onSubmit: widget.onSubmit,
-        options: widget.options,
       );
     }));
   }
@@ -47,7 +44,9 @@ class _RadioEditor extends ConsumerState<RadioEditor> {
       child: ListTile(
         tileColor: Theme.of(context).primaryColor.withOpacity(0.1),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        subtitle: Text(widget.oldValue?.label ?? 'NONE'),
+        subtitle: widget.oldValue != null
+            ? Text(ref.watch(dateFormatterProvider).format(widget.oldValue!))
+            : const Text('NONE'),
         title: Text(widget.fieldLabel),
         trailing: EditButton(
           onPressed: () => _edit(),
@@ -62,24 +61,24 @@ class UpdateForm<T> extends ConsumerStatefulWidget {
     super.key,
     required this.project,
     required this.oldValue,
-    required this.options,
     required this.fieldLabel,
     required this.onSubmit,
   });
 
   final FullProject project;
-  final Option? oldValue;
-  final List<Option> options;
+  final DateTime? oldValue;
   final String fieldLabel;
-  final Function(Option newValue) onSubmit;
+  final Function(DateTime newValue) onSubmit;
 
   @override
   ConsumerState<UpdateForm> createState() => _UpdateFormState();
 }
 
 class _UpdateFormState extends ConsumerState<UpdateForm> {
-  late Option? oldValue;
-  late Option? newValue;
+  late DateTime? oldValue;
+  late DateTime? newValue;
+
+  TextEditingController dateController = TextEditingController();
 
   @override
   void initState() {
@@ -87,6 +86,17 @@ class _UpdateFormState extends ConsumerState<UpdateForm> {
 
     oldValue = widget.oldValue;
     newValue = oldValue;
+
+    if (newValue != null) {
+      dateController.text = ref.watch(dateFormatterProvider).format(newValue!);
+    }
+  }
+
+  @override
+  void dispose() {
+    dateController.dispose();
+
+    super.dispose();
   }
 
   @override
@@ -132,19 +142,32 @@ class _UpdateFormState extends ConsumerState<UpdateForm> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: ListView.builder(
-            itemCount: widget.options.length,
-            itemBuilder: (context, index) {
-              return RadioListTile.adaptive(
-                  value: widget.options[index],
-                  groupValue: newValue,
-                  title: Text(widget.options[index].label),
-                  onChanged: (value) {
-                    //
-                    setState(() {
-                      newValue = value!;
-                    });
-                  });
+        child: TextFormField(
+            controller: dateController,
+            decoration: const InputDecoration(
+              icon: Icon(Icons.calendar_today), //icon of text field
+              labelText: "Enter Date", //label text of field
+            ),
+            readOnly: true, // when true user cannot edit text
+            onTap: () async {
+              //when click we have to show the datepicker
+              DateTime? pickedDate = await showDatePicker(
+                context: context,
+                initialDate:
+                    widget.oldValue ?? DateTime.now(), //get today's date
+                firstDate: DateTime(
+                    2020), //DateTime.now() - not to allow to choose before today.
+                lastDate: DateTime.now(),
+                initialEntryMode: DatePickerEntryMode.input,
+              );
+
+              setState(() {
+                newValue = pickedDate;
+                if (pickedDate != null) {
+                  dateController.text =
+                      ref.watch(dateFormatterProvider).format(pickedDate);
+                }
+              });
             }),
       ),
     );

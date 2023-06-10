@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pips/presentation/widgets/papform/common/editbutton.dart';
 
 import '../../../../application/extensions.dart';
-import '../../../../domain/models/option.dart';
+import '../../../../domain/models/office.dart';
 import '../../../../presentation/controllers/patchproject_controller.dart';
 import '../../../../domain/models/fullproject.dart';
-import 'editbutton.dart';
 
-class RadioEditor extends ConsumerStatefulWidget {
-  const RadioEditor({
+class OfficeEditor extends ConsumerStatefulWidget {
+  const OfficeEditor({
     super.key,
     required this.project,
     required this.fieldLabel,
@@ -19,15 +19,15 @@ class RadioEditor extends ConsumerStatefulWidget {
 
   final FullProject project;
   final String fieldLabel;
-  final Option? oldValue;
-  final List<Option> options;
-  final Function(Option newValue) onSubmit;
+  final Office? oldValue;
+  final List<Office> options;
+  final Function(Office newValue) onSubmit;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _RadioEditor();
 }
 
-class _RadioEditor extends ConsumerState<RadioEditor> {
+class _RadioEditor extends ConsumerState<OfficeEditor> {
   void _edit() {
     Navigator.of(context).push(MaterialPageRoute(builder: (context) {
       return UpdateForm(
@@ -57,7 +57,7 @@ class _RadioEditor extends ConsumerState<RadioEditor> {
   }
 }
 
-class UpdateForm<T> extends ConsumerStatefulWidget {
+class UpdateForm extends ConsumerStatefulWidget {
   const UpdateForm({
     super.key,
     required this.project,
@@ -68,18 +68,18 @@ class UpdateForm<T> extends ConsumerStatefulWidget {
   });
 
   final FullProject project;
-  final Option? oldValue;
-  final List<Option> options;
+  final Office? oldValue;
+  final List<Office> options;
   final String fieldLabel;
-  final Function(Option newValue) onSubmit;
+  final Function(Office newValue) onSubmit;
 
   @override
   ConsumerState<UpdateForm> createState() => _UpdateFormState();
 }
 
 class _UpdateFormState extends ConsumerState<UpdateForm> {
-  late Option? oldValue;
-  late Option? newValue;
+  late Office? oldValue;
+  late Office? newValue;
 
   @override
   void initState() {
@@ -135,7 +135,7 @@ class _UpdateFormState extends ConsumerState<UpdateForm> {
         child: ListView.builder(
             itemCount: widget.options.length,
             itemBuilder: (context, index) {
-              return RadioListTile.adaptive(
+              return RadioListTile(
                   value: widget.options[index],
                   groupValue: newValue,
                   title: Text(widget.options[index].label),

@@ -1,33 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../application/extensions.dart';
-import '../../../../domain/models/option.dart';
 import '../../../../presentation/controllers/patchproject_controller.dart';
 import '../../../../domain/models/fullproject.dart';
 import 'editbutton.dart';
 
-class RadioEditor extends ConsumerStatefulWidget {
-  const RadioEditor({
+class SwitchEditor extends ConsumerStatefulWidget {
+  const SwitchEditor({
     super.key,
     required this.project,
     required this.fieldLabel,
     required this.oldValue,
     required this.onSubmit,
-    required this.options,
   });
 
   final FullProject project;
   final String fieldLabel;
-  final Option? oldValue;
-  final List<Option> options;
-  final Function(Option newValue) onSubmit;
+  final bool oldValue;
+  final Function(bool newValue) onSubmit;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _RadioEditor();
 }
 
-class _RadioEditor extends ConsumerState<RadioEditor> {
+class _RadioEditor extends ConsumerState<SwitchEditor> {
   void _edit() {
     Navigator.of(context).push(MaterialPageRoute(builder: (context) {
       return UpdateForm(
@@ -35,7 +33,6 @@ class _RadioEditor extends ConsumerState<RadioEditor> {
         oldValue: widget.oldValue,
         fieldLabel: widget.fieldLabel,
         onSubmit: widget.onSubmit,
-        options: widget.options,
       );
     }));
   }
@@ -47,7 +44,7 @@ class _RadioEditor extends ConsumerState<RadioEditor> {
       child: ListTile(
         tileColor: Theme.of(context).primaryColor.withOpacity(0.1),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        subtitle: Text(widget.oldValue?.label ?? 'NONE'),
+        subtitle: Text(widget.oldValue ? 'YES' : 'NO'),
         title: Text(widget.fieldLabel),
         trailing: EditButton(
           onPressed: () => _edit(),
@@ -57,29 +54,27 @@ class _RadioEditor extends ConsumerState<RadioEditor> {
   }
 }
 
-class UpdateForm<T> extends ConsumerStatefulWidget {
+class UpdateForm extends ConsumerStatefulWidget {
   const UpdateForm({
     super.key,
     required this.project,
     required this.oldValue,
-    required this.options,
     required this.fieldLabel,
     required this.onSubmit,
   });
 
   final FullProject project;
-  final Option? oldValue;
-  final List<Option> options;
+  final bool oldValue;
   final String fieldLabel;
-  final Function(Option newValue) onSubmit;
+  final Function(bool newValue) onSubmit;
 
   @override
   ConsumerState<UpdateForm> createState() => _UpdateFormState();
 }
 
 class _UpdateFormState extends ConsumerState<UpdateForm> {
-  late Option? oldValue;
-  late Option? newValue;
+  bool? oldValue;
+  bool? newValue;
 
   @override
   void initState() {
@@ -91,7 +86,14 @@ class _UpdateFormState extends ConsumerState<UpdateForm> {
 
   @override
   Widget build(BuildContext context) {
+    if (oldValue == null) {
+      oldValue = widget.oldValue;
+      newValue = oldValue!;
+    }
+
     print("oldValue $oldValue");
+    print("newValue $newValue");
+    print(oldValue == newValue);
 
     ref.listen(patchProjectControllerProvider, (previous, next) {
       //
@@ -112,11 +114,9 @@ class _UpdateFormState extends ConsumerState<UpdateForm> {
             // disable if no changes have been made
             onPressed: oldValue == newValue
                 ? null
-                : (newValue != null
-                    ? () {
-                        widget.onSubmit(newValue!);
-                      }
-                    : null),
+                : () {
+                    widget.onSubmit(newValue ?? false);
+                  },
             child: ref.watch(patchProjectControllerProvider).isLoading
                 ? const SizedBox(
                     height: 10,
@@ -132,20 +132,28 @@ class _UpdateFormState extends ConsumerState<UpdateForm> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: ListView.builder(
-            itemCount: widget.options.length,
-            itemBuilder: (context, index) {
-              return RadioListTile.adaptive(
-                  value: widget.options[index],
-                  groupValue: newValue,
-                  title: Text(widget.options[index].label),
-                  onChanged: (value) {
-                    //
+        child: SizedBox(
+          width: double.infinity,
+          child: Row(
+            children: [
+              Expanded(
+                child: SwitchListTile(
+                  value: newValue ?? false,
+                  onChanged: (bool value) {
+                    print("typing $value");
                     setState(() {
-                      newValue = value!;
+                      newValue = value;
                     });
-                  });
-            }),
+                    print("oldValue $oldValue");
+                    print("newValue $newValue");
+                    print(oldValue == newValue);
+                  },
+                  title: Text(widget.fieldLabel),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

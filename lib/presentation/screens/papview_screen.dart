@@ -5,8 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
-import 'package:intl/intl.dart';
 
+import '../widgets/papform/form_objects/attachments.dart';
+import '../widgets/papform/common/checkboxeditor.dart';
 import '../../application/app_router.dart';
 import '../../application/extensions.dart';
 import '../../application/providers/numberformatter_provider.dart';
@@ -14,19 +15,16 @@ import '../../data/repositories/repositories.dart';
 import '../../data/requests/requests.dart';
 import '../../data/responses/responses.dart';
 import '../../domain/models/models.dart';
-import '../../presentation/controllers/currentuser_controller.dart';
-import '../../presentation/controllers/newcommentstream_controller.dart';
+import '../../presentation/controllers/controllers.dart';
 import '../../presentation/widgets/message_bubble.dart';
-import '../../presentation/widgets/papform/form_objects/update_notes.dart';
-import '../controllers/combinedcomments_controller.dart';
-import '../controllers/controllers.dart';
-import '../controllers/patchproject_controller.dart';
+import '../widgets/papform/common/SwitchEditor.dart';
+import '../widgets/papform/common/dateeditor.dart';
 import '../widgets/papform/common/radioeditor.dart';
+import '../widgets/papform/common/sliverstickyheader.dart';
 import '../widgets/papform/common/texteditor.dart';
-import '../widgets/papform/form_objects/financial_accomplishment.dart';
+import '../widgets/papform/financial_accomplishment.dart';
+import '../widgets/papform/form_objects/officeeditor.dart';
 import '../widgets/papform/form_objects/total_project_cost.dart';
-import '../widgets/papform/form_objects/update_indicator.dart';
-import '../widgets/papform/form_objects/update_pap.dart';
 
 @RoutePage()
 class PapViewScreen extends ConsumerStatefulWidget {
@@ -185,19 +183,8 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
       slivers: [
         // General Information
         SliverStickyHeader(
-          header: Container(
-            height: 60.0,
-            color: Theme.of(context).primaryColor,
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            alignment: Alignment.centerLeft,
-            child: const Text(
-              'General Information',
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ),
+          header:
+              const SliverStickyHeaderComponent(title: 'General Information'),
           sliver: SliverList(
             delegate: SliverChildListDelegate(
               [
@@ -225,8 +212,20 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                     Navigator.pop(context);
                   },
                 ),
-                UpdatePap(project: project),
                 RadioEditor(
+                    project: project,
+                    fieldLabel: 'Program or Project',
+                    oldValue: project.type,
+                    onSubmit: (newValue) {
+                      // TODO: implement TYpe update
+                    },
+                    options: ref
+                            .watch(optionsControllerProvider)
+                            .value
+                            ?.data
+                            .types ??
+                        []),
+                SwitchEditor(
                   project: project,
                   fieldLabel: 'Regular Program',
                   oldValue: project.regularProgram ?? false,
@@ -249,11 +248,33 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                     Navigator.pop(context);
                   },
                 ),
-                ListTile(
-                  subtitle: Text(
-                    project.bases.map((e) => e.label).join(', '),
-                  ),
-                  title: const Text('Basis for Implementation'),
+                CheckboxEditor(
+                  project: project,
+                  fieldLabel: 'Basis for Implementation',
+                  options:
+                      ref.watch(optionsControllerProvider).value?.data.bases ??
+                          [],
+                  oldValue: ref
+                      .watch(fullProjectControllerProvider(project.uuid))
+                      .bases,
+                  onSubmit: (List<Option> newValue) {
+                    final valueToSubmit = newValue.map((e) => e.value).toList();
+
+                    final payload = {
+                      'bases': valueToSubmit,
+                    };
+
+                    ref
+                        .read(patchProjectControllerProvider.notifier)
+                        .submit(uuid: project.uuid ?? '', payload: payload);
+
+                    ref
+                        .watch(fullProjectControllerProvider(project.uuid)
+                            .notifier)
+                        .update(bases: newValue);
+
+                    Navigator.pop(context);
+                  },
                 ),
                 TextEditor(
                   project: project,
@@ -286,48 +307,55 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         ),
         // Implementing Offices/Units
         SliverStickyHeader(
-          header: Container(
-            height: 60.0,
-            color: Theme.of(context).primaryColor,
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            alignment: Alignment.centerLeft,
-            child: const Text(
-              'Implementing Offices/Units',
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
+          header: const SliverStickyHeaderComponent(
+              title: 'Implementing Offices/Units'),
           sliver: SliverList(
             delegate: SliverChildListDelegate([
-              ListTile(
-                subtitle: Text(project.office?.name ?? 'N/A'),
-                title: const Text('Office'),
+              OfficeEditor(
+                project: project,
+                fieldLabel: 'Reporting Office',
+                options: ref.watch(officesProvider).value?.data ?? <Office>[],
+                oldValue: project.office,
+                onSubmit: (Office newValue) {
+                  //
+                },
               ),
-              ListTile(
-                subtitle: Text(
-                  project.operatingUnits.map((e) => e.label).join(', '),
-                ),
-                title: const Text('Implementing Units'),
-              ),
+              CheckboxEditor(
+                  project: project,
+                  fieldLabel: 'Implementing Units',
+                  oldValue: project.operatingUnits,
+                  options: ref
+                          .watch(optionsControllerProvider)
+                          .value
+                          ?.data
+                          .operatingUnits ??
+                      [],
+                  onSubmit: (newValue) {
+                    // TODO: update logic
+                  }),
             ]),
           ),
         ),
         // Spatial Coverage
         SliverStickyHeader(
-          header: Container(
-            height: 60.0,
-            color: Theme.of(context).primaryColor,
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            alignment: Alignment.centerLeft,
-            child: const Text(
-              'Spatial Coverage',
-              style: TextStyle(color: Colors.white),
-            ),
+          header: const SliverStickyHeaderComponent(
+            title: 'Spatial Coverage',
           ),
           sliver: SliverList(
             delegate: SliverChildListDelegate([
-              ListTile(
-                subtitle: Text(project.spatialCoverage?.label ?? 'N/A'),
-                title: const Text('Spatial Coverage'),
+              RadioEditor(
+                project: project,
+                fieldLabel: 'Spatial Coverage',
+                options: ref
+                        .watch(optionsControllerProvider)
+                        .value
+                        ?.data
+                        .spatialCoverages ??
+                    [],
+                oldValue: project.spatialCoverage,
+                onSubmit: (newValue) {
+                  // TODO: spatial coverage
+                },
               ),
               ListTile(
                 subtitle: Text(
@@ -340,21 +368,13 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         ),
         // Level of Approval
         SliverStickyHeader(
-          header: Container(
-            height: 60.0,
-            color: Theme.of(context).primaryColor,
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            alignment: Alignment.centerLeft,
-            child: const Text(
-              'Level of Approval',
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
+          header: const SliverStickyHeaderComponent(title: 'Level of Approval'),
           sliver: SliverList(
             delegate: SliverChildListDelegate([
-              RadioEditor(
+              SwitchEditor(
                 project: project,
-                fieldLabel: 'Requires ICC submission',
+                fieldLabel:
+                    'Will require Investment Coordination Committee/NEDA Board Approval (ICC-able)?',
                 oldValue: project.iccable ?? false,
                 onSubmit: (bool value) {
                   final Map<String, dynamic> payload = {
@@ -375,34 +395,33 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   Navigator.pop(context);
                 },
               ),
-              ListTile(
-                subtitle: Text(project.approvalLevel?.label ?? 'N/A'),
-                title: const Text('Approval Level'),
+              RadioEditor(
+                project: project,
+                fieldLabel: 'Approval Level',
+                oldValue: project.approvalLevel,
+                onSubmit: (newValue) {},
+                options: ref
+                        .watch(optionsControllerProvider)
+                        .value
+                        ?.data
+                        .approvalLevels ??
+                    [],
               ),
-              ListTile(
-                subtitle: Text(project.approvalLevelDate != null
-                    ? DateFormat.yMMMd().format(project.approvalLevelDate!)
-                    : 'N/A'),
-                title: const Text('As of'),
-              ),
+              DateEditor(
+                  project: project,
+                  fieldLabel: 'As of',
+                  oldValue: project.approvalLevelDate,
+                  onSubmit: (newValue) {}),
             ]),
           ),
         ),
         // Project for Inclusion in Which Programming Document
         SliverStickyHeader(
-          header: Container(
-            height: 60.0,
-            color: Theme.of(context).primaryColor,
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            alignment: Alignment.centerLeft,
-            child: const Text(
-              'Project for Inclusion in Which Programming Document',
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
+          header: const SliverStickyHeaderComponent(
+              title: 'Project for Inclusion in Which Programming Document'),
           sliver: SliverList(
             delegate: SliverChildListDelegate([
-              RadioEditor(
+              SwitchEditor(
                 project: project,
                 fieldLabel: 'Public Investment Program (PIP)',
                 oldValue: project.pip ?? false,
@@ -425,11 +444,20 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   Navigator.pop(context);
                 },
               ),
-              ListTile(
-                subtitle: Text(project.typology?.label ?? 'N/A'),
-                title: const Text('Typology of PIP'),
-              ),
               RadioEditor(
+                  project: project,
+                  fieldLabel: 'Typology of PIP',
+                  oldValue: project.typology,
+                  onSubmit: (newValue) {
+                    // TODO: implement CIP TYpe update
+                  },
+                  options: ref
+                          .watch(optionsControllerProvider)
+                          .value
+                          ?.data
+                          .typologies ??
+                      []),
+              SwitchEditor(
                 project: project,
                 fieldLabel: 'Core Investment Programs/Projects (CIP)',
                 oldValue: project.cip ?? false,
@@ -452,11 +480,20 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   Navigator.pop(context);
                 },
               ),
-              ListTile(
-                subtitle: Text(project.cipType?.label ?? 'N/A'),
-                title: const Text('Type of CIP'),
-              ),
               RadioEditor(
+                  project: project,
+                  fieldLabel: 'Type of CIP',
+                  oldValue: project.cipType,
+                  onSubmit: (newValue) {
+                    // TODO: implement CIP TYpe update
+                  },
+                  options: ref
+                          .watch(optionsControllerProvider)
+                          .value
+                          ?.data
+                          .cipTypes ??
+                      []),
+              SwitchEditor(
                 project: project,
                 fieldLabel: 'Core Investment Programs/Projects (CIP)',
                 oldValue: project.trip ?? false,
@@ -479,7 +516,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   Navigator.pop(context);
                 },
               ),
-              RadioEditor(
+              SwitchEditor(
                 project: project,
                 fieldLabel: 'Is it a Research and Development Program/Project?',
                 oldValue: project.research ?? false,
@@ -502,7 +539,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   Navigator.pop(context);
                 },
               ),
-              RadioEditor(
+              SwitchEditor(
                 project: project,
                 fieldLabel:
                     'Is it responsive to COVID-19/New Normal Intervention?',
@@ -526,7 +563,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   Navigator.pop(context);
                 },
               ),
-              RadioEditor(
+              SwitchEditor(
                 project: project,
                 fieldLabel: 'Is the Program/Project included in the RDIP?',
                 oldValue: project.rdip ?? false,
@@ -554,48 +591,52 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         ),
         // PDP chapters
         SliverStickyHeader(
-          header: Container(
-            height: 60.0,
-            color: Theme.of(context).primaryColor,
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            alignment: Alignment.centerLeft,
-            child: const Text(
-              'Philippine Development Plan (PDP) Chapter',
-              style: TextStyle(color: Colors.white),
-            ),
+          header: const SliverStickyHeaderComponent(
+            title: 'Philippine Development Plan (PDP) Chapter',
           ),
           sliver: SliverList(
             delegate: SliverChildListDelegate(
               [
-                ListTile(
-                  subtitle: Text(project.pdpChapter?.label ?? 'N/A'),
-                  title:
-                      const Text('Philippine Development Plan (PDP) Chapter'),
+                RadioEditor(
+                  project: project,
+                  fieldLabel: 'Philippine Development Plan (PDP) Chapter',
+                  oldValue: project.pdpChapter,
+                  onSubmit: (newValue) {
+                    //
+                  },
+                  options: ref
+                          .watch(optionsControllerProvider)
+                          .value
+                          ?.data
+                          .pdpChapters ??
+                      [],
                 ),
-                ListTile(
-                  subtitle: Text(
-                    project.pdpChapters.map((e) => e.label).join(', '),
-                  ),
-                  title: const Text(
-                      'Other Philippine Development Plan (PDP) Chapter/s'),
+                CheckboxEditor(
+                  project: project,
+                  fieldLabel:
+                      'Other Philippine Development Plan (PDP) Chapter/s',
+                  oldValue: project.pdpChapters,
+                  onSubmit: (newValue) {
+                    //
+                  },
+                  options: ref
+                          .watch(optionsControllerProvider)
+                          .value
+                          ?.data
+                          .pdpChapters ??
+                      [],
                 ),
               ],
             ),
           ),
         ),
         SliverStickyHeader(
-          header: Container(
-            height: 60.0,
-            color: Theme.of(context).primaryColor,
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            alignment: Alignment.centerLeft,
-            child: const Text(
-              'Main Infrastructure Sector/Subsector',
-              style: TextStyle(color: Colors.white),
-            ),
+          header: const SliverStickyHeaderComponent(
+            title: 'Main Infrastructure Sector/Subsector',
           ),
           sliver: SliverList(
             delegate: SliverChildListDelegate([
+              // TODO: Nested Checkbox
               ListTile(
                 title: const Text(
                   'Main Infrastructure Sector/Subsector',
@@ -604,14 +645,17 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   project.infrastructureSectors.map((e) => e.label).join(', '),
                 ),
               ),
-              ListTile(
-                title: const Text(
-                  'Prerequisites',
-                ),
-                subtitle: Text(
-                  project.prerequisites.map((e) => e.label).join(', '),
-                ),
-              ),
+              CheckboxEditor(
+                  project: project,
+                  fieldLabel: 'Prerequisites',
+                  options: ref
+                          .watch(optionsControllerProvider)
+                          .value
+                          ?.data
+                          .prerequisites ??
+                      [],
+                  oldValue: project.prerequisites,
+                  onSubmit: (newValue) {}),
               TextEditor(
                 project: project,
                 fieldLabel: 'Implementation Risks and Mitigation Strategies',
@@ -640,164 +684,253 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
           ),
         ),
         SliverStickyHeader(
-          header: Container(
-            height: 60.0,
-            color: Theme.of(context).primaryColor,
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            alignment: Alignment.centerLeft,
-            child: const Text(
-              'Expected Outputs/Deliverables',
-              style: TextStyle(color: Colors.white),
-            ),
+          header: const SliverStickyHeaderComponent(
+            title: 'Expected Outputs/Deliverables',
           ),
           sliver: SliverList(
             delegate: SliverChildListDelegate([
-              UpdateIndicator(project: project),
+              TextEditor(
+                  project: project,
+                  fieldLabel: 'Expected Outputs/Deliverables',
+                  oldValue: project.expectedOutputs ?? '',
+                  onSubmit: (String newValue) {
+                    final Map<String, dynamic> payload = {
+                      'expected_outputs': newValue,
+                    };
+
+                    ref
+                        .read(patchProjectControllerProvider.notifier)
+                        .submit(uuid: project.uuid!, payload: payload);
+
+                    // update the provider
+                    ref
+                        .read(fullProjectControllerProvider(project.uuid)
+                            .notifier)
+                        .update(expectedOutputs: newValue);
+
+                    // close
+                    Navigator.pop(context);
+                  }),
             ]),
           ),
         ),
         SliverStickyHeader(
-          header: Container(
-            height: 60.0,
-            color: Theme.of(context).primaryColor,
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            alignment: Alignment.centerLeft,
-            child: const Text(
-              '8-Point Socioeconomic Agenda',
-              style: TextStyle(color: Colors.white),
-            ),
+          header: const SliverStickyHeaderComponent(
+            title: '8-Point Socioeconomic Agenda',
           ),
           sliver: SliverList(
             delegate: SliverChildListDelegate([
-              ListTile(
-                title: const Text(
-                  '8-Point Socioeconomic Agenda',
-                ),
-                subtitle: Text(
-                  project.agenda.map((e) => e.label).join(', '),
-                ),
+              CheckboxEditor(
+                  project: project,
+                  fieldLabel: '8-Point Socioeconomic Agenda',
+                  options:
+                      ref.watch(optionsControllerProvider).value?.data.agenda ??
+                          [],
+                  oldValue: project.sdgs,
+                  onSubmit: (newValue) {
+                    //
+                  }),
+            ]),
+          ),
+        ),
+        SliverStickyHeader(
+          header: const SliverStickyHeaderComponent(
+            title: 'Sustainable Development Goals',
+          ),
+          sliver: SliverList(
+            delegate: SliverChildListDelegate([
+              CheckboxEditor(
+                  project: project,
+                  fieldLabel: 'Sustainable Development Goals',
+                  options:
+                      ref.watch(optionsControllerProvider).value?.data.sdgs ??
+                          [],
+                  oldValue: project.sdgs,
+                  onSubmit: (newValue) {
+                    //
+                  }),
+            ]),
+          ),
+        ),
+        SliverStickyHeader(
+          header: const SliverStickyHeaderComponent(
+            title: 'Level of GAD Responsiveness',
+          ),
+          sliver: SliverList(
+            delegate: SliverChildListDelegate([
+              RadioEditor(
+                  project: project,
+                  fieldLabel: 'Level of GAD Responsiveness',
+                  oldValue: project.gad,
+                  onSubmit: (newValue) {
+                    // TODO: implement GAD update
+                  },
+                  options:
+                      ref.watch(optionsControllerProvider).value?.data.gads ??
+                          []),
+            ]),
+          ),
+        ),
+        SliverStickyHeader(
+          header: const SliverStickyHeaderComponent(
+            title: 'Project Preparation Details',
+          ),
+          sliver: SliverList(
+            delegate: SliverChildListDelegate([
+              // TODO: add fields
+              // FS details
+            ]),
+          ),
+        ),
+        SliverStickyHeader(
+          header: const SliverStickyHeaderComponent(
+            title: 'Pre-construction Costs',
+          ),
+          sliver: SliverList(
+            delegate: SliverChildListDelegate([
+              // TODO: add fields
+              // ROWA
+              // RAP
+              // ROWA/RAP
+            ]),
+          ),
+        ),
+        SliverStickyHeader(
+          header: const SliverStickyHeaderComponent(
+            title: 'Employment Generation',
+          ),
+          sliver: SliverList(
+            delegate: SliverChildListDelegate([
+              // TODO: add fields
+              // ROWA
+              // RAP
+              // ROWA/RAP
+            ]),
+          ),
+        ),
+        SliverStickyHeader(
+          header: const SliverStickyHeaderComponent(
+            title: 'Funding Source and Mode of Implementation',
+          ),
+          sliver: SliverList(
+            delegate: SliverChildListDelegate([
+              RadioEditor(
+                project: project,
+                fieldLabel: 'Main Funding Source',
+                oldValue: project.fundingSource,
+                onSubmit: (newValue) {
+                  // TODO: implement Funding Sources
+                },
+                options: ref
+                        .watch(optionsControllerProvider)
+                        .value
+                        ?.data
+                        .fundingSources ??
+                    [],
+              ),
+              CheckboxEditor(
+                  project: project,
+                  fieldLabel: 'Other Funding Sources',
+                  options: ref
+                          .watch(optionsControllerProvider)
+                          .value
+                          ?.data
+                          .fundingSources ??
+                      [],
+                  oldValue: project.fundingSources,
+                  onSubmit: (newValue) {
+                    //
+                  }),
+              CheckboxEditor(
+                  project: project,
+                  fieldLabel: 'ODA Funding Institutions',
+                  options: ref
+                          .watch(optionsControllerProvider)
+                          .value
+                          ?.data
+                          .fundingInstitutions ??
+                      [],
+                  oldValue: project.fundingInstitutions,
+                  onSubmit: (newValue) {
+                    //
+                  }),
+              RadioEditor(
+                project: project,
+                fieldLabel: 'Mode of Implementation/Procurement',
+                oldValue: project.implementationMode,
+                onSubmit: (newValue) {
+                  // TODO: implement Funding Sources
+                },
+                options: ref
+                        .watch(optionsControllerProvider)
+                        .value
+                        ?.data
+                        .implementationModes ??
+                    [],
               ),
             ]),
           ),
         ),
         SliverStickyHeader(
-          header: Container(
-            height: 60.0,
-            color: Theme.of(context).primaryColor,
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            alignment: Alignment.centerLeft,
-            child: const Text(
-              'Sustainable Development Goals',
-              style: TextStyle(color: Colors.white),
-            ),
+          header: const SliverStickyHeaderComponent(
+            title: 'Investment Cost per Funding Source',
           ),
           sliver: SliverList(
-            delegate: SliverChildListDelegate([
-              ListTile(
-                title: const Text(
-                  'Sustainable Development Goals',
-                ),
-                subtitle: Text(
-                  project.sdgs.map((e) => e.label).join(', '),
-                ),
-              ),
-            ]),
+            delegate: SliverChildListDelegate(
+              [
+                _buildFinancialTable(project),
+                _buildAddFs(project),
+              ],
+            ),
           ),
         ),
         SliverStickyHeader(
-          header: Container(
-            height: 60.0,
-            color: Theme.of(context).primaryColor,
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            alignment: Alignment.centerLeft,
-            child: const Text(
-              'Level of GAD Responsiveness',
-              style: TextStyle(color: Colors.white),
-            ),
+          header: const SliverStickyHeaderComponent(
+            title: 'Investment Cost per Region',
           ),
           sliver: SliverList(
-            delegate: SliverChildListDelegate([
-              ListTile(
-                title: const Text(
-                  'Level of GAD Responsiveness',
-                ),
-                subtitle: Text(
-                  project.gad?.label ?? 'N/A',
-                ),
-              ),
-            ]),
+            delegate: SliverChildListDelegate(
+              [
+                _buildRegionalTable(project),
+                // TODO: only enable if current regions < all regions
+                _buildAddRegion(project),
+              ],
+            ),
           ),
         ),
         SliverStickyHeader(
-          header: Container(
-            height: 60.0,
-            color: Theme.of(context).primaryColor,
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            alignment: Alignment.centerLeft,
-            child: const Text(
-              'Funding Source and Mode of Implementation',
-              style: TextStyle(color: Colors.white),
-            ),
+          header: const SliverStickyHeaderComponent(
+            title: 'Physical and Financial Status',
           ),
           sliver: SliverList(
             delegate: SliverChildListDelegate([
-              ListTile(
-                title: const Text(
-                  'Main Funding Source',
-                ),
-                subtitle: Text(
-                  project.fundingSource?.label ?? 'N/A',
-                ),
-              ),
-              ListTile(
-                title: const Text(
-                  'Funding Sources',
-                ),
-                subtitle: Text(
-                  project.fundingSources.map((e) => e.label).join(', '),
-                ),
-              ),
-              ListTile(
-                title: const Text(
-                  'Funding Institutions',
-                ),
-                subtitle: Text(
-                  project.fundingInstitutions.map((e) => e.label).join(', '),
-                ),
-              ),
-            ]),
-          ),
-        ),
-        SliverStickyHeader(
-          header: Container(
-            height: 60.0,
-            color: Theme.of(context).primaryColor,
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            alignment: Alignment.centerLeft,
-            child: const Text(
-              'Physical and Financial Status',
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-          sliver: SliverList(
-            delegate: SliverChildListDelegate([
-              ListTile(
-                title: const Text(
-                  'Category',
-                ),
-                subtitle: Text(
-                  project.category?.label ?? 'N/A',
-                ),
-              ),
-              ListTile(
-                title: const Text(
-                  'Status of Implementation Readiness',
-                ),
-                subtitle: Text(
-                  project.projectStatus?.label ?? 'N/A',
-                ),
+              RadioEditor(
+                project: project,
+                fieldLabel: 'Category',
+                oldValue: project.category,
+                onSubmit: (newValue) {
+                  // TODO: implement Category
+                },
+                options: ref
+                        .watch(optionsControllerProvider)
+                        .value
+                        ?.data
+                        .categories ??
+                    [],
               ),
               RadioEditor(
+                project: project,
+                fieldLabel: 'Status of Implementation Readiness',
+                oldValue: project.projectStatus,
+                onSubmit: (newValue) {},
+                options: ref
+                        .watch(optionsControllerProvider)
+                        .value
+                        ?.data
+                        .projectStatuses ??
+                    [],
+              ),
+              SwitchEditor(
                 project: project,
                 fieldLabel: 'Will require resubmission to the ICC?',
                 oldValue: project.iccResubmission ?? false,
@@ -844,133 +977,50 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   Navigator.pop(context);
                 },
               ),
-              ListTile(
-                title: const Text('As of'),
-                subtitle: Text(project.asOf != null
-                    ? DateFormat.yMMMd().format(project.asOf!)
-                    : 'N/A'),
-              ),
+              DateEditor(
+                  project: project,
+                  fieldLabel: 'As of',
+                  oldValue: project.asOf,
+                  onSubmit: (newValue) {
+                    //
+                  }),
             ]),
           ),
         ),
         SliverStickyHeader(
-          header: Container(
-            height: 60.0,
-            color: Theme.of(context).primaryColor,
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            alignment: Alignment.centerLeft,
-            child: const Text(
-              'Implementation Period',
-              style: TextStyle(color: Colors.white),
-            ),
+          header: const SliverStickyHeaderComponent(
+            title: 'Implementation Period',
           ),
           sliver: SliverList(
             delegate: SliverChildListDelegate([
-              ListTile(
-                title: const Text('Start of Project Implementation'),
-                subtitle: Text(project.startYear?.label ?? 'N/A'),
+              RadioEditor(
+                project: project,
+                fieldLabel: 'Start of Project Implementation',
+                oldValue: project.startYear,
+                onSubmit: (newValue) {
+                  // TODO: implement Funding Sources
+                },
+                options:
+                    ref.watch(optionsControllerProvider).value?.data.years ??
+                        [],
               ),
-              ListTile(
-                title: const Text('Year of Project Completion'),
-                subtitle: Text(project.endYear?.label ?? 'N/A'),
+              RadioEditor(
+                project: project,
+                fieldLabel: 'Year of Project Completion',
+                oldValue: project.endYear,
+                onSubmit: (newValue) {
+                  // TODO: implement Funding Sources
+                },
+                options:
+                    ref.watch(optionsControllerProvider).value?.data.years ??
+                        [],
               ),
             ]),
           ),
         ),
         SliverStickyHeader(
-          header: Container(
-            height: 60.0,
-            color: Theme.of(context).primaryColor,
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            alignment: Alignment.centerLeft,
-            child: const Text(
-              'Investment Cost per Region',
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-          sliver: SliverList(
-            delegate: SliverChildListDelegate(
-              [
-                _buildRegionalTable(project),
-                // TODO: only enable if current regions < all regions
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        width: 100,
-                        child: TextButton(
-                          child: const Text('Add'),
-                          onPressed: () {
-                            //
-                            ref
-                                .read(
-                                    fullProjectControllerProvider(project.uuid)
-                                        .notifier)
-                                .addRegionalInvestment(
-                                    regionalInvestment:
-                                        RegionalInvestment.initial());
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        SliverStickyHeader(
-          header: Container(
-            height: 60.0,
-            color: Theme.of(context).primaryColor,
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            alignment: Alignment.centerLeft,
-            child: const Text(
-              'Investment Cost per Funding Source',
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-          sliver: SliverList(
-            delegate: SliverChildListDelegate(
-              [
-                _buildFinancialTable(project),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        width: 100,
-                        child: TextButton(
-                          child: const Text('Add'),
-                          onPressed: () {
-                            // TODO: implement navigator
-                            ref
-                                .read(
-                                    fullProjectControllerProvider(project.uuid)
-                                        .notifier)
-                                .addFsInvestment(
-                                    fsInvestment: FsInvestment.initial());
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        SliverStickyHeader(
-          header: Container(
-            height: 60.0,
-            color: Theme.of(context).primaryColor,
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            alignment: Alignment.centerLeft,
-            child: const Text(
-              'Financial Accomplishments',
-              style: TextStyle(color: Colors.white),
-            ),
+          header: const SliverStickyHeaderComponent(
+            title: 'Financial Accomplishments',
           ),
           sliver: SliverList(
             delegate: SliverChildListDelegate([
@@ -979,15 +1029,8 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
           ),
         ),
         SliverStickyHeader(
-          header: Container(
-            height: 60.0,
-            color: Theme.of(context).primaryColor,
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            alignment: Alignment.centerLeft,
-            child: const Text(
-              'Contact Information',
-              style: TextStyle(color: Colors.white),
-            ),
+          header: const SliverStickyHeaderComponent(
+            title: 'Contact Information',
           ),
           sliver: SliverList(
             delegate: SliverChildListDelegate(
@@ -1021,32 +1064,18 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
           ),
         ),
         SliverStickyHeader(
-          header: Container(
-            height: 60.0,
-            color: Theme.of(context).primaryColor,
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            alignment: Alignment.centerLeft,
-            child: const Text(
-              'Attachments',
-              style: TextStyle(color: Colors.white),
-            ),
+          header: const SliverStickyHeaderComponent(
+            title: 'Attachments',
           ),
           sliver: SliverList(
             delegate: SliverChildListDelegate([
-              UpdateNotes(project: project),
+              if (project.uuid != null) Attachments(uuid: project.uuid!),
             ]),
           ),
         ),
         SliverStickyHeader(
-          header: Container(
-            height: 60.0,
-            color: Theme.of(context).primaryColor,
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            alignment: Alignment.centerLeft,
-            child: const Text(
-              'Notes',
-              style: TextStyle(color: Colors.white),
-            ),
+          header: const SliverStickyHeaderComponent(
+            title: 'Notes',
           ),
           sliver: SliverList(
             delegate: SliverChildListDelegate(
@@ -1307,7 +1336,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   child: InkWell(
                     onTap: () async {
                       await Clipboard.setData(
-                              ClipboardData(text: e.y2027.toString() ?? ''))
+                              ClipboardData(text: e.y2027.toString()))
                           .then((_) {
                         ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
@@ -1327,7 +1356,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   child: InkWell(
                     onTap: () async {
                       await Clipboard.setData(
-                              ClipboardData(text: e.y2028.toString() ?? ''))
+                              ClipboardData(text: e.y2028.toString()))
                           .then((_) {
                         ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
@@ -2787,6 +2816,71 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildAddRegion(project) {
+    final regionsCount =
+        ref.watch(optionsControllerProvider).value?.data.regions?.length ?? 0;
+    final regionalInvestmentsCount = project.regionalInvestments.length;
+
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        children: [
+          SizedBox(
+            width: 100,
+            child: TextButton(
+              onPressed: regionsCount > regionalInvestmentsCount
+                  ? () {
+                      //
+                      ref
+                          .read(fullProjectControllerProvider(project.uuid)
+                              .notifier)
+                          .addRegionalInvestment(
+                              regionalInvestment: RegionalInvestment.initial());
+                    }
+                  : null,
+              child: const Text('Add'),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAddFs(project) {
+    final fsCount = ref
+            .watch(optionsControllerProvider)
+            .value
+            ?.data
+            .fundingSources
+            ?.length ??
+        0;
+    final fsInvestmentsCount = project.fsInvestments.length;
+
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        children: [
+          SizedBox(
+            width: 100,
+            child: TextButton(
+              onPressed: fsCount > fsInvestmentsCount
+                  ? () {
+                      // TODO: implement navigator
+                      ref
+                          .read(fullProjectControllerProvider(project.uuid)
+                              .notifier)
+                          .addFsInvestment(
+                              fsInvestment: FsInvestment.initial());
+                    }
+                  : null,
+              child: const Text('Add'),
+            ),
+          ),
+        ],
       ),
     );
   }
