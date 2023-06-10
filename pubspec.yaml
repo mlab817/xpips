@@ -71,6 +71,7 @@ dependencies:
   fluttertoast: ^8.2.2
   onesignal_flutter: ^3.5.1
   flutter_dropzone: ^3.0.5
+  collection: ^1.17.1
 
 dev_dependencies:
   flutter_test:
