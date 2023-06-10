@@ -2,10 +2,10 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:pips/application/app_router.dart';
-import 'package:pips/application/providers/numberformatter_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../application/app_router.dart';
+import '../../application/providers/numberformatter_provider.dart';
 import '../../application/config.dart';
 import '../../application/functions.dart';
 import '../../domain/models/models.dart';
@@ -123,7 +123,7 @@ class _ProjectListTileState extends ConsumerState<ProjectListTile> {
                   width: double.infinity,
                   height: 40,
                   decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: Theme.of(context).primaryColor.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(8.0)),
                   child: Text(
                     "Office: ${_project.office?.acronym ?? 'NO OFFICE'}",
@@ -138,7 +138,7 @@ class _ProjectListTileState extends ConsumerState<ProjectListTile> {
                   width: double.infinity,
                   height: 90,
                   decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: Theme.of(context).primaryColor.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(8.0)),
                   child: Text(
                     "Description: ${_project.description ?? 'No description'}",
@@ -153,7 +153,7 @@ class _ProjectListTileState extends ConsumerState<ProjectListTile> {
                   width: double.infinity,
                   height: 40,
                   decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: Theme.of(context).primaryColor.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(8.0)),
                   child: Text(
                     'PIPOL Code: ${_project.pipolCode ?? 'N/A'}',
@@ -168,7 +168,7 @@ class _ProjectListTileState extends ConsumerState<ProjectListTile> {
                   width: double.infinity,
                   height: 40,
                   decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: Theme.of(context).primaryColor.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(8.0)),
                   child: Text(
                     'Total Cost: PHP ${ref.watch(numberFormatterProvider).format(_project.totalCost)}',
@@ -183,10 +183,9 @@ class _ProjectListTileState extends ConsumerState<ProjectListTile> {
                   width: double.infinity,
                   height: 90,
                   decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: Theme.of(context).primaryColor.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(8.0)),
-                  child: Text(
-                      _project.contactInformation ?? 'No contact information'),
+                  child: Text(_project.contactInformation ?? 'NONE'),
                 ),
                 const SizedBox(
                   height: 10,
@@ -196,7 +195,7 @@ class _ProjectListTileState extends ConsumerState<ProjectListTile> {
                   width: double.infinity,
                   height: 90,
                   decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: Theme.of(context).primaryColor.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(8.0)),
                   child: Text(_project.notes ?? 'No notes'),
                 ),
@@ -233,7 +232,7 @@ class _ProjectListTileState extends ConsumerState<ProjectListTile> {
                   }
                 : null,
             backgroundColor: Colors.grey,
-            foregroundColor: Colors.white,
+            foregroundColor: Theme.of(context).primaryColor.withOpacity(0.1),
             icon: Icons.visibility,
           ),
           SlidableAction(
@@ -243,7 +242,7 @@ class _ProjectListTileState extends ConsumerState<ProjectListTile> {
                   }
                 : null,
             backgroundColor: Colors.green,
-            foregroundColor: Colors.white,
+            foregroundColor: Theme.of(context).primaryColor.withOpacity(0.1),
             icon: Icons.picture_as_pdf,
           ),
           SlidableAction(
@@ -255,7 +254,7 @@ class _ProjectListTileState extends ConsumerState<ProjectListTile> {
                   }
                 : null,
             backgroundColor: const Color(0xFF21B7CA),
-            foregroundColor: Colors.white,
+            foregroundColor: Theme.of(context).primaryColor.withOpacity(0.1),
             icon: Icons.edit,
           ),
           SlidableAction(
@@ -265,7 +264,7 @@ class _ProjectListTileState extends ConsumerState<ProjectListTile> {
                   }
                 : null,
             backgroundColor: const Color(0xFFFE4A49),
-            foregroundColor: Colors.white,
+            foregroundColor: Theme.of(context).primaryColor.withOpacity(0.1),
             icon: Icons.delete,
           ),
         ],

@@ -801,9 +801,28 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
           ),
           sliver: SliverList(
             delegate: SliverChildListDelegate([
-              // TODO: add fields
+              TextEditor(
+                  fieldLabel: 'Number of males employed',
+                  oldValue: project.employedMale?.toString() ?? '0',
+                  onSubmit: (newValue) {},
+                  project: project),
               // ROWA
+              TextEditor(
+                  fieldLabel: 'Number of females employed',
+                  oldValue: project.employedFemale?.toString() ?? '0',
+                  onSubmit: (newValue) {},
+                  project: project),
               // RAP
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ListTile(
+                  tileColor: Theme.of(context).primaryColor.withOpacity(0.1),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  subtitle: Text(project.totalEmployment().toString()),
+                  title: const Text('Total Employed'),
+                ),
+              )
               // ROWA/RAP
             ]),
           ),
