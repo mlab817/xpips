@@ -612,7 +612,7 @@ class _AppServiceClient implements AppServiceClient {
 
   @override
   Future<UpdateFinancialAccomplishmentResponse> updateFinancialAccomplishment(
-    int id,
+    String uuid,
     Map<String, dynamic> payload,
   ) async {
     const _extra = <String, dynamic>{};
@@ -622,18 +622,231 @@ class _AppServiceClient implements AppServiceClient {
     _data.addAll(payload);
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<UpdateFinancialAccomplishmentResponse>(Options(
-      method: 'PUT',
+      method: 'POST',
       headers: _headers,
       extra: _extra,
     )
             .compose(
               _dio.options,
-              '/financial-accomplishment/${id}',
+              '/projects/${uuid}/financial-accomplishment',
               queryParameters: queryParameters,
               data: _data,
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     final value = UpdateFinancialAccomplishmentResponse.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<StatusResponse> updateRow(
+    String uuid,
+    CostSchedule request,
+  ) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(request.toJson());
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<StatusResponse>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/projects/${uuid}/row',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = StatusResponse.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<StatusResponse> updateRap(
+    String uuid,
+    CostSchedule request,
+  ) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(request.toJson());
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<StatusResponse>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/projects/${uuid}/rap',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = StatusResponse.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<StatusResponse> updateFs(
+    String uuid,
+    CostSchedule request,
+  ) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(request.toJson());
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<StatusResponse>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/projects/${uuid}/fs',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = StatusResponse.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<RegionalInvestmentResponse> updateRegionalInvestment(
+    String uuid,
+    RegionalInvestment request,
+  ) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(request.toJson());
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<RegionalInvestmentResponse>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/projects/${uuid}/regional-investments',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = RegionalInvestmentResponse.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<FsInvestmentResponse> updateFsInvestment(
+    String uuid,
+    FsInvestment request,
+  ) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(request.toJson());
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<FsInvestmentResponse>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/projects/${uuid}/fs-investments',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = FsInvestmentResponse.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<void> removeRegionalInvestment(int id) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final Map<String, dynamic>? _data = null;
+    await _dio.fetch<void>(_setStreamType<void>(Options(
+      method: 'DELETE',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/regional-investments/${id}',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+  }
+
+  @override
+  Future<void> removeFsInvestment(int id) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final Map<String, dynamic>? _data = null;
+    await _dio.fetch<void>(_setStreamType<void>(Options(
+      method: 'DELETE',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/fs-investments/${id}',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+  }
+
+  @override
+  Future<UploadAttachmentResponse> attach(
+    String uuid, {
+    required File attachment,
+    required int attachmentTypeId,
+  }) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = FormData();
+    _data.files.add(MapEntry(
+      'attachment',
+      MultipartFile.fromFileSync(
+        attachment.path,
+        filename: attachment.path.split(Platform.pathSeparator).last,
+      ),
+    ));
+    _data.fields.add(MapEntry(
+      'attachment_type_id',
+      attachmentTypeId.toString(),
+    ));
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<UploadAttachmentResponse>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/projects/${uuid}/attachments',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = UploadAttachmentResponse.fromJson(_result.data!);
     return value;
   }
 

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../application/extensions.dart';
 import '../../../../presentation/controllers/patchproject_controller.dart';
 import '../../../../domain/models/fullproject.dart';
 import 'editbutton.dart';
@@ -14,12 +12,14 @@ class SwitchEditor extends ConsumerStatefulWidget {
     required this.fieldLabel,
     required this.oldValue,
     required this.onSubmit,
+    this.enabled = true,
   });
 
   final FullProject project;
   final String fieldLabel;
   final bool oldValue;
   final Function(bool newValue) onSubmit;
+  final bool enabled;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _RadioEditor();
@@ -49,6 +49,8 @@ class _RadioEditor extends ConsumerState<SwitchEditor> {
         trailing: EditButton(
           onPressed: () => _edit(),
         ),
+        enabled: widget.enabled,
+        onTap: () => _edit(),
       ),
     );
   }
@@ -91,21 +93,6 @@ class _UpdateFormState extends ConsumerState<UpdateForm> {
       newValue = oldValue!;
     }
 
-    print("oldValue $oldValue");
-    print("newValue $newValue");
-    print(oldValue == newValue);
-
-    ref.listen(patchProjectControllerProvider, (previous, next) {
-      //
-      if (next.hasError) {
-        next.showSnackbarOnError(context);
-      }
-
-      if (next.hasValue) {
-        next.showSnackbarOnSuccess(context);
-      }
-    });
-
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.fieldLabel),
@@ -137,18 +124,15 @@ class _UpdateFormState extends ConsumerState<UpdateForm> {
           child: Row(
             children: [
               Expanded(
-                child: SwitchListTile(
+                child: SwitchListTile.adaptive(
                   value: newValue ?? false,
                   onChanged: (bool value) {
-                    print("typing $value");
                     setState(() {
                       newValue = value;
                     });
-                    print("oldValue $oldValue");
-                    print("newValue $newValue");
-                    print(oldValue == newValue);
                   },
                   title: Text(widget.fieldLabel),
+                  activeColor: Theme.of(context).primaryColor,
                 ),
               ),
             ],

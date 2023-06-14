@@ -1,3 +1,4 @@
+import 'package:pips/data/responses/uploadattachment_response.dart';
 import 'package:pips/presentation/controllers/controllers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -19,7 +20,7 @@ class FullProjectController extends _$FullProjectController {
       Option? pdpChapter,
       Option? spatialCoverage,
       String? description,
-      FsCost? fsCost,
+      CostSchedule? fsCost,
       List<Option>? infrastructureSectors,
       bool? pip,
       List<FsInvestment>? fsInvestments,
@@ -41,8 +42,8 @@ class FullProjectController extends _$FullProjectController {
       bool? hasRow,
       bool? hasRap,
       bool? hasRowRap,
-      RowCost? rowCost,
-      RapCost? rapCost,
+      CostSchedule? rowCost,
+      CostSchedule? rapCost,
       int? employedMale,
       int? employedFemale,
       Option? fundingSource,
@@ -70,7 +71,10 @@ class FullProjectController extends _$FullProjectController {
       FinancialAccomplishment? financialAccomplishment,
       String? notes,
       String? contactInformation,
-      bool? iccResubmission}) {
+      bool? iccResubmission,
+      List<Option>? regions,
+      List<Option>? provinces,
+      Option? readinessLevel}) {
     state = state.copyWith(
       title: title ?? state.title,
       type: type ?? state.type,
@@ -139,6 +143,9 @@ class FullProjectController extends _$FullProjectController {
       notes: notes ?? state.notes,
       contactInformation: contactInformation ?? state.contactInformation,
       iccResubmission: iccResubmission ?? state.iccResubmission,
+      regions: regions ?? state.regions,
+      provinces: provinces ?? state.provinces,
+      readinessLevel: readinessLevel ?? state.readinessLevel,
     );
   }
 
@@ -153,33 +160,23 @@ class FullProjectController extends _$FullProjectController {
   }
 
   void updateRegionalInvestment({
+    required int currentIndex,
     required RegionalInvestment regionalInvestment,
   }) {
     final currentRegionalInvestments = state.regionalInvestments.toList();
 
-    int index = currentRegionalInvestments
-        .indexWhere((element) => element.id == regionalInvestment.id);
-
-    // if found
-    if (index != -1) {
-      currentRegionalInvestments[index] = regionalInvestment;
-    }
+    currentRegionalInvestments[currentIndex] = regionalInvestment;
 
     state = state.copyWith(regionalInvestments: currentRegionalInvestments);
   }
 
   void removeRegionalInvestment({
-    required RegionalInvestment regionalInvestment,
+    required int index,
   }) {
     final currentRegionalInvestments = state.regionalInvestments.toList();
 
-    int index = currentRegionalInvestments
-        .indexWhere((element) => element.id == regionalInvestment.id);
-
-    // if found
-    if (index != -1) {
-      currentRegionalInvestments.removeAt(index);
-    }
+    // remove index
+    currentRegionalInvestments.removeAt(index);
 
     state = state.copyWith(regionalInvestments: currentRegionalInvestments);
   }
@@ -194,86 +191,42 @@ class FullProjectController extends _$FullProjectController {
     state = state.copyWith(fsInvestments: currentFsInvestments);
   }
 
-  void updateFsInvestment({required FsInvestment fsInvestment}) {
-    final currentInvestments = state.fsInvestments;
-
-    int index = currentInvestments
-        .indexWhere((element) => element.id == fsInvestment.id);
-
-    // if found
-    if (index != -1) {
-      currentInvestments[index] = fsInvestment;
-    }
-
-    state = state.copyWith(fsInvestments: currentInvestments);
-  }
-
-  void removeFsInvestment({
-    required FsInvestment fsInvestment,
-  }) {
+  void updateFsInvestment(
+      {required int index, required FsInvestment fsInvestment}) {
     final currentInvestments = state.fsInvestments.toList();
 
     int index = currentInvestments
         .indexWhere((element) => element.id == fsInvestment.id);
 
     // if found
-    if (index != -1) {
-      currentInvestments.removeAt(index);
-    }
+    currentInvestments[index] = fsInvestment;
 
     state = state.copyWith(fsInvestments: currentInvestments);
   }
 
+  void removeFsInvestment({
+    required int index,
+  }) {
+    final currentInvestments = state.fsInvestments.toList();
+
+    currentInvestments.removeAt(index);
+
+    state = state.copyWith(fsInvestments: currentInvestments);
+  }
+
+  void addAttachment(UploadAttachmentResponseData data) {
+    final curAttachments = state.attachments;
+
+    curAttachments.add(data);
+
+    state = state.copyWith(attachments: curAttachments);
+  }
+
   @override
-  FullProject build(String? uuid) {
+  FullProject build(String uuid) {
     final asyncProject = ref.watch(projectProvider(uuid: uuid));
 
-    // // initialize fsInvestments and regionalInvestments
-    // final options = ref.watch(optionsControllerProvider);
-    // List<FsInvestment> fsInvestments = [];
-    // List<RegionalInvestment> regions = [];
-    //
-    // options.when(
-    //   data: (data) {
-    //     for (var fs in data.data.fundingSources ?? []) {
-    //       fsInvestments.add(FsInvestment.initial().copyWith(
-    //         fundingSource: fs,
-    //       ));
-    //     }
-    //
-    //     for (var region in data.data.regions ?? []) {
-    //       regions.add(RegionalInvestment.initial().copyWith(region: region));
-    //     }
-    //   },
-    //   error: (error, stacktrace) {},
-    //   loading: () {},
-    // );
-    //
-    // // initialize the full project model
-    // FullProject defaultProject = FullProject(
-    //   bases: [],
-    //   operatingUnits: [],
-    //   pdpChapters: [],
-    //   agenda: [],
-    //   sdgs: [],
-    //   fsCost: FsCost.initial(),
-    //   rowCost: RowCost.initial(),
-    //   rapCost: RapCost.initial(),
-    //   prerequisites: [],
-    //   locations: [],
-    //   infrastructureSectors: [],
-    //   fundingInstitutions: [],
-    //   fundingSources: [],
-    //   fsInvestments: fsInvestments,
-    //   regions: regions,
-    //   financialAccomplishment: FinancialAccomplishment.initial(),
-    // );
-    //
-    // if (asyncProject.hasValue) {
-    //   return asyncProject.value?.project ?? defaultProject;
-    // }
-
-    assert(asyncProject.value?.project != null, 'Project cannot be null');
+    // assert(asyncProject.value?.project != null, 'Project cannot be null');
 
     return asyncProject.value!.project;
   }

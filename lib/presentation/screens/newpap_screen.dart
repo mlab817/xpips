@@ -21,9 +21,6 @@ class _NewPapScreenState extends ConsumerState<NewPapScreen> {
     final optionsAsync = ref.watch(optionsControllerProvider).value;
     final simpleProject = ref.watch(simpleProjectProvider);
 
-    print('simple project: ');
-    print(simpleProject);
-
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(

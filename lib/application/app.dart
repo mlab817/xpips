@@ -191,7 +191,7 @@ class MyApp extends ConsumerWidget {
         useMaterial3: true,
         swapLegacyOnMaterial3: true,
         // To use the Playground font, add GoogleFonts package and uncomment
-        fontFamily: GoogleFonts.nanumGothicCoding().fontFamily,
+        fontFamily: GoogleFonts.robotoCondensed().fontFamily,
       ),
       // light theme
       theme: FlexThemeData.light(
@@ -232,7 +232,7 @@ class MyApp extends ConsumerWidget {
         useMaterial3: true,
         swapLegacyOnMaterial3: true,
         // To use the Playground font, add GoogleFonts package and uncomment
-        fontFamily: GoogleFonts.nanumGothicCoding().fontFamily,
+        fontFamily: GoogleFonts.robotoCondensed().fontFamily,
       ),
       routerConfig: appRouter.config(),
     );

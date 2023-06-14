@@ -8,8 +8,8 @@ part of 'fullproject.dart';
 
 _$_FullProject _$$_FullProjectFromJson(Map<String, dynamic> json) =>
     _$_FullProject(
-      id: json['id'] as int?,
-      uuid: json['uuid'] as String?,
+      id: json['id'] as int,
+      uuid: json['uuid'] as String,
       title: json['title'] as String?,
       typeId: json['type_id'] as int?,
       type: json['type'] == null
@@ -83,7 +83,7 @@ _$_FullProject _$$_FullProjectFromJson(Map<String, dynamic> json) =>
       fsTotalCost: json['fs_total_cost'] as String?,
       fsCost: json['fs_cost'] == null
           ? null
-          : FsCost.fromJson(json['fs_cost'] as Map<String, dynamic>),
+          : CostSchedule.fromJson(json['fs_cost'] as Map<String, dynamic>),
       fsCompletionDate: json['fs_completion_date'] == null
           ? null
           : DateTime.parse(json['fs_completion_date'] as String),
@@ -92,13 +92,13 @@ _$_FullProject _$$_FullProjectFromJson(Map<String, dynamic> json) =>
       rowTotalCost: (json['row_total_cost'] as num?)?.toDouble(),
       rowCost: json['row_cost'] == null
           ? null
-          : RowCost.fromJson(json['row_cost'] as Map<String, dynamic>),
+          : CostSchedule.fromJson(json['row_cost'] as Map<String, dynamic>),
       hasRap: json['has_rap'] as bool?,
       rapAffectedHouseholds: json['rap_affected_households'] as int?,
       rapTotalCost: (json['rap_total_cost'] as num?)?.toDouble(),
       rapCost: json['rap_cost'] == null
           ? null
-          : RapCost.fromJson(json['rap_cost'] as Map<String, dynamic>),
+          : CostSchedule.fromJson(json['rap_cost'] as Map<String, dynamic>),
       hasRowRap: json['has_row_rap'] as bool?,
       prerequisites: (json['prerequisites'] as List<dynamic>)
           .map((e) => Option.fromJson(e as Map<String, dynamic>))
@@ -176,6 +176,16 @@ _$_FullProject _$$_FullProjectFromJson(Map<String, dynamic> json) =>
       contactInformation: json['contact_information'] as String?,
       notes: json['notes'] as String?,
       iccResubmission: json['icc_resubmission'] as bool?,
+      regions: (json['regions'] as List<dynamic>)
+          .map((e) => Option.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      provinces: (json['provinces'] as List<dynamic>)
+          .map((e) => Option.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      attachments: (json['attachments'] as List<dynamic>)
+          .map((e) =>
+              UploadAttachmentResponseData.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$$_FullProjectToJson(_$_FullProject instance) =>
@@ -268,4 +278,7 @@ Map<String, dynamic> _$$_FullProjectToJson(_$_FullProject instance) =>
       'contact_information': instance.contactInformation,
       'notes': instance.notes,
       'icc_resubmission': instance.iccResubmission,
+      'regions': instance.regions,
+      'provinces': instance.provinces,
+      'attachments': instance.attachments,
     };

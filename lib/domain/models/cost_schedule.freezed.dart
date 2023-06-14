@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'fs_cost.dart';
+part of 'cost_schedule.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -14,48 +14,46 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
-FsCost _$FsCostFromJson(Map<String, dynamic> json) {
-  return _FsCost.fromJson(json);
+CostSchedule _$CostScheduleFromJson(Map<String, dynamic> json) {
+  return _CostSchedule.fromJson(json);
 }
 
 /// @nodoc
-mixin _$FsCost {
-  @JsonKey(name: "y2023")
+mixin _$CostSchedule {
+  int? get id => throw _privateConstructorUsedError;
   double? get y2023 => throw _privateConstructorUsedError;
-  @JsonKey(name: "y2024")
   double? get y2024 => throw _privateConstructorUsedError;
-  @JsonKey(name: "y2025")
   double? get y2025 => throw _privateConstructorUsedError;
-  @JsonKey(name: "y2026")
   double? get y2026 => throw _privateConstructorUsedError;
-  @JsonKey(name: "y2027")
   double? get y2027 => throw _privateConstructorUsedError;
-  @JsonKey(name: "y2028")
   double? get y2028 => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $FsCostCopyWith<FsCost> get copyWith => throw _privateConstructorUsedError;
+  $CostScheduleCopyWith<CostSchedule> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $FsCostCopyWith<$Res> {
-  factory $FsCostCopyWith(FsCost value, $Res Function(FsCost) then) =
-      _$FsCostCopyWithImpl<$Res, FsCost>;
+abstract class $CostScheduleCopyWith<$Res> {
+  factory $CostScheduleCopyWith(
+          CostSchedule value, $Res Function(CostSchedule) then) =
+      _$CostScheduleCopyWithImpl<$Res, CostSchedule>;
   @useResult
   $Res call(
-      {@JsonKey(name: "y2023") double? y2023,
-      @JsonKey(name: "y2024") double? y2024,
-      @JsonKey(name: "y2025") double? y2025,
-      @JsonKey(name: "y2026") double? y2026,
-      @JsonKey(name: "y2027") double? y2027,
-      @JsonKey(name: "y2028") double? y2028});
+      {int? id,
+      double? y2023,
+      double? y2024,
+      double? y2025,
+      double? y2026,
+      double? y2027,
+      double? y2028});
 }
 
 /// @nodoc
-class _$FsCostCopyWithImpl<$Res, $Val extends FsCost>
-    implements $FsCostCopyWith<$Res> {
-  _$FsCostCopyWithImpl(this._value, this._then);
+class _$CostScheduleCopyWithImpl<$Res, $Val extends CostSchedule>
+    implements $CostScheduleCopyWith<$Res> {
+  _$CostScheduleCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -65,6 +63,7 @@ class _$FsCostCopyWithImpl<$Res, $Val extends FsCost>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = freezed,
     Object? y2023 = freezed,
     Object? y2024 = freezed,
     Object? y2025 = freezed,
@@ -73,6 +72,10 @@ class _$FsCostCopyWithImpl<$Res, $Val extends FsCost>
     Object? y2028 = freezed,
   }) {
     return _then(_value.copyWith(
+      id: freezed == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int?,
       y2023: freezed == y2023
           ? _value.y2023
           : y2023 // ignore: cast_nullable_to_non_nullable
@@ -102,30 +105,35 @@ class _$FsCostCopyWithImpl<$Res, $Val extends FsCost>
 }
 
 /// @nodoc
-abstract class _$$_FsCostCopyWith<$Res> implements $FsCostCopyWith<$Res> {
-  factory _$$_FsCostCopyWith(_$_FsCost value, $Res Function(_$_FsCost) then) =
-      __$$_FsCostCopyWithImpl<$Res>;
+abstract class _$$_CostScheduleCopyWith<$Res>
+    implements $CostScheduleCopyWith<$Res> {
+  factory _$$_CostScheduleCopyWith(
+          _$_CostSchedule value, $Res Function(_$_CostSchedule) then) =
+      __$$_CostScheduleCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
-      {@JsonKey(name: "y2023") double? y2023,
-      @JsonKey(name: "y2024") double? y2024,
-      @JsonKey(name: "y2025") double? y2025,
-      @JsonKey(name: "y2026") double? y2026,
-      @JsonKey(name: "y2027") double? y2027,
-      @JsonKey(name: "y2028") double? y2028});
+      {int? id,
+      double? y2023,
+      double? y2024,
+      double? y2025,
+      double? y2026,
+      double? y2027,
+      double? y2028});
 }
 
 /// @nodoc
-class __$$_FsCostCopyWithImpl<$Res>
-    extends _$FsCostCopyWithImpl<$Res, _$_FsCost>
-    implements _$$_FsCostCopyWith<$Res> {
-  __$$_FsCostCopyWithImpl(_$_FsCost _value, $Res Function(_$_FsCost) _then)
+class __$$_CostScheduleCopyWithImpl<$Res>
+    extends _$CostScheduleCopyWithImpl<$Res, _$_CostSchedule>
+    implements _$$_CostScheduleCopyWith<$Res> {
+  __$$_CostScheduleCopyWithImpl(
+      _$_CostSchedule _value, $Res Function(_$_CostSchedule) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = freezed,
     Object? y2023 = freezed,
     Object? y2024 = freezed,
     Object? y2025 = freezed,
@@ -133,7 +141,11 @@ class __$$_FsCostCopyWithImpl<$Res>
     Object? y2027 = freezed,
     Object? y2028 = freezed,
   }) {
-    return _then(_$_FsCost(
+    return _then(_$_CostSchedule(
+      id: freezed == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int?,
       y2023: freezed == y2023
           ? _value.y2023
           : y2023 // ignore: cast_nullable_to_non_nullable
@@ -164,48 +176,46 @@ class __$$_FsCostCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_FsCost extends _FsCost {
-  _$_FsCost(
-      {@JsonKey(name: "y2023") this.y2023,
-      @JsonKey(name: "y2024") this.y2024,
-      @JsonKey(name: "y2025") this.y2025,
-      @JsonKey(name: "y2026") this.y2026,
-      @JsonKey(name: "y2027") this.y2027,
-      @JsonKey(name: "y2028") this.y2028})
+class _$_CostSchedule extends _CostSchedule {
+  _$_CostSchedule(
+      {this.id,
+      required this.y2023,
+      required this.y2024,
+      required this.y2025,
+      required this.y2026,
+      required this.y2027,
+      required this.y2028})
       : super._();
 
-  factory _$_FsCost.fromJson(Map<String, dynamic> json) =>
-      _$$_FsCostFromJson(json);
+  factory _$_CostSchedule.fromJson(Map<String, dynamic> json) =>
+      _$$_CostScheduleFromJson(json);
 
   @override
-  @JsonKey(name: "y2023")
+  final int? id;
+  @override
   final double? y2023;
   @override
-  @JsonKey(name: "y2024")
   final double? y2024;
   @override
-  @JsonKey(name: "y2025")
   final double? y2025;
   @override
-  @JsonKey(name: "y2026")
   final double? y2026;
   @override
-  @JsonKey(name: "y2027")
   final double? y2027;
   @override
-  @JsonKey(name: "y2028")
   final double? y2028;
 
   @override
   String toString() {
-    return 'FsCost(y2023: $y2023, y2024: $y2024, y2025: $y2025, y2026: $y2026, y2027: $y2027, y2028: $y2028)';
+    return 'CostSchedule(id: $id, y2023: $y2023, y2024: $y2024, y2025: $y2025, y2026: $y2026, y2027: $y2027, y2028: $y2028)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_FsCost &&
+            other is _$_CostSchedule &&
+            (identical(other.id, id) || other.id == id) &&
             (identical(other.y2023, y2023) || other.y2023 == y2023) &&
             (identical(other.y2024, y2024) || other.y2024 == y2024) &&
             (identical(other.y2025, y2025) || other.y2025 == y2025) &&
@@ -217,54 +227,52 @@ class _$_FsCost extends _FsCost {
   @JsonKey(ignore: true)
   @override
   int get hashCode =>
-      Object.hash(runtimeType, y2023, y2024, y2025, y2026, y2027, y2028);
+      Object.hash(runtimeType, id, y2023, y2024, y2025, y2026, y2027, y2028);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_FsCostCopyWith<_$_FsCost> get copyWith =>
-      __$$_FsCostCopyWithImpl<_$_FsCost>(this, _$identity);
+  _$$_CostScheduleCopyWith<_$_CostSchedule> get copyWith =>
+      __$$_CostScheduleCopyWithImpl<_$_CostSchedule>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_FsCostToJson(
+    return _$$_CostScheduleToJson(
       this,
     );
   }
 }
 
-abstract class _FsCost extends FsCost {
-  factory _FsCost(
-      {@JsonKey(name: "y2023") final double? y2023,
-      @JsonKey(name: "y2024") final double? y2024,
-      @JsonKey(name: "y2025") final double? y2025,
-      @JsonKey(name: "y2026") final double? y2026,
-      @JsonKey(name: "y2027") final double? y2027,
-      @JsonKey(name: "y2028") final double? y2028}) = _$_FsCost;
-  _FsCost._() : super._();
+abstract class _CostSchedule extends CostSchedule {
+  factory _CostSchedule(
+      {final int? id,
+      required final double? y2023,
+      required final double? y2024,
+      required final double? y2025,
+      required final double? y2026,
+      required final double? y2027,
+      required final double? y2028}) = _$_CostSchedule;
+  _CostSchedule._() : super._();
 
-  factory _FsCost.fromJson(Map<String, dynamic> json) = _$_FsCost.fromJson;
+  factory _CostSchedule.fromJson(Map<String, dynamic> json) =
+      _$_CostSchedule.fromJson;
 
   @override
-  @JsonKey(name: "y2023")
+  int? get id;
+  @override
   double? get y2023;
   @override
-  @JsonKey(name: "y2024")
   double? get y2024;
   @override
-  @JsonKey(name: "y2025")
   double? get y2025;
   @override
-  @JsonKey(name: "y2026")
   double? get y2026;
   @override
-  @JsonKey(name: "y2027")
   double? get y2027;
   @override
-  @JsonKey(name: "y2028")
   double? get y2028;
   @override
   @JsonKey(ignore: true)
-  _$$_FsCostCopyWith<_$_FsCost> get copyWith =>
+  _$$_CostScheduleCopyWith<_$_CostSchedule> get copyWith =>
       throw _privateConstructorUsedError;
 }

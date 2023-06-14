@@ -7,8 +7,8 @@ import '../../../../domain/models/fullproject.dart';
 import '../../../../domain/models/option.dart';
 import '../../../controllers/patchproject_controller.dart';
 
-class CheckboxEditor extends ConsumerStatefulWidget {
-  const CheckboxEditor({
+class NestedCheckboxEditor extends ConsumerStatefulWidget {
+  const NestedCheckboxEditor({
     super.key,
     required this.project,
     required this.fieldLabel,
@@ -26,10 +26,11 @@ class CheckboxEditor extends ConsumerStatefulWidget {
   final bool enabled;
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _CheckboxEditorState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _NestedCheckboxEditorState();
 }
 
-class _CheckboxEditorState extends ConsumerState<CheckboxEditor> {
+class _NestedCheckboxEditorState extends ConsumerState<NestedCheckboxEditor> {
   void _edit() {
     //
     Navigator.of(context).push(
@@ -131,8 +132,6 @@ class _CheckboxFormState extends ConsumerState<CheckboxForm> {
 
             return CheckboxListTile.adaptive(
               value: newValue.contains(option),
-              subtitle:
-                  option.description != null ? Text(option.description!) : null,
               activeColor: Theme.of(context).primaryColor,
               onChanged: (bool? value) {
                 setState(() {

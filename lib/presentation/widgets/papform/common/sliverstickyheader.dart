@@ -4,9 +4,11 @@ class SliverStickyHeaderComponent extends StatelessWidget {
   const SliverStickyHeaderComponent({
     super.key,
     required this.title,
+    this.actions,
   });
 
   final String title;
+  final List<Widget>? actions;
 
   @override
   Widget build(BuildContext context) {
@@ -21,13 +23,20 @@ class SliverStickyHeaderComponent extends StatelessWidget {
         bottom: 20,
       ),
       alignment: Alignment.centerLeft,
-      child: Text(
-        title,
-        style: const TextStyle(
-          color: Colors.white,
-          fontWeight: FontWeight.w700,
-          fontSize: 20,
-        ),
+      child: Row(
+        children: [
+          Text(
+            title,
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w700,
+              fontSize: 20,
+            ),
+          ),
+          const Spacer(),
+          // TODO: review if this is ok
+          ...?actions
+        ],
       ),
     );
   }

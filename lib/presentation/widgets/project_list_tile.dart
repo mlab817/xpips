@@ -108,8 +108,8 @@ class _ProjectListTileState extends ConsumerState<ProjectListTile> {
                           ? () {
                               ref.read(projectProvider(uuid: _project.uuid));
                               AutoRouter.of(context).push(PapViewRoute(
-                                uuid: _project.uuid,
-                              ));
+                                  // uuid: _project.uuid,
+                                  ));
                             }
                           : null,
                       icon: const Icon(Icons.visibility),
@@ -185,7 +185,8 @@ class _ProjectListTileState extends ConsumerState<ProjectListTile> {
                   decoration: BoxDecoration(
                       color: Theme.of(context).primaryColor.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(8.0)),
-                  child: Text(_project.contactInformation ?? 'NONE'),
+                  child: Text(
+                      "Contact Information: ${_project.contactInformation ?? 'NONE'}"),
                 ),
                 const SizedBox(
                   height: 10,
@@ -197,7 +198,7 @@ class _ProjectListTileState extends ConsumerState<ProjectListTile> {
                   decoration: BoxDecoration(
                       color: Theme.of(context).primaryColor.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(8.0)),
-                  child: Text(_project.notes ?? 'No notes'),
+                  child: Text("Notes: ${_project.notes ?? 'NO NOTES'}"),
                 ),
               ],
             ),
@@ -227,8 +228,8 @@ class _ProjectListTileState extends ConsumerState<ProjectListTile> {
             onPressed: _project.permissions.view
                 ? (context) {
                     AutoRouter.of(context).push(PapViewRoute(
-                      uuid: _project.uuid,
-                    ));
+                        //uuid: _project.uuid,
+                        ));
                   }
                 : null,
             backgroundColor: Colors.grey,
@@ -249,8 +250,8 @@ class _ProjectListTileState extends ConsumerState<ProjectListTile> {
             onPressed: _project.permissions.update
                 ? (context) {
                     AutoRouter.of(context).push(PapViewRoute(
-                      uuid: _project.uuid,
-                    ));
+                        // uuid: _project.uuid,
+                        ));
                   }
                 : null,
             backgroundColor: const Color(0xFF21B7CA),

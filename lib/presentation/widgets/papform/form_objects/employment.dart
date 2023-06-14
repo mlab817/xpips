@@ -8,10 +8,10 @@ import '../get_input_decoration.dart';
 class EmploymentGenerated extends ConsumerStatefulWidget {
   const EmploymentGenerated({
     Key? key,
-    this.uuid,
+    required this.uuid,
   }) : super(key: key);
 
-  final String? uuid;
+  final String uuid;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _EmploymentGenerated();

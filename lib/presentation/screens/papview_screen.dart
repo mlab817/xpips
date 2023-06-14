@@ -1,12 +1,19 @@
 import 'dart:math';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-import '../widgets/papform/form_objects/attachments.dart';
+import '../../data/responses/patchproject_response.dart';
+import '../../presentation/widgets/papform/common/scheduleeditor.dart';
+import '../resources/strings_manager.dart';
+import '../widgets/papform/common/editbutton.dart';
+import '../widgets/papform/common/fsinvestmenteditor.dart';
+import '../widgets/papform/common/regionalinvestmenteditor.dart';
 import '../widgets/papform/common/checkboxeditor.dart';
 import '../../application/app_router.dart';
 import '../../application/extensions.dart';
@@ -23,17 +30,17 @@ import '../widgets/papform/common/radioeditor.dart';
 import '../widgets/papform/common/sliverstickyheader.dart';
 import '../widgets/papform/common/texteditor.dart';
 import '../widgets/papform/financial_accomplishment.dart';
+import '../widgets/papform/form_objects/infrastructuresectors.dart';
 import '../widgets/papform/form_objects/officeeditor.dart';
-import '../widgets/papform/form_objects/total_project_cost.dart';
 
 @RoutePage()
 class PapViewScreen extends ConsumerStatefulWidget {
   const PapViewScreen({
     Key? key,
-    @PathParam('uuid') required this.uuid,
+    // @PathParam('uuid') required this.uuid,
   }) : super(key: key);
 
-  final String uuid;
+  final String uuid = 'e2600fce';
 
   @override
   ConsumerState<PapViewScreen> createState() => _PapViewScreenState();
@@ -51,9 +58,36 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
     });
   }
 
+  Future<PatchProjectResponse> _handleSubmit({
+    required String uuid,
+    required String fieldKey,
+    required dynamic value,
+  }) async {
+    final Map<String, dynamic> payload = {
+      fieldKey: value,
+    };
+
+    return await ref
+        .read(patchProjectControllerProvider.notifier)
+        .submit(uuid: uuid, payload: payload);
+  }
+
   @override
   Widget build(BuildContext context) {
     final projectProfileAsync = ref.watch(projectProvider(uuid: widget.uuid));
+
+    // listen for the status of the patch request
+    ref.listen(patchProjectControllerProvider, (previous, next) {
+      // if there was an error in the patch request, show error message
+      if (next.hasError) {
+        next.showSnackbarOnError(context);
+      }
+
+      // if the patch request was successful, show success message
+      if (next.hasValue) {
+        next.showSnackbarOnSuccess(context);
+      }
+    });
 
     return Scaffold(
       appBar: AppBar(
@@ -72,7 +106,8 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         actions: [
           IconButton(
             onPressed: () {
-              //
+              // reload the project
+              ref.invalidate(projectProvider(uuid: widget.uuid));
             },
             icon: const Icon(Icons.refresh),
             tooltip: 'Reload',
@@ -121,7 +156,20 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   });
             },
             icon: const Icon(Icons.delete),
-            tooltip: 'Delete',
+            tooltip: AppStrings.delete,
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Tooltip(
+              message:
+                  'Ensure that all fields have been filled up and are consistent.',
+              child: FilledButton(
+                onPressed: () {
+                  //
+                },
+                child: const Text('SUBMIT'),
+              ),
+            ),
           ),
         ],
       ),
@@ -178,13 +226,18 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
     final FullProject project =
         ref.watch(fullProjectControllerProvider(widget.uuid));
 
+    final options =
+        ref.watch(optionsControllerProvider).value?.data ?? Options();
+
+    final uuid = widget.uuid;
+
     return CustomScrollView(
       physics: const ClampingScrollPhysics(),
       slivers: [
         // General Information
         SliverStickyHeader(
-          header:
-              const SliverStickyHeaderComponent(title: 'General Information'),
+          header: const SliverStickyHeaderComponent(
+              title: AppStrings.generalInformation),
           sliver: SliverList(
             delegate: SliverChildListDelegate(
               [
@@ -192,60 +245,51 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   project: project,
                   fieldLabel: 'Title',
                   oldValue: project.title ?? '',
-                  onSubmit: (String newValue) {
+                  onSubmit: (String newValue) async {
                     //
-                    final Map<String, dynamic> payload = {
-                      'title': newValue,
-                    };
-
-                    ref
-                        .read(patchProjectControllerProvider.notifier)
-                        .submit(uuid: project.uuid!, payload: payload);
+                    await _handleSubmit(
+                        uuid: widget.uuid, fieldKey: 'title', value: newValue);
 
                     // update the provider
                     ref
-                        .read(fullProjectControllerProvider(project.uuid)
-                            .notifier)
+                        .read(
+                            fullProjectControllerProvider(widget.uuid).notifier)
                         .update(title: newValue);
-
-                    // close
-                    Navigator.pop(context);
                   },
                 ),
                 RadioEditor(
                     project: project,
                     fieldLabel: 'Program or Project',
                     oldValue: project.type,
-                    onSubmit: (newValue) {
-                      // TODO: implement TYpe update
+                    onSubmit: (newValue) async {
+                      await _handleSubmit(
+                        uuid: widget.uuid,
+                        fieldKey: 'type_id',
+                        value: newValue.value,
+                      );
+
+                      // update the provider
+                      ref
+                          .read(fullProjectControllerProvider(widget.uuid)
+                              .notifier)
+                          .update(type: newValue);
                     },
-                    options: ref
-                            .watch(optionsControllerProvider)
-                            .value
-                            ?.data
-                            .types ??
-                        []),
+                    options: options.types ?? []),
                 SwitchEditor(
                   project: project,
                   fieldLabel: 'Regular Program',
                   oldValue: project.regularProgram ?? false,
-                  onSubmit: (bool value) {
-                    final Map<String, dynamic> payload = {
-                      'regular_program': value,
-                    };
-
-                    ref
-                        .read(patchProjectControllerProvider.notifier)
-                        .submit(uuid: project.uuid!, payload: payload);
+                  onSubmit: (bool newValue) async {
+                    await _handleSubmit(
+                        uuid: uuid,
+                        fieldKey: 'regular_program',
+                        value: newValue);
 
                     // update the provider
                     ref
-                        .read(fullProjectControllerProvider(project.uuid)
-                            .notifier)
-                        .update(regularProgram: value);
-
-                    // close
-                    Navigator.pop(context);
+                        .read(
+                            fullProjectControllerProvider(widget.uuid).notifier)
+                        .update(regularProgram: newValue);
                   },
                 ),
                 CheckboxEditor(
@@ -255,52 +299,64 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                       ref.watch(optionsControllerProvider).value?.data.bases ??
                           [],
                   oldValue: ref
-                      .watch(fullProjectControllerProvider(project.uuid))
+                      .watch(fullProjectControllerProvider(widget.uuid))
                       .bases,
-                  onSubmit: (List<Option> newValue) {
+                  onSubmit: (List<Option> newValue) async {
+                    // conver to list of value
                     final valueToSubmit = newValue.map((e) => e.value).toList();
 
-                    final payload = {
-                      'bases': valueToSubmit,
-                    };
+                    await _handleSubmit(
+                      uuid: uuid,
+                      fieldKey: 'bases',
+                      value: valueToSubmit,
+                    );
 
                     ref
-                        .read(patchProjectControllerProvider.notifier)
-                        .submit(uuid: project.uuid ?? '', payload: payload);
-
-                    ref
-                        .watch(fullProjectControllerProvider(project.uuid)
-                            .notifier)
+                        .watch(
+                            fullProjectControllerProvider(widget.uuid).notifier)
                         .update(bases: newValue);
-
-                    Navigator.pop(context);
                   },
                 ),
                 TextEditor(
                   project: project,
                   fieldLabel: 'Description',
                   oldValue: project.description ?? '',
-                  onSubmit: (String newValue) {
+                  onSubmit: (String newValue) async {
                     //
-                    final Map<String, dynamic> payload = {
-                      'description': newValue,
-                    };
-
-                    ref
-                        .read(patchProjectControllerProvider.notifier)
-                        .submit(uuid: project.uuid!, payload: payload);
+                    await _handleSubmit(
+                      uuid: uuid,
+                      fieldKey: 'description',
+                      value: newValue,
+                    );
 
                     // update the provider
                     ref
-                        .read(fullProjectControllerProvider(project.uuid)
-                            .notifier)
+                        .read(fullProjectControllerProvider(uuid).notifier)
                         .update(description: newValue);
-
-                    // close
-                    Navigator.pop(context);
                   },
                 ),
-                TotalProjectCost(project: project),
+                TextEditor(
+                  project: project,
+                  oldValue: ref
+                      .watch(numberFormatterProvider)
+                      .format(project.totalCost),
+                  fieldLabel: 'Total Project Cost (in absolute PHP)',
+                  onSubmit: (String newValue) async {
+                    //
+                    await _handleSubmit(
+                      uuid: uuid,
+                      fieldKey: 'total_cost',
+                      value: double.tryParse(newValue),
+                    );
+
+                    // update the provider
+                    ref
+                        .read(fullProjectControllerProvider(uuid).notifier)
+                        .update(
+                          totalCost: double.tryParse(newValue),
+                        );
+                  },
+                ),
               ],
             ),
           ),
@@ -316,8 +372,16 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 fieldLabel: 'Reporting Office',
                 options: ref.watch(officesProvider).value?.data ?? <Office>[],
                 oldValue: project.office,
-                onSubmit: (Office newValue) {
-                  //
+                onSubmit: (Office newValue) async {
+                  await _handleSubmit(
+                    uuid: uuid,
+                    fieldKey: 'office_id',
+                    value: newValue.value,
+                  );
+
+                  ref
+                      .read(fullProjectControllerProvider(uuid).notifier)
+                      .update(office: newValue);
                 },
               ),
               CheckboxEditor(
@@ -330,8 +394,20 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                           ?.data
                           .operatingUnits ??
                       [],
-                  onSubmit: (newValue) {
-                    // TODO: update logic
+                  onSubmit: (List<Option> newValue) async {
+                    // convert to List<int>
+                    final valueToSubmit = newValue.map((e) => e.value).toList();
+
+                    await _handleSubmit(
+                      uuid: uuid,
+                      fieldKey: 'operating_units',
+                      value: valueToSubmit,
+                    );
+
+                    ref
+                        .read(
+                            fullProjectControllerProvider(widget.uuid).notifier)
+                        .update(operatingUnits: newValue);
                   }),
             ]),
           ),
@@ -353,15 +429,57 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                         .spatialCoverages ??
                     [],
                 oldValue: project.spatialCoverage,
-                onSubmit: (newValue) {
-                  // TODO: spatial coverage
+                onSubmit: (Option newValue) async {
+                  await _handleSubmit(
+                    uuid: uuid,
+                    fieldKey: 'spatial_coverage_id',
+                    value: newValue.value,
+                  );
+
+                  ref
+                      .read(fullProjectControllerProvider(widget.uuid).notifier)
+                      .update(spatialCoverage: newValue);
                 },
               ),
-              ListTile(
-                subtitle: Text(
-                  project.locations.map((e) => e.label).join(', '),
-                ),
-                title: const Text('Regions/Provinces'),
+              CheckboxEditor(
+                project: project,
+                oldValue: project.regions,
+                fieldLabel: 'Regions',
+                onSubmit: (newValue) async {
+                  final valueToSubmit = newValue.map((e) => e.value).toList();
+                  //
+                  await _handleSubmit(
+                    uuid: uuid,
+                    fieldKey: 'regions',
+                    value: valueToSubmit,
+                  );
+
+                  ref
+                      .read(fullProjectControllerProvider(widget.uuid).notifier)
+                      .update(regions: newValue);
+                },
+                options: options.regions ?? [],
+              ),
+              CheckboxEditor(
+                project: project,
+                oldValue: project.provinces,
+                fieldLabel: 'Provinces',
+                onSubmit: (List<Option> newValue) async {
+                  //
+                  final List<int> valueToSubmit =
+                      newValue.map((e) => e.value).toList();
+                  //
+                  await _handleSubmit(
+                    uuid: uuid,
+                    fieldKey: 'provinces',
+                    value: valueToSubmit,
+                  );
+
+                  ref
+                      .read(fullProjectControllerProvider(widget.uuid).notifier)
+                      .update(provinces: newValue);
+                },
+                options: options.provinces ?? [],
               ),
             ]),
           ),
@@ -376,30 +494,40 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 fieldLabel:
                     'Will require Investment Coordination Committee/NEDA Board Approval (ICC-able)?',
                 oldValue: project.iccable ?? false,
-                onSubmit: (bool value) {
-                  final Map<String, dynamic> payload = {
-                    'iccable': value,
-                  };
-
-                  ref
-                      .read(patchProjectControllerProvider.notifier)
-                      .submit(uuid: project.uuid!, payload: payload);
+                onSubmit: (bool newValue) async {
+                  await _handleSubmit(
+                    uuid: uuid,
+                    fieldKey: 'iccable',
+                    value: newValue,
+                  );
 
                   // update the provider
                   ref
-                      .read(
-                          fullProjectControllerProvider(project.uuid).notifier)
-                      .update(iccable: value);
-
-                  // close
-                  Navigator.pop(context);
+                      .read(fullProjectControllerProvider(widget.uuid).notifier)
+                      .update(iccable: newValue);
                 },
               ),
               RadioEditor(
                 project: project,
                 fieldLabel: 'Approval Level',
                 oldValue: project.approvalLevel,
-                onSubmit: (newValue) {},
+                enabled: ref
+                        .watch(fullProjectControllerProvider(widget.uuid))
+                        .iccable ??
+                    false,
+                onSubmit: (Option newValue) async {
+                  //
+                  await _handleSubmit(
+                    uuid: uuid,
+                    fieldKey: 'approval_level_id',
+                    value: newValue.value,
+                  );
+
+                  // update the provider
+                  ref
+                      .read(fullProjectControllerProvider(widget.uuid).notifier)
+                      .update(approvalLevel: newValue);
+                },
                 options: ref
                         .watch(optionsControllerProvider)
                         .value
@@ -411,7 +539,24 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   project: project,
                   fieldLabel: 'As of',
                   oldValue: project.approvalLevelDate,
-                  onSubmit: (newValue) {}),
+                  enabled: ref
+                          .watch(fullProjectControllerProvider(widget.uuid))
+                          .iccable ??
+                      false,
+                  onSubmit: (DateTime newValue) async {
+                    //
+                    await _handleSubmit(
+                      uuid: uuid,
+                      fieldKey: 'approval_level_date',
+                      value: newValue.toIso8601String(),
+                    );
+
+                    // update the provider
+                    ref
+                        .read(
+                            fullProjectControllerProvider(widget.uuid).notifier)
+                        .update(approvalLevelDate: newValue);
+                  }),
             ]),
           ),
         ),
@@ -425,31 +570,39 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 project: project,
                 fieldLabel: 'Public Investment Program (PIP)',
                 oldValue: project.pip ?? false,
-                onSubmit: (bool value) {
-                  final Map<String, dynamic> payload = {
-                    'pip': value,
-                  };
-
-                  ref
-                      .read(patchProjectControllerProvider.notifier)
-                      .submit(uuid: project.uuid!, payload: payload);
+                onSubmit: (bool newValue) async {
+                  await _handleSubmit(
+                    uuid: uuid,
+                    fieldKey: 'pip',
+                    value: newValue,
+                  );
 
                   // update the provider
                   ref
-                      .read(
-                          fullProjectControllerProvider(project.uuid).notifier)
-                      .update(pip: value);
-
-                  // close
-                  Navigator.pop(context);
+                      .read(fullProjectControllerProvider(widget.uuid).notifier)
+                      .update(pip: newValue);
                 },
               ),
               RadioEditor(
                   project: project,
                   fieldLabel: 'Typology of PIP',
                   oldValue: project.typology,
-                  onSubmit: (newValue) {
-                    // TODO: implement CIP TYpe update
+                  enabled: ref
+                          .watch(fullProjectControllerProvider(widget.uuid))
+                          .pip ??
+                      false,
+                  onSubmit: (Option newValue) async {
+                    await _handleSubmit(
+                      uuid: uuid,
+                      fieldKey: 'typology_id',
+                      value: newValue.value,
+                    );
+
+                    // update the provider
+                    ref
+                        .read(
+                            fullProjectControllerProvider(widget.uuid).notifier)
+                        .update(typology: newValue);
                   },
                   options: ref
                           .watch(optionsControllerProvider)
@@ -461,31 +614,36 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 project: project,
                 fieldLabel: 'Core Investment Programs/Projects (CIP)',
                 oldValue: project.cip ?? false,
-                onSubmit: (bool value) {
-                  final Map<String, dynamic> payload = {
-                    'cip': value,
-                  };
-
-                  ref
-                      .read(patchProjectControllerProvider.notifier)
-                      .submit(uuid: project.uuid!, payload: payload);
+                onSubmit: (bool newValue) async {
+                  await _handleSubmit(
+                    uuid: uuid,
+                    fieldKey: 'cip',
+                    value: newValue,
+                  );
 
                   // update the provider
                   ref
-                      .read(
-                          fullProjectControllerProvider(project.uuid).notifier)
-                      .update(cip: value);
-
-                  // close
-                  Navigator.pop(context);
+                      .read(fullProjectControllerProvider(widget.uuid).notifier)
+                      .update(cip: newValue);
                 },
               ),
               RadioEditor(
                   project: project,
                   fieldLabel: 'Type of CIP',
                   oldValue: project.cipType,
-                  onSubmit: (newValue) {
-                    // TODO: implement CIP TYpe update
+                  enabled: project.cip ?? false,
+                  onSubmit: (Option newValue) async {
+                    await _handleSubmit(
+                      uuid: uuid,
+                      fieldKey: 'cip_type_id',
+                      value: newValue.value,
+                    );
+
+                    // update the provider
+                    ref
+                        .read(
+                            fullProjectControllerProvider(widget.uuid).notifier)
+                        .update(cipType: newValue);
                   },
                   options: ref
                           .watch(optionsControllerProvider)
@@ -495,48 +653,39 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                       []),
               SwitchEditor(
                 project: project,
-                fieldLabel: 'Core Investment Programs/Projects (CIP)',
+                fieldLabel: 'Three Year Rolling Infrastructure Program',
                 oldValue: project.trip ?? false,
-                onSubmit: (bool value) {
-                  final Map<String, dynamic> payload = {
-                    'trip': value,
-                  };
-
-                  ref
-                      .read(patchProjectControllerProvider.notifier)
-                      .submit(uuid: project.uuid!, payload: payload);
+                onSubmit: (bool newValue) async {
+                  await _handleSubmit(
+                    uuid: uuid,
+                    fieldKey: 'trip',
+                    value: newValue,
+                  );
 
                   // update the provider
                   ref
-                      .read(
-                          fullProjectControllerProvider(project.uuid).notifier)
-                      .update(trip: value);
-
-                  // close
-                  Navigator.pop(context);
+                      .read(fullProjectControllerProvider(uuid).notifier)
+                      .update(trip: newValue);
                 },
               ),
               SwitchEditor(
                 project: project,
                 fieldLabel: 'Is it a Research and Development Program/Project?',
                 oldValue: project.research ?? false,
-                onSubmit: (bool value) {
-                  final Map<String, dynamic> payload = {
-                    'research': value,
-                  };
+                onSubmit: (bool value) async {
+                  try {
+                    await _handleSubmit(
+                        fieldKey: 'research', uuid: widget.uuid, value: value);
 
-                  ref
-                      .read(patchProjectControllerProvider.notifier)
-                      .submit(uuid: project.uuid!, payload: payload);
-
-                  // update the provider
-                  ref
-                      .read(
-                          fullProjectControllerProvider(project.uuid).notifier)
-                      .update(research: value);
-
-                  // close
-                  Navigator.pop(context);
+                    // update the provider
+                    ref
+                        .read(
+                            fullProjectControllerProvider(widget.uuid).notifier)
+                        .update(research: value);
+                  } catch (error) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(error.toString())));
+                  }
                 },
               ),
               SwitchEditor(
@@ -544,46 +693,34 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 fieldLabel:
                     'Is it responsive to COVID-19/New Normal Intervention?',
                 oldValue: project.covid ?? false,
-                onSubmit: (bool value) {
-                  final Map<String, dynamic> payload = {
-                    'covid': value,
-                  };
-
-                  ref
-                      .read(patchProjectControllerProvider.notifier)
-                      .submit(uuid: project.uuid!, payload: payload);
+                onSubmit: (bool newValue) async {
+                  await _handleSubmit(
+                    fieldKey: 'covid',
+                    uuid: widget.uuid,
+                    value: newValue,
+                  );
 
                   // update the provider
                   ref
-                      .read(
-                          fullProjectControllerProvider(project.uuid).notifier)
-                      .update(covid: value);
-
-                  // close
-                  Navigator.pop(context);
+                      .read(fullProjectControllerProvider(uuid).notifier)
+                      .update(covid: newValue);
                 },
               ),
               SwitchEditor(
                 project: project,
                 fieldLabel: 'Is the Program/Project included in the RDIP?',
                 oldValue: project.rdip ?? false,
-                onSubmit: (bool value) {
-                  final Map<String, dynamic> payload = {
-                    'rdip': value,
-                  };
-
-                  ref
-                      .read(patchProjectControllerProvider.notifier)
-                      .submit(uuid: project.uuid!, payload: payload);
+                onSubmit: (bool newValue) async {
+                  await _handleSubmit(
+                    fieldKey: 'rdip',
+                    uuid: widget.uuid,
+                    value: newValue,
+                  );
 
                   // update the provider
                   ref
-                      .read(
-                          fullProjectControllerProvider(project.uuid).notifier)
-                      .update(rdip: value);
-
-                  // close
-                  Navigator.pop(context);
+                      .read(fullProjectControllerProvider(widget.uuid).notifier)
+                      .update(rdip: newValue);
                 },
               ),
             ]),
@@ -601,8 +738,17 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   project: project,
                   fieldLabel: 'Philippine Development Plan (PDP) Chapter',
                   oldValue: project.pdpChapter,
-                  onSubmit: (newValue) {
-                    //
+                  onSubmit: (Option newValue) async {
+                    await _handleSubmit(
+                      fieldKey: 'pdp_chapter_id',
+                      uuid: widget.uuid,
+                      value: newValue.value,
+                    );
+
+                    ref
+                        .read(
+                            fullProjectControllerProvider(widget.uuid).notifier)
+                        .update(pdpChapter: newValue);
                   },
                   options: ref
                           .watch(optionsControllerProvider)
@@ -616,8 +762,22 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   fieldLabel:
                       'Other Philippine Development Plan (PDP) Chapter/s',
                   oldValue: project.pdpChapters,
-                  onSubmit: (newValue) {
+                  onSubmit: (List<Option> newValue) async {
+                    // convert to List<int> for backend processing
+                    final List<int> valueToSubmit =
+                        newValue.map((e) => e.value).toList();
                     //
+                    await _handleSubmit(
+                      fieldKey: 'pdp_chapters',
+                      uuid: widget.uuid,
+                      value: valueToSubmit,
+                    );
+
+// update local State
+                    ref
+                        .read(
+                            fullProjectControllerProvider(widget.uuid).notifier)
+                        .update(pdpChapters: newValue);
                   },
                   options: ref
                           .watch(optionsControllerProvider)
@@ -636,14 +796,25 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
           ),
           sliver: SliverList(
             delegate: SliverChildListDelegate([
-              // TODO: Nested Checkbox
-              ListTile(
-                title: const Text(
-                  'Main Infrastructure Sector/Subsector',
-                ),
-                subtitle: Text(
-                  project.infrastructureSectors.map((e) => e.label).join(', '),
-                ),
+              UpdateInfraSectors(
+                project: project,
+                oldValue: project.infrastructureSectors,
+                options: options.infrastructureSectors ?? [],
+                onSubmit: (List<Option> newValue) async {
+                  //
+                  final List<int> valueToSubmit =
+                      newValue.map((e) => e.value).toList();
+
+                  await _handleSubmit(
+                    fieldKey: 'infrastructure_sectors',
+                    uuid: widget.uuid,
+                    value: valueToSubmit,
+                  );
+
+                  ref
+                      .read(fullProjectControllerProvider(widget.uuid).notifier)
+                      .update(infrastructureSectors: newValue);
+                },
               ),
               CheckboxEditor(
                   project: project,
@@ -655,29 +826,46 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                           .prerequisites ??
                       [],
                   oldValue: project.prerequisites,
-                  onSubmit: (newValue) {}),
+                  enabled: ref
+                          .watch(fullProjectControllerProvider(widget.uuid))
+                          .trip ??
+                      false,
+                  onSubmit: (List<Option> newValue) async {
+                    // convert to list of ints e.g. [1,2,3]
+                    final List<int> valueToSubmit =
+                        newValue.map((e) => e.value).toList();
+
+                    await _handleSubmit(
+                      fieldKey: 'prerequisites',
+                      uuid: widget.uuid,
+                      value: valueToSubmit,
+                    );
+
+                    ref
+                        .read(
+                            fullProjectControllerProvider(widget.uuid).notifier)
+                        .update(prerequisites: newValue);
+                  }),
               TextEditor(
                 project: project,
                 fieldLabel: 'Implementation Risks and Mitigation Strategies',
                 oldValue: project.risk ?? 'NO DATA',
-                onSubmit: (String newValue) {
+                enabled: ref
+                        .watch(fullProjectControllerProvider(widget.uuid))
+                        .trip ??
+                    false,
+                onSubmit: (String newValue) async {
                   //
-                  final Map<String, dynamic> payload = {
-                    'implementation_risk': newValue,
-                  };
-
-                  ref
-                      .read(patchProjectControllerProvider.notifier)
-                      .submit(uuid: project.uuid!, payload: payload);
+                  await _handleSubmit(
+                    fieldKey: 'implementation_risk',
+                    uuid: uuid,
+                    value: newValue,
+                  );
 
                   // update the provider
                   ref
-                      .read(
-                          fullProjectControllerProvider(project.uuid).notifier)
+                      .read(fullProjectControllerProvider(widget.uuid).notifier)
                       .update(risk: newValue);
-
-                  // close
-                  Navigator.pop(context);
                 },
               ),
             ]),
@@ -692,24 +880,19 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
               TextEditor(
                   project: project,
                   fieldLabel: 'Expected Outputs/Deliverables',
-                  oldValue: project.expectedOutputs ?? '',
-                  onSubmit: (String newValue) {
-                    final Map<String, dynamic> payload = {
-                      'expected_outputs': newValue,
-                    };
-
-                    ref
-                        .read(patchProjectControllerProvider.notifier)
-                        .submit(uuid: project.uuid!, payload: payload);
+                  oldValue: project.expectedOutputs ?? 'NO DATA',
+                  onSubmit: (String newValue) async {
+                    await _handleSubmit(
+                      fieldKey: 'expected_outputs',
+                      uuid: uuid,
+                      value: newValue,
+                    );
 
                     // update the provider
                     ref
-                        .read(fullProjectControllerProvider(project.uuid)
-                            .notifier)
+                        .read(
+                            fullProjectControllerProvider(widget.uuid).notifier)
                         .update(expectedOutputs: newValue);
-
-                    // close
-                    Navigator.pop(context);
                   }),
             ]),
           ),
@@ -726,9 +909,21 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   options:
                       ref.watch(optionsControllerProvider).value?.data.agenda ??
                           [],
-                  oldValue: project.sdgs,
-                  onSubmit: (newValue) {
-                    //
+                  oldValue: project.agenda,
+                  onSubmit: (List<Option> newValue) async {
+                    final List<int> valueToSubmit =
+                        newValue.map((e) => e.value).toList();
+
+                    await _handleSubmit(
+                      fieldKey: 'agenda',
+                      uuid: uuid,
+                      value: valueToSubmit,
+                    );
+
+                    // update the provider
+                    ref
+                        .read(fullProjectControllerProvider(uuid).notifier)
+                        .update(agenda: newValue);
                   }),
             ]),
           ),
@@ -746,15 +941,28 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                       ref.watch(optionsControllerProvider).value?.data.sdgs ??
                           [],
                   oldValue: project.sdgs,
-                  onSubmit: (newValue) {
+                  onSubmit: (List<Option> newValue) async {
+                    final List<int> valueToSubmit =
+                        newValue.map((e) => e.value).toList();
                     //
+                    await _handleSubmit(
+                      fieldKey: 'sdgs',
+                      uuid: uuid,
+                      value: valueToSubmit,
+                    );
+
+                    // update the provider
+                    ref
+                        .read(
+                            fullProjectControllerProvider(widget.uuid).notifier)
+                        .update(sdgs: newValue);
                   }),
             ]),
           ),
         ),
         SliverStickyHeader(
           header: const SliverStickyHeaderComponent(
-            title: 'Level of GAD Responsiveness',
+            title: 'Level of GAD Responsiveness [CIP Only]',
           ),
           sliver: SliverList(
             delegate: SliverChildListDelegate([
@@ -762,8 +970,19 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   project: project,
                   fieldLabel: 'Level of GAD Responsiveness',
                   oldValue: project.gad,
-                  onSubmit: (newValue) {
-                    // TODO: implement GAD update
+                  enabled: project.cip ?? false, // enable if project is CIP
+                  onSubmit: (Option newValue) async {
+                    await _handleSubmit(
+                      fieldKey: 'gad_id',
+                      uuid: uuid,
+                      value: newValue.value,
+                    );
+
+                    // update the provider
+                    ref
+                        .read(
+                            fullProjectControllerProvider(widget.uuid).notifier)
+                        .update(gad: newValue);
                   },
                   options:
                       ref.watch(optionsControllerProvider).value?.data.gads ??
@@ -773,25 +992,217 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         ),
         SliverStickyHeader(
           header: const SliverStickyHeaderComponent(
-            title: 'Project Preparation Details',
+            title: 'Project Preparation Details [CIP Only]',
           ),
           sliver: SliverList(
             delegate: SliverChildListDelegate([
-              // TODO: add fields
+              RadioEditor(
+                project: project,
+                fieldLabel: 'Project Preparation Document',
+                oldValue: project.preparationDocument,
+                onSubmit: (Option newValue) async {
+                  //
+                  await _handleSubmit(
+                    fieldKey: 'preparation_document_id',
+                    uuid: uuid,
+                    value: newValue,
+                  );
+
+                  ref
+                      .read(fullProjectControllerProvider(widget.uuid).notifier)
+                      .update(preparationDocument: newValue);
+                },
+                enabled: project.cip ?? false,
+                options: options.preparationDocuments ?? [],
+              ),
               // FS details
+              SwitchEditor(
+                  project: project,
+                  fieldLabel: 'Will require assistance for the conduct of F/S?',
+                  oldValue: project.fsNeedsAssistance ?? false,
+                  enabled: project.cip ?? false,
+                  onSubmit: (bool newValue) async {
+                    //
+                    await _handleSubmit(
+                      fieldKey: 'fs_needs_assistance',
+                      uuid: uuid,
+                      value: newValue,
+                    );
+
+                    ref
+                        .read(
+                            fullProjectControllerProvider(widget.uuid).notifier)
+                        .update(fsNeedsAssistance: newValue);
+                  }),
+              RadioEditor(
+                project: project,
+                fieldLabel: 'Status of F/S',
+                oldValue: project.fsStatus,
+                enabled: project.cip ?? false,
+                onSubmit: (newValue) async {
+                  await _handleSubmit(
+                    fieldKey: 'fs_status_id',
+                    uuid: uuid,
+                    value: newValue,
+                  );
+
+                  ref
+                      .read(fullProjectControllerProvider(widget.uuid).notifier)
+                      .update(fsStatus: newValue);
+                },
+                options: options.fsStatuses ?? [],
+              ),
+              ScheduleEditor(
+                title: 'Schedule of Feasibility Study',
+                oldValue: project.fsCost ?? CostSchedule.initial(),
+                enabled: project.cip ?? false,
+                onSubmit: (CostSchedule newValue) async {
+                  ref
+                      .read(updateFsProvider.notifier)
+                      .submit(uuid: uuid, payload: newValue);
+
+                  //
+                  ref
+                      .read(fullProjectControllerProvider(widget.uuid).notifier)
+                      .update(fsCost: newValue);
+                },
+              ),
             ]),
           ),
         ),
         SliverStickyHeader(
           header: const SliverStickyHeaderComponent(
-            title: 'Pre-construction Costs',
+            title: 'Pre-construction Costs [CIP Only]',
           ),
           sliver: SliverList(
             delegate: SliverChildListDelegate([
-              // TODO: add fields
+              SwitchEditor(
+                project: project,
+                fieldLabel: 'Has Right of Way',
+                oldValue: project.hasRow ?? false,
+                enabled: project.cip ?? false, // enable if CIP
+                onSubmit: (bool newValue) async {
+                  //
+                  await _handleSubmit(
+                    fieldKey: 'has_row',
+                    uuid: uuid,
+                    value: newValue,
+                  );
+
+                  ref
+                      .read(fullProjectControllerProvider(widget.uuid).notifier)
+                      .update(hasRow: newValue);
+                },
+              ),
+              TextEditor(
+                  project: project,
+                  fieldLabel: 'Affected Households (number)',
+                  oldValue: project.rowAffectedHouseholds?.toString() ?? 'NONE',
+                  enabled: project.cip ?? false, // enable if CIP
+                  onSubmit: (newValue) async {
+                    //
+                    await _handleSubmit(
+                      fieldKey: 'row_affected_households',
+                      uuid: uuid,
+                      value: int.tryParse(newValue),
+                    );
+
+                    ref
+                        .read(
+                            fullProjectControllerProvider(widget.uuid).notifier)
+                        .update(rowAffectedHouseholds: int.tryParse(newValue));
+                  }),
+              ScheduleEditor(
+                title: 'Right of Way Schedule',
+                oldValue: project.rowCost ?? CostSchedule.initial(),
+                enabled: project.cip ?? false, // enable if CIP
+                onSubmit: (CostSchedule newValue) {
+                  //
+                  ref
+                      .read(updateRowProvider.notifier)
+                      .submit(uuid: uuid, payload: newValue);
+
+                  //
+                  ref
+                      .read(fullProjectControllerProvider(widget.uuid).notifier)
+                      .update(rowCost: newValue);
+                },
+              ),
+              const Divider(),
+              SwitchEditor(
+                project: project,
+                fieldLabel: 'Has Resettlement Action Plan',
+                oldValue: project.hasRap ?? false,
+                enabled: project.cip ?? false,
+                onSubmit: (bool newValue) async {
+                  //
+                  await _handleSubmit(
+                    fieldKey: 'has_rap',
+                    uuid: uuid,
+                    value: newValue,
+                  );
+
+                  ref
+                      .read(fullProjectControllerProvider(widget.uuid).notifier)
+                      .update(fsNeedsAssistance: newValue);
+                },
+              ),
+              TextEditor(
+                  project: project,
+                  fieldLabel: 'Affected Households (number)',
+                  oldValue: project.rapAffectedHouseholds?.toString() ?? 'NONE',
+                  enabled: project.cip ?? false,
+                  onSubmit: (String newValue) async {
+                    //
+                    await _handleSubmit(
+                      fieldKey: 'rap_affected_households',
+                      uuid: uuid,
+                      value: int.tryParse(newValue),
+                    );
+
+                    ref
+                        .read(
+                            fullProjectControllerProvider(widget.uuid).notifier)
+                        .update(rapAffectedHouseholds: int.tryParse(newValue));
+                  }),
               // ROWA
+              ScheduleEditor(
+                title: 'Resettlement Action Plan Schedule',
+                oldValue: project.rapCost ?? CostSchedule.initial(),
+                onSubmit: (CostSchedule newValue) {
+                  //
+                  //
+                  ref
+                      .read(updateRapProvider.notifier)
+                      .submit(uuid: uuid, payload: newValue);
+
+                  //
+                  ref
+                      .read(fullProjectControllerProvider(widget.uuid).notifier)
+                      .update(rapCost: newValue);
+                },
+              ),
               // RAP
               // ROWA/RAP
+              const Divider(),
+              SwitchEditor(
+                project: project,
+                fieldLabel: 'Has Right of Way and Resettlement Action Plan',
+                oldValue: project.hasRowRap ?? false,
+                enabled: project.cip ?? false,
+                onSubmit: (bool newValue) async {
+                  //
+                  await _handleSubmit(
+                    fieldKey: 'has_row_rap',
+                    uuid: uuid,
+                    value: newValue,
+                  );
+
+                  ref
+                      .read(fullProjectControllerProvider(widget.uuid).notifier)
+                      .update(hasRowRap: newValue);
+                },
+              ),
             ]),
           ),
         ),
@@ -802,15 +1213,40 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
           sliver: SliverList(
             delegate: SliverChildListDelegate([
               TextEditor(
-                  fieldLabel: 'Number of males employed',
-                  oldValue: project.employedMale?.toString() ?? '0',
-                  onSubmit: (newValue) {},
-                  project: project),
+                fieldLabel: 'Number of males employed',
+                oldValue: project.employedMale?.toString() ?? '0',
+                onSubmit: (String newValue) async {
+                  //
+                  await _handleSubmit(
+                    fieldKey: 'employed_male',
+                    uuid: uuid,
+                    value: newValue,
+                  );
+
+                  // update the provider
+                  ref
+                      .read(fullProjectControllerProvider(widget.uuid).notifier)
+                      .update(employedMale: int.tryParse(newValue));
+                },
+                project: project,
+              ),
               // ROWA
               TextEditor(
                   fieldLabel: 'Number of females employed',
                   oldValue: project.employedFemale?.toString() ?? '0',
-                  onSubmit: (newValue) {},
+                  onSubmit: (String newValue) async {
+                    await _handleSubmit(
+                      fieldKey: 'employed_female',
+                      uuid: uuid,
+                      value: newValue,
+                    );
+
+                    // update the provider
+                    ref
+                        .read(
+                            fullProjectControllerProvider(widget.uuid).notifier)
+                        .update(employedFemale: int.tryParse(newValue));
+                  },
                   project: project),
               // RAP
               Padding(
@@ -820,10 +1256,9 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10)),
                   subtitle: Text(project.totalEmployment().toString()),
-                  title: const Text('Total Employed'),
+                  title: const Text('Total Employed (auto-computed)'),
                 ),
-              )
-              // ROWA/RAP
+              ),
             ]),
           ),
         ),
@@ -837,8 +1272,17 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 project: project,
                 fieldLabel: 'Main Funding Source',
                 oldValue: project.fundingSource,
-                onSubmit: (newValue) {
-                  // TODO: implement Funding Sources
+                onSubmit: (Option newValue) async {
+                  await _handleSubmit(
+                    fieldKey: 'funding_source_id',
+                    uuid: uuid,
+                    value: newValue.value,
+                  );
+
+                  // update the provider
+                  ref
+                      .read(fullProjectControllerProvider(widget.uuid).notifier)
+                      .update(fundingSource: newValue);
                 },
                 options: ref
                         .watch(optionsControllerProvider)
@@ -854,11 +1298,30 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                           .watch(optionsControllerProvider)
                           .value
                           ?.data
-                          .fundingSources ??
+                          .fundingSources
+                          ?.where((element) =>
+                              ref
+                                  .watch(fullProjectControllerProvider(
+                                      widget.uuid))
+                                  .fundingSource !=
+                              element)
+                          .toList() ??
                       [],
                   oldValue: project.fundingSources,
-                  onSubmit: (newValue) {
+                  onSubmit: (List<Option> newValue) async {
+                    final List<int> valueToSubmit =
+                        newValue.map((e) => e.value).toList();
                     //
+                    await _handleSubmit(
+                      fieldKey: 'funding_sources',
+                      uuid: uuid,
+                      value: valueToSubmit,
+                    );
+
+                    // update the provider
+                    ref
+                        .read(fullProjectControllerProvider(uuid).notifier)
+                        .update(fundingSources: newValue);
                   }),
               CheckboxEditor(
                   project: project,
@@ -870,15 +1333,38 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                           .fundingInstitutions ??
                       [],
                   oldValue: project.fundingInstitutions,
-                  onSubmit: (newValue) {
+                  onSubmit: (List<Option> newValue) async {
                     //
+                    final List<int> valueToSubmit =
+                        newValue.map((e) => e.value).toList();
+                    //
+                    await _handleSubmit(
+                      fieldKey: 'funding_institutions',
+                      uuid: uuid,
+                      value: valueToSubmit,
+                    );
+
+                    // update the provider
+                    ref
+                        .read(fullProjectControllerProvider(uuid).notifier)
+                        .update(fundingInstitutions: newValue);
                   }),
               RadioEditor(
                 project: project,
                 fieldLabel: 'Mode of Implementation/Procurement',
                 oldValue: project.implementationMode,
-                onSubmit: (newValue) {
-                  // TODO: implement Funding Sources
+                onSubmit: (Option newValue) async {
+                  //
+                  await _handleSubmit(
+                    fieldKey: 'implementation_mode_id',
+                    uuid: uuid,
+                    value: newValue.value,
+                  );
+
+                  // update the provider
+                  ref
+                      .read(fullProjectControllerProvider(uuid).notifier)
+                      .update(implementationMode: newValue);
                 },
                 options: ref
                         .watch(optionsControllerProvider)
@@ -897,8 +1383,8 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
           sliver: SliverList(
             delegate: SliverChildListDelegate(
               [
-                _buildFinancialTable(project),
-                _buildAddFs(project),
+                _buildFinancialTable(project, options),
+                _buildAddFs(project, options),
               ],
             ),
           ),
@@ -910,7 +1396,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
           sliver: SliverList(
             delegate: SliverChildListDelegate(
               [
-                _buildRegionalTable(project),
+                _buildRegionalTable(project, options),
                 // TODO: only enable if current regions < all regions
                 _buildAddRegion(project),
               ],
@@ -927,8 +1413,20 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 project: project,
                 fieldLabel: 'Category',
                 oldValue: project.category,
-                onSubmit: (newValue) {
+                onSubmit: (Option newValue) async {
                   // TODO: implement Category
+
+                  //
+                  await _handleSubmit(
+                    fieldKey: 'category_id',
+                    uuid: uuid,
+                    value: newValue.value,
+                  );
+
+                  // update the provider
+                  ref
+                      .read(fullProjectControllerProvider(uuid).notifier)
+                      .update(category: newValue);
                 },
                 options: ref
                         .watch(optionsControllerProvider)
@@ -941,7 +1439,18 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 project: project,
                 fieldLabel: 'Status of Implementation Readiness',
                 oldValue: project.projectStatus,
-                onSubmit: (newValue) {},
+                onSubmit: (Option newValue) async {
+                  await _handleSubmit(
+                    fieldKey: 'project_status_id',
+                    uuid: uuid,
+                    value: newValue.value,
+                  );
+
+                  // update the provider
+                  ref
+                      .read(fullProjectControllerProvider(uuid).notifier)
+                      .update(projectStatus: newValue);
+                },
                 options: ref
                         .watch(optionsControllerProvider)
                         .value
@@ -949,59 +1458,82 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                         .projectStatuses ??
                     [],
               ),
+              RadioEditor(
+                project: project,
+                fieldLabel: 'Level of Readiness',
+                oldValue: project.readinessLevel,
+                onSubmit: (Option newValue) async {
+                  await _handleSubmit(
+                    fieldKey: 'readiness_level_id',
+                    uuid: uuid,
+                    value: newValue.value,
+                  );
+
+                  // update the provider
+                  ref
+                      .read(fullProjectControllerProvider(uuid).notifier)
+                      .update(readinessLevel: newValue);
+                },
+                options: ref
+                        .watch(optionsControllerProvider)
+                        .value
+                        ?.data
+                        .readinessLevels ??
+                    [],
+              ),
               SwitchEditor(
                 project: project,
                 fieldLabel: 'Will require resubmission to the ICC?',
                 oldValue: project.iccResubmission ?? false,
-                onSubmit: (bool value) {
-                  final Map<String, dynamic> payload = {
-                    'icc_resubmission': value,
-                  };
-
-                  ref
-                      .read(patchProjectControllerProvider.notifier)
-                      .submit(uuid: project.uuid!, payload: payload);
+                enabled: project.iccable ?? false, // only if the PAP is iccable
+                onSubmit: (bool newValue) async {
+                  //
+                  await _handleSubmit(
+                    fieldKey: 'icc_resubmission',
+                    uuid: uuid,
+                    value: newValue,
+                  );
 
                   // update the provider
                   ref
-                      .read(
-                          fullProjectControllerProvider(project.uuid).notifier)
-                      .update(iccResubmission: value);
-
-                  // close
-                  Navigator.pop(context);
+                      .read(fullProjectControllerProvider(uuid).notifier)
+                      .update(iccResubmission: newValue);
                 },
               ),
               TextEditor(
                 project: project,
                 fieldLabel: 'Updates',
                 oldValue: project.updates ?? 'NO DATA',
-                onSubmit: (String newValue) {
+                onSubmit: (String newValue) async {
                   //
-                  final Map<String, dynamic> payload = {
-                    'updates': newValue,
-                  };
-
-                  ref
-                      .read(patchProjectControllerProvider.notifier)
-                      .submit(uuid: project.uuid!, payload: payload);
+                  await _handleSubmit(
+                    uuid: widget.uuid,
+                    fieldKey: 'updates',
+                    value: newValue,
+                  );
 
                   // update the provider
                   ref
-                      .read(
-                          fullProjectControllerProvider(project.uuid).notifier)
+                      .read(fullProjectControllerProvider(widget.uuid).notifier)
                       .update(updates: newValue);
-
-                  // close
-                  Navigator.pop(context);
                 },
               ),
               DateEditor(
                   project: project,
                   fieldLabel: 'As of',
                   oldValue: project.asOf,
-                  onSubmit: (newValue) {
+                  onSubmit: (DateTime newValue) async {
                     //
+                    await _handleSubmit(
+                      fieldKey: 'updates_as_of',
+                      uuid: uuid,
+                      value: newValue.toIso8601String(),
+                    );
+
+                    // update the provider
+                    ref
+                        .read(fullProjectControllerProvider(uuid).notifier)
+                        .update(asOf: newValue);
                   }),
             ]),
           ),
@@ -1016,8 +1548,17 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 project: project,
                 fieldLabel: 'Start of Project Implementation',
                 oldValue: project.startYear,
-                onSubmit: (newValue) {
-                  // TODO: implement Funding Sources
+                onSubmit: (Option newValue) async {
+                  await _handleSubmit(
+                    fieldKey: 'start_year_id',
+                    uuid: uuid,
+                    value: newValue.value,
+                  );
+
+                  // update the provider
+                  ref
+                      .read(fullProjectControllerProvider(uuid).notifier)
+                      .update(startYear: newValue);
                 },
                 options:
                     ref.watch(optionsControllerProvider).value?.data.years ??
@@ -1027,8 +1568,17 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 project: project,
                 fieldLabel: 'Year of Project Completion',
                 oldValue: project.endYear,
-                onSubmit: (newValue) {
-                  // TODO: implement Funding Sources
+                onSubmit: (Option newValue) async {
+                  await _handleSubmit(
+                    fieldKey: 'end_year_id',
+                    uuid: uuid,
+                    value: newValue.value,
+                  );
+
+                  // update the provider
+                  ref
+                      .read(fullProjectControllerProvider(uuid).notifier)
+                      .update(endYear: newValue);
                 },
                 options:
                     ref.watch(optionsControllerProvider).value?.data.years ??
@@ -1048,6 +1598,100 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
           ),
         ),
         SliverStickyHeader(
+          header: SliverStickyHeaderComponent(
+              title: 'Supporting Documents [PDF Only]',
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    //
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return const Dialog(
+                            child: Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text('Supporting Documents'),
+                                    SizedBox(height: 20),
+                                    Text('ALL PROJECTS',
+                                        textAlign: TextAlign.center),
+                                    Text(
+                                        'Project Concept Note/Project Proposal'),
+                                    Text('Pre-Feasibility Study/Business Case'),
+                                    Text('Feasibility Study'),
+                                    SizedBox(height: 10),
+                                    Text(
+                                        'CORE INVESTMENT PROGRAMS/PROJECTS (CIPs)'),
+                                    Text('RDC Endorsement'),
+                                    Text('Level of Approval (CIP)'),
+                                    Text('GAD Checklist (CIP)'),
+                                    SizedBox(height: 10),
+                                    Text('INFRASTRUCTURE PROJECTS'),
+                                    Text('Right-of-Way Acquisition'),
+                                    Text('Resettlement Action Plan'),
+                                    Text(
+                                        'Environmental Compliance Certificate'),
+                                    Text('Detailed Engineering Design'),
+                                    SizedBox(height: 10),
+                                    Text('GRANT'),
+                                    Text(
+                                        'Proof of Grant (e.g., letter from funding Agency)'),
+                                    Text(
+                                        'Letter of request/proposal to funding Agency'),
+                                    SizedBox(height: 10),
+                                    Text('PPP/JOINT VENTURE'),
+                                    Text('Memorandum of Agreement'),
+                                  ]),
+                            ),
+                          );
+                        });
+                  },
+                  child: const Text(
+                    'Need help?',
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ]),
+          sliver: SliverList(
+            delegate: SliverChildListDelegate([
+              ...ref
+                  .watch(fullProjectControllerProvider(widget.uuid))
+                  .attachments
+                  .map((e) {
+                return ListTile(
+                    leading: const Icon(Icons.attachment),
+                    title: Text(e.attachmentType.label),
+                    onTap: () async {
+                      final urlToOpen = Uri.parse(e.url);
+                      if (!await launchUrl(urlToOpen)) {
+                        // ignore: use_build_context_synchronously
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Failed to open ${e.url}')));
+                      }
+                    });
+              }),
+              Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextButton(
+                        onPressed: () {
+                          // TODO: prompt for file upload
+                        },
+                        child: const Text('UPLOAD')),
+                  ),
+                ],
+              ),
+            ]),
+          ),
+        ),
+        SliverStickyHeader(
           header: const SliverStickyHeaderComponent(
             title: 'Contact Information',
           ),
@@ -1058,38 +1702,22 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   project: project,
                   fieldLabel: 'Contact Information',
                   oldValue: project.contactInformation ?? 'NO DATA',
-                  onSubmit: (String newValue) {
-                    //
-                    final Map<String, dynamic> payload = {
-                      'contact_information': newValue,
-                    };
-
-                    ref
-                        .read(patchProjectControllerProvider.notifier)
-                        .submit(uuid: project.uuid!, payload: payload);
+                  onSubmit: (String newValue) async {
+                    await _handleSubmit(
+                      fieldKey: 'contact_information',
+                      uuid: uuid,
+                      value: newValue,
+                    );
 
                     // update the provider
                     ref
-                        .read(fullProjectControllerProvider(project.uuid)
-                            .notifier)
+                        .read(
+                            fullProjectControllerProvider(widget.uuid).notifier)
                         .update(contactInformation: newValue);
-
-                    // close
-                    Navigator.pop(context);
                   },
                 ),
               ],
             ),
-          ),
-        ),
-        SliverStickyHeader(
-          header: const SliverStickyHeaderComponent(
-            title: 'Attachments',
-          ),
-          sliver: SliverList(
-            delegate: SliverChildListDelegate([
-              if (project.uuid != null) Attachments(uuid: project.uuid!),
-            ]),
           ),
         ),
         SliverStickyHeader(
@@ -1103,24 +1731,19 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   project: project,
                   fieldLabel: 'Notes',
                   oldValue: project.notes ?? 'NO DATA',
-                  onSubmit: (String newValue) {
+                  onSubmit: (String newValue) async {
                     //
-                    final Map<String, dynamic> payload = {
-                      'notes': newValue,
-                    };
-
-                    ref
-                        .read(patchProjectControllerProvider.notifier)
-                        .submit(uuid: project.uuid!, payload: payload);
+                    await _handleSubmit(
+                      fieldKey: 'notes',
+                      uuid: uuid,
+                      value: newValue,
+                    );
 
                     // update the provider
                     ref
-                        .read(fullProjectControllerProvider(project.uuid)
-                            .notifier)
+                        .read(
+                            fullProjectControllerProvider(widget.uuid).notifier)
                         .update(notes: newValue);
-
-                    // close
-                    Navigator.pop(context);
                   },
                 ),
               ],
@@ -1131,7 +1754,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
     );
   }
 
-  Widget _buildRegionalTable(FullProject project) {
+  Widget _buildRegionalTable(FullProject project, Options options) {
     final List<RegionalInvestment> regionInvestments =
         project.regionalInvestments;
 
@@ -1432,19 +2055,55 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                             Icons.edit,
                             size: 20,
                           ),
-                          onPressed: () {},
+                          onPressed: () async {
+                            Navigator.of(context)
+                                .push(MaterialPageRoute(builder: (context) {
+                              //
+                              return RegionalInvestmentEditor(
+                                  project: project,
+                                  options: ref
+                                          .watch(optionsControllerProvider)
+                                          .value
+                                          ?.data
+                                          .regions ??
+                                      [],
+                                  oldValue: e,
+                                  onSubmit: (newValue) async {
+                                    final response = await ref
+                                        .read(projectRepositoryProvider)
+                                        .updateRegionalInvestment(
+                                            widget.uuid, newValue);
+
+                                    //
+                                    ref
+                                        .read(fullProjectControllerProvider(
+                                                widget.uuid)
+                                            .notifier)
+                                        .updateRegionalInvestment(
+                                            currentIndex:
+                                                regionInvestments.indexOf(e),
+                                            regionalInvestment: response.data);
+                                  });
+                            }));
+                          },
                         ),
                         IconButton(
                           visualDensity: VisualDensity.compact,
                           icon: const Icon(Icons.delete, size: 20),
                           onPressed: () {
+                            // if id is not null, it means that it exists in the server
+                            if (e.id != null) {
+                              ref
+                                  .read(projectRepositoryProvider)
+                                  .removeRegionalInvestment(e.id!);
+                            }
+
                             //
                             ref
-                                .read(
-                                    fullProjectControllerProvider(project.uuid)
-                                        .notifier)
+                                .read(fullProjectControllerProvider(widget.uuid)
+                                    .notifier)
                                 .removeRegionalInvestment(
-                                  regionalInvestment: e,
+                                  index: regionInvestments.indexOf(e),
                                 );
                           },
                         ),
@@ -1572,7 +2231,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
     );
   }
 
-  Widget _buildFinancialTable(FullProject project) {
+  Widget _buildFinancialTable(FullProject project, Options options) {
     final List<FsInvestment> fsInvestments = project.fsInvestments;
 
     return Padding(
@@ -1870,13 +2529,45 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                             visualDensity: VisualDensity.compact,
                             icon: const Icon(Icons.edit, size: 20),
                             onPressed: () {
-                              // TODO: implement edit
+                              Navigator.of(context)
+                                  .push(MaterialPageRoute(builder: (context) {
+                                return FsInvestmentEditor(
+                                    project: project,
+                                    oldValue: e,
+                                    options: options.fundingSources ?? [],
+                                    onSubmit: (newValue) async {
+                                      final response = await ref
+                                          .read(projectRepositoryProvider)
+                                          .updateFsInvestment(
+                                              widget.uuid, newValue);
+                                      //
+                                      ref
+                                          .read(fullProjectControllerProvider(
+                                                  widget.uuid)
+                                              .notifier)
+                                          .updateFsInvestment(
+                                              index: fsInvestments.indexOf(e),
+                                              fsInvestment: response.data);
+                                    });
+                              }));
                             }),
                         IconButton(
                             visualDensity: VisualDensity.compact,
                             icon: const Icon(Icons.delete, size: 20),
                             onPressed: () {
-                              // TODO: implement delete
+                              if (e.id != null) {
+                                ref
+                                    .read(projectRepositoryProvider)
+                                    .removeFsInvestment(e.id!);
+                              }
+
+                              int index = fsInvestments.indexOf(e);
+
+                              ref
+                                  .read(
+                                      fullProjectControllerProvider(widget.uuid)
+                                          .notifier)
+                                  .removeFsInvestment(index: index);
                             }),
                       ],
                     ),
@@ -2006,12 +2697,8 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
   }
 
   Widget _buildFinancialAccomplishments(project) {
-    final FinancialAccomplishment? financialAccomplishment =
-        project.financialAccomplishment;
-
-    if (financialAccomplishment == null) {
-      return Container();
-    }
+    final FinancialAccomplishment financialAccomplishment =
+        project.financialAccomplishment ?? FinancialAccomplishment.initial();
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -2079,8 +2766,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 child: InkWell(
                   onTap: () async {
                     await Clipboard.setData(ClipboardData(
-                            text: financialAccomplishment.nep2023.toString() ??
-                                ''))
+                            text: financialAccomplishment.nep2023.toString()))
                         .then((_) {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                           content: Text("Value copied to clipboard")));
@@ -2854,11 +3540,36 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
               onPressed: regionsCount > regionalInvestmentsCount
                   ? () {
                       //
-                      ref
-                          .read(fullProjectControllerProvider(project.uuid)
-                              .notifier)
-                          .addRegionalInvestment(
-                              regionalInvestment: RegionalInvestment.initial());
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context) {
+                        //
+                        return RegionalInvestmentEditor(
+                            project: project,
+                            options: ref
+                                    .watch(optionsControllerProvider)
+                                    .value
+                                    ?.data
+                                    .regions ??
+                                [],
+                            oldValue: RegionalInvestment.initial(
+                                projectId: project.id),
+                            onSubmit: (newValue) {
+                              ref
+                                  .read(projectRepositoryProvider)
+                                  .updateRegionalInvestment(
+                                      widget.uuid, newValue);
+                              //
+                              ref
+                                  .read(
+                                      fullProjectControllerProvider(widget.uuid)
+                                          .notifier)
+                                  .addRegionalInvestment(
+                                      regionalInvestment: newValue);
+
+                              // close the editor
+                              Navigator.of(context).pop();
+                            });
+                      }));
                     }
                   : null,
               child: const Text('Add'),
@@ -2869,7 +3580,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
     );
   }
 
-  Widget _buildAddFs(project) {
+  Widget _buildAddFs(FullProject project, Options options) {
     final fsCount = ref
             .watch(optionsControllerProvider)
             .value
@@ -2888,12 +3599,28 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
             child: TextButton(
               onPressed: fsCount > fsInvestmentsCount
                   ? () {
-                      // TODO: implement navigator
-                      ref
-                          .read(fullProjectControllerProvider(project.uuid)
-                              .notifier)
-                          .addFsInvestment(
-                              fsInvestment: FsInvestment.initial());
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context) {
+                        return FsInvestmentEditor(
+                            project: project,
+                            oldValue:
+                                FsInvestment.initial(projectId: project.id),
+                            options: options.fundingSources ?? [],
+                            onSubmit: (newValue) {
+                              ref
+                                  .read(projectRepositoryProvider)
+                                  .updateFsInvestment(widget.uuid, newValue);
+                              //
+                              ref
+                                  .read(
+                                      fullProjectControllerProvider(widget.uuid)
+                                          .notifier)
+                                  .addFsInvestment(fsInvestment: newValue);
+
+                              // close the editor
+                              Navigator.of(context).pop();
+                            });
+                      }));
                     }
                   : null,
               child: const Text('Add'),
@@ -2902,5 +3629,27 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         ],
       ),
     );
+  }
+
+  Future<void> uploadAttachment(Option attachmentType) async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      allowMultiple: false,
+      type: FileType.custom,
+      allowedExtensions: [
+        'pdf',
+      ],
+    );
+
+    if (result != null) {
+      final response = await ref.read(uploadRepositoryProvider).attach(
+            widget.uuid,
+            result.files.first,
+            attachmentType,
+          );
+
+      ref
+          .read(fullProjectControllerProvider(widget.uuid).notifier)
+          .addAttachment(response.data);
+    }
   }
 }

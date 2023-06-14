@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pips/application/providers/dateformatter_provider.dart';
 import 'package:pips/presentation/widgets/papform/common/editbutton.dart';
 
-import '../../../../application/extensions.dart';
 import '../../../../presentation/controllers/patchproject_controller.dart';
 import '../../../../domain/models/fullproject.dart';
 
@@ -14,12 +13,14 @@ class DateEditor extends ConsumerStatefulWidget {
     required this.fieldLabel,
     required this.oldValue,
     required this.onSubmit,
+    this.enabled = true,
   });
 
   final FullProject project;
   final String fieldLabel;
   final DateTime? oldValue;
   final Function(DateTime newValue) onSubmit;
+  final bool enabled;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _RadioEditor();
@@ -49,8 +50,10 @@ class _RadioEditor extends ConsumerState<DateEditor> {
             : const Text('NONE'),
         title: Text(widget.fieldLabel),
         trailing: EditButton(
-          onPressed: () => _edit(),
+          onPressed: widget.enabled ? () => _edit() : null,
         ),
+        enabled: widget.enabled,
+        onTap: () => _edit(),
       ),
     );
   }
@@ -101,19 +104,6 @@ class _UpdateFormState extends ConsumerState<UpdateForm> {
 
   @override
   Widget build(BuildContext context) {
-    print("oldValue $oldValue");
-
-    ref.listen(patchProjectControllerProvider, (previous, next) {
-      //
-      if (next.hasError) {
-        next.showSnackbarOnError(context);
-      }
-
-      if (next.hasValue) {
-        next.showSnackbarOnSuccess(context);
-      }
-    });
-
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.fieldLabel),

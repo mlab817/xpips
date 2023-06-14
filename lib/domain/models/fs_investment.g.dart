@@ -9,6 +9,7 @@ part of 'fs_investment.dart';
 _$_FsInvestment _$$_FsInvestmentFromJson(Map<String, dynamic> json) =>
     _$_FsInvestment(
       id: json['id'] as int?,
+      projectId: json['project_id'] as int?,
       fundingSourceId: json['funding_source_id'] as int?,
       fundingSource: json['funding_source'] == null
           ? null
@@ -26,6 +27,7 @@ _$_FsInvestment _$$_FsInvestmentFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$$_FsInvestmentToJson(_$_FsInvestment instance) =>
     <String, dynamic>{
       'id': instance.id,
+      'project_id': instance.projectId,
       'funding_source_id': instance.fundingSourceId,
       'funding_source': instance.fundingSource,
       'y2022': instance.y2022,

@@ -1,7 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../domain/models/option.dart';
-
 part 'newproject_request.g.dart';
 
 @JsonSerializable()

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../application/extensions.dart';
 import '../../../../domain/models/option.dart';
 import '../../../../presentation/controllers/patchproject_controller.dart';
 import '../../../../domain/models/fullproject.dart';
@@ -15,6 +14,7 @@ class RadioEditor extends ConsumerStatefulWidget {
     required this.oldValue,
     required this.onSubmit,
     required this.options,
+    this.enabled = true,
   });
 
   final FullProject project;
@@ -22,6 +22,7 @@ class RadioEditor extends ConsumerStatefulWidget {
   final Option? oldValue;
   final List<Option> options;
   final Function(Option newValue) onSubmit;
+  final bool enabled;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _RadioEditor();
@@ -50,8 +51,10 @@ class _RadioEditor extends ConsumerState<RadioEditor> {
         subtitle: Text(widget.oldValue?.label ?? 'NONE'),
         title: Text(widget.fieldLabel),
         trailing: EditButton(
-          onPressed: () => _edit(),
+          onPressed: widget.enabled ? () => _edit() : null,
         ),
+        onTap: () => _edit(),
+        enabled: widget.enabled,
       ),
     );
   }
@@ -91,19 +94,6 @@ class _UpdateFormState extends ConsumerState<UpdateForm> {
 
   @override
   Widget build(BuildContext context) {
-    print("oldValue $oldValue");
-
-    ref.listen(patchProjectControllerProvider, (previous, next) {
-      //
-      if (next.hasError) {
-        next.showSnackbarOnError(context);
-      }
-
-      if (next.hasValue) {
-        next.showSnackbarOnSuccess(context);
-      }
-    });
-
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.fieldLabel),
@@ -139,6 +129,7 @@ class _UpdateFormState extends ConsumerState<UpdateForm> {
                   value: widget.options[index],
                   groupValue: newValue,
                   title: Text(widget.options[index].label),
+                  activeColor: Theme.of(context).primaryColor,
                   onChanged: (value) {
                     //
                     setState(() {

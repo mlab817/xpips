@@ -1,14 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:pips/domain/models/rap_cost.dart';
-import 'package:pips/domain/models/regional_investment.dart';
-import 'package:pips/domain/models/row_cost.dart';
-import 'package:pips/domain/models/user.dart';
+import 'package:pips/data/responses/uploadattachment_response.dart';
 
-import 'financial_accomplishment.dart';
-import 'fs_cost.dart';
-import 'fs_investment.dart';
-import 'office.dart';
-import 'option.dart';
+import 'models.dart';
 
 part 'fullproject.freezed.dart';
 part 'fullproject.g.dart';
@@ -16,8 +9,8 @@ part 'fullproject.g.dart';
 @freezed
 class FullProject with _$FullProject {
   factory FullProject({
-    @JsonKey(name: "id") int? id,
-    @JsonKey(name: "uuid") String? uuid,
+    @JsonKey(name: "id") required int id,
+    @JsonKey(name: "uuid") required String uuid,
     @JsonKey(name: "title") String? title,
     @JsonKey(name: "type_id") int? typeId,
     @JsonKey(name: "type") Option? type,
@@ -59,16 +52,16 @@ class FullProject with _$FullProject {
     @JsonKey(name: "fs_status_id") int? fsStatusId,
     @JsonKey(name: "fs_status") Option? fsStatus,
     @JsonKey(name: "fs_total_cost") String? fsTotalCost,
-    @JsonKey(name: "fs_cost") FsCost? fsCost,
+    @JsonKey(name: "fs_cost") CostSchedule? fsCost,
     @JsonKey(name: "fs_completion_date") DateTime? fsCompletionDate,
     @JsonKey(name: "has_row") bool? hasRow,
     @JsonKey(name: "row_affected_households") int? rowAffectedHouseholds,
     @JsonKey(name: "row_total_cost") double? rowTotalCost,
-    @JsonKey(name: "row_cost") RowCost? rowCost,
+    @JsonKey(name: "row_cost") CostSchedule? rowCost,
     @JsonKey(name: "has_rap") bool? hasRap,
     @JsonKey(name: "rap_affected_households") int? rapAffectedHouseholds,
     @JsonKey(name: "rap_total_cost") double? rapTotalCost,
-    @JsonKey(name: "rap_cost") RapCost? rapCost,
+    @JsonKey(name: "rap_cost") CostSchedule? rapCost,
     @JsonKey(name: "has_row_rap") bool? hasRowRap,
     @JsonKey(name: "prerequisites") required List<Option> prerequisites,
     @JsonKey(name: "locations") required List<Option> locations,
@@ -110,29 +103,36 @@ class FullProject with _$FullProject {
     @JsonKey(name: "contact_information") String? contactInformation,
     @JsonKey(name: "notes") String? notes,
     @JsonKey(name: "icc_resubmission") bool? iccResubmission,
+    @JsonKey(name: "regions") required List<Option> regions,
+    @JsonKey(name: "provinces") required List<Option> provinces,
+    @JsonKey(name: "attachments")
+    required List<UploadAttachmentResponseData> attachments,
   }) = _FullProject;
 
   factory FullProject.fromJson(Map<String, Object?> json) =>
       _$FullProjectFromJson(json);
 
-  static FullProject initial() {
-    return FullProject(
-      bases: [],
-      operatingUnits: [],
-      pdpChapters: [],
-      agenda: [],
-      sdgs: [],
-      prerequisites: [],
-      locations: [],
-      infrastructureSectors: [],
-      fundingInstitutions: [],
-      fundingSources: [],
-      fsInvestments: [],
-      regionalInvestments: [],
-      rapCost: RapCost.initial(),
-      rowCost: RowCost.initial(),
-      fsCost: FsCost.initial(),
-      financialAccomplishment: FinancialAccomplishment.initial(),
-    );
+  bool get isValid {
+    if (title == null || title!.isEmpty) return false;
+
+    if (type == null) return false;
+
+    if (bases.isEmpty) return false;
+
+    if (description == null || description!.isEmpty) return false;
+
+    if (totalCost == 0) return false;
+
+    if (office == null) return false;
+
+    if (operatingUnits.isEmpty) return false;
+
+    if (expectedOutputs == null || expectedOutputs!.isEmpty) return false;
+
+    if (pdpChapter == null) return false;
+
+    return true;
   }
+
+  FullProject._();
 }

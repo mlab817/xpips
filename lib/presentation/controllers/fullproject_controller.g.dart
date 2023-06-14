@@ -7,7 +7,7 @@ part of 'fullproject_controller.dart';
 // **************************************************************************
 
 String _$fullProjectControllerHash() =>
-    r'9b9fd822f4b4fb8dc3f8e4e3b1556a237163c52f';
+    r'6c8756a5e40a2e9c106661602da019b500badb2f';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -31,10 +31,10 @@ class _SystemHash {
 }
 
 abstract class _$FullProjectController extends BuildlessNotifier<FullProject> {
-  late final String? uuid;
+  late final String uuid;
 
   FullProject build(
-    String? uuid,
+    String uuid,
   );
 }
 
@@ -49,7 +49,7 @@ class FullProjectControllerFamily extends Family<FullProject> {
 
   /// See also [FullProjectController].
   FullProjectControllerProvider call(
-    String? uuid,
+    String uuid,
   ) {
     return FullProjectControllerProvider(
       uuid,
@@ -99,7 +99,7 @@ class FullProjectControllerProvider
               FullProjectControllerFamily._allTransitiveDependencies,
         );
 
-  final String? uuid;
+  final String uuid;
 
   @override
   bool operator ==(Object other) {

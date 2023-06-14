@@ -22,9 +22,6 @@ _$_Options _$$_OptionsFromJson(Map<String, dynamic> json) => _$_Options(
       cipTypes: (json['cip_types'] as List<dynamic>?)
           ?.map((e) => Option.fromJson(e as Map<String, dynamic>))
           .toList(),
-      commodities: (json['commodities'] as List<dynamic>?)
-          ?.map((e) => Option.fromJson(e as Map<String, dynamic>))
-          .toList(),
       fsStatuses: (json['fs_statuses'] as List<dynamic>?)
           ?.map((e) => Option.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -43,9 +40,6 @@ _$_Options _$$_OptionsFromJson(Map<String, dynamic> json) => _$_Options(
       infrastructureSectors: (json['infrastructure_sectors'] as List<dynamic>?)
           ?.map((e) => Option.fromJson(e as Map<String, dynamic>))
           .toList(),
-      locations: (json['locations'] as List<dynamic>?)
-          ?.map((e) => Option.fromJson(e as Map<String, dynamic>))
-          .toList(),
       nafmipOutputs: (json['nafmip_outputs'] as List<dynamic>?)
           ?.map((e) => Option.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -56,9 +50,6 @@ _$_Options _$$_OptionsFromJson(Map<String, dynamic> json) => _$_Options(
           ?.map((e) => Option.fromJson(e as Map<String, dynamic>))
           .toList(),
       pdpChapters: (json['pdp_chapters'] as List<dynamic>?)
-          ?.map((e) => Option.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      pdpStrategies: (json['pdp_strategies'] as List<dynamic>?)
           ?.map((e) => Option.fromJson(e as Map<String, dynamic>))
           .toList(),
       pipolStatuses: (json['pipol_statuses'] as List<dynamic>?)
@@ -82,6 +73,9 @@ _$_Options _$$_OptionsFromJson(Map<String, dynamic> json) => _$_Options(
       projectStatuses: (json['project_statuses'] as List<dynamic>?)
           ?.map((e) => Option.fromJson(e as Map<String, dynamic>))
           .toList(),
+      provinces: (json['provinces'] as List<dynamic>?)
+          ?.map((e) => Option.fromJson(e as Map<String, dynamic>))
+          .toList(),
       readinessLevels: (json['readiness_levels'] as List<dynamic>?)
           ?.map((e) => Option.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -103,13 +97,13 @@ _$_Options _$$_OptionsFromJson(Map<String, dynamic> json) => _$_Options(
       typologies: (json['typologies'] as List<dynamic>?)
           ?.map((e) => Option.fromJson(e as Map<String, dynamic>))
           .toList(),
-      vcSegments: (json['vc_segments'] as List<dynamic>?)
-          ?.map((e) => Option.fromJson(e as Map<String, dynamic>))
-          .toList(),
       years: (json['years'] as List<dynamic>?)
           ?.map((e) => Option.fromJson(e as Map<String, dynamic>))
           .toList(),
       ouTypes: (json['ou_types'] as List<dynamic>?)
+          ?.map((e) => Option.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      attachmentTypes: (json['attachment_types'] as List<dynamic>?)
           ?.map((e) => Option.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
@@ -121,19 +115,16 @@ Map<String, dynamic> _$$_OptionsToJson(_$_Options instance) =>
       'bases': instance.bases,
       'categories': instance.categories,
       'cip_types': instance.cipTypes,
-      'commodities': instance.commodities,
       'fs_statuses': instance.fsStatuses,
       'funding_institutions': instance.fundingInstitutions,
       'funding_sources': instance.fundingSources,
       'gads': instance.gads,
       'implementation_modes': instance.implementationModes,
       'infrastructure_sectors': instance.infrastructureSectors,
-      'locations': instance.locations,
       'nafmip_outputs': instance.nafmipOutputs,
       'offices': instance.offices,
       'operating_units': instance.operatingUnits,
       'pdp_chapters': instance.pdpChapters,
-      'pdp_strategies': instance.pdpStrategies,
       'pipol_statuses': instance.pipolStatuses,
       'pips_statuses': instance.pipsStatuses,
       'preparation_documents': instance.preparationDocuments,
@@ -141,6 +132,7 @@ Map<String, dynamic> _$$_OptionsToJson(_$_Options instance) =>
       'prexcs': instance.prexcs,
       'programs': instance.programs,
       'project_statuses': instance.projectStatuses,
+      'provinces': instance.provinces,
       'readiness_levels': instance.readinessLevels,
       'regions': instance.regions,
       'roles': instance.roles,
@@ -148,7 +140,7 @@ Map<String, dynamic> _$$_OptionsToJson(_$_Options instance) =>
       'spatial_coverages': instance.spatialCoverages,
       'types': instance.types,
       'typologies': instance.typologies,
-      'vc_segments': instance.vcSegments,
       'years': instance.years,
       'ou_types': instance.ouTypes,
+      'attachment_types': instance.attachmentTypes,
     };

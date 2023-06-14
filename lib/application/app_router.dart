@@ -1,5 +1,4 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:flutter/material.dart';
 
 import '../presentation/screens/chat_screen.dart';
 import '../presentation/screens/forgotpassword_screen.dart';
@@ -24,12 +23,14 @@ class AppRouter extends _$AppRouter implements AutoRouteGuard {
 
   @override
   List<AutoRoute> get routes => [
-        AutoRoute(page: SplashRoute.page, initial: true),
+        AutoRoute(
+          page: SplashRoute.page,
+        ), //  initial: true),
         AutoRoute(page: LoginRoute.page, path: '/login'),
         AutoRoute(page: SignupRoute.page, path: '/signup'),
         AutoRoute(page: ForgotPasswordRoute.page, path: '/forgot-password'),
         AutoRoute(
-          guards: [],
+          guards: const [],
           page: MainRoute.page,
           path: '/main',
           children: [
@@ -56,8 +57,9 @@ class AppRouter extends _$AppRouter implements AutoRouteGuard {
           page: NewPapRoute.page,
         ),
         AutoRoute(
-          path: '/project/:uuid',
+          path: '/project/e2600fce', // '/project/:uuid',
           page: PapViewRoute.page,
+          initial: true,
         ),
         AutoRoute(
           path: '/request-reactivation',

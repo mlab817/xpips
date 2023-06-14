@@ -1,12 +1,11 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:onesignal_flutter/onesignal_flutter.dart';
-import 'package:pips/presentation/screens/preferences_screen.dart';
-import 'package:pips/presentation/screens/updatepassword_screen.dart';
-import 'package:pips/presentation/screens/updateprofile_screen.dart';
 import 'package:universal_io/io.dart';
 
+import '../../../presentation/screens/preferences_screen.dart';
+import '../../../presentation/screens/updatepassword_screen.dart';
+import '../../../presentation/screens/updateprofile_screen.dart';
 import '../../../application/app_router.dart';
 import '../controllers/auth_controller.dart';
 import 'about_screen.dart';
