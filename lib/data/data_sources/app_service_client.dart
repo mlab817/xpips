@@ -21,6 +21,7 @@ import '../repositories/pipolstatus_repository.dart';
 import '../requests/comment_request.dart';
 import '../requests/fullproject_request.dart';
 import '../requests/newproject_request.dart';
+import '../requests/notifications_request.dart';
 import '../requests/projects_request.dart';
 import '../requests/reactivation_request.dart';
 import '../requests/updateprofile_request.dart';
@@ -76,7 +77,7 @@ abstract class AppServiceClient {
 
   @GET("/notifications")
   Future<NotificationsResponse> listNotifications(
-      @Queries() PaginationRequest input);
+      @Queries() NotificationsRequest input);
 
   @POST("/mark-notification-as-read")
   Future<Notifications> markNotificationAsRead(@Field("id") String id);

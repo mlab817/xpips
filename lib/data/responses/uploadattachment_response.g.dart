@@ -25,11 +25,13 @@ UploadAttachmentResponseData _$UploadAttachmentResponseDataFromJson(
       url: json['url'] as String,
       attachmentType:
           Option.fromJson(json['attachment_type'] as Map<String, dynamic>),
+      attachmentUrl: json['attachment_url'] as String,
     );
 
 Map<String, dynamic> _$UploadAttachmentResponseDataToJson(
         UploadAttachmentResponseData instance) =>
     <String, dynamic>{
       'url': instance.url,
+      'attachment_url': instance.attachmentUrl,
       'attachment_type': instance.attachmentType,
     };

@@ -5,7 +5,6 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:pips/application/providers/searchhistory_provider.dart';
 import 'package:pips/domain/models/pipsstatus.dart';
 import 'package:pips/presentation/controllers/options_controller.dart';
-import 'package:pips/presentation/screens/newpap_screen.dart';
 import 'package:pips/presentation/screens/pipolstatus_controller.dart';
 import 'package:pips/presentation/widgets/loading_dialog.dart';
 

@@ -8,6 +8,7 @@ import '../../../data/responses/responses.dart';
 import '../../../presentation/controllers/controllers.dart';
 import '../../../presentation/widgets/loading_dialog.dart';
 import '../../../presentation/widgets/logout_button.dart';
+import '../../application/app_router.dart';
 
 @RoutePage()
 class ChatScreen extends ConsumerStatefulWidget {
@@ -116,7 +117,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
             onTap: () {
               // ref.read(selectedProjectProvider.notifier).update(project);
 
-              // AutoRouter.of(context).push(PapViewRoute(title: project.title, uuid: chat.uuid));
+              AutoRouter.of(context).push(PapViewRoute(uuid: chat.uuid));
             },
           );
         });

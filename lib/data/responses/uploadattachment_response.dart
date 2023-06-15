@@ -24,12 +24,16 @@ class UploadAttachmentResponseData {
   @JsonKey(name: 'url')
   final String url;
 
+  @JsonKey(name: 'attachment_url')
+  final String attachmentUrl;
+
   @JsonKey(name: 'attachment_type')
   final Option attachmentType;
 
   UploadAttachmentResponseData({
     required this.url,
     required this.attachmentType,
+    required this.attachmentUrl,
   });
 
   factory UploadAttachmentResponseData.fromJson(Map<String, dynamic> json) =>

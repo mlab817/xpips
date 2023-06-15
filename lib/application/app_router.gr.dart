@@ -70,9 +70,15 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     PapViewRoute.name: (routeData) {
+      final pathParams = routeData.inheritedPathParams;
+      final args = routeData.argsAs<PapViewRouteArgs>(
+          orElse: () => PapViewRouteArgs(uuid: pathParams.getString('uuid')));
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const PapViewScreen(),
+        child: PapViewScreen(
+          key: args.key,
+          uuid: args.uuid,
+        ),
       );
     },
     HomeRoute.name: (routeData) {
@@ -218,16 +224,41 @@ class MainRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [PapViewScreen]
-class PapViewRoute extends PageRouteInfo<void> {
-  const PapViewRoute({List<PageRouteInfo>? children})
-      : super(
+class PapViewRoute extends PageRouteInfo<PapViewRouteArgs> {
+  PapViewRoute({
+    Key? key,
+    required String uuid,
+    List<PageRouteInfo>? children,
+  }) : super(
           PapViewRoute.name,
+          args: PapViewRouteArgs(
+            key: key,
+            uuid: uuid,
+          ),
+          rawPathParams: {'uuid': uuid},
           initialChildren: children,
         );
 
   static const String name = 'PapViewRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static const PageInfo<PapViewRouteArgs> page =
+      PageInfo<PapViewRouteArgs>(name);
+}
+
+class PapViewRouteArgs {
+  const PapViewRouteArgs({
+    this.key,
+    required this.uuid,
+  });
+
+  final Key? key;
+
+  final String uuid;
+
+  @override
+  String toString() {
+    return 'PapViewRouteArgs{key: $key, uuid: $uuid}';
+  }
 }
 
 /// generated route for

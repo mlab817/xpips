@@ -9,6 +9,7 @@ class NotificationsRequest with _$NotificationsRequest {
     @JsonKey(name: "per_page") required int perPage,
     @JsonKey(name: "page") required int page,
     @JsonKey(name: "q") String? q,
+    @JsonKey(name: "filter") String? filter,
   }) = _NotificationsRequest;
 
   factory NotificationsRequest.fromJson(Map<String, dynamic> json) =>

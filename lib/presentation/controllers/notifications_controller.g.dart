@@ -6,7 +6,7 @@ part of 'notifications_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$notificationsHash() => r'09474cf69d86cfdb85a36d376f019545d7791047';
+String _$notificationsHash() => r'e5649ccc28ff4355a1322c23b2e629ef107330ea';
 
 /// See also [notifications].
 @ProviderFor(notifications)
@@ -126,11 +126,11 @@ class MarkAsReadProvider extends AutoDisposeFutureProvider<Notifications> {
 }
 
 String _$notificationsRequestControllerHash() =>
-    r'24b661e113697eec3316025eafecd46782ad7a00';
+    r'f22a29fe2cdc8f02cfe130cabad405b80fd4ebb5';
 
 /// See also [NotificationsRequestController].
 @ProviderFor(NotificationsRequestController)
-final notificationsRequestControllerProvider = AutoDisposeNotifierProvider<
+final notificationsRequestControllerProvider = NotifierProvider<
     NotificationsRequestController, NotificationsRequest>.internal(
   NotificationsRequestController.new,
   name: r'notificationsRequestControllerProvider',
@@ -141,6 +141,5 @@ final notificationsRequestControllerProvider = AutoDisposeNotifierProvider<
   allTransitiveDependencies: null,
 );
 
-typedef _$NotificationsRequestController
-    = AutoDisposeNotifier<NotificationsRequest>;
+typedef _$NotificationsRequestController = Notifier<NotificationsRequest>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions

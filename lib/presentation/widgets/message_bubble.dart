@@ -73,7 +73,7 @@ class _MessageBubbleState extends ConsumerState<MessageBubble>
               ),
               decoration: BoxDecoration(
                   color: Theme.of(context).primaryColor,
-                  borderRadius: BorderRadius.circular(50)),
+                  borderRadius: BorderRadius.circular(10)),
               child: Text(
                 widget.comment.comment,
                 style: const TextStyle(
@@ -106,7 +106,7 @@ class _MessageBubbleState extends ConsumerState<MessageBubble>
               ),
               decoration: BoxDecoration(
                   color: Theme.of(context).primaryColor,
-                  borderRadius: BorderRadius.circular(50)),
+                  borderRadius: BorderRadius.circular(10)),
               child: Text(
                 widget.comment.comment,
                 style: const TextStyle(

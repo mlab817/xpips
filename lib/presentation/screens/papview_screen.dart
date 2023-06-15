@@ -11,7 +11,6 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../data/responses/patchproject_response.dart';
 import '../../presentation/widgets/papform/common/scheduleeditor.dart';
 import '../resources/strings_manager.dart';
-import '../widgets/papform/common/editbutton.dart';
 import '../widgets/papform/common/fsinvestmenteditor.dart';
 import '../widgets/papform/common/regionalinvestmenteditor.dart';
 import '../widgets/papform/common/checkboxeditor.dart';
@@ -32,15 +31,16 @@ import '../widgets/papform/common/texteditor.dart';
 import '../widgets/papform/financial_accomplishment.dart';
 import '../widgets/papform/form_objects/infrastructuresectors.dart';
 import '../widgets/papform/form_objects/officeeditor.dart';
+import '../widgets/papform/form_objects/projectattachment.dart';
 
 @RoutePage()
 class PapViewScreen extends ConsumerStatefulWidget {
   const PapViewScreen({
     Key? key,
-    // @PathParam('uuid') required this.uuid,
+    @PathParam('uuid') required this.uuid,
   }) : super(key: key);
 
-  final String uuid = 'e2600fce';
+  final String uuid;
 
   @override
   ConsumerState<PapViewScreen> createState() => _PapViewScreenState();
@@ -74,7 +74,8 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final projectProfileAsync = ref.watch(projectProvider(uuid: widget.uuid));
+    final projectProfileAsync =
+        ref.watch(futureProjectProvider(uuid: widget.uuid));
 
     // listen for the status of the patch request
     ref.listen(patchProjectControllerProvider, (previous, next) {
@@ -107,7 +108,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
           IconButton(
             onPressed: () {
               // reload the project
-              ref.invalidate(projectProvider(uuid: widget.uuid));
+              ref.invalidate(futureProjectProvider(uuid: widget.uuid));
             },
             icon: const Icon(Icons.refresh),
             tooltip: 'Reload',
@@ -279,6 +280,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   project: project,
                   fieldLabel: 'Regular Program',
                   oldValue: project.regularProgram ?? false,
+                  enabled: project.type?.value == 1, // if type is program
                   onSubmit: (bool newValue) async {
                     await _handleSubmit(
                         uuid: uuid,
@@ -773,7 +775,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                       value: valueToSubmit,
                     );
 
-// update local State
+                    // update local State
                     ref
                         .read(
                             fullProjectControllerProvider(widget.uuid).notifier)
@@ -1660,33 +1662,9 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
               ]),
           sliver: SliverList(
             delegate: SliverChildListDelegate([
-              ...ref
-                  .watch(fullProjectControllerProvider(widget.uuid))
-                  .attachments
-                  .map((e) {
-                return ListTile(
-                    leading: const Icon(Icons.attachment),
-                    title: Text(e.attachmentType.label),
-                    onTap: () async {
-                      final urlToOpen = Uri.parse(e.url);
-                      if (!await launchUrl(urlToOpen)) {
-                        // ignore: use_build_context_synchronously
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Failed to open ${e.url}')));
-                      }
-                    });
-              }),
-              Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextButton(
-                        onPressed: () {
-                          // TODO: prompt for file upload
-                        },
-                        child: const Text('UPLOAD')),
-                  ),
-                ],
+              ProjectAttachment(
+                project: project,
+                options: options.attachmentTypes ?? [],
               ),
             ]),
           ),
@@ -3629,27 +3607,5 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         ],
       ),
     );
-  }
-
-  Future<void> uploadAttachment(Option attachmentType) async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      allowMultiple: false,
-      type: FileType.custom,
-      allowedExtensions: [
-        'pdf',
-      ],
-    );
-
-    if (result != null) {
-      final response = await ref.read(uploadRepositoryProvider).attach(
-            widget.uuid,
-            result.files.first,
-            attachmentType,
-          );
-
-      ref
-          .read(fullProjectControllerProvider(widget.uuid).notifier)
-          .addAttachment(response.data);
-    }
   }
 }

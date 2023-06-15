@@ -12,6 +12,7 @@ _$_NotificationsRequest _$$_NotificationsRequestFromJson(
       perPage: json['per_page'] as int,
       page: json['page'] as int,
       q: json['q'] as String?,
+      filter: json['filter'] as String?,
     );
 
 Map<String, dynamic> _$$_NotificationsRequestToJson(
@@ -20,4 +21,5 @@ Map<String, dynamic> _$$_NotificationsRequestToJson(
       'per_page': instance.perPage,
       'page': instance.page,
       'q': instance.q,
+      'filter': instance.filter,
     };

@@ -215,7 +215,7 @@ class FullProjectController extends _$FullProjectController {
   }
 
   void addAttachment(UploadAttachmentResponseData data) {
-    final curAttachments = state.attachments;
+    final curAttachments = state.attachments.toList();
 
     curAttachments.add(data);
 
@@ -224,7 +224,7 @@ class FullProjectController extends _$FullProjectController {
 
   @override
   FullProject build(String uuid) {
-    final asyncProject = ref.watch(projectProvider(uuid: uuid));
+    final asyncProject = ref.watch(futureProjectProvider(uuid: uuid));
 
     // assert(asyncProject.value?.project != null, 'Project cannot be null');
 

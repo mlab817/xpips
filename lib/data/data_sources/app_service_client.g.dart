@@ -13,7 +13,7 @@ class _AppServiceClient implements AppServiceClient {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= 'https://api.pipsv2.test';
+    baseUrl ??= 'https://api.pips.da.gov.ph';
   }
 
   final Dio _dio;
@@ -194,7 +194,7 @@ class _AppServiceClient implements AppServiceClient {
 
   @override
   Future<NotificationsResponse> listNotifications(
-      PaginationRequest input) async {
+      NotificationsRequest input) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     queryParameters.addAll(input.toJson());

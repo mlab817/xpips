@@ -26,6 +26,8 @@ mixin _$NotificationsRequest {
   int get page => throw _privateConstructorUsedError;
   @JsonKey(name: "q")
   String? get q => throw _privateConstructorUsedError;
+  @JsonKey(name: "filter")
+  String? get filter => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -42,7 +44,8 @@ abstract class $NotificationsRequestCopyWith<$Res> {
   $Res call(
       {@JsonKey(name: "per_page") int perPage,
       @JsonKey(name: "page") int page,
-      @JsonKey(name: "q") String? q});
+      @JsonKey(name: "q") String? q,
+      @JsonKey(name: "filter") String? filter});
 }
 
 /// @nodoc
@@ -62,6 +65,7 @@ class _$NotificationsRequestCopyWithImpl<$Res,
     Object? perPage = null,
     Object? page = null,
     Object? q = freezed,
+    Object? filter = freezed,
   }) {
     return _then(_value.copyWith(
       perPage: null == perPage
@@ -75,6 +79,10 @@ class _$NotificationsRequestCopyWithImpl<$Res,
       q: freezed == q
           ? _value.q
           : q // ignore: cast_nullable_to_non_nullable
+              as String?,
+      filter: freezed == filter
+          ? _value.filter
+          : filter // ignore: cast_nullable_to_non_nullable
               as String?,
     ) as $Val);
   }
@@ -91,7 +99,8 @@ abstract class _$$_NotificationsRequestCopyWith<$Res>
   $Res call(
       {@JsonKey(name: "per_page") int perPage,
       @JsonKey(name: "page") int page,
-      @JsonKey(name: "q") String? q});
+      @JsonKey(name: "q") String? q,
+      @JsonKey(name: "filter") String? filter});
 }
 
 /// @nodoc
@@ -108,6 +117,7 @@ class __$$_NotificationsRequestCopyWithImpl<$Res>
     Object? perPage = null,
     Object? page = null,
     Object? q = freezed,
+    Object? filter = freezed,
   }) {
     return _then(_$_NotificationsRequest(
       perPage: null == perPage
@@ -122,6 +132,10 @@ class __$$_NotificationsRequestCopyWithImpl<$Res>
           ? _value.q
           : q // ignore: cast_nullable_to_non_nullable
               as String?,
+      filter: freezed == filter
+          ? _value.filter
+          : filter // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -132,7 +146,8 @@ class _$_NotificationsRequest implements _NotificationsRequest {
   _$_NotificationsRequest(
       {@JsonKey(name: "per_page") required this.perPage,
       @JsonKey(name: "page") required this.page,
-      @JsonKey(name: "q") this.q});
+      @JsonKey(name: "q") this.q,
+      @JsonKey(name: "filter") this.filter});
 
   factory _$_NotificationsRequest.fromJson(Map<String, dynamic> json) =>
       _$$_NotificationsRequestFromJson(json);
@@ -146,10 +161,13 @@ class _$_NotificationsRequest implements _NotificationsRequest {
   @override
   @JsonKey(name: "q")
   final String? q;
+  @override
+  @JsonKey(name: "filter")
+  final String? filter;
 
   @override
   String toString() {
-    return 'NotificationsRequest(perPage: $perPage, page: $page, q: $q)';
+    return 'NotificationsRequest(perPage: $perPage, page: $page, q: $q, filter: $filter)';
   }
 
   @override
@@ -159,12 +177,13 @@ class _$_NotificationsRequest implements _NotificationsRequest {
             other is _$_NotificationsRequest &&
             (identical(other.perPage, perPage) || other.perPage == perPage) &&
             (identical(other.page, page) || other.page == page) &&
-            (identical(other.q, q) || other.q == q));
+            (identical(other.q, q) || other.q == q) &&
+            (identical(other.filter, filter) || other.filter == filter));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, perPage, page, q);
+  int get hashCode => Object.hash(runtimeType, perPage, page, q, filter);
 
   @JsonKey(ignore: true)
   @override
@@ -185,7 +204,8 @@ abstract class _NotificationsRequest implements NotificationsRequest {
   factory _NotificationsRequest(
       {@JsonKey(name: "per_page") required final int perPage,
       @JsonKey(name: "page") required final int page,
-      @JsonKey(name: "q") final String? q}) = _$_NotificationsRequest;
+      @JsonKey(name: "q") final String? q,
+      @JsonKey(name: "filter") final String? filter}) = _$_NotificationsRequest;
 
   factory _NotificationsRequest.fromJson(Map<String, dynamic> json) =
       _$_NotificationsRequest.fromJson;
@@ -199,6 +219,9 @@ abstract class _NotificationsRequest implements NotificationsRequest {
   @override
   @JsonKey(name: "q")
   String? get q;
+  @override
+  @JsonKey(name: "filter")
+  String? get filter;
   @override
   @JsonKey(ignore: true)
   _$$_NotificationsRequestCopyWith<_$_NotificationsRequest> get copyWith =>

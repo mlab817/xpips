@@ -279,6 +279,7 @@ class _CostScheduleFormState extends ConsumerState<CostScheduleForm> {
           padding: const EdgeInsets.all(8.0),
           child: TextFormField(
             controller: y1,
+            decoration: const InputDecoration(labelText: 'FY 2023'),
             inputFormatters: [FilteringTextInputFormatter.digitsOnly],
           ),
         ),
@@ -286,6 +287,7 @@ class _CostScheduleFormState extends ConsumerState<CostScheduleForm> {
           padding: const EdgeInsets.all(8.0),
           child: TextFormField(
             controller: y2,
+            decoration: const InputDecoration(labelText: 'FY 2024'),
             inputFormatters: [FilteringTextInputFormatter.digitsOnly],
           ),
         ),
@@ -293,6 +295,7 @@ class _CostScheduleFormState extends ConsumerState<CostScheduleForm> {
           padding: const EdgeInsets.all(8.0),
           child: TextFormField(
             controller: y3,
+            decoration: const InputDecoration(labelText: 'FY 2025'),
             inputFormatters: [FilteringTextInputFormatter.digitsOnly],
           ),
         ),
@@ -300,6 +303,7 @@ class _CostScheduleFormState extends ConsumerState<CostScheduleForm> {
           padding: const EdgeInsets.all(8.0),
           child: TextFormField(
             controller: y4,
+            decoration: const InputDecoration(labelText: 'FY 2026'),
             inputFormatters: [FilteringTextInputFormatter.digitsOnly],
           ),
         ),
@@ -307,6 +311,7 @@ class _CostScheduleFormState extends ConsumerState<CostScheduleForm> {
           padding: const EdgeInsets.all(8.0),
           child: TextFormField(
             controller: y5,
+            decoration: const InputDecoration(labelText: 'FY 2027'),
             inputFormatters: [FilteringTextInputFormatter.digitsOnly],
           ),
         ),
@@ -314,6 +319,7 @@ class _CostScheduleFormState extends ConsumerState<CostScheduleForm> {
           padding: const EdgeInsets.all(8.0),
           child: TextFormField(
             controller: y6,
+            decoration: const InputDecoration(labelText: 'FY 2028'),
             inputFormatters: [FilteringTextInputFormatter.digitsOnly],
           ),
         ),
