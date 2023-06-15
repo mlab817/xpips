@@ -106,7 +106,6 @@ class _ProjectListTileState extends ConsumerState<ProjectListTile> {
                     IconButton(
                       onPressed: _project.permissions.view
                           ? () {
-                              ref.read(projectProvider(uuid: _project.uuid));
                               AutoRouter.of(context).push(PapViewRoute(
                                 uuid: _project.uuid,
                               ));
@@ -185,7 +184,8 @@ class _ProjectListTileState extends ConsumerState<ProjectListTile> {
                   decoration: BoxDecoration(
                       color: Theme.of(context).primaryColor.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(8.0)),
-                  child: Text(_project.contactInformation ?? 'NONE'),
+                  child: Text(
+                      "Contact Information: ${_project.contactInformation ?? 'NONE'}"),
                 ),
                 const SizedBox(
                   height: 10,
@@ -197,7 +197,7 @@ class _ProjectListTileState extends ConsumerState<ProjectListTile> {
                   decoration: BoxDecoration(
                       color: Theme.of(context).primaryColor.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(8.0)),
-                  child: Text(_project.notes ?? 'No notes'),
+                  child: Text("Notes: ${_project.notes ?? 'NO NOTES'}"),
                 ),
               ],
             ),
@@ -218,120 +218,68 @@ class _ProjectListTileState extends ConsumerState<ProjectListTile> {
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
 
-    return Slidable(
-      endActionPane: ActionPane(
-        extentRatio: (width < 768) ? 0.75 : 0.25,
-        motion: const ScrollMotion(),
+    return ListTile(
+      minVerticalPadding: 8.0,
+      tileColor: _project.isRead
+          ? Colors.transparent
+          : Theme.of(context).hoverColor.withAlpha(9),
+      trailing: Padding(
+        padding: const EdgeInsets.only(top: 8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Text(formatDate(_project.updatedAt)),
+          ],
+        ),
+      ),
+      leading: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          SlidableAction(
-            onPressed: _project.permissions.view
-                ? (context) {
-                    AutoRouter.of(context).push(PapViewRoute(
-                      uuid: _project.uuid,
-                    ));
-                  }
-                : null,
-            backgroundColor: Colors.grey,
-            foregroundColor: Theme.of(context).primaryColor.withOpacity(0.1),
-            icon: Icons.visibility,
-          ),
-          SlidableAction(
-            onPressed: _project.permissions.view
-                ? (context) {
-                    _openInNewWindow();
-                  }
-                : null,
-            backgroundColor: Colors.green,
-            foregroundColor: Theme.of(context).primaryColor.withOpacity(0.1),
-            icon: Icons.picture_as_pdf,
-          ),
-          SlidableAction(
-            onPressed: _project.permissions.update
-                ? (context) {
-                    AutoRouter.of(context).push(PapViewRoute(
-                      uuid: _project.uuid,
-                    ));
-                  }
-                : null,
-            backgroundColor: const Color(0xFF21B7CA),
-            foregroundColor: Theme.of(context).primaryColor.withOpacity(0.1),
-            icon: Icons.edit,
-          ),
-          SlidableAction(
-            onPressed: _project.permissions.delete
-                ? (context) {
-                    _confirmDelete();
-                  }
-                : null,
-            backgroundColor: const Color(0xFFFE4A49),
-            foregroundColor: Theme.of(context).primaryColor.withOpacity(0.1),
-            icon: Icons.delete,
+          Tooltip(
+            message: _project.user?.fullname ?? 'NA',
+            child: CircleAvatar(
+              child: Text(
+                _project.user?.avatar ?? 'NA',
+              ),
+            ),
           ),
         ],
       ),
-      child: ListTile(
-        minVerticalPadding: 8.0,
-        tileColor: _project.isRead
-            ? Colors.transparent
-            : Theme.of(context).hoverColor.withAlpha(9),
-        trailing: Padding(
-          padding: const EdgeInsets.only(top: 8.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Text(formatDate(_project.updatedAt)),
-            ],
-          ),
-        ),
-        leading: Column(
+      subtitle: Text(
+        _project.title,
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
+        style: Theme.of(context).textTheme.bodyMedium,
+      ),
+      title: Padding(
+        padding: const EdgeInsets.all(0.0),
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Tooltip(
-              message: _project.user?.fullname ?? 'NA',
-              child: CircleAvatar(
-                child: Text(
-                  _project.user?.avatar ?? 'NA',
+            Row(
+              children: [
+                Text(
+                  _project.office?.acronym.toUpperCase() ?? 'OFFICE',
+                  style: Theme.of(context).textTheme.titleSmall,
                 ),
-              ),
+                const Spacer(),
+                if (_project.commentsCount > 0)
+                  Badge(
+                    label: Text(
+                      _project.commentsCount.toString(),
+                      style: const TextStyle(fontSize: 8.0),
+                    ),
+                    child: const Icon(
+                      Icons.chat_bubble_outline,
+                      size: 20.0,
+                    ),
+                  ),
+              ],
             ),
           ],
         ),
-        subtitle: Text(
-          _project.title,
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-          style: Theme.of(context).textTheme.bodyMedium,
-        ),
-        title: Padding(
-          padding: const EdgeInsets.all(0.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Text(
-                    _project.office?.acronym.toUpperCase() ?? 'OFFICE',
-                    style: Theme.of(context).textTheme.titleSmall,
-                  ),
-                  const Spacer(),
-                  if (_project.commentsCount > 0)
-                    Badge(
-                      label: Text(
-                        _project.commentsCount.toString(),
-                        style: const TextStyle(fontSize: 8.0),
-                      ),
-                      child: const Icon(
-                        Icons.chat_bubble_outline,
-                        size: 20.0,
-                      ),
-                    ),
-                ],
-              ),
-            ],
-          ),
-        ),
-        onTap: _showDialog,
       ),
+      onTap: _showDialog,
     );
   }
 }

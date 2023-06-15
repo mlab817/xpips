@@ -10,7 +10,7 @@ import '../../domain/models/notifications.dart';
 
 part 'notifications_controller.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class NotificationsRequestController extends _$NotificationsRequestController {
   @override
   NotificationsRequest build() => NotificationsRequest(perPage: 25, page: 1);
@@ -19,11 +19,13 @@ class NotificationsRequestController extends _$NotificationsRequestController {
     int? perPage,
     int? page,
     String? q,
+    String? filter,
   }) {
     state = state.copyWith(
       page: page ?? state.page,
       perPage: perPage ?? state.perPage,
       q: q ?? state.q,
+      filter: filter ?? state.filter,
     );
   }
 }
@@ -32,7 +34,7 @@ class NotificationsRequestController extends _$NotificationsRequestController {
 Future<NotificationsResponse> notifications(NotificationsRef ref) {
   return ref
       .read(notificationsRepositoryProvider)
-      .getAll(ref.watch(paginationRequestControllerProvider));
+      .getAll(ref.watch(notificationsRequestControllerProvider));
 }
 
 @riverpod

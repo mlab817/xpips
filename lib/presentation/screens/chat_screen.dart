@@ -1,14 +1,14 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pips/application/providers/dateformatter_provider.dart';
-import 'package:pips/domain/models/chatroom.dart';
 
-import '../../../application/app_router.dart';
+import '../../../application/providers/dateformatter_provider.dart';
+import '../../../domain/models/chatroom.dart';
 import '../../../data/responses/responses.dart';
 import '../../../presentation/controllers/controllers.dart';
 import '../../../presentation/widgets/loading_dialog.dart';
 import '../../../presentation/widgets/logout_button.dart';
+import '../../application/app_router.dart';
 
 @RoutePage()
 class ChatScreen extends ConsumerStatefulWidget {
@@ -117,7 +117,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
             onTap: () {
               // ref.read(selectedProjectProvider.notifier).update(project);
 
-              // AutoRouter.of(context).push(PapViewRoute(title: project.title, uuid: chat.uuid));
+              AutoRouter.of(context).push(PapViewRoute(uuid: chat.uuid));
             },
           );
         });

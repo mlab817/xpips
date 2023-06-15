@@ -6,7 +6,7 @@ class EditButton extends StatelessWidget {
     required this.onPressed,
   });
 
-  final Function() onPressed;
+  final Function()? onPressed;
 
   @override
   Widget build(BuildContext context) {

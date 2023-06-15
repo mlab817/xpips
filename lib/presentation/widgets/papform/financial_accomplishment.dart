@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pips/data/repositories/repositories.dart';
+import 'package:pips/domain/models/models.dart';
 import 'package:pips/presentation/controllers/controllers.dart';
-import 'package:pips/presentation/controllers/patchproject_controller.dart';
-
-import '../../../../domain/models/fullproject.dart';
 
 class FinancialAccomplishmentForm extends ConsumerStatefulWidget {
   const FinancialAccomplishmentForm({
@@ -63,11 +62,9 @@ class _FinancialAccomplishmentFormState
                     };
 
                     // send to server
-                    ref
-                        .read(updateFinancialAccompControllerProvider.notifier)
-                        .submit(
-                          id: widget.project.financialAccomplishment?.id ?? 0,
-                          payload: payload,
+                    ref.read(projectRepositoryProvider).updateFa(
+                          widget.project.uuid!,
+                          payload,
                         );
 
                     // update locally saved
@@ -79,10 +76,15 @@ class _FinancialAccomplishmentFormState
                                 .notifier)
                             .update(
                               financialAccomplishment: ref
-                                  .watch(fullProjectControllerProvider(
-                                      widget.project.uuid))
-                                  .financialAccomplishment
-                                  ?.copyWith(
+                                      .watch(fullProjectControllerProvider(
+                                          widget.project.uuid))
+                                      .financialAccomplishment
+                                      ?.copyWith(
+                                        nep2023: newNep,
+                                        gaa2023: newGaa,
+                                        disbursement2023: newDisbursement,
+                                      ) ??
+                                  FinancialAccomplishment(
                                     nep2023: newNep,
                                     gaa2023: newGaa,
                                     disbursement2023: newDisbursement,
@@ -96,10 +98,15 @@ class _FinancialAccomplishmentFormState
                                 .notifier)
                             .update(
                               financialAccomplishment: ref
-                                  .watch(fullProjectControllerProvider(
-                                      widget.project.uuid))
-                                  .financialAccomplishment
-                                  ?.copyWith(
+                                      .watch(fullProjectControllerProvider(
+                                          widget.project.uuid))
+                                      .financialAccomplishment
+                                      ?.copyWith(
+                                        nep2024: newNep,
+                                        gaa2024: newGaa,
+                                        disbursement2024: newDisbursement,
+                                      ) ??
+                                  FinancialAccomplishment(
                                     nep2024: newNep,
                                     gaa2024: newGaa,
                                     disbursement2024: newDisbursement,
@@ -113,10 +120,15 @@ class _FinancialAccomplishmentFormState
                                 .notifier)
                             .update(
                               financialAccomplishment: ref
-                                  .watch(fullProjectControllerProvider(
-                                      widget.project.uuid))
-                                  .financialAccomplishment
-                                  ?.copyWith(
+                                      .watch(fullProjectControllerProvider(
+                                          widget.project.uuid))
+                                      .financialAccomplishment
+                                      ?.copyWith(
+                                        nep2025: newNep,
+                                        gaa2025: newGaa,
+                                        disbursement2025: newDisbursement,
+                                      ) ??
+                                  FinancialAccomplishment(
                                     nep2025: newNep,
                                     gaa2025: newGaa,
                                     disbursement2025: newDisbursement,
@@ -130,10 +142,15 @@ class _FinancialAccomplishmentFormState
                                 .notifier)
                             .update(
                               financialAccomplishment: ref
-                                  .watch(fullProjectControllerProvider(
-                                      widget.project.uuid))
-                                  .financialAccomplishment
-                                  ?.copyWith(
+                                      .watch(fullProjectControllerProvider(
+                                          widget.project.uuid))
+                                      .financialAccomplishment
+                                      ?.copyWith(
+                                        nep2026: newNep,
+                                        gaa2026: newGaa,
+                                        disbursement2026: newDisbursement,
+                                      ) ??
+                                  FinancialAccomplishment(
                                     nep2026: newNep,
                                     gaa2026: newGaa,
                                     disbursement2026: newDisbursement,
@@ -147,10 +164,15 @@ class _FinancialAccomplishmentFormState
                                 .notifier)
                             .update(
                               financialAccomplishment: ref
-                                  .watch(fullProjectControllerProvider(
-                                      widget.project.uuid))
-                                  .financialAccomplishment
-                                  ?.copyWith(
+                                      .watch(fullProjectControllerProvider(
+                                          widget.project.uuid))
+                                      .financialAccomplishment
+                                      ?.copyWith(
+                                        nep2027: newNep,
+                                        gaa2027: newGaa,
+                                        disbursement2027: newDisbursement,
+                                      ) ??
+                                  FinancialAccomplishment(
                                     nep2027: newNep,
                                     gaa2027: newGaa,
                                     disbursement2027: newDisbursement,
@@ -164,10 +186,15 @@ class _FinancialAccomplishmentFormState
                                 .notifier)
                             .update(
                               financialAccomplishment: ref
-                                  .watch(fullProjectControllerProvider(
-                                      widget.project.uuid))
-                                  .financialAccomplishment
-                                  ?.copyWith(
+                                      .watch(fullProjectControllerProvider(
+                                          widget.project.uuid))
+                                      .financialAccomplishment
+                                      ?.copyWith(
+                                        nep2028: newNep,
+                                        gaa2028: newGaa,
+                                        disbursement2028: newDisbursement,
+                                      ) ??
+                                  FinancialAccomplishment(
                                     nep2028: newNep,
                                     gaa2028: newGaa,
                                     disbursement2028: newDisbursement,
@@ -177,8 +204,6 @@ class _FinancialAccomplishmentFormState
                       default:
                         break;
                     }
-
-                    Navigator.pop(context);
                   }
                 : null,
             child: const Text('UPDATE'),
@@ -192,6 +217,7 @@ class _FinancialAccomplishmentFormState
             padding: const EdgeInsets.all(8.0),
             child: TextFormField(
               initialValue: newNep.toString(),
+              decoration: const InputDecoration(labelText: "NEP"),
               onChanged: (String value) {
                 setState(() {
                   newNep = double.tryParse(value);
@@ -204,6 +230,7 @@ class _FinancialAccomplishmentFormState
             padding: const EdgeInsets.all(8.0),
             child: TextFormField(
               initialValue: newGaa.toString(),
+              decoration: const InputDecoration(labelText: "GAA"),
               onChanged: (String value) {
                 setState(() {
                   newGaa = double.tryParse(value);
@@ -216,6 +243,7 @@ class _FinancialAccomplishmentFormState
             padding: const EdgeInsets.all(8.0),
             child: TextFormField(
               initialValue: newDisbursement.toString(),
+              decoration: const InputDecoration(labelText: "DISBURSEMENT"),
               onChanged: (String value) {
                 setState(() {
                   newDisbursement = double.tryParse(value);

@@ -10,6 +10,7 @@ _$_RegionalInvestment _$$_RegionalInvestmentFromJson(
         Map<String, dynamic> json) =>
     _$_RegionalInvestment(
       id: json['id'] as int?,
+      projectId: json['project_id'] as int?,
       regionId: json['region_id'] as int?,
       region: json['region'] == null
           ? null
@@ -28,6 +29,7 @@ Map<String, dynamic> _$$_RegionalInvestmentToJson(
         _$_RegionalInvestment instance) =>
     <String, dynamic>{
       'id': instance.id,
+      'project_id': instance.projectId,
       'region_id': instance.regionId,
       'region': instance.region,
       'y2022': instance.y2022,

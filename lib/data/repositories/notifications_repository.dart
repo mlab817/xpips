@@ -1,15 +1,15 @@
-import 'package:pips/data/requests/pagination_request.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../application/providers/appserviceclient_provider.dart';
 import '../../domain/models/notifications.dart';
 import '../data_sources/app_service_client.dart';
+import '../requests/notifications_request.dart';
 import '../responses/notifications_response.dart';
 
 part 'notifications_repository.g.dart';
 
 abstract class NotificationsRepository {
-  Future<NotificationsResponse> getAll(PaginationRequest input);
+  Future<NotificationsResponse> getAll(NotificationsRequest input);
 
   Future<Notifications> markNotificationAsRead(String id);
 }
@@ -20,7 +20,7 @@ class NotificationsRepositoryImplementer implements NotificationsRepository {
   NotificationsRepositoryImplementer({required this.client});
 
   @override
-  Future<NotificationsResponse> getAll(PaginationRequest input) async {
+  Future<NotificationsResponse> getAll(NotificationsRequest input) async {
     return await client.listNotifications(input);
   }
 

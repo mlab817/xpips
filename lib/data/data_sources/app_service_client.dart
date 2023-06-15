@@ -12,12 +12,16 @@ import '../../data/responses/chatrooms_response.dart';
 import '../../data/responses/comments_response.dart';
 import '../../data/responses/createproject_response.dart';
 import '../../data/responses/newcomment_response.dart';
+import '../../domain/models/cost_schedule.dart';
+import '../../domain/models/fs_investment.dart';
 import '../../domain/models/login_credentials.dart';
 import '../../domain/models/notifications.dart';
+import '../../domain/models/regional_investment.dart';
 import '../repositories/pipolstatus_repository.dart';
 import '../requests/comment_request.dart';
 import '../requests/fullproject_request.dart';
 import '../requests/newproject_request.dart';
+import '../requests/notifications_request.dart';
 import '../requests/projects_request.dart';
 import '../requests/reactivation_request.dart';
 import '../requests/updateprofile_request.dart';
@@ -33,10 +37,12 @@ import '../responses/project_response.dart';
 import '../responses/projects_response.dart';
 import '../responses/reactivation_response.dart';
 import '../responses/signup_response.dart';
+import '../responses/status_response.dart';
 import '../responses/updatefinancialaccomplishment_response.dart';
 import '../responses/updateprofile_response.dart';
 import '../responses/updateproject_response.dart';
 import '../responses/upload_response.dart';
+import '../responses/uploadattachment_response.dart';
 
 part 'app_service_client.g.dart';
 
@@ -71,7 +77,7 @@ abstract class AppServiceClient {
 
   @GET("/notifications")
   Future<NotificationsResponse> listNotifications(
-      @Queries() PaginationRequest input);
+      @Queries() NotificationsRequest input);
 
   @POST("/mark-notification-as-read")
   Future<Notifications> markNotificationAsRead(@Field("id") String id);
@@ -129,7 +135,40 @@ abstract class AppServiceClient {
   @GET('/pipol-statuses')
   Future<PipolStatusResponse> getPipolStatuses();
 
-  @PUT('/financial-accomplishment/{id}')
+  @POST('/projects/{uuid}/financial-accomplishment')
   Future<UpdateFinancialAccomplishmentResponse> updateFinancialAccomplishment(
-      @Path('id') int id, @Body() Map<String, dynamic> payload);
+      @Path('uuid') String uuid, @Body() Map<String, dynamic> payload);
+
+  @POST('/projects/{uuid}/row')
+  Future<StatusResponse> updateRow(
+      @Path('uuid') String uuid, @Body() CostSchedule request);
+
+  @POST('/projects/{uuid}/rap')
+  Future<StatusResponse> updateRap(
+      @Path('uuid') String uuid, @Body() CostSchedule request);
+
+  @POST('/projects/{uuid}/fs')
+  Future<StatusResponse> updateFs(
+      @Path('uuid') String uuid, @Body() CostSchedule request);
+
+  @POST('/projects/{uuid}/regional-investments')
+  Future<RegionalInvestmentResponse> updateRegionalInvestment(
+      @Path('uuid') String uuid, @Body() RegionalInvestment request);
+
+  @POST('/projects/{uuid}/fs-investments')
+  Future<FsInvestmentResponse> updateFsInvestment(
+      @Path('uuid') String uuid, @Body() FsInvestment request);
+
+  @DELETE('/regional-investments/{id}')
+  Future<void> removeRegionalInvestment(@Path('id') int id);
+
+  @DELETE('/fs-investments/{id}')
+  Future<void> removeFsInvestment(@Path('id') int id);
+
+  @POST('/projects/{uuid}/attachments')
+  Future<UploadAttachmentResponse> attach(
+    @Path('uuid') String uuid, {
+    @Part(name: 'attachment') required File attachment,
+    @Part(name: 'attachment_type_id') required int attachmentTypeId,
+  });
 }

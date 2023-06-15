@@ -5,6 +5,7 @@ import 'package:pips/presentation/widgets/papform/common/editbutton.dart';
 
 import '../../../../domain/models/fullproject.dart';
 import '../../../../domain/models/option.dart';
+import '../../../controllers/patchproject_controller.dart';
 
 class CheckboxEditor extends ConsumerStatefulWidget {
   const CheckboxEditor({
@@ -14,6 +15,7 @@ class CheckboxEditor extends ConsumerStatefulWidget {
     required this.options,
     required this.oldValue,
     required this.onSubmit,
+    this.enabled = true,
   });
 
   final FullProject project;
@@ -21,6 +23,7 @@ class CheckboxEditor extends ConsumerStatefulWidget {
   final List<Option> oldValue;
   final List<Option> options;
   final Function(List<Option> newValue) onSubmit;
+  final bool enabled;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _CheckboxEditorState();
@@ -49,19 +52,23 @@ class _CheckboxEditorState extends ConsumerState<CheckboxEditor> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: ListTile(
-          tileColor: Theme.of(context).primaryColor.withOpacity(0.1),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          title: Text(widget.fieldLabel),
-          subtitle: Text(widget.oldValue.map((e) => e.label).join(', ')),
-          trailing: EditButton(
-            onPressed: _edit,
-          )),
+        tileColor: Theme.of(context).primaryColor.withOpacity(0.1),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        title: Text(widget.fieldLabel),
+        subtitle: widget.oldValue.isEmpty
+            ? const Text('NO ITEM(S) SELECTED')
+            : Text(widget.oldValue.map((e) => e.label).join(', ')),
+        onTap: () => _edit(),
+        trailing: EditButton(
+          onPressed: widget.enabled ? () => _edit() : null,
+        ),
+        enabled: widget.enabled,
+      ),
     );
   }
 }
 
-class CheckboxForm extends StatefulWidget {
+class CheckboxForm extends ConsumerStatefulWidget {
   const CheckboxForm({
     super.key,
     required this.fieldLabel,
@@ -76,10 +83,10 @@ class CheckboxForm extends StatefulWidget {
   final Function(List<Option> newValue) onSubmit;
 
   @override
-  State<CheckboxForm> createState() => _CheckboxFormState();
+  ConsumerState<CheckboxForm> createState() => _CheckboxFormState();
 }
 
-class _CheckboxFormState extends State<CheckboxForm> {
+class _CheckboxFormState extends ConsumerState<CheckboxForm> {
   late List<Option> oldValue;
   late List<Option> newValue;
 
@@ -107,7 +114,13 @@ class _CheckboxFormState extends State<CheckboxForm> {
                 : () {
                     widget.onSubmit(newValue);
                   },
-            child: const Text('UPDATE'),
+            child: ref.watch(patchProjectControllerProvider).isLoading
+                ? const SizedBox(
+                    height: 10,
+                    width: 10,
+                    child: CircularProgressIndicator(),
+                  )
+                : const Text('UPDATE'),
           ),
         ],
       ),
@@ -118,6 +131,9 @@ class _CheckboxFormState extends State<CheckboxForm> {
 
             return CheckboxListTile.adaptive(
               value: newValue.contains(option),
+              subtitle:
+                  option.description != null ? Text(option.description!) : null,
+              activeColor: Theme.of(context).primaryColor,
               onChanged: (bool? value) {
                 setState(() {
                   if (value ?? false) {

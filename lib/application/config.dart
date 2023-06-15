@@ -3,7 +3,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'config.g.dart';
 
 class Config {
-  final String _domain = 'pipsv2.test'; // 'pips.da.gov.ph';
+  final String _domain = 'pips.da.gov.ph'; // 'pips.da.gov.ph';
   final String _oneSignalAppId = 'f601fb30-7df7-437e-a51f-be3f72997245';
 
   String get domain => _domain;
@@ -14,7 +14,7 @@ class Config {
   String get oneSignalAppId => _oneSignalAppId;
 
   static const String apiUrl =
-      'https://api.pipsv2.test'; // 'https://api.pips.da.gov.ph';
+      'https://api.pips.da.gov.ph'; // 'https://api.pips.da.gov.ph';
 }
 
 @Riverpod(keepAlive: true)

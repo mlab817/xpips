@@ -11,6 +11,7 @@ part 'fs_investment.g.dart';
 class FsInvestment with _$FsInvestment {
   factory FsInvestment({
     @JsonKey(name: "id") int? id,
+    @JsonKey(name: "project_id") int? projectId,
     @JsonKey(name: "funding_source_id") int? fundingSourceId,
     @JsonKey(name: "funding_source") Option? fundingSource,
     @JsonKey(name: "y2022") double? y2022,
@@ -32,8 +33,9 @@ class FsInvestment with _$FsInvestment {
     return jsonEncode(this);
   }
 
-  static FsInvestment initial() {
+  static FsInvestment initial({required int projectId}) {
     return FsInvestment(
+      projectId: projectId,
       fundingSourceId: null,
       fundingSource: null,
       y2022: 0,

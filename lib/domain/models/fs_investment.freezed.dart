@@ -22,6 +22,8 @@ FsInvestment _$FsInvestmentFromJson(Map<String, dynamic> json) {
 mixin _$FsInvestment {
   @JsonKey(name: "id")
   int? get id => throw _privateConstructorUsedError;
+  @JsonKey(name: "project_id")
+  int? get projectId => throw _privateConstructorUsedError;
   @JsonKey(name: "funding_source_id")
   int? get fundingSourceId => throw _privateConstructorUsedError;
   @JsonKey(name: "funding_source")
@@ -57,6 +59,7 @@ abstract class $FsInvestmentCopyWith<$Res> {
   @useResult
   $Res call(
       {@JsonKey(name: "id") int? id,
+      @JsonKey(name: "project_id") int? projectId,
       @JsonKey(name: "funding_source_id") int? fundingSourceId,
       @JsonKey(name: "funding_source") Option? fundingSource,
       @JsonKey(name: "y2022") double? y2022,
@@ -85,6 +88,7 @@ class _$FsInvestmentCopyWithImpl<$Res, $Val extends FsInvestment>
   @override
   $Res call({
     Object? id = freezed,
+    Object? projectId = freezed,
     Object? fundingSourceId = freezed,
     Object? fundingSource = freezed,
     Object? y2022 = freezed,
@@ -100,6 +104,10 @@ class _$FsInvestmentCopyWithImpl<$Res, $Val extends FsInvestment>
       id: freezed == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
+              as int?,
+      projectId: freezed == projectId
+          ? _value.projectId
+          : projectId // ignore: cast_nullable_to_non_nullable
               as int?,
       fundingSourceId: freezed == fundingSourceId
           ? _value.fundingSourceId
@@ -167,6 +175,7 @@ abstract class _$$_FsInvestmentCopyWith<$Res>
   @useResult
   $Res call(
       {@JsonKey(name: "id") int? id,
+      @JsonKey(name: "project_id") int? projectId,
       @JsonKey(name: "funding_source_id") int? fundingSourceId,
       @JsonKey(name: "funding_source") Option? fundingSource,
       @JsonKey(name: "y2022") double? y2022,
@@ -194,6 +203,7 @@ class __$$_FsInvestmentCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = freezed,
+    Object? projectId = freezed,
     Object? fundingSourceId = freezed,
     Object? fundingSource = freezed,
     Object? y2022 = freezed,
@@ -209,6 +219,10 @@ class __$$_FsInvestmentCopyWithImpl<$Res>
       id: freezed == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
+              as int?,
+      projectId: freezed == projectId
+          ? _value.projectId
+          : projectId // ignore: cast_nullable_to_non_nullable
               as int?,
       fundingSourceId: freezed == fundingSourceId
           ? _value.fundingSourceId
@@ -259,6 +273,7 @@ class __$$_FsInvestmentCopyWithImpl<$Res>
 class _$_FsInvestment implements _FsInvestment {
   _$_FsInvestment(
       {@JsonKey(name: "id") this.id,
+      @JsonKey(name: "project_id") this.projectId,
       @JsonKey(name: "funding_source_id") this.fundingSourceId,
       @JsonKey(name: "funding_source") this.fundingSource,
       @JsonKey(name: "y2022") this.y2022,
@@ -276,6 +291,9 @@ class _$_FsInvestment implements _FsInvestment {
   @override
   @JsonKey(name: "id")
   final int? id;
+  @override
+  @JsonKey(name: "project_id")
+  final int? projectId;
   @override
   @JsonKey(name: "funding_source_id")
   final int? fundingSourceId;
@@ -313,6 +331,8 @@ class _$_FsInvestment implements _FsInvestment {
         (other.runtimeType == runtimeType &&
             other is _$_FsInvestment &&
             (identical(other.id, id) || other.id == id) &&
+            (identical(other.projectId, projectId) ||
+                other.projectId == projectId) &&
             (identical(other.fundingSourceId, fundingSourceId) ||
                 other.fundingSourceId == fundingSourceId) &&
             (identical(other.fundingSource, fundingSource) ||
@@ -329,7 +349,7 @@ class _$_FsInvestment implements _FsInvestment {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, fundingSourceId,
+  int get hashCode => Object.hash(runtimeType, id, projectId, fundingSourceId,
       fundingSource, y2022, y2023, y2024, y2025, y2026, y2027, y2028, y2029);
 
   @JsonKey(ignore: true)
@@ -349,6 +369,7 @@ class _$_FsInvestment implements _FsInvestment {
 abstract class _FsInvestment implements FsInvestment {
   factory _FsInvestment(
       {@JsonKey(name: "id") final int? id,
+      @JsonKey(name: "project_id") final int? projectId,
       @JsonKey(name: "funding_source_id") final int? fundingSourceId,
       @JsonKey(name: "funding_source") final Option? fundingSource,
       @JsonKey(name: "y2022") final double? y2022,
@@ -366,6 +387,9 @@ abstract class _FsInvestment implements FsInvestment {
   @override
   @JsonKey(name: "id")
   int? get id;
+  @override
+  @JsonKey(name: "project_id")
+  int? get projectId;
   @override
   @JsonKey(name: "funding_source_id")
   int? get fundingSourceId;

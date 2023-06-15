@@ -22,6 +22,8 @@ RegionalInvestment _$RegionalInvestmentFromJson(Map<String, dynamic> json) {
 mixin _$RegionalInvestment {
   @JsonKey(name: "id")
   int? get id => throw _privateConstructorUsedError;
+  @JsonKey(name: "project_id")
+  int? get projectId => throw _privateConstructorUsedError;
   @JsonKey(name: "region_id")
   int? get regionId => throw _privateConstructorUsedError;
   @JsonKey(name: "region")
@@ -57,6 +59,7 @@ abstract class $RegionalInvestmentCopyWith<$Res> {
   @useResult
   $Res call(
       {@JsonKey(name: "id") int? id,
+      @JsonKey(name: "project_id") int? projectId,
       @JsonKey(name: "region_id") int? regionId,
       @JsonKey(name: "region") Option? region,
       @JsonKey(name: "y2022") double? y2022,
@@ -85,6 +88,7 @@ class _$RegionalInvestmentCopyWithImpl<$Res, $Val extends RegionalInvestment>
   @override
   $Res call({
     Object? id = freezed,
+    Object? projectId = freezed,
     Object? regionId = freezed,
     Object? region = freezed,
     Object? y2022 = freezed,
@@ -100,6 +104,10 @@ class _$RegionalInvestmentCopyWithImpl<$Res, $Val extends RegionalInvestment>
       id: freezed == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
+              as int?,
+      projectId: freezed == projectId
+          ? _value.projectId
+          : projectId // ignore: cast_nullable_to_non_nullable
               as int?,
       regionId: freezed == regionId
           ? _value.regionId
@@ -167,6 +175,7 @@ abstract class _$$_RegionalInvestmentCopyWith<$Res>
   @useResult
   $Res call(
       {@JsonKey(name: "id") int? id,
+      @JsonKey(name: "project_id") int? projectId,
       @JsonKey(name: "region_id") int? regionId,
       @JsonKey(name: "region") Option? region,
       @JsonKey(name: "y2022") double? y2022,
@@ -194,6 +203,7 @@ class __$$_RegionalInvestmentCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = freezed,
+    Object? projectId = freezed,
     Object? regionId = freezed,
     Object? region = freezed,
     Object? y2022 = freezed,
@@ -209,6 +219,10 @@ class __$$_RegionalInvestmentCopyWithImpl<$Res>
       id: freezed == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
+              as int?,
+      projectId: freezed == projectId
+          ? _value.projectId
+          : projectId // ignore: cast_nullable_to_non_nullable
               as int?,
       regionId: freezed == regionId
           ? _value.regionId
@@ -259,6 +273,7 @@ class __$$_RegionalInvestmentCopyWithImpl<$Res>
 class _$_RegionalInvestment implements _RegionalInvestment {
   _$_RegionalInvestment(
       {@JsonKey(name: "id") this.id,
+      @JsonKey(name: "project_id") this.projectId,
       @JsonKey(name: "region_id") this.regionId,
       @JsonKey(name: "region") this.region,
       @JsonKey(name: "y2022") this.y2022,
@@ -276,6 +291,9 @@ class _$_RegionalInvestment implements _RegionalInvestment {
   @override
   @JsonKey(name: "id")
   final int? id;
+  @override
+  @JsonKey(name: "project_id")
+  final int? projectId;
   @override
   @JsonKey(name: "region_id")
   final int? regionId;
@@ -313,6 +331,8 @@ class _$_RegionalInvestment implements _RegionalInvestment {
         (other.runtimeType == runtimeType &&
             other is _$_RegionalInvestment &&
             (identical(other.id, id) || other.id == id) &&
+            (identical(other.projectId, projectId) ||
+                other.projectId == projectId) &&
             (identical(other.regionId, regionId) ||
                 other.regionId == regionId) &&
             (identical(other.region, region) || other.region == region) &&
@@ -328,8 +348,8 @@ class _$_RegionalInvestment implements _RegionalInvestment {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, regionId, region, y2022,
-      y2023, y2024, y2025, y2026, y2027, y2028, y2029);
+  int get hashCode => Object.hash(runtimeType, id, projectId, regionId, region,
+      y2022, y2023, y2024, y2025, y2026, y2027, y2028, y2029);
 
   @JsonKey(ignore: true)
   @override
@@ -349,6 +369,7 @@ class _$_RegionalInvestment implements _RegionalInvestment {
 abstract class _RegionalInvestment implements RegionalInvestment {
   factory _RegionalInvestment(
       {@JsonKey(name: "id") final int? id,
+      @JsonKey(name: "project_id") final int? projectId,
       @JsonKey(name: "region_id") final int? regionId,
       @JsonKey(name: "region") final Option? region,
       @JsonKey(name: "y2022") final double? y2022,
@@ -366,6 +387,9 @@ abstract class _RegionalInvestment implements RegionalInvestment {
   @override
   @JsonKey(name: "id")
   int? get id;
+  @override
+  @JsonKey(name: "project_id")
+  int? get projectId;
   @override
   @JsonKey(name: "region_id")
   int? get regionId;

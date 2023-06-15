@@ -21,9 +21,9 @@ FullProject _$FullProjectFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$FullProject {
   @JsonKey(name: "id")
-  int? get id => throw _privateConstructorUsedError;
+  int get id => throw _privateConstructorUsedError;
   @JsonKey(name: "uuid")
-  String? get uuid => throw _privateConstructorUsedError;
+  String get uuid => throw _privateConstructorUsedError;
   @JsonKey(name: "title")
   String? get title => throw _privateConstructorUsedError;
   @JsonKey(name: "type_id")
@@ -105,7 +105,7 @@ mixin _$FullProject {
   @JsonKey(name: "fs_total_cost")
   String? get fsTotalCost => throw _privateConstructorUsedError;
   @JsonKey(name: "fs_cost")
-  FsCost? get fsCost => throw _privateConstructorUsedError;
+  CostSchedule? get fsCost => throw _privateConstructorUsedError;
   @JsonKey(name: "fs_completion_date")
   DateTime? get fsCompletionDate => throw _privateConstructorUsedError;
   @JsonKey(name: "has_row")
@@ -115,7 +115,7 @@ mixin _$FullProject {
   @JsonKey(name: "row_total_cost")
   double? get rowTotalCost => throw _privateConstructorUsedError;
   @JsonKey(name: "row_cost")
-  RowCost? get rowCost => throw _privateConstructorUsedError;
+  CostSchedule? get rowCost => throw _privateConstructorUsedError;
   @JsonKey(name: "has_rap")
   bool? get hasRap => throw _privateConstructorUsedError;
   @JsonKey(name: "rap_affected_households")
@@ -123,7 +123,7 @@ mixin _$FullProject {
   @JsonKey(name: "rap_total_cost")
   double? get rapTotalCost => throw _privateConstructorUsedError;
   @JsonKey(name: "rap_cost")
-  RapCost? get rapCost => throw _privateConstructorUsedError;
+  CostSchedule? get rapCost => throw _privateConstructorUsedError;
   @JsonKey(name: "has_row_rap")
   bool? get hasRowRap => throw _privateConstructorUsedError;
   @JsonKey(name: "prerequisites")
@@ -200,6 +200,13 @@ mixin _$FullProject {
   String? get notes => throw _privateConstructorUsedError;
   @JsonKey(name: "icc_resubmission")
   bool? get iccResubmission => throw _privateConstructorUsedError;
+  @JsonKey(name: "regions")
+  List<Option> get regions => throw _privateConstructorUsedError;
+  @JsonKey(name: "provinces")
+  List<Option> get provinces => throw _privateConstructorUsedError;
+  @JsonKey(name: "attachments")
+  List<UploadAttachmentResponseData> get attachments =>
+      throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -215,9 +222,9 @@ abstract class $FullProjectCopyWith<$Res> {
   @useResult
   $Res call(
       {@JsonKey(name: "id")
-          int? id,
+          int id,
       @JsonKey(name: "uuid")
-          String? uuid,
+          String uuid,
       @JsonKey(name: "title")
           String? title,
       @JsonKey(name: "type_id")
@@ -299,7 +306,7 @@ abstract class $FullProjectCopyWith<$Res> {
       @JsonKey(name: "fs_total_cost")
           String? fsTotalCost,
       @JsonKey(name: "fs_cost")
-          FsCost? fsCost,
+          CostSchedule? fsCost,
       @JsonKey(name: "fs_completion_date")
           DateTime? fsCompletionDate,
       @JsonKey(name: "has_row")
@@ -309,7 +316,7 @@ abstract class $FullProjectCopyWith<$Res> {
       @JsonKey(name: "row_total_cost")
           double? rowTotalCost,
       @JsonKey(name: "row_cost")
-          RowCost? rowCost,
+          CostSchedule? rowCost,
       @JsonKey(name: "has_rap")
           bool? hasRap,
       @JsonKey(name: "rap_affected_households")
@@ -317,7 +324,7 @@ abstract class $FullProjectCopyWith<$Res> {
       @JsonKey(name: "rap_total_cost")
           double? rapTotalCost,
       @JsonKey(name: "rap_cost")
-          RapCost? rapCost,
+          CostSchedule? rapCost,
       @JsonKey(name: "has_row_rap")
           bool? hasRowRap,
       @JsonKey(name: "prerequisites")
@@ -391,7 +398,13 @@ abstract class $FullProjectCopyWith<$Res> {
       @JsonKey(name: "notes")
           String? notes,
       @JsonKey(name: "icc_resubmission")
-          bool? iccResubmission});
+          bool? iccResubmission,
+      @JsonKey(name: "regions")
+          List<Option> regions,
+      @JsonKey(name: "provinces")
+          List<Option> provinces,
+      @JsonKey(name: "attachments")
+          List<UploadAttachmentResponseData> attachments});
 
   $OptionCopyWith<$Res>? get type;
   $OptionCopyWith<$Res>? get spatialCoverage;
@@ -402,9 +415,9 @@ abstract class $FullProjectCopyWith<$Res> {
   $OptionCopyWith<$Res>? get gad;
   $OptionCopyWith<$Res>? get preparationDocument;
   $OptionCopyWith<$Res>? get fsStatus;
-  $FsCostCopyWith<$Res>? get fsCost;
-  $RowCostCopyWith<$Res>? get rowCost;
-  $RapCostCopyWith<$Res>? get rapCost;
+  $CostScheduleCopyWith<$Res>? get fsCost;
+  $CostScheduleCopyWith<$Res>? get rowCost;
+  $CostScheduleCopyWith<$Res>? get rapCost;
   $OptionCopyWith<$Res>? get fundingSource;
   $OptionCopyWith<$Res>? get implementationMode;
   $OptionCopyWith<$Res>? get category;
@@ -430,8 +443,8 @@ class _$FullProjectCopyWithImpl<$Res, $Val extends FullProject>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = freezed,
-    Object? uuid = freezed,
+    Object? id = null,
+    Object? uuid = null,
     Object? title = freezed,
     Object? typeId = freezed,
     Object? type = freezed,
@@ -519,16 +532,19 @@ class _$FullProjectCopyWithImpl<$Res, $Val extends FullProject>
     Object? contactInformation = freezed,
     Object? notes = freezed,
     Object? iccResubmission = freezed,
+    Object? regions = null,
+    Object? provinces = null,
+    Object? attachments = null,
   }) {
     return _then(_value.copyWith(
-      id: freezed == id
+      id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as int?,
-      uuid: freezed == uuid
+              as int,
+      uuid: null == uuid
           ? _value.uuid
           : uuid // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as String,
       title: freezed == title
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
@@ -692,7 +708,7 @@ class _$FullProjectCopyWithImpl<$Res, $Val extends FullProject>
       fsCost: freezed == fsCost
           ? _value.fsCost
           : fsCost // ignore: cast_nullable_to_non_nullable
-              as FsCost?,
+              as CostSchedule?,
       fsCompletionDate: freezed == fsCompletionDate
           ? _value.fsCompletionDate
           : fsCompletionDate // ignore: cast_nullable_to_non_nullable
@@ -712,7 +728,7 @@ class _$FullProjectCopyWithImpl<$Res, $Val extends FullProject>
       rowCost: freezed == rowCost
           ? _value.rowCost
           : rowCost // ignore: cast_nullable_to_non_nullable
-              as RowCost?,
+              as CostSchedule?,
       hasRap: freezed == hasRap
           ? _value.hasRap
           : hasRap // ignore: cast_nullable_to_non_nullable
@@ -728,7 +744,7 @@ class _$FullProjectCopyWithImpl<$Res, $Val extends FullProject>
       rapCost: freezed == rapCost
           ? _value.rapCost
           : rapCost // ignore: cast_nullable_to_non_nullable
-              as RapCost?,
+              as CostSchedule?,
       hasRowRap: freezed == hasRowRap
           ? _value.hasRowRap
           : hasRowRap // ignore: cast_nullable_to_non_nullable
@@ -877,6 +893,18 @@ class _$FullProjectCopyWithImpl<$Res, $Val extends FullProject>
           ? _value.iccResubmission
           : iccResubmission // ignore: cast_nullable_to_non_nullable
               as bool?,
+      regions: null == regions
+          ? _value.regions
+          : regions // ignore: cast_nullable_to_non_nullable
+              as List<Option>,
+      provinces: null == provinces
+          ? _value.provinces
+          : provinces // ignore: cast_nullable_to_non_nullable
+              as List<Option>,
+      attachments: null == attachments
+          ? _value.attachments
+          : attachments // ignore: cast_nullable_to_non_nullable
+              as List<UploadAttachmentResponseData>,
     ) as $Val);
   }
 
@@ -990,36 +1018,36 @@ class _$FullProjectCopyWithImpl<$Res, $Val extends FullProject>
 
   @override
   @pragma('vm:prefer-inline')
-  $FsCostCopyWith<$Res>? get fsCost {
+  $CostScheduleCopyWith<$Res>? get fsCost {
     if (_value.fsCost == null) {
       return null;
     }
 
-    return $FsCostCopyWith<$Res>(_value.fsCost!, (value) {
+    return $CostScheduleCopyWith<$Res>(_value.fsCost!, (value) {
       return _then(_value.copyWith(fsCost: value) as $Val);
     });
   }
 
   @override
   @pragma('vm:prefer-inline')
-  $RowCostCopyWith<$Res>? get rowCost {
+  $CostScheduleCopyWith<$Res>? get rowCost {
     if (_value.rowCost == null) {
       return null;
     }
 
-    return $RowCostCopyWith<$Res>(_value.rowCost!, (value) {
+    return $CostScheduleCopyWith<$Res>(_value.rowCost!, (value) {
       return _then(_value.copyWith(rowCost: value) as $Val);
     });
   }
 
   @override
   @pragma('vm:prefer-inline')
-  $RapCostCopyWith<$Res>? get rapCost {
+  $CostScheduleCopyWith<$Res>? get rapCost {
     if (_value.rapCost == null) {
       return null;
     }
 
-    return $RapCostCopyWith<$Res>(_value.rapCost!, (value) {
+    return $CostScheduleCopyWith<$Res>(_value.rapCost!, (value) {
       return _then(_value.copyWith(rapCost: value) as $Val);
     });
   }
@@ -1156,9 +1184,9 @@ abstract class _$$_FullProjectCopyWith<$Res>
   @useResult
   $Res call(
       {@JsonKey(name: "id")
-          int? id,
+          int id,
       @JsonKey(name: "uuid")
-          String? uuid,
+          String uuid,
       @JsonKey(name: "title")
           String? title,
       @JsonKey(name: "type_id")
@@ -1240,7 +1268,7 @@ abstract class _$$_FullProjectCopyWith<$Res>
       @JsonKey(name: "fs_total_cost")
           String? fsTotalCost,
       @JsonKey(name: "fs_cost")
-          FsCost? fsCost,
+          CostSchedule? fsCost,
       @JsonKey(name: "fs_completion_date")
           DateTime? fsCompletionDate,
       @JsonKey(name: "has_row")
@@ -1250,7 +1278,7 @@ abstract class _$$_FullProjectCopyWith<$Res>
       @JsonKey(name: "row_total_cost")
           double? rowTotalCost,
       @JsonKey(name: "row_cost")
-          RowCost? rowCost,
+          CostSchedule? rowCost,
       @JsonKey(name: "has_rap")
           bool? hasRap,
       @JsonKey(name: "rap_affected_households")
@@ -1258,7 +1286,7 @@ abstract class _$$_FullProjectCopyWith<$Res>
       @JsonKey(name: "rap_total_cost")
           double? rapTotalCost,
       @JsonKey(name: "rap_cost")
-          RapCost? rapCost,
+          CostSchedule? rapCost,
       @JsonKey(name: "has_row_rap")
           bool? hasRowRap,
       @JsonKey(name: "prerequisites")
@@ -1332,7 +1360,13 @@ abstract class _$$_FullProjectCopyWith<$Res>
       @JsonKey(name: "notes")
           String? notes,
       @JsonKey(name: "icc_resubmission")
-          bool? iccResubmission});
+          bool? iccResubmission,
+      @JsonKey(name: "regions")
+          List<Option> regions,
+      @JsonKey(name: "provinces")
+          List<Option> provinces,
+      @JsonKey(name: "attachments")
+          List<UploadAttachmentResponseData> attachments});
 
   @override
   $OptionCopyWith<$Res>? get type;
@@ -1353,11 +1387,11 @@ abstract class _$$_FullProjectCopyWith<$Res>
   @override
   $OptionCopyWith<$Res>? get fsStatus;
   @override
-  $FsCostCopyWith<$Res>? get fsCost;
+  $CostScheduleCopyWith<$Res>? get fsCost;
   @override
-  $RowCostCopyWith<$Res>? get rowCost;
+  $CostScheduleCopyWith<$Res>? get rowCost;
   @override
-  $RapCostCopyWith<$Res>? get rapCost;
+  $CostScheduleCopyWith<$Res>? get rapCost;
   @override
   $OptionCopyWith<$Res>? get fundingSource;
   @override
@@ -1391,8 +1425,8 @@ class __$$_FullProjectCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = freezed,
-    Object? uuid = freezed,
+    Object? id = null,
+    Object? uuid = null,
     Object? title = freezed,
     Object? typeId = freezed,
     Object? type = freezed,
@@ -1480,16 +1514,19 @@ class __$$_FullProjectCopyWithImpl<$Res>
     Object? contactInformation = freezed,
     Object? notes = freezed,
     Object? iccResubmission = freezed,
+    Object? regions = null,
+    Object? provinces = null,
+    Object? attachments = null,
   }) {
     return _then(_$_FullProject(
-      id: freezed == id
+      id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as int?,
-      uuid: freezed == uuid
+              as int,
+      uuid: null == uuid
           ? _value.uuid
           : uuid // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as String,
       title: freezed == title
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
@@ -1653,7 +1690,7 @@ class __$$_FullProjectCopyWithImpl<$Res>
       fsCost: freezed == fsCost
           ? _value.fsCost
           : fsCost // ignore: cast_nullable_to_non_nullable
-              as FsCost?,
+              as CostSchedule?,
       fsCompletionDate: freezed == fsCompletionDate
           ? _value.fsCompletionDate
           : fsCompletionDate // ignore: cast_nullable_to_non_nullable
@@ -1673,7 +1710,7 @@ class __$$_FullProjectCopyWithImpl<$Res>
       rowCost: freezed == rowCost
           ? _value.rowCost
           : rowCost // ignore: cast_nullable_to_non_nullable
-              as RowCost?,
+              as CostSchedule?,
       hasRap: freezed == hasRap
           ? _value.hasRap
           : hasRap // ignore: cast_nullable_to_non_nullable
@@ -1689,7 +1726,7 @@ class __$$_FullProjectCopyWithImpl<$Res>
       rapCost: freezed == rapCost
           ? _value.rapCost
           : rapCost // ignore: cast_nullable_to_non_nullable
-              as RapCost?,
+              as CostSchedule?,
       hasRowRap: freezed == hasRowRap
           ? _value.hasRowRap
           : hasRowRap // ignore: cast_nullable_to_non_nullable
@@ -1838,18 +1875,30 @@ class __$$_FullProjectCopyWithImpl<$Res>
           ? _value.iccResubmission
           : iccResubmission // ignore: cast_nullable_to_non_nullable
               as bool?,
+      regions: null == regions
+          ? _value._regions
+          : regions // ignore: cast_nullable_to_non_nullable
+              as List<Option>,
+      provinces: null == provinces
+          ? _value._provinces
+          : provinces // ignore: cast_nullable_to_non_nullable
+              as List<Option>,
+      attachments: null == attachments
+          ? _value._attachments
+          : attachments // ignore: cast_nullable_to_non_nullable
+              as List<UploadAttachmentResponseData>,
     ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$_FullProject implements _FullProject {
+class _$_FullProject extends _FullProject {
   _$_FullProject(
       {@JsonKey(name: "id")
-          this.id,
+          required this.id,
       @JsonKey(name: "uuid")
-          this.uuid,
+          required this.uuid,
       @JsonKey(name: "title")
           this.title,
       @JsonKey(name: "type_id")
@@ -2023,7 +2072,13 @@ class _$_FullProject implements _FullProject {
       @JsonKey(name: "notes")
           this.notes,
       @JsonKey(name: "icc_resubmission")
-          this.iccResubmission})
+          this.iccResubmission,
+      @JsonKey(name: "regions")
+          required final List<Option> regions,
+      @JsonKey(name: "provinces")
+          required final List<Option> provinces,
+      @JsonKey(name: "attachments")
+          required final List<UploadAttachmentResponseData> attachments})
       : _bases = bases,
         _operatingUnits = operatingUnits,
         _pdpChapters = pdpChapters,
@@ -2035,17 +2090,21 @@ class _$_FullProject implements _FullProject {
         _fundingInstitutions = fundingInstitutions,
         _fundingSources = fundingSources,
         _fsInvestments = fsInvestments,
-        _regionalInvestments = regionalInvestments;
+        _regionalInvestments = regionalInvestments,
+        _regions = regions,
+        _provinces = provinces,
+        _attachments = attachments,
+        super._();
 
   factory _$_FullProject.fromJson(Map<String, dynamic> json) =>
       _$$_FullProjectFromJson(json);
 
   @override
   @JsonKey(name: "id")
-  final int? id;
+  final int id;
   @override
   @JsonKey(name: "uuid")
-  final String? uuid;
+  final String uuid;
   @override
   @JsonKey(name: "title")
   final String? title;
@@ -2198,7 +2257,7 @@ class _$_FullProject implements _FullProject {
   final String? fsTotalCost;
   @override
   @JsonKey(name: "fs_cost")
-  final FsCost? fsCost;
+  final CostSchedule? fsCost;
   @override
   @JsonKey(name: "fs_completion_date")
   final DateTime? fsCompletionDate;
@@ -2213,7 +2272,7 @@ class _$_FullProject implements _FullProject {
   final double? rowTotalCost;
   @override
   @JsonKey(name: "row_cost")
-  final RowCost? rowCost;
+  final CostSchedule? rowCost;
   @override
   @JsonKey(name: "has_rap")
   final bool? hasRap;
@@ -2225,7 +2284,7 @@ class _$_FullProject implements _FullProject {
   final double? rapTotalCost;
   @override
   @JsonKey(name: "rap_cost")
-  final RapCost? rapCost;
+  final CostSchedule? rapCost;
   @override
   @JsonKey(name: "has_row_rap")
   final bool? hasRowRap;
@@ -2382,10 +2441,36 @@ class _$_FullProject implements _FullProject {
   @override
   @JsonKey(name: "icc_resubmission")
   final bool? iccResubmission;
+  final List<Option> _regions;
+  @override
+  @JsonKey(name: "regions")
+  List<Option> get regions {
+    if (_regions is EqualUnmodifiableListView) return _regions;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_regions);
+  }
+
+  final List<Option> _provinces;
+  @override
+  @JsonKey(name: "provinces")
+  List<Option> get provinces {
+    if (_provinces is EqualUnmodifiableListView) return _provinces;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_provinces);
+  }
+
+  final List<UploadAttachmentResponseData> _attachments;
+  @override
+  @JsonKey(name: "attachments")
+  List<UploadAttachmentResponseData> get attachments {
+    if (_attachments is EqualUnmodifiableListView) return _attachments;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_attachments);
+  }
 
   @override
   String toString() {
-    return 'FullProject(id: $id, uuid: $uuid, title: $title, typeId: $typeId, type: $type, regularProgram: $regularProgram, description: $description, totalCost: $totalCost, expectedOutputs: $expectedOutputs, spatialCoverageId: $spatialCoverageId, spatialCoverage: $spatialCoverage, approvalLevelId: $approvalLevelId, approvalLevel: $approvalLevel, approvalLevelDate: $approvalLevelDate, pip: $pip, typologyId: $typologyId, typology: $typology, cip: $cip, iccable: $iccable, cipTypeId: $cipTypeId, cipType: $cipType, trip: $trip, rdip: $rdip, covid: $covid, research: $research, bases: $bases, operatingUnits: $operatingUnits, rdcEndorsementRequired: $rdcEndorsementRequired, pdpChapterId: $pdpChapterId, pdpChapter: $pdpChapter, pdpChapters: $pdpChapters, risk: $risk, agenda: $agenda, sdgs: $sdgs, gadId: $gadId, gad: $gad, preparationDocumentId: $preparationDocumentId, preparationDocument: $preparationDocument, fsNeedsAssistance: $fsNeedsAssistance, fsStatusId: $fsStatusId, fsStatus: $fsStatus, fsTotalCost: $fsTotalCost, fsCost: $fsCost, fsCompletionDate: $fsCompletionDate, hasRow: $hasRow, rowAffectedHouseholds: $rowAffectedHouseholds, rowTotalCost: $rowTotalCost, rowCost: $rowCost, hasRap: $hasRap, rapAffectedHouseholds: $rapAffectedHouseholds, rapTotalCost: $rapTotalCost, rapCost: $rapCost, hasRowRap: $hasRowRap, prerequisites: $prerequisites, locations: $locations, infrastructureSectors: $infrastructureSectors, fundingInstitutions: $fundingInstitutions, fundingSourceId: $fundingSourceId, fundingSource: $fundingSource, fundingSources: $fundingSources, implementationMode: $implementationMode, pureGrant: $pureGrant, fsInvestments: $fsInvestments, regionalInvestments: $regionalInvestments, implementationModeId: $implementationModeId, projectStatusId: $projectStatusId, categoryId: $categoryId, category: $category, readinessLevelId: $readinessLevelId, readinessLevel: $readinessLevel, startYearId: $startYearId, startYear: $startYear, endYearId: $endYearId, endYear: $endYear, updates: $updates, asOf: $asOf, employmentGenerated: $employmentGenerated, employedMale: $employedMale, employedFemale: $employedFemale, projectStatus: $projectStatus, office: $office, updatedAt: $updatedAt, user: $user, remarks: $remarks, uacsCode: $uacsCode, financialAccomplishment: $financialAccomplishment, contactInformation: $contactInformation, notes: $notes, iccResubmission: $iccResubmission)';
+    return 'FullProject(id: $id, uuid: $uuid, title: $title, typeId: $typeId, type: $type, regularProgram: $regularProgram, description: $description, totalCost: $totalCost, expectedOutputs: $expectedOutputs, spatialCoverageId: $spatialCoverageId, spatialCoverage: $spatialCoverage, approvalLevelId: $approvalLevelId, approvalLevel: $approvalLevel, approvalLevelDate: $approvalLevelDate, pip: $pip, typologyId: $typologyId, typology: $typology, cip: $cip, iccable: $iccable, cipTypeId: $cipTypeId, cipType: $cipType, trip: $trip, rdip: $rdip, covid: $covid, research: $research, bases: $bases, operatingUnits: $operatingUnits, rdcEndorsementRequired: $rdcEndorsementRequired, pdpChapterId: $pdpChapterId, pdpChapter: $pdpChapter, pdpChapters: $pdpChapters, risk: $risk, agenda: $agenda, sdgs: $sdgs, gadId: $gadId, gad: $gad, preparationDocumentId: $preparationDocumentId, preparationDocument: $preparationDocument, fsNeedsAssistance: $fsNeedsAssistance, fsStatusId: $fsStatusId, fsStatus: $fsStatus, fsTotalCost: $fsTotalCost, fsCost: $fsCost, fsCompletionDate: $fsCompletionDate, hasRow: $hasRow, rowAffectedHouseholds: $rowAffectedHouseholds, rowTotalCost: $rowTotalCost, rowCost: $rowCost, hasRap: $hasRap, rapAffectedHouseholds: $rapAffectedHouseholds, rapTotalCost: $rapTotalCost, rapCost: $rapCost, hasRowRap: $hasRowRap, prerequisites: $prerequisites, locations: $locations, infrastructureSectors: $infrastructureSectors, fundingInstitutions: $fundingInstitutions, fundingSourceId: $fundingSourceId, fundingSource: $fundingSource, fundingSources: $fundingSources, implementationMode: $implementationMode, pureGrant: $pureGrant, fsInvestments: $fsInvestments, regionalInvestments: $regionalInvestments, implementationModeId: $implementationModeId, projectStatusId: $projectStatusId, categoryId: $categoryId, category: $category, readinessLevelId: $readinessLevelId, readinessLevel: $readinessLevel, startYearId: $startYearId, startYear: $startYear, endYearId: $endYearId, endYear: $endYear, updates: $updates, asOf: $asOf, employmentGenerated: $employmentGenerated, employedMale: $employedMale, employedFemale: $employedFemale, projectStatus: $projectStatus, office: $office, updatedAt: $updatedAt, user: $user, remarks: $remarks, uacsCode: $uacsCode, financialAccomplishment: $financialAccomplishment, contactInformation: $contactInformation, notes: $notes, iccResubmission: $iccResubmission, regions: $regions, provinces: $provinces, attachments: $attachments)';
   }
 
   @override
@@ -2523,7 +2608,10 @@ class _$_FullProject implements _FullProject {
             (identical(other.financialAccomplishment, financialAccomplishment) || other.financialAccomplishment == financialAccomplishment) &&
             (identical(other.contactInformation, contactInformation) || other.contactInformation == contactInformation) &&
             (identical(other.notes, notes) || other.notes == notes) &&
-            (identical(other.iccResubmission, iccResubmission) || other.iccResubmission == iccResubmission));
+            (identical(other.iccResubmission, iccResubmission) || other.iccResubmission == iccResubmission) &&
+            const DeepCollectionEquality().equals(other._regions, _regions) &&
+            const DeepCollectionEquality().equals(other._provinces, _provinces) &&
+            const DeepCollectionEquality().equals(other._attachments, _attachments));
   }
 
   @JsonKey(ignore: true)
@@ -2618,7 +2706,10 @@ class _$_FullProject implements _FullProject {
         financialAccomplishment,
         contactInformation,
         notes,
-        iccResubmission
+        iccResubmission,
+        const DeepCollectionEquality().hash(_regions),
+        const DeepCollectionEquality().hash(_provinces),
+        const DeepCollectionEquality().hash(_attachments)
       ]);
 
   @JsonKey(ignore: true)
@@ -2635,196 +2726,204 @@ class _$_FullProject implements _FullProject {
   }
 }
 
-abstract class _FullProject implements FullProject {
+abstract class _FullProject extends FullProject {
   factory _FullProject(
-      {@JsonKey(name: "id")
-          final int? id,
-      @JsonKey(name: "uuid")
-          final String? uuid,
-      @JsonKey(name: "title")
-          final String? title,
-      @JsonKey(name: "type_id")
-          final int? typeId,
-      @JsonKey(name: "type")
-          final Option? type,
-      @JsonKey(name: "regular_program")
-          final bool? regularProgram,
-      @JsonKey(name: "description")
-          final String? description,
-      @JsonKey(name: "total_cost")
-          final double? totalCost,
-      @JsonKey(name: "expected_outputs")
-          final String? expectedOutputs,
-      @JsonKey(name: "spatial_coverage_id")
-          final int? spatialCoverageId,
-      @JsonKey(name: "spatial_coverage")
-          final Option? spatialCoverage,
-      @JsonKey(name: "approval_level_id")
-          final int? approvalLevelId,
-      @JsonKey(name: "approval_level", includeToJson: false)
-          final Option? approvalLevel,
-      @JsonKey(name: "approval_level_date")
-          final DateTime? approvalLevelDate,
-      @JsonKey(name: "pip")
-          final bool? pip,
-      @JsonKey(name: "typology_id")
-          final int? typologyId,
-      @JsonKey(name: "typology")
-          final Option? typology,
-      @JsonKey(name: "cip")
-          final bool? cip,
-      @JsonKey(name: "iccable")
-          final bool? iccable,
-      @JsonKey(name: "cip_type_id")
-          final int? cipTypeId,
-      @JsonKey(name: "cip_type")
-          final Option? cipType,
-      @JsonKey(name: "trip")
-          final bool? trip,
-      @JsonKey(name: "rdip")
-          final bool? rdip,
-      @JsonKey(name: "covid")
-          final bool? covid,
-      @JsonKey(name: "research")
-          final bool? research,
-      @JsonKey(name: "bases")
-          required final List<Option> bases,
-      @JsonKey(name: "operating_units")
-          required final List<Option> operatingUnits,
-      @JsonKey(name: "rdc_endorsement_required")
-          final bool? rdcEndorsementRequired,
-      @JsonKey(name: "pdp_chapter_id")
-          final int? pdpChapterId,
-      @JsonKey(name: "pdp_chapter")
-          final Option? pdpChapter,
-      @JsonKey(name: "pdp_chapters")
-          required final List<Option> pdpChapters,
-      @JsonKey(name: "implementation_risk")
-          final String? risk,
-      @JsonKey(name: "agenda")
-          required final List<Option> agenda,
-      @JsonKey(name: "sdgs")
-          required final List<Option> sdgs,
-      @JsonKey(name: "gad_id")
-          final int? gadId,
-      @JsonKey(name: "gad")
-          final Option? gad,
-      @JsonKey(name: "preparation_document_id")
-          final int? preparationDocumentId,
-      @JsonKey(name: "preparation_document")
-          final Option? preparationDocument,
-      @JsonKey(name: "fs_needs_assistance")
-          final bool? fsNeedsAssistance,
-      @JsonKey(name: "fs_status_id")
-          final int? fsStatusId,
-      @JsonKey(name: "fs_status")
-          final Option? fsStatus,
-      @JsonKey(name: "fs_total_cost")
-          final String? fsTotalCost,
-      @JsonKey(name: "fs_cost")
-          final FsCost? fsCost,
-      @JsonKey(name: "fs_completion_date")
-          final DateTime? fsCompletionDate,
-      @JsonKey(name: "has_row")
-          final bool? hasRow,
-      @JsonKey(name: "row_affected_households")
-          final int? rowAffectedHouseholds,
-      @JsonKey(name: "row_total_cost")
-          final double? rowTotalCost,
-      @JsonKey(name: "row_cost")
-          final RowCost? rowCost,
-      @JsonKey(name: "has_rap")
-          final bool? hasRap,
-      @JsonKey(name: "rap_affected_households")
-          final int? rapAffectedHouseholds,
-      @JsonKey(name: "rap_total_cost")
-          final double? rapTotalCost,
-      @JsonKey(name: "rap_cost")
-          final RapCost? rapCost,
-      @JsonKey(name: "has_row_rap")
-          final bool? hasRowRap,
-      @JsonKey(name: "prerequisites")
-          required final List<Option> prerequisites,
-      @JsonKey(name: "locations")
-          required final List<Option> locations,
-      @JsonKey(name: "infrastructure_sectors")
-          required final List<Option> infrastructureSectors,
-      @JsonKey(name: "funding_institutions")
-          required final List<Option> fundingInstitutions,
-      @JsonKey(name: "funding_source_id")
-          final int? fundingSourceId,
-      @JsonKey(name: "funding_source")
-          final Option? fundingSource,
-      @JsonKey(name: "funding_sources")
-          required final List<Option> fundingSources,
-      @JsonKey(name: "implementation_mode")
-          final Option? implementationMode,
-      @JsonKey(name: "pure_grant")
-          final bool? pureGrant,
-      @JsonKey(name: "fs_investments")
-          required final List<FsInvestment> fsInvestments,
-      @JsonKey(name: "regional_investments")
-          required final List<RegionalInvestment> regionalInvestments,
-      @JsonKey(name: "implementation_mode_id")
-          final int? implementationModeId,
-      @JsonKey(name: "project_status_id")
-          final int? projectStatusId,
-      @JsonKey(name: "category_id")
-          final int? categoryId,
-      @JsonKey(name: "category")
-          final Option? category,
-      @JsonKey(name: "readiness_level_id")
-          final int? readinessLevelId,
-      @JsonKey(name: "readiness_level")
-          final Option? readinessLevel,
-      @JsonKey(name: "start_year_id")
-          final int? startYearId,
-      @JsonKey(name: "start_year")
-          final Option? startYear,
-      @JsonKey(name: "end_year_id")
-          final int? endYearId,
-      @JsonKey(name: "end_year")
-          final Option? endYear,
-      @JsonKey(name: "updates")
-          final String? updates,
-      @JsonKey(name: "updates_as_of")
-          final DateTime? asOf,
-      @JsonKey(name: "employment_generated")
-          final int? employmentGenerated,
-      @JsonKey(name: "employed_male")
-          final int? employedMale,
-      @JsonKey(name: "employed_female")
-          final int? employedFemale,
-      @JsonKey(name: "project_status")
-          final Option? projectStatus,
-      @JsonKey(name: "office")
-          final Office? office,
-      @JsonKey(name: "updated_at")
-          final DateTime? updatedAt,
-      @JsonKey(name: "user")
-          final User? user,
-      @JsonKey(name: "remarks")
-          final String? remarks,
-      @JsonKey(name: "uacs_code")
-          final String? uacsCode,
-      @JsonKey(name: "financial_accomplishment")
-          final FinancialAccomplishment? financialAccomplishment,
-      @JsonKey(name: "contact_information")
-          final String? contactInformation,
-      @JsonKey(name: "notes")
-          final String? notes,
-      @JsonKey(name: "icc_resubmission")
-          final bool? iccResubmission}) = _$_FullProject;
+          {@JsonKey(name: "id")
+              required final int id,
+          @JsonKey(name: "uuid")
+              required final String uuid,
+          @JsonKey(name: "title")
+              final String? title,
+          @JsonKey(name: "type_id")
+              final int? typeId,
+          @JsonKey(name: "type")
+              final Option? type,
+          @JsonKey(name: "regular_program")
+              final bool? regularProgram,
+          @JsonKey(name: "description")
+              final String? description,
+          @JsonKey(name: "total_cost")
+              final double? totalCost,
+          @JsonKey(name: "expected_outputs")
+              final String? expectedOutputs,
+          @JsonKey(name: "spatial_coverage_id")
+              final int? spatialCoverageId,
+          @JsonKey(name: "spatial_coverage")
+              final Option? spatialCoverage,
+          @JsonKey(name: "approval_level_id")
+              final int? approvalLevelId,
+          @JsonKey(name: "approval_level", includeToJson: false)
+              final Option? approvalLevel,
+          @JsonKey(name: "approval_level_date")
+              final DateTime? approvalLevelDate,
+          @JsonKey(name: "pip")
+              final bool? pip,
+          @JsonKey(name: "typology_id")
+              final int? typologyId,
+          @JsonKey(name: "typology")
+              final Option? typology,
+          @JsonKey(name: "cip")
+              final bool? cip,
+          @JsonKey(name: "iccable")
+              final bool? iccable,
+          @JsonKey(name: "cip_type_id")
+              final int? cipTypeId,
+          @JsonKey(name: "cip_type")
+              final Option? cipType,
+          @JsonKey(name: "trip")
+              final bool? trip,
+          @JsonKey(name: "rdip")
+              final bool? rdip,
+          @JsonKey(name: "covid")
+              final bool? covid,
+          @JsonKey(name: "research")
+              final bool? research,
+          @JsonKey(name: "bases")
+              required final List<Option> bases,
+          @JsonKey(name: "operating_units")
+              required final List<Option> operatingUnits,
+          @JsonKey(name: "rdc_endorsement_required")
+              final bool? rdcEndorsementRequired,
+          @JsonKey(name: "pdp_chapter_id")
+              final int? pdpChapterId,
+          @JsonKey(name: "pdp_chapter")
+              final Option? pdpChapter,
+          @JsonKey(name: "pdp_chapters")
+              required final List<Option> pdpChapters,
+          @JsonKey(name: "implementation_risk")
+              final String? risk,
+          @JsonKey(name: "agenda")
+              required final List<Option> agenda,
+          @JsonKey(name: "sdgs")
+              required final List<Option> sdgs,
+          @JsonKey(name: "gad_id")
+              final int? gadId,
+          @JsonKey(name: "gad")
+              final Option? gad,
+          @JsonKey(name: "preparation_document_id")
+              final int? preparationDocumentId,
+          @JsonKey(name: "preparation_document")
+              final Option? preparationDocument,
+          @JsonKey(name: "fs_needs_assistance")
+              final bool? fsNeedsAssistance,
+          @JsonKey(name: "fs_status_id")
+              final int? fsStatusId,
+          @JsonKey(name: "fs_status")
+              final Option? fsStatus,
+          @JsonKey(name: "fs_total_cost")
+              final String? fsTotalCost,
+          @JsonKey(name: "fs_cost")
+              final CostSchedule? fsCost,
+          @JsonKey(name: "fs_completion_date")
+              final DateTime? fsCompletionDate,
+          @JsonKey(name: "has_row")
+              final bool? hasRow,
+          @JsonKey(name: "row_affected_households")
+              final int? rowAffectedHouseholds,
+          @JsonKey(name: "row_total_cost")
+              final double? rowTotalCost,
+          @JsonKey(name: "row_cost")
+              final CostSchedule? rowCost,
+          @JsonKey(name: "has_rap")
+              final bool? hasRap,
+          @JsonKey(name: "rap_affected_households")
+              final int? rapAffectedHouseholds,
+          @JsonKey(name: "rap_total_cost")
+              final double? rapTotalCost,
+          @JsonKey(name: "rap_cost")
+              final CostSchedule? rapCost,
+          @JsonKey(name: "has_row_rap")
+              final bool? hasRowRap,
+          @JsonKey(name: "prerequisites")
+              required final List<Option> prerequisites,
+          @JsonKey(name: "locations")
+              required final List<Option> locations,
+          @JsonKey(name: "infrastructure_sectors")
+              required final List<Option> infrastructureSectors,
+          @JsonKey(name: "funding_institutions")
+              required final List<Option> fundingInstitutions,
+          @JsonKey(name: "funding_source_id")
+              final int? fundingSourceId,
+          @JsonKey(name: "funding_source")
+              final Option? fundingSource,
+          @JsonKey(name: "funding_sources")
+              required final List<Option> fundingSources,
+          @JsonKey(name: "implementation_mode")
+              final Option? implementationMode,
+          @JsonKey(name: "pure_grant")
+              final bool? pureGrant,
+          @JsonKey(name: "fs_investments")
+              required final List<FsInvestment> fsInvestments,
+          @JsonKey(name: "regional_investments")
+              required final List<RegionalInvestment> regionalInvestments,
+          @JsonKey(name: "implementation_mode_id")
+              final int? implementationModeId,
+          @JsonKey(name: "project_status_id")
+              final int? projectStatusId,
+          @JsonKey(name: "category_id")
+              final int? categoryId,
+          @JsonKey(name: "category")
+              final Option? category,
+          @JsonKey(name: "readiness_level_id")
+              final int? readinessLevelId,
+          @JsonKey(name: "readiness_level")
+              final Option? readinessLevel,
+          @JsonKey(name: "start_year_id")
+              final int? startYearId,
+          @JsonKey(name: "start_year")
+              final Option? startYear,
+          @JsonKey(name: "end_year_id")
+              final int? endYearId,
+          @JsonKey(name: "end_year")
+              final Option? endYear,
+          @JsonKey(name: "updates")
+              final String? updates,
+          @JsonKey(name: "updates_as_of")
+              final DateTime? asOf,
+          @JsonKey(name: "employment_generated")
+              final int? employmentGenerated,
+          @JsonKey(name: "employed_male")
+              final int? employedMale,
+          @JsonKey(name: "employed_female")
+              final int? employedFemale,
+          @JsonKey(name: "project_status")
+              final Option? projectStatus,
+          @JsonKey(name: "office")
+              final Office? office,
+          @JsonKey(name: "updated_at")
+              final DateTime? updatedAt,
+          @JsonKey(name: "user")
+              final User? user,
+          @JsonKey(name: "remarks")
+              final String? remarks,
+          @JsonKey(name: "uacs_code")
+              final String? uacsCode,
+          @JsonKey(name: "financial_accomplishment")
+              final FinancialAccomplishment? financialAccomplishment,
+          @JsonKey(name: "contact_information")
+              final String? contactInformation,
+          @JsonKey(name: "notes")
+              final String? notes,
+          @JsonKey(name: "icc_resubmission")
+              final bool? iccResubmission,
+          @JsonKey(name: "regions")
+              required final List<Option> regions,
+          @JsonKey(name: "provinces")
+              required final List<Option> provinces,
+          @JsonKey(name: "attachments")
+              required final List<UploadAttachmentResponseData> attachments}) =
+      _$_FullProject;
+  _FullProject._() : super._();
 
   factory _FullProject.fromJson(Map<String, dynamic> json) =
       _$_FullProject.fromJson;
 
   @override
   @JsonKey(name: "id")
-  int? get id;
+  int get id;
   @override
   @JsonKey(name: "uuid")
-  String? get uuid;
+  String get uuid;
   @override
   @JsonKey(name: "title")
   String? get title;
@@ -2947,7 +3046,7 @@ abstract class _FullProject implements FullProject {
   String? get fsTotalCost;
   @override
   @JsonKey(name: "fs_cost")
-  FsCost? get fsCost;
+  CostSchedule? get fsCost;
   @override
   @JsonKey(name: "fs_completion_date")
   DateTime? get fsCompletionDate;
@@ -2962,7 +3061,7 @@ abstract class _FullProject implements FullProject {
   double? get rowTotalCost;
   @override
   @JsonKey(name: "row_cost")
-  RowCost? get rowCost;
+  CostSchedule? get rowCost;
   @override
   @JsonKey(name: "has_rap")
   bool? get hasRap;
@@ -2974,7 +3073,7 @@ abstract class _FullProject implements FullProject {
   double? get rapTotalCost;
   @override
   @JsonKey(name: "rap_cost")
-  RapCost? get rapCost;
+  CostSchedule? get rapCost;
   @override
   @JsonKey(name: "has_row_rap")
   bool? get hasRowRap;
@@ -3086,6 +3185,15 @@ abstract class _FullProject implements FullProject {
   @override
   @JsonKey(name: "icc_resubmission")
   bool? get iccResubmission;
+  @override
+  @JsonKey(name: "regions")
+  List<Option> get regions;
+  @override
+  @JsonKey(name: "provinces")
+  List<Option> get provinces;
+  @override
+  @JsonKey(name: "attachments")
+  List<UploadAttachmentResponseData> get attachments;
   @override
   @JsonKey(ignore: true)
   _$$_FullProjectCopyWith<_$_FullProject> get copyWith =>

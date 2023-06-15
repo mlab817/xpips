@@ -33,60 +33,6 @@ extension AsyncValueUI on AsyncValue<void> {
       });
 }
 
-extension ApplyPresets on FullProject {
-  FullProject applyPresets(Preset preset) {
-    return FullProject(
-      bases: [],
-      operatingUnits: [],
-      pdpChapters: [],
-      agenda: [],
-      sdgs: [],
-      fsCost: FsCost(),
-      rowCost: RowCost(),
-      rapCost: RapCost(),
-      prerequisites: [],
-      locations: [],
-      infrastructureSectors: [],
-      fundingInstitutions: [],
-      fundingSources: [],
-      fsInvestments: <FsInvestment>[],
-      regionalInvestments: <RegionalInvestment>[],
-      financialAccomplishment: FinancialAccomplishment(),
-      typeId: preset.typeId,
-      type: preset.type,
-      regularProgram: preset.regularProgram ?? false,
-      spatialCoverageId: preset.spatialCoverageId,
-      spatialCoverage: preset.spatialCoverage,
-      pip: preset.pip ?? false,
-      typologyId: preset.typologyId,
-      typology: preset.typology,
-      cip: preset.cip ?? false,
-      cipTypeId: preset.cipTypeId,
-      cipType: preset.cipType,
-      trip: preset.trip ?? false,
-      rdcEndorsementRequired: preset.rdcEndorsementRequired ?? false,
-      categoryId: preset.categoryId,
-      category: preset.category,
-      startYearId: preset.startYearId,
-      startYear: preset.startYear,
-      endYearId: preset.endYearId,
-      endYear: preset.endYear,
-      projectStatusId: preset.projectStatusId,
-      projectStatus: preset.projectStatus,
-      readinessLevelId: preset.readinessLevelId,
-      readinessLevel: preset.readinessLevel,
-      hasRow: preset.hasRow,
-      hasRap: preset.hasRap,
-      hasRowRap: preset.hasRowRap,
-      fundingSourceId: preset.fundingSourceId,
-      fundingSource: preset.fundingSource,
-      pureGrant: preset.pureGrant,
-      implementationModeId: preset.implementationModeId,
-      implementationMode: preset.implementationMode,
-    );
-  }
-}
-
 extension FsInvestmentTotal on FsInvestment {
   double _total() {
     return (y2022 ?? 0) +

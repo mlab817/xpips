@@ -10,6 +10,12 @@ import '../../../presentation/widgets/loading_dialog.dart';
 import '../../../presentation/widgets/logout_button.dart';
 import '../resources/strings_manager.dart';
 
+enum NotificationStatus {
+  all,
+  read,
+  unread,
+}
+
 @RoutePage()
 class NotificationsScreen extends ConsumerStatefulWidget {
   const NotificationsScreen({Key? key}) : super(key: key);
@@ -21,6 +27,8 @@ class NotificationsScreen extends ConsumerStatefulWidget {
 
 class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
   int _page = 1;
+
+  NotificationStatus _selected = NotificationStatus.all;
 
   @override
   Widget build(BuildContext context) {
@@ -57,21 +65,71 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
       padding: const EdgeInsets.all(8.0),
       child: Row(
         children: [
-          IconButton(
-            onPressed: () {
-              showSearch(
-                  context: context, delegate: _NotificationsSearchDelegate());
-            },
-            icon: const Icon(Icons.search),
+          Expanded(
+            child: TextField(
+              decoration: const InputDecoration(
+                prefixIcon: Icon(Icons.search),
+                hintText: 'Type and press enter to search',
+                fillColor: Colors.transparent,
+                hoverColor: Colors.transparent,
+                focusColor: Colors.transparent,
+                border: InputBorder.none,
+                focusedBorder: InputBorder.none,
+                enabledBorder: InputBorder.none,
+              ),
+              onSubmitted: (String value) {
+                ref
+                    .read(notificationsRequestControllerProvider.notifier)
+                    .update(q: value);
+              },
+            ),
           ),
           const Spacer(),
+          SegmentedButton<NotificationStatus>(
+            selected: {_selected},
+            segments: const <ButtonSegment<NotificationStatus>>[
+              ButtonSegment(
+                value: NotificationStatus.all,
+                label: Text('ALL'),
+              ),
+              ButtonSegment(
+                value: NotificationStatus.unread,
+                label: Text('UNREAD'),
+              ),
+              ButtonSegment(
+                value: NotificationStatus.read,
+                label: Text('READ'),
+              ),
+            ],
+            onSelectionChanged: (Set<NotificationStatus> newSelection) {
+              var filter = '';
+
+              switch (newSelection.first) {
+                case NotificationStatus.all:
+                  filter = 'all';
+                case NotificationStatus.unread:
+                  filter = 'unread';
+                case NotificationStatus.read:
+                  filter = 'read';
+                default:
+                  filter = 'all';
+              }
+
+              ref
+                  .read(notificationsRequestControllerProvider.notifier)
+                  .update(filter: filter);
+              setState(() {
+                _selected = newSelection.first;
+              });
+            },
+          ),
           IconButton(
               onPressed: () {
                 setState(() {
                   _page--;
                 });
                 ref
-                    .read(paginationRequestControllerProvider.notifier)
+                    .read(notificationsRequestControllerProvider.notifier)
                     .update(page: _page);
               },
               icon: const Icon(Icons.chevron_left)),
@@ -81,7 +139,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                   _page++;
                 });
                 ref
-                    .read(paginationRequestControllerProvider.notifier)
+                    .read(notificationsRequestControllerProvider.notifier)
                     .update(page: _page);
               },
               icon: const Icon(Icons.chevron_right)),
@@ -153,7 +211,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
               child: const Text(AppStrings.close),
             ),
             if (notification.readAt == null)
-              ElevatedButton(
+              FilledButton(
                 onPressed: () {
                   Navigator.pop(context, true);
                 },
@@ -197,45 +255,5 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
       // pop mark as read dialog
       Navigator.of(context).pop();
     }
-  }
-}
-
-// TODO: implement search
-class _NotificationsSearchDelegate extends SearchDelegate {
-  @override
-  List<Widget>? buildActions(BuildContext context) {
-    // TODO: implement buildActions
-    return [
-      IconButton(
-        onPressed: () {
-          query = '';
-        },
-        icon: const Icon(Icons.clear),
-      )
-    ];
-  }
-
-  @override
-  Widget? buildLeading(BuildContext context) {
-    // TODO: implement buildLeading
-    return IconButton(
-        onPressed: () {
-          Navigator.pop(context);
-        },
-        icon: const Icon(Icons.arrow_back));
-  }
-
-  @override
-  Widget buildResults(BuildContext context) {
-    return Container();
-  }
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    if (query.isEmpty) {
-      return Container();
-    }
-
-    return ListTile(title: Text(query));
   }
 }

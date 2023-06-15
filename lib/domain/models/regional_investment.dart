@@ -11,6 +11,7 @@ part 'regional_investment.g.dart';
 class RegionalInvestment with _$RegionalInvestment {
   factory RegionalInvestment({
     @JsonKey(name: "id") int? id,
+    @JsonKey(name: "project_id") int? projectId,
     @JsonKey(name: "region_id") int? regionId,
     @JsonKey(name: "region") Option? region,
     @JsonKey(name: "y2022") double? y2022,
@@ -32,8 +33,9 @@ class RegionalInvestment with _$RegionalInvestment {
     return jsonEncode(this);
   }
 
-  static RegionalInvestment initial() {
+  static RegionalInvestment initial({required int projectId}) {
     return RegionalInvestment(
+      projectId: projectId,
       regionId: null,
       region: null,
       y2022: 0,

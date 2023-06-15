@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pips/presentation/widgets/papform/common/editbutton.dart';
 
-import '../../../../application/extensions.dart';
 import '../../../../presentation/controllers/patchproject_controller.dart';
 import '../../../../domain/models/fullproject.dart';
 
@@ -14,12 +13,14 @@ class TextEditor extends ConsumerStatefulWidget {
     required this.fieldLabel,
     required this.oldValue,
     required this.onSubmit,
+    this.enabled = true,
   });
 
   final FullProject project;
   final String fieldLabel;
   final String oldValue;
   final Function(String newValue) onSubmit;
+  final bool enabled;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _TextEditor();
@@ -47,7 +48,7 @@ class _TextEditor extends ConsumerState<TextEditor> {
         subtitle: Text(widget.oldValue),
         title: Text(widget.fieldLabel),
         trailing: EditButton(
-          onPressed: () => _edit(),
+          onPressed: widget.enabled ? () => _edit() : null,
         ),
         onTap: () async {
           await Clipboard.setData(ClipboardData(text: widget.oldValue))
@@ -55,7 +56,9 @@ class _TextEditor extends ConsumerState<TextEditor> {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                 content: Text("${widget.fieldLabel} copied to clipboard")));
           });
+          _edit();
         },
+        enabled: widget.enabled,
       ),
     );
   }
@@ -89,21 +92,6 @@ class _UpdateFormState extends ConsumerState<UpdateForm> {
       oldValue = widget.oldValue;
       newValue = oldValue!;
     }
-
-    print("oldValue $oldValue");
-    print("newValue $newValue");
-    print(oldValue == newValue);
-
-    ref.listen(patchProjectControllerProvider, (previous, next) {
-      //
-      if (next.hasError) {
-        next.showSnackbarOnError(context);
-      }
-
-      if (next.hasValue) {
-        next.showSnackbarOnSuccess(context);
-      }
-    });
 
     return Scaffold(
       appBar: AppBar(

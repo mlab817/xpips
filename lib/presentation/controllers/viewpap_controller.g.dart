@@ -6,7 +6,7 @@ part of 'viewpap_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$projectHash() => r'753acc616945c06e9396d6d4a17fa326bf184df9';
+String _$futureProjectHash() => r'8ecc20b74f954e8bbd1887898e9f900a21c95041';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -29,29 +29,29 @@ class _SystemHash {
   }
 }
 
-typedef ProjectRef = FutureProviderRef<ProjectResponse>;
+typedef FutureProjectRef = FutureProviderRef<ProjectResponse>;
 
-/// See also [project].
-@ProviderFor(project)
-const projectProvider = ProjectFamily();
+/// See also [futureProject].
+@ProviderFor(futureProject)
+const futureProjectProvider = FutureProjectFamily();
 
-/// See also [project].
-class ProjectFamily extends Family<AsyncValue<ProjectResponse>> {
-  /// See also [project].
-  const ProjectFamily();
+/// See also [futureProject].
+class FutureProjectFamily extends Family<AsyncValue<ProjectResponse>> {
+  /// See also [futureProject].
+  const FutureProjectFamily();
 
-  /// See also [project].
-  ProjectProvider call({
-    String? uuid,
+  /// See also [futureProject].
+  FutureProjectProvider call({
+    required String uuid,
   }) {
-    return ProjectProvider(
+    return FutureProjectProvider(
       uuid: uuid,
     );
   }
 
   @override
-  ProjectProvider getProviderOverride(
-    covariant ProjectProvider provider,
+  FutureProjectProvider getProviderOverride(
+    covariant FutureProjectProvider provider,
   ) {
     return call(
       uuid: provider.uuid,
@@ -70,34 +70,35 @@ class ProjectFamily extends Family<AsyncValue<ProjectResponse>> {
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'projectProvider';
+  String? get name => r'futureProjectProvider';
 }
 
-/// See also [project].
-class ProjectProvider extends FutureProvider<ProjectResponse> {
-  /// See also [project].
-  ProjectProvider({
-    this.uuid,
+/// See also [futureProject].
+class FutureProjectProvider extends FutureProvider<ProjectResponse> {
+  /// See also [futureProject].
+  FutureProjectProvider({
+    required this.uuid,
   }) : super.internal(
-          (ref) => project(
+          (ref) => futureProject(
             ref,
             uuid: uuid,
           ),
-          from: projectProvider,
-          name: r'projectProvider',
+          from: futureProjectProvider,
+          name: r'futureProjectProvider',
           debugGetCreateSourceHash:
               const bool.fromEnvironment('dart.vm.product')
                   ? null
-                  : _$projectHash,
-          dependencies: ProjectFamily._dependencies,
-          allTransitiveDependencies: ProjectFamily._allTransitiveDependencies,
+                  : _$futureProjectHash,
+          dependencies: FutureProjectFamily._dependencies,
+          allTransitiveDependencies:
+              FutureProjectFamily._allTransitiveDependencies,
         );
 
-  final String? uuid;
+  final String uuid;
 
   @override
   bool operator ==(Object other) {
-    return other is ProjectProvider && other.uuid == uuid;
+    return other is FutureProjectProvider && other.uuid == uuid;
   }
 
   @override

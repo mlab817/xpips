@@ -29,9 +29,8 @@ mixin _$Options {
   @JsonKey(name: "categories")
   List<Option>? get categories => throw _privateConstructorUsedError;
   @JsonKey(name: "cip_types")
-  List<Option>? get cipTypes => throw _privateConstructorUsedError;
-  @JsonKey(name: "commodities")
-  List<Option>? get commodities => throw _privateConstructorUsedError;
+  List<Option>? get cipTypes =>
+      throw _privateConstructorUsedError; // @JsonKey(name: "commodities") List<Option>? commodities,
   @JsonKey(name: "fs_statuses")
   List<Option>? get fsStatuses => throw _privateConstructorUsedError;
   @JsonKey(name: "funding_institutions")
@@ -43,9 +42,8 @@ mixin _$Options {
   @JsonKey(name: "implementation_modes")
   List<Option>? get implementationModes => throw _privateConstructorUsedError;
   @JsonKey(name: "infrastructure_sectors")
-  List<Option>? get infrastructureSectors => throw _privateConstructorUsedError;
-  @JsonKey(name: "locations")
-  List<Option>? get locations => throw _privateConstructorUsedError;
+  List<Option>? get infrastructureSectors =>
+      throw _privateConstructorUsedError; // @JsonKey(name: "locations") List<Option>? locations,
   @JsonKey(name: "nafmip_outputs")
   List<Option>? get nafmipOutputs => throw _privateConstructorUsedError;
   @JsonKey(name: "offices")
@@ -53,9 +51,8 @@ mixin _$Options {
   @JsonKey(name: "operating_units")
   List<Option>? get operatingUnits => throw _privateConstructorUsedError;
   @JsonKey(name: "pdp_chapters")
-  List<Option>? get pdpChapters => throw _privateConstructorUsedError;
-  @JsonKey(name: "pdp_strategies")
-  List<Option>? get pdpStrategies => throw _privateConstructorUsedError;
+  List<Option>? get pdpChapters =>
+      throw _privateConstructorUsedError; // @JsonKey(name: "pdp_strategies") List<Option>? pdpStrategies,
   @JsonKey(name: "pipol_statuses")
   List<Option>? get pipolStatuses => throw _privateConstructorUsedError;
   @JsonKey(name: "pips_statuses")
@@ -70,6 +67,8 @@ mixin _$Options {
   List<Option>? get programs => throw _privateConstructorUsedError;
   @JsonKey(name: "project_statuses")
   List<Option>? get projectStatuses => throw _privateConstructorUsedError;
+  @JsonKey(name: "provinces")
+  List<Option>? get provinces => throw _privateConstructorUsedError;
   @JsonKey(name: "readiness_levels")
   List<Option>? get readinessLevels => throw _privateConstructorUsedError;
   @JsonKey(name: "regions")
@@ -83,13 +82,14 @@ mixin _$Options {
   @JsonKey(name: "types")
   List<Option>? get types => throw _privateConstructorUsedError;
   @JsonKey(name: "typologies")
-  List<Option>? get typologies => throw _privateConstructorUsedError;
-  @JsonKey(name: "vc_segments")
-  List<Option>? get vcSegments => throw _privateConstructorUsedError;
+  List<Option>? get typologies =>
+      throw _privateConstructorUsedError; // @JsonKey(name: "vc_segments") List<Option>? vcSegments,
   @JsonKey(name: "years")
   List<Option>? get years => throw _privateConstructorUsedError;
   @JsonKey(name: "ou_types")
   List<Option>? get ouTypes => throw _privateConstructorUsedError;
+  @JsonKey(name: "attachment_types")
+  List<Option>? get attachmentTypes => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -112,8 +112,6 @@ abstract class $OptionsCopyWith<$Res> {
           List<Option>? categories,
       @JsonKey(name: "cip_types")
           List<Option>? cipTypes,
-      @JsonKey(name: "commodities")
-          List<Option>? commodities,
       @JsonKey(name: "fs_statuses")
           List<Option>? fsStatuses,
       @JsonKey(name: "funding_institutions")
@@ -126,8 +124,6 @@ abstract class $OptionsCopyWith<$Res> {
           List<Option>? implementationModes,
       @JsonKey(name: "infrastructure_sectors")
           List<Option>? infrastructureSectors,
-      @JsonKey(name: "locations")
-          List<Option>? locations,
       @JsonKey(name: "nafmip_outputs")
           List<Option>? nafmipOutputs,
       @JsonKey(name: "offices")
@@ -136,8 +132,6 @@ abstract class $OptionsCopyWith<$Res> {
           List<Option>? operatingUnits,
       @JsonKey(name: "pdp_chapters")
           List<Option>? pdpChapters,
-      @JsonKey(name: "pdp_strategies")
-          List<Option>? pdpStrategies,
       @JsonKey(name: "pipol_statuses")
           List<Option>? pipolStatuses,
       @JsonKey(name: "pips_statuses")
@@ -152,6 +146,8 @@ abstract class $OptionsCopyWith<$Res> {
           List<Option>? programs,
       @JsonKey(name: "project_statuses")
           List<Option>? projectStatuses,
+      @JsonKey(name: "provinces")
+          List<Option>? provinces,
       @JsonKey(name: "readiness_levels")
           List<Option>? readinessLevels,
       @JsonKey(name: "regions")
@@ -166,12 +162,12 @@ abstract class $OptionsCopyWith<$Res> {
           List<Option>? types,
       @JsonKey(name: "typologies")
           List<Option>? typologies,
-      @JsonKey(name: "vc_segments")
-          List<Option>? vcSegments,
       @JsonKey(name: "years")
           List<Option>? years,
       @JsonKey(name: "ou_types")
-          List<Option>? ouTypes});
+          List<Option>? ouTypes,
+      @JsonKey(name: "attachment_types")
+          List<Option>? attachmentTypes});
 }
 
 /// @nodoc
@@ -192,19 +188,16 @@ class _$OptionsCopyWithImpl<$Res, $Val extends Options>
     Object? bases = freezed,
     Object? categories = freezed,
     Object? cipTypes = freezed,
-    Object? commodities = freezed,
     Object? fsStatuses = freezed,
     Object? fundingInstitutions = freezed,
     Object? fundingSources = freezed,
     Object? gads = freezed,
     Object? implementationModes = freezed,
     Object? infrastructureSectors = freezed,
-    Object? locations = freezed,
     Object? nafmipOutputs = freezed,
     Object? offices = freezed,
     Object? operatingUnits = freezed,
     Object? pdpChapters = freezed,
-    Object? pdpStrategies = freezed,
     Object? pipolStatuses = freezed,
     Object? pipsStatuses = freezed,
     Object? preparationDocuments = freezed,
@@ -212,6 +205,7 @@ class _$OptionsCopyWithImpl<$Res, $Val extends Options>
     Object? prexcs = freezed,
     Object? programs = freezed,
     Object? projectStatuses = freezed,
+    Object? provinces = freezed,
     Object? readinessLevels = freezed,
     Object? regions = freezed,
     Object? roles = freezed,
@@ -219,9 +213,9 @@ class _$OptionsCopyWithImpl<$Res, $Val extends Options>
     Object? spatialCoverages = freezed,
     Object? types = freezed,
     Object? typologies = freezed,
-    Object? vcSegments = freezed,
     Object? years = freezed,
     Object? ouTypes = freezed,
+    Object? attachmentTypes = freezed,
   }) {
     return _then(_value.copyWith(
       agenda: freezed == agenda
@@ -243,10 +237,6 @@ class _$OptionsCopyWithImpl<$Res, $Val extends Options>
       cipTypes: freezed == cipTypes
           ? _value.cipTypes
           : cipTypes // ignore: cast_nullable_to_non_nullable
-              as List<Option>?,
-      commodities: freezed == commodities
-          ? _value.commodities
-          : commodities // ignore: cast_nullable_to_non_nullable
               as List<Option>?,
       fsStatuses: freezed == fsStatuses
           ? _value.fsStatuses
@@ -272,10 +262,6 @@ class _$OptionsCopyWithImpl<$Res, $Val extends Options>
           ? _value.infrastructureSectors
           : infrastructureSectors // ignore: cast_nullable_to_non_nullable
               as List<Option>?,
-      locations: freezed == locations
-          ? _value.locations
-          : locations // ignore: cast_nullable_to_non_nullable
-              as List<Option>?,
       nafmipOutputs: freezed == nafmipOutputs
           ? _value.nafmipOutputs
           : nafmipOutputs // ignore: cast_nullable_to_non_nullable
@@ -291,10 +277,6 @@ class _$OptionsCopyWithImpl<$Res, $Val extends Options>
       pdpChapters: freezed == pdpChapters
           ? _value.pdpChapters
           : pdpChapters // ignore: cast_nullable_to_non_nullable
-              as List<Option>?,
-      pdpStrategies: freezed == pdpStrategies
-          ? _value.pdpStrategies
-          : pdpStrategies // ignore: cast_nullable_to_non_nullable
               as List<Option>?,
       pipolStatuses: freezed == pipolStatuses
           ? _value.pipolStatuses
@@ -324,6 +306,10 @@ class _$OptionsCopyWithImpl<$Res, $Val extends Options>
           ? _value.projectStatuses
           : projectStatuses // ignore: cast_nullable_to_non_nullable
               as List<Option>?,
+      provinces: freezed == provinces
+          ? _value.provinces
+          : provinces // ignore: cast_nullable_to_non_nullable
+              as List<Option>?,
       readinessLevels: freezed == readinessLevels
           ? _value.readinessLevels
           : readinessLevels // ignore: cast_nullable_to_non_nullable
@@ -352,10 +338,6 @@ class _$OptionsCopyWithImpl<$Res, $Val extends Options>
           ? _value.typologies
           : typologies // ignore: cast_nullable_to_non_nullable
               as List<Option>?,
-      vcSegments: freezed == vcSegments
-          ? _value.vcSegments
-          : vcSegments // ignore: cast_nullable_to_non_nullable
-              as List<Option>?,
       years: freezed == years
           ? _value.years
           : years // ignore: cast_nullable_to_non_nullable
@@ -363,6 +345,10 @@ class _$OptionsCopyWithImpl<$Res, $Val extends Options>
       ouTypes: freezed == ouTypes
           ? _value.ouTypes
           : ouTypes // ignore: cast_nullable_to_non_nullable
+              as List<Option>?,
+      attachmentTypes: freezed == attachmentTypes
+          ? _value.attachmentTypes
+          : attachmentTypes // ignore: cast_nullable_to_non_nullable
               as List<Option>?,
     ) as $Val);
   }
@@ -386,8 +372,6 @@ abstract class _$$_OptionsCopyWith<$Res> implements $OptionsCopyWith<$Res> {
           List<Option>? categories,
       @JsonKey(name: "cip_types")
           List<Option>? cipTypes,
-      @JsonKey(name: "commodities")
-          List<Option>? commodities,
       @JsonKey(name: "fs_statuses")
           List<Option>? fsStatuses,
       @JsonKey(name: "funding_institutions")
@@ -400,8 +384,6 @@ abstract class _$$_OptionsCopyWith<$Res> implements $OptionsCopyWith<$Res> {
           List<Option>? implementationModes,
       @JsonKey(name: "infrastructure_sectors")
           List<Option>? infrastructureSectors,
-      @JsonKey(name: "locations")
-          List<Option>? locations,
       @JsonKey(name: "nafmip_outputs")
           List<Option>? nafmipOutputs,
       @JsonKey(name: "offices")
@@ -410,8 +392,6 @@ abstract class _$$_OptionsCopyWith<$Res> implements $OptionsCopyWith<$Res> {
           List<Option>? operatingUnits,
       @JsonKey(name: "pdp_chapters")
           List<Option>? pdpChapters,
-      @JsonKey(name: "pdp_strategies")
-          List<Option>? pdpStrategies,
       @JsonKey(name: "pipol_statuses")
           List<Option>? pipolStatuses,
       @JsonKey(name: "pips_statuses")
@@ -426,6 +406,8 @@ abstract class _$$_OptionsCopyWith<$Res> implements $OptionsCopyWith<$Res> {
           List<Option>? programs,
       @JsonKey(name: "project_statuses")
           List<Option>? projectStatuses,
+      @JsonKey(name: "provinces")
+          List<Option>? provinces,
       @JsonKey(name: "readiness_levels")
           List<Option>? readinessLevels,
       @JsonKey(name: "regions")
@@ -440,12 +422,12 @@ abstract class _$$_OptionsCopyWith<$Res> implements $OptionsCopyWith<$Res> {
           List<Option>? types,
       @JsonKey(name: "typologies")
           List<Option>? typologies,
-      @JsonKey(name: "vc_segments")
-          List<Option>? vcSegments,
       @JsonKey(name: "years")
           List<Option>? years,
       @JsonKey(name: "ou_types")
-          List<Option>? ouTypes});
+          List<Option>? ouTypes,
+      @JsonKey(name: "attachment_types")
+          List<Option>? attachmentTypes});
 }
 
 /// @nodoc
@@ -463,19 +445,16 @@ class __$$_OptionsCopyWithImpl<$Res>
     Object? bases = freezed,
     Object? categories = freezed,
     Object? cipTypes = freezed,
-    Object? commodities = freezed,
     Object? fsStatuses = freezed,
     Object? fundingInstitutions = freezed,
     Object? fundingSources = freezed,
     Object? gads = freezed,
     Object? implementationModes = freezed,
     Object? infrastructureSectors = freezed,
-    Object? locations = freezed,
     Object? nafmipOutputs = freezed,
     Object? offices = freezed,
     Object? operatingUnits = freezed,
     Object? pdpChapters = freezed,
-    Object? pdpStrategies = freezed,
     Object? pipolStatuses = freezed,
     Object? pipsStatuses = freezed,
     Object? preparationDocuments = freezed,
@@ -483,6 +462,7 @@ class __$$_OptionsCopyWithImpl<$Res>
     Object? prexcs = freezed,
     Object? programs = freezed,
     Object? projectStatuses = freezed,
+    Object? provinces = freezed,
     Object? readinessLevels = freezed,
     Object? regions = freezed,
     Object? roles = freezed,
@@ -490,9 +470,9 @@ class __$$_OptionsCopyWithImpl<$Res>
     Object? spatialCoverages = freezed,
     Object? types = freezed,
     Object? typologies = freezed,
-    Object? vcSegments = freezed,
     Object? years = freezed,
     Object? ouTypes = freezed,
+    Object? attachmentTypes = freezed,
   }) {
     return _then(_$_Options(
       agenda: freezed == agenda
@@ -514,10 +494,6 @@ class __$$_OptionsCopyWithImpl<$Res>
       cipTypes: freezed == cipTypes
           ? _value._cipTypes
           : cipTypes // ignore: cast_nullable_to_non_nullable
-              as List<Option>?,
-      commodities: freezed == commodities
-          ? _value._commodities
-          : commodities // ignore: cast_nullable_to_non_nullable
               as List<Option>?,
       fsStatuses: freezed == fsStatuses
           ? _value._fsStatuses
@@ -543,10 +519,6 @@ class __$$_OptionsCopyWithImpl<$Res>
           ? _value._infrastructureSectors
           : infrastructureSectors // ignore: cast_nullable_to_non_nullable
               as List<Option>?,
-      locations: freezed == locations
-          ? _value._locations
-          : locations // ignore: cast_nullable_to_non_nullable
-              as List<Option>?,
       nafmipOutputs: freezed == nafmipOutputs
           ? _value._nafmipOutputs
           : nafmipOutputs // ignore: cast_nullable_to_non_nullable
@@ -562,10 +534,6 @@ class __$$_OptionsCopyWithImpl<$Res>
       pdpChapters: freezed == pdpChapters
           ? _value._pdpChapters
           : pdpChapters // ignore: cast_nullable_to_non_nullable
-              as List<Option>?,
-      pdpStrategies: freezed == pdpStrategies
-          ? _value._pdpStrategies
-          : pdpStrategies // ignore: cast_nullable_to_non_nullable
               as List<Option>?,
       pipolStatuses: freezed == pipolStatuses
           ? _value._pipolStatuses
@@ -595,6 +563,10 @@ class __$$_OptionsCopyWithImpl<$Res>
           ? _value._projectStatuses
           : projectStatuses // ignore: cast_nullable_to_non_nullable
               as List<Option>?,
+      provinces: freezed == provinces
+          ? _value._provinces
+          : provinces // ignore: cast_nullable_to_non_nullable
+              as List<Option>?,
       readinessLevels: freezed == readinessLevels
           ? _value._readinessLevels
           : readinessLevels // ignore: cast_nullable_to_non_nullable
@@ -623,10 +595,6 @@ class __$$_OptionsCopyWithImpl<$Res>
           ? _value._typologies
           : typologies // ignore: cast_nullable_to_non_nullable
               as List<Option>?,
-      vcSegments: freezed == vcSegments
-          ? _value._vcSegments
-          : vcSegments // ignore: cast_nullable_to_non_nullable
-              as List<Option>?,
       years: freezed == years
           ? _value._years
           : years // ignore: cast_nullable_to_non_nullable
@@ -634,6 +602,10 @@ class __$$_OptionsCopyWithImpl<$Res>
       ouTypes: freezed == ouTypes
           ? _value._ouTypes
           : ouTypes // ignore: cast_nullable_to_non_nullable
+              as List<Option>?,
+      attachmentTypes: freezed == attachmentTypes
+          ? _value._attachmentTypes
+          : attachmentTypes // ignore: cast_nullable_to_non_nullable
               as List<Option>?,
     ));
   }
@@ -653,8 +625,6 @@ class _$_Options implements _Options {
           final List<Option>? categories,
       @JsonKey(name: "cip_types")
           final List<Option>? cipTypes,
-      @JsonKey(name: "commodities")
-          final List<Option>? commodities,
       @JsonKey(name: "fs_statuses")
           final List<Option>? fsStatuses,
       @JsonKey(name: "funding_institutions")
@@ -667,8 +637,6 @@ class _$_Options implements _Options {
           final List<Option>? implementationModes,
       @JsonKey(name: "infrastructure_sectors")
           final List<Option>? infrastructureSectors,
-      @JsonKey(name: "locations")
-          final List<Option>? locations,
       @JsonKey(name: "nafmip_outputs")
           final List<Option>? nafmipOutputs,
       @JsonKey(name: "offices")
@@ -677,8 +645,6 @@ class _$_Options implements _Options {
           final List<Option>? operatingUnits,
       @JsonKey(name: "pdp_chapters")
           final List<Option>? pdpChapters,
-      @JsonKey(name: "pdp_strategies")
-          final List<Option>? pdpStrategies,
       @JsonKey(name: "pipol_statuses")
           final List<Option>? pipolStatuses,
       @JsonKey(name: "pips_statuses")
@@ -693,6 +659,8 @@ class _$_Options implements _Options {
           final List<Option>? programs,
       @JsonKey(name: "project_statuses")
           final List<Option>? projectStatuses,
+      @JsonKey(name: "provinces")
+          final List<Option>? provinces,
       @JsonKey(name: "readiness_levels")
           final List<Option>? readinessLevels,
       @JsonKey(name: "regions")
@@ -707,30 +675,27 @@ class _$_Options implements _Options {
           final List<Option>? types,
       @JsonKey(name: "typologies")
           final List<Option>? typologies,
-      @JsonKey(name: "vc_segments")
-          final List<Option>? vcSegments,
       @JsonKey(name: "years")
           final List<Option>? years,
       @JsonKey(name: "ou_types")
-          final List<Option>? ouTypes})
+          final List<Option>? ouTypes,
+      @JsonKey(name: "attachment_types")
+          final List<Option>? attachmentTypes})
       : _agenda = agenda,
         _approvalLevels = approvalLevels,
         _bases = bases,
         _categories = categories,
         _cipTypes = cipTypes,
-        _commodities = commodities,
         _fsStatuses = fsStatuses,
         _fundingInstitutions = fundingInstitutions,
         _fundingSources = fundingSources,
         _gads = gads,
         _implementationModes = implementationModes,
         _infrastructureSectors = infrastructureSectors,
-        _locations = locations,
         _nafmipOutputs = nafmipOutputs,
         _offices = offices,
         _operatingUnits = operatingUnits,
         _pdpChapters = pdpChapters,
-        _pdpStrategies = pdpStrategies,
         _pipolStatuses = pipolStatuses,
         _pipsStatuses = pipsStatuses,
         _preparationDocuments = preparationDocuments,
@@ -738,6 +703,7 @@ class _$_Options implements _Options {
         _prexcs = prexcs,
         _programs = programs,
         _projectStatuses = projectStatuses,
+        _provinces = provinces,
         _readinessLevels = readinessLevels,
         _regions = regions,
         _roles = roles,
@@ -745,9 +711,9 @@ class _$_Options implements _Options {
         _spatialCoverages = spatialCoverages,
         _types = types,
         _typologies = typologies,
-        _vcSegments = vcSegments,
         _years = years,
-        _ouTypes = ouTypes;
+        _ouTypes = ouTypes,
+        _attachmentTypes = attachmentTypes;
 
   factory _$_Options.fromJson(Map<String, dynamic> json) =>
       _$$_OptionsFromJson(json);
@@ -807,18 +773,9 @@ class _$_Options implements _Options {
     return EqualUnmodifiableListView(value);
   }
 
-  final List<Option>? _commodities;
-  @override
-  @JsonKey(name: "commodities")
-  List<Option>? get commodities {
-    final value = _commodities;
-    if (value == null) return null;
-    if (_commodities is EqualUnmodifiableListView) return _commodities;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(value);
-  }
-
+// @JsonKey(name: "commodities") List<Option>? commodities,
   final List<Option>? _fsStatuses;
+// @JsonKey(name: "commodities") List<Option>? commodities,
   @override
   @JsonKey(name: "fs_statuses")
   List<Option>? get fsStatuses {
@@ -887,18 +844,9 @@ class _$_Options implements _Options {
     return EqualUnmodifiableListView(value);
   }
 
-  final List<Option>? _locations;
-  @override
-  @JsonKey(name: "locations")
-  List<Option>? get locations {
-    final value = _locations;
-    if (value == null) return null;
-    if (_locations is EqualUnmodifiableListView) return _locations;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(value);
-  }
-
+// @JsonKey(name: "locations") List<Option>? locations,
   final List<Option>? _nafmipOutputs;
+// @JsonKey(name: "locations") List<Option>? locations,
   @override
   @JsonKey(name: "nafmip_outputs")
   List<Option>? get nafmipOutputs {
@@ -942,18 +890,9 @@ class _$_Options implements _Options {
     return EqualUnmodifiableListView(value);
   }
 
-  final List<Option>? _pdpStrategies;
-  @override
-  @JsonKey(name: "pdp_strategies")
-  List<Option>? get pdpStrategies {
-    final value = _pdpStrategies;
-    if (value == null) return null;
-    if (_pdpStrategies is EqualUnmodifiableListView) return _pdpStrategies;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(value);
-  }
-
+// @JsonKey(name: "pdp_strategies") List<Option>? pdpStrategies,
   final List<Option>? _pipolStatuses;
+// @JsonKey(name: "pdp_strategies") List<Option>? pdpStrategies,
   @override
   @JsonKey(name: "pipol_statuses")
   List<Option>? get pipolStatuses {
@@ -1027,6 +966,17 @@ class _$_Options implements _Options {
     final value = _projectStatuses;
     if (value == null) return null;
     if (_projectStatuses is EqualUnmodifiableListView) return _projectStatuses;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  final List<Option>? _provinces;
+  @override
+  @JsonKey(name: "provinces")
+  List<Option>? get provinces {
+    final value = _provinces;
+    if (value == null) return null;
+    if (_provinces is EqualUnmodifiableListView) return _provinces;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(value);
   }
@@ -1109,18 +1059,9 @@ class _$_Options implements _Options {
     return EqualUnmodifiableListView(value);
   }
 
-  final List<Option>? _vcSegments;
-  @override
-  @JsonKey(name: "vc_segments")
-  List<Option>? get vcSegments {
-    final value = _vcSegments;
-    if (value == null) return null;
-    if (_vcSegments is EqualUnmodifiableListView) return _vcSegments;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(value);
-  }
-
+// @JsonKey(name: "vc_segments") List<Option>? vcSegments,
   final List<Option>? _years;
+// @JsonKey(name: "vc_segments") List<Option>? vcSegments,
   @override
   @JsonKey(name: "years")
   List<Option>? get years {
@@ -1142,9 +1083,20 @@ class _$_Options implements _Options {
     return EqualUnmodifiableListView(value);
   }
 
+  final List<Option>? _attachmentTypes;
+  @override
+  @JsonKey(name: "attachment_types")
+  List<Option>? get attachmentTypes {
+    final value = _attachmentTypes;
+    if (value == null) return null;
+    if (_attachmentTypes is EqualUnmodifiableListView) return _attachmentTypes;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
   @override
   String toString() {
-    return 'Options(agenda: $agenda, approvalLevels: $approvalLevels, bases: $bases, categories: $categories, cipTypes: $cipTypes, commodities: $commodities, fsStatuses: $fsStatuses, fundingInstitutions: $fundingInstitutions, fundingSources: $fundingSources, gads: $gads, implementationModes: $implementationModes, infrastructureSectors: $infrastructureSectors, locations: $locations, nafmipOutputs: $nafmipOutputs, offices: $offices, operatingUnits: $operatingUnits, pdpChapters: $pdpChapters, pdpStrategies: $pdpStrategies, pipolStatuses: $pipolStatuses, pipsStatuses: $pipsStatuses, preparationDocuments: $preparationDocuments, prerequisites: $prerequisites, prexcs: $prexcs, programs: $programs, projectStatuses: $projectStatuses, readinessLevels: $readinessLevels, regions: $regions, roles: $roles, sdgs: $sdgs, spatialCoverages: $spatialCoverages, types: $types, typologies: $typologies, vcSegments: $vcSegments, years: $years, ouTypes: $ouTypes)';
+    return 'Options(agenda: $agenda, approvalLevels: $approvalLevels, bases: $bases, categories: $categories, cipTypes: $cipTypes, fsStatuses: $fsStatuses, fundingInstitutions: $fundingInstitutions, fundingSources: $fundingSources, gads: $gads, implementationModes: $implementationModes, infrastructureSectors: $infrastructureSectors, nafmipOutputs: $nafmipOutputs, offices: $offices, operatingUnits: $operatingUnits, pdpChapters: $pdpChapters, pipolStatuses: $pipolStatuses, pipsStatuses: $pipsStatuses, preparationDocuments: $preparationDocuments, prerequisites: $prerequisites, prexcs: $prexcs, programs: $programs, projectStatuses: $projectStatuses, provinces: $provinces, readinessLevels: $readinessLevels, regions: $regions, roles: $roles, sdgs: $sdgs, spatialCoverages: $spatialCoverages, types: $types, typologies: $typologies, years: $years, ouTypes: $ouTypes, attachmentTypes: $attachmentTypes)';
   }
 
   @override
@@ -1160,8 +1112,6 @@ class _$_Options implements _Options {
                 .equals(other._categories, _categories) &&
             const DeepCollectionEquality().equals(other._cipTypes, _cipTypes) &&
             const DeepCollectionEquality()
-                .equals(other._commodities, _commodities) &&
-            const DeepCollectionEquality()
                 .equals(other._fsStatuses, _fsStatuses) &&
             const DeepCollectionEquality()
                 .equals(other._fundingInstitutions, _fundingInstitutions) &&
@@ -1173,16 +1123,12 @@ class _$_Options implements _Options {
             const DeepCollectionEquality()
                 .equals(other._infrastructureSectors, _infrastructureSectors) &&
             const DeepCollectionEquality()
-                .equals(other._locations, _locations) &&
-            const DeepCollectionEquality()
                 .equals(other._nafmipOutputs, _nafmipOutputs) &&
             const DeepCollectionEquality().equals(other._offices, _offices) &&
             const DeepCollectionEquality()
                 .equals(other._operatingUnits, _operatingUnits) &&
             const DeepCollectionEquality()
                 .equals(other._pdpChapters, _pdpChapters) &&
-            const DeepCollectionEquality()
-                .equals(other._pdpStrategies, _pdpStrategies) &&
             const DeepCollectionEquality()
                 .equals(other._pipolStatuses, _pipolStatuses) &&
             const DeepCollectionEquality()
@@ -1196,6 +1142,8 @@ class _$_Options implements _Options {
             const DeepCollectionEquality()
                 .equals(other._projectStatuses, _projectStatuses) &&
             const DeepCollectionEquality()
+                .equals(other._provinces, _provinces) &&
+            const DeepCollectionEquality()
                 .equals(other._readinessLevels, _readinessLevels) &&
             const DeepCollectionEquality().equals(other._regions, _regions) &&
             const DeepCollectionEquality().equals(other._roles, _roles) &&
@@ -1205,10 +1153,10 @@ class _$_Options implements _Options {
             const DeepCollectionEquality().equals(other._types, _types) &&
             const DeepCollectionEquality()
                 .equals(other._typologies, _typologies) &&
-            const DeepCollectionEquality()
-                .equals(other._vcSegments, _vcSegments) &&
             const DeepCollectionEquality().equals(other._years, _years) &&
-            const DeepCollectionEquality().equals(other._ouTypes, _ouTypes));
+            const DeepCollectionEquality().equals(other._ouTypes, _ouTypes) &&
+            const DeepCollectionEquality()
+                .equals(other._attachmentTypes, _attachmentTypes));
   }
 
   @JsonKey(ignore: true)
@@ -1220,19 +1168,16 @@ class _$_Options implements _Options {
         const DeepCollectionEquality().hash(_bases),
         const DeepCollectionEquality().hash(_categories),
         const DeepCollectionEquality().hash(_cipTypes),
-        const DeepCollectionEquality().hash(_commodities),
         const DeepCollectionEquality().hash(_fsStatuses),
         const DeepCollectionEquality().hash(_fundingInstitutions),
         const DeepCollectionEquality().hash(_fundingSources),
         const DeepCollectionEquality().hash(_gads),
         const DeepCollectionEquality().hash(_implementationModes),
         const DeepCollectionEquality().hash(_infrastructureSectors),
-        const DeepCollectionEquality().hash(_locations),
         const DeepCollectionEquality().hash(_nafmipOutputs),
         const DeepCollectionEquality().hash(_offices),
         const DeepCollectionEquality().hash(_operatingUnits),
         const DeepCollectionEquality().hash(_pdpChapters),
-        const DeepCollectionEquality().hash(_pdpStrategies),
         const DeepCollectionEquality().hash(_pipolStatuses),
         const DeepCollectionEquality().hash(_pipsStatuses),
         const DeepCollectionEquality().hash(_preparationDocuments),
@@ -1240,6 +1185,7 @@ class _$_Options implements _Options {
         const DeepCollectionEquality().hash(_prexcs),
         const DeepCollectionEquality().hash(_programs),
         const DeepCollectionEquality().hash(_projectStatuses),
+        const DeepCollectionEquality().hash(_provinces),
         const DeepCollectionEquality().hash(_readinessLevels),
         const DeepCollectionEquality().hash(_regions),
         const DeepCollectionEquality().hash(_roles),
@@ -1247,9 +1193,9 @@ class _$_Options implements _Options {
         const DeepCollectionEquality().hash(_spatialCoverages),
         const DeepCollectionEquality().hash(_types),
         const DeepCollectionEquality().hash(_typologies),
-        const DeepCollectionEquality().hash(_vcSegments),
         const DeepCollectionEquality().hash(_years),
-        const DeepCollectionEquality().hash(_ouTypes)
+        const DeepCollectionEquality().hash(_ouTypes),
+        const DeepCollectionEquality().hash(_attachmentTypes)
       ]);
 
   @JsonKey(ignore: true)
@@ -1278,8 +1224,6 @@ abstract class _Options implements Options {
           final List<Option>? categories,
       @JsonKey(name: "cip_types")
           final List<Option>? cipTypes,
-      @JsonKey(name: "commodities")
-          final List<Option>? commodities,
       @JsonKey(name: "fs_statuses")
           final List<Option>? fsStatuses,
       @JsonKey(name: "funding_institutions")
@@ -1292,8 +1236,6 @@ abstract class _Options implements Options {
           final List<Option>? implementationModes,
       @JsonKey(name: "infrastructure_sectors")
           final List<Option>? infrastructureSectors,
-      @JsonKey(name: "locations")
-          final List<Option>? locations,
       @JsonKey(name: "nafmip_outputs")
           final List<Option>? nafmipOutputs,
       @JsonKey(name: "offices")
@@ -1302,8 +1244,6 @@ abstract class _Options implements Options {
           final List<Option>? operatingUnits,
       @JsonKey(name: "pdp_chapters")
           final List<Option>? pdpChapters,
-      @JsonKey(name: "pdp_strategies")
-          final List<Option>? pdpStrategies,
       @JsonKey(name: "pipol_statuses")
           final List<Option>? pipolStatuses,
       @JsonKey(name: "pips_statuses")
@@ -1318,6 +1258,8 @@ abstract class _Options implements Options {
           final List<Option>? programs,
       @JsonKey(name: "project_statuses")
           final List<Option>? projectStatuses,
+      @JsonKey(name: "provinces")
+          final List<Option>? provinces,
       @JsonKey(name: "readiness_levels")
           final List<Option>? readinessLevels,
       @JsonKey(name: "regions")
@@ -1332,12 +1274,12 @@ abstract class _Options implements Options {
           final List<Option>? types,
       @JsonKey(name: "typologies")
           final List<Option>? typologies,
-      @JsonKey(name: "vc_segments")
-          final List<Option>? vcSegments,
       @JsonKey(name: "years")
           final List<Option>? years,
       @JsonKey(name: "ou_types")
-          final List<Option>? ouTypes}) = _$_Options;
+          final List<Option>? ouTypes,
+      @JsonKey(name: "attachment_types")
+          final List<Option>? attachmentTypes}) = _$_Options;
 
   factory _Options.fromJson(Map<String, dynamic> json) = _$_Options.fromJson;
 
@@ -1356,10 +1298,7 @@ abstract class _Options implements Options {
   @override
   @JsonKey(name: "cip_types")
   List<Option>? get cipTypes;
-  @override
-  @JsonKey(name: "commodities")
-  List<Option>? get commodities;
-  @override
+  @override // @JsonKey(name: "commodities") List<Option>? commodities,
   @JsonKey(name: "fs_statuses")
   List<Option>? get fsStatuses;
   @override
@@ -1377,10 +1316,7 @@ abstract class _Options implements Options {
   @override
   @JsonKey(name: "infrastructure_sectors")
   List<Option>? get infrastructureSectors;
-  @override
-  @JsonKey(name: "locations")
-  List<Option>? get locations;
-  @override
+  @override // @JsonKey(name: "locations") List<Option>? locations,
   @JsonKey(name: "nafmip_outputs")
   List<Option>? get nafmipOutputs;
   @override
@@ -1392,10 +1328,7 @@ abstract class _Options implements Options {
   @override
   @JsonKey(name: "pdp_chapters")
   List<Option>? get pdpChapters;
-  @override
-  @JsonKey(name: "pdp_strategies")
-  List<Option>? get pdpStrategies;
-  @override
+  @override // @JsonKey(name: "pdp_strategies") List<Option>? pdpStrategies,
   @JsonKey(name: "pipol_statuses")
   List<Option>? get pipolStatuses;
   @override
@@ -1417,6 +1350,9 @@ abstract class _Options implements Options {
   @JsonKey(name: "project_statuses")
   List<Option>? get projectStatuses;
   @override
+  @JsonKey(name: "provinces")
+  List<Option>? get provinces;
+  @override
   @JsonKey(name: "readiness_levels")
   List<Option>? get readinessLevels;
   @override
@@ -1437,15 +1373,15 @@ abstract class _Options implements Options {
   @override
   @JsonKey(name: "typologies")
   List<Option>? get typologies;
-  @override
-  @JsonKey(name: "vc_segments")
-  List<Option>? get vcSegments;
-  @override
+  @override // @JsonKey(name: "vc_segments") List<Option>? vcSegments,
   @JsonKey(name: "years")
   List<Option>? get years;
   @override
   @JsonKey(name: "ou_types")
   List<Option>? get ouTypes;
+  @override
+  @JsonKey(name: "attachment_types")
+  List<Option>? get attachmentTypes;
   @override
   @JsonKey(ignore: true)
   _$$_OptionsCopyWith<_$_Options> get copyWith =>

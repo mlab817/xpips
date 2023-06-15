@@ -13,6 +13,7 @@ _$_Option _$$_OptionFromJson(Map<String, dynamic> json) => _$_Option(
       children: (json['children'] as List<dynamic>?)
           ?.map((e) => Option.fromJson(e as Map<String, dynamic>))
           .toList(),
+      parentId: json['parent_id'] as int?,
     );
 
 Map<String, dynamic> _$$_OptionToJson(_$_Option instance) => <String, dynamic>{
@@ -20,4 +21,5 @@ Map<String, dynamic> _$$_OptionToJson(_$_Option instance) => <String, dynamic>{
       'value': instance.value,
       'description': instance.description,
       'children': instance.children,
+      'parent_id': instance.parentId,
     };

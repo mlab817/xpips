@@ -24,12 +24,15 @@ class AppRouter extends _$AppRouter implements AutoRouteGuard {
 
   @override
   List<AutoRoute> get routes => [
-        AutoRoute(page: SplashRoute.page, initial: true),
+        AutoRoute(
+          page: SplashRoute.page,
+          initial: true,
+        ),
         AutoRoute(page: LoginRoute.page, path: '/login'),
         AutoRoute(page: SignupRoute.page, path: '/signup'),
         AutoRoute(page: ForgotPasswordRoute.page, path: '/forgot-password'),
         AutoRoute(
-          guards: [],
+          guards: const [],
           page: MainRoute.page,
           path: '/main',
           children: [
@@ -56,7 +59,7 @@ class AppRouter extends _$AppRouter implements AutoRouteGuard {
           page: NewPapRoute.page,
         ),
         AutoRoute(
-          path: '/project/:uuid',
+          path: '/project/:uuid', // '/project/:uuid',
           page: PapViewRoute.page,
         ),
         AutoRoute(
