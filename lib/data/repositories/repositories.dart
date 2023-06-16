@@ -4,6 +4,7 @@ export 'chats_repository.dart';
 export 'comments_repository.dart';
 export 'newcomment_repository.dart';
 export 'notifications_repository.dart';
+export 'offices_repository.dart';
 export 'options_repository.dart';
 export 'pipsstatus_repository.dart';
 export 'project_repository.dart';

@@ -20,7 +20,7 @@ OptionsResponse _$OptionsResponseFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$OptionsResponse {
-  Options get data => throw _privateConstructorUsedError;
+  FormOptions get data => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -34,9 +34,9 @@ abstract class $OptionsResponseCopyWith<$Res> {
           OptionsResponse value, $Res Function(OptionsResponse) then) =
       _$OptionsResponseCopyWithImpl<$Res, OptionsResponse>;
   @useResult
-  $Res call({Options data});
+  $Res call({FormOptions data});
 
-  $OptionsCopyWith<$Res> get data;
+  $FormOptionsCopyWith<$Res> get data;
 }
 
 /// @nodoc
@@ -58,14 +58,14 @@ class _$OptionsResponseCopyWithImpl<$Res, $Val extends OptionsResponse>
       data: null == data
           ? _value.data
           : data // ignore: cast_nullable_to_non_nullable
-              as Options,
+              as FormOptions,
     ) as $Val);
   }
 
   @override
   @pragma('vm:prefer-inline')
-  $OptionsCopyWith<$Res> get data {
-    return $OptionsCopyWith<$Res>(_value.data, (value) {
+  $FormOptionsCopyWith<$Res> get data {
+    return $FormOptionsCopyWith<$Res>(_value.data, (value) {
       return _then(_value.copyWith(data: value) as $Val);
     });
   }
@@ -79,10 +79,10 @@ abstract class _$$_OptionsResponseCopyWith<$Res>
       __$$_OptionsResponseCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({Options data});
+  $Res call({FormOptions data});
 
   @override
-  $OptionsCopyWith<$Res> get data;
+  $FormOptionsCopyWith<$Res> get data;
 }
 
 /// @nodoc
@@ -102,7 +102,7 @@ class __$$_OptionsResponseCopyWithImpl<$Res>
       data: null == data
           ? _value.data
           : data // ignore: cast_nullable_to_non_nullable
-              as Options,
+              as FormOptions,
     ));
   }
 }
@@ -116,7 +116,7 @@ class _$_OptionsResponse implements _OptionsResponse {
       _$$_OptionsResponseFromJson(json);
 
   @override
-  final Options data;
+  final FormOptions data;
 
   @override
   String toString() {
@@ -150,13 +150,14 @@ class _$_OptionsResponse implements _OptionsResponse {
 }
 
 abstract class _OptionsResponse implements OptionsResponse {
-  factory _OptionsResponse({required final Options data}) = _$_OptionsResponse;
+  factory _OptionsResponse({required final FormOptions data}) =
+      _$_OptionsResponse;
 
   factory _OptionsResponse.fromJson(Map<String, dynamic> json) =
       _$_OptionsResponse.fromJson;
 
   @override
-  Options get data;
+  FormOptions get data;
   @override
   @JsonKey(ignore: true)
   _$$_OptionsResponseCopyWith<_$_OptionsResponse> get copyWith =>

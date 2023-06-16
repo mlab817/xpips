@@ -547,6 +547,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     ref
                         .read(projectsRequestControllerProvider.notifier)
                         .clearQuery();
+
                     _searchController.clear();
                   })
               : null,
@@ -557,7 +558,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         ),
         onFieldSubmitted: (String value) {
           // update the query value in the provider
-          ref.read(projectsRequestControllerProvider.notifier).update(q: value);
+          ref
+              .read(projectsRequestControllerProvider.notifier)
+              .update(q: value, pipsStatuses: [], pipolStatuses: []);
         },
       ),
     );

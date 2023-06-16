@@ -212,6 +212,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
             setState(() {
               _isExpanded = !_isExpanded;
             });
+            AutoRouter.of(context).push(CommentsRoute(uuid: widget.uuid));
           },
           child: const Icon(Icons.chat_bubble),
         ),
@@ -228,7 +229,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         ref.watch(fullProjectControllerProvider(widget.uuid));
 
     final options =
-        ref.watch(optionsControllerProvider).value?.data ?? Options();
+        ref.watch(optionsControllerProvider).value?.data ?? FormOptions();
 
     final uuid = widget.uuid;
 
@@ -1732,7 +1733,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
     );
   }
 
-  Widget _buildRegionalTable(FullProject project, Options options) {
+  Widget _buildRegionalTable(FullProject project, FormOptions options) {
     final List<RegionalInvestment> regionInvestments =
         project.regionalInvestments;
 
@@ -2209,7 +2210,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
     );
   }
 
-  Widget _buildFinancialTable(FullProject project, Options options) {
+  Widget _buildFinancialTable(FullProject project, FormOptions options) {
     final List<FsInvestment> fsInvestments = project.fsInvestments;
 
     return Padding(
@@ -3558,7 +3559,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
     );
   }
 
-  Widget _buildAddFs(FullProject project, Options options) {
+  Widget _buildAddFs(FullProject project, FormOptions options) {
     final fsCount = ref
             .watch(optionsControllerProvider)
             .value
