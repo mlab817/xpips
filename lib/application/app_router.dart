@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 import '../presentation/screens/chat_screen.dart';
+import '../presentation/screens/comments_screen.dart';
 import '../presentation/screens/forgotpassword_screen.dart';
 import '../presentation/screens/home_screen.dart';
 import '../presentation/screens/login_screen.dart';
@@ -61,6 +62,10 @@ class AppRouter extends _$AppRouter implements AutoRouteGuard {
         AutoRoute(
           path: '/project/:uuid', // '/project/:uuid',
           page: PapViewRoute.page,
+        ),
+        AutoRoute(
+          path: '/comments/:uuid', // '/project/:uuid',
+          page: CommentsRoute.page,
         ),
         AutoRoute(
           path: '/request-reactivation',

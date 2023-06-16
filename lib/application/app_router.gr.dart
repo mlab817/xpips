@@ -93,6 +93,18 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const SplashScreen(),
       );
     },
+    CommentsRoute.name: (routeData) {
+      final pathParams = routeData.inheritedPathParams;
+      final args = routeData.argsAs<CommentsRouteArgs>(
+          orElse: () => CommentsRouteArgs(uuid: pathParams.getString('uuid')));
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CommentsScreen(
+          key: args.key,
+          uuid: args.uuid,
+        ),
+      );
+    },
   };
 }
 
@@ -287,4 +299,43 @@ class SplashRoute extends PageRouteInfo<void> {
   static const String name = 'SplashRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [CommentsScreen]
+class CommentsRoute extends PageRouteInfo<CommentsRouteArgs> {
+  CommentsRoute({
+    Key? key,
+    required String uuid,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CommentsRoute.name,
+          args: CommentsRouteArgs(
+            key: key,
+            uuid: uuid,
+          ),
+          rawPathParams: {'uuid': uuid},
+          initialChildren: children,
+        );
+
+  static const String name = 'CommentsRoute';
+
+  static const PageInfo<CommentsRouteArgs> page =
+      PageInfo<CommentsRouteArgs>(name);
+}
+
+class CommentsRouteArgs {
+  const CommentsRouteArgs({
+    this.key,
+    required this.uuid,
+  });
+
+  final Key? key;
+
+  final String uuid;
+
+  @override
+  String toString() {
+    return 'CommentsRouteArgs{key: $key, uuid: $uuid}';
+  }
 }

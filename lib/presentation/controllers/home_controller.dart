@@ -97,7 +97,7 @@ class ProjectsRequestController extends Notifier<ProjectsRequest> {
   }
 
   void clearQuery() {
-    state = state.copyWith(q: '');
+    state = state.copyWith(q: '', pipolStatuses: [], pipsStatuses: []);
   }
 
   @override
