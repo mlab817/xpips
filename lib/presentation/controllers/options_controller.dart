@@ -8,8 +8,8 @@ import '../../data/responses/options_response.dart';
 part 'options_controller.g.dart';
 
 @Riverpod(keepAlive: true)
-Future<OptionsResponse> optionsController(OptionsControllerRef ref) {
+Future<OptionsResponse> optionsController(OptionsControllerRef ref) async {
   final repository = ref.watch(optionsRepositoryProvider);
 
-  return repository.get();
+  return await repository.get();
 }

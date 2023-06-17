@@ -31,26 +31,47 @@ abstract class ProjectRepository {
 
   // patch
   // we use string, dynamic for payload because we will only post one key-value pair at a time
-  Future<PatchProjectResponse> patch(String uuid, Map<String, dynamic> payload);
+  Future<PatchProjectResponse> patch(
+    String uuid,
+    Map<String, dynamic> payload,
+  );
 
   Future<UpdateFinancialAccomplishmentResponse> updateFa(
-      String uuid, Map<String, dynamic> payload);
+    String uuid,
+    Map<String, dynamic> payload,
+  );
 
-  Future<StatusResponse> updateRow(String uuid, CostSchedule payload);
+  Future<StatusResponse> updateRow(
+    String uuid,
+    CostSchedule payload,
+  );
 
-  Future<StatusResponse> updateRap(String uuid, CostSchedule payload);
+  Future<StatusResponse> updateRap(
+    String uuid,
+    CostSchedule payload,
+  );
 
-  Future<StatusResponse> updateFs(String uuid, CostSchedule payload);
+  Future<StatusResponse> updateFs(
+    String uuid,
+    CostSchedule payload,
+  );
 
   Future<RegionalInvestmentResponse> updateRegionalInvestment(
-      String uuid, RegionalInvestment payload);
+    String uuid,
+    RegionalInvestment payload,
+  );
 
   Future<void> removeRegionalInvestment(int id);
 
   Future<FsInvestmentResponse> updateFsInvestment(
-      String uuid, FsInvestment payload);
+    String uuid,
+    FsInvestment payload,
+  );
 
   Future<void> removeFsInvestment(int id);
+
+  // Duplicates the PAP to be edited on the current updating period
+  Future<ProjectResponse> duplicate(String uuid);
 }
 
 class ProjectRepositoryImplementer implements ProjectRepository {
@@ -131,6 +152,12 @@ class ProjectRepositoryImplementer implements ProjectRepository {
   @override
   Future<void> removeFsInvestment(int id) async {
     return await client.removeFsInvestment(id);
+  }
+
+  @override
+  Future<ProjectResponse> duplicate(String uuid) async {
+    // TODO: implement duplicate
+    throw UnimplementedError();
   }
 }
 
