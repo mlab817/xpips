@@ -29,7 +29,7 @@ class _NewPapScreenState extends ConsumerState<NewPapScreen> {
             Navigator.pop(context);
           },
         ),
-        title: const Text('New Program/Project'),
+        title: const Text('Add Program/Project'),
         actions: [
           const Text('Please complete all fields'),
           const SizedBox(
@@ -142,7 +142,7 @@ class _NewPapScreenState extends ConsumerState<NewPapScreen> {
                             .update(regularProgram: value);
                       },
                     ),
-                    const Text('Regular Program'),
+                    const Text('Check if this is a regular program'),
                   ],
                 ),
               ),
@@ -150,57 +150,57 @@ class _NewPapScreenState extends ConsumerState<NewPapScreen> {
               const Text('Basis for Implementation'),
               const SizedBox(height: 10),
               Column(
-                  children: optionsAsync?.data.bases?.map(
-                        (basis) {
-                          return InkWell(
-                            onTap: () {
-                              final curSelection = simpleProject.bases
-                                  .toList(); // copy the current selection
+                children: optionsAsync?.data.bases?.map(
+                      (basis) {
+                        return InkWell(
+                          onTap: () {
+                            final curSelection = simpleProject.bases
+                                .toList(); // copy the current selection
 
-                              if (simpleProject.bases.contains(basis)) {
-                                curSelection.add(basis);
-                              } else {
-                                curSelection.remove(basis);
-                              }
+                            if (simpleProject.bases.contains(basis)) {
+                              curSelection.add(basis);
+                            } else {
+                              curSelection.remove(basis);
+                            }
 
-                              ref
-                                  .read(simpleProjectControllerStateProvider
-                                      .notifier)
-                                  .update(bases: curSelection);
-                            },
-                            child: Row(
-                              children: [
-                                Checkbox(
-                                  value: simpleProject.bases.contains(basis),
-                                  onChanged: (bool? value) {
-                                    final curSelection = simpleProject.bases
-                                        .toList(); // copy the current selection
+                            ref
+                                .read(simpleProjectControllerStateProvider
+                                    .notifier)
+                                .update(bases: curSelection);
+                          },
+                          child: Row(
+                            children: [
+                              Checkbox(
+                                value: simpleProject.bases.contains(basis),
+                                onChanged: (bool? value) {
+                                  final curSelection = simpleProject.bases
+                                      .toList(); // copy the current selection
 
-                                    if (value ?? false) {
-                                      curSelection.add(basis);
-                                    } else {
-                                      curSelection.remove(basis);
-                                    }
+                                  if (value ?? false) {
+                                    curSelection.add(basis);
+                                  } else {
+                                    curSelection.remove(basis);
+                                  }
 
-                                    ref
-                                        .read(
-                                            simpleProjectControllerStateProvider
-                                                .notifier)
-                                        .update(bases: curSelection);
-                                  },
+                                  ref
+                                      .read(simpleProjectControllerStateProvider
+                                          .notifier)
+                                      .update(bases: curSelection);
+                                },
+                              ),
+                              Flexible(
+                                child: Text(
+                                  basis.label,
+                                  maxLines: 2,
                                 ),
-                                Flexible(
-                                  child: Text(
-                                    basis.label,
-                                    maxLines: 2,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      ).toList() ??
-                      []),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ).toList() ??
+                    [],
+              ),
               const SizedBox(height: 30),
               const Text('Description'),
               const SizedBox(height: 10),
@@ -217,7 +217,7 @@ class _NewPapScreenState extends ConsumerState<NewPapScreen> {
                 },
               ),
               const SizedBox(height: 30),
-              const Text('Total Cost (in absolute PHP)'),
+              const Text('Total Cost (in ABSOLUTE PHP)'),
               const SizedBox(height: 10),
               TextFormField(
                 initialValue: simpleProject.totalCost.toString(),

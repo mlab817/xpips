@@ -3,10 +3,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:pips/application/extensions.dart';
-import 'package:pips/application/providers/bearertoken_provider.dart';
-import 'package:pips/presentation/controllers/currentuser_controller.dart';
 
+import '../../../application/extensions.dart';
+import '../../../application/providers/bearertoken_provider.dart';
 import '../../../application/app_router.dart';
 import '../../../presentation/controllers/controllers.dart';
 
@@ -97,7 +96,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         height: 10,
                       ),
                       Text(
-                        'Public Investment Programming System',
+                        'Public Investment Program System',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontFamily: GoogleFonts.bebasNeue().fontFamily,
@@ -233,14 +232,5 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         ),
       ),
     );
-  }
-
-  void _handleLogin() async {
-    try {
-      //
-      ref.read(loginProvider);
-    } catch (error) {
-      print(error);
-    }
   }
 }

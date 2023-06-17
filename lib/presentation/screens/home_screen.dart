@@ -2,12 +2,12 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:pips/application/providers/searchhistory_provider.dart';
-import 'package:pips/domain/models/pipsstatus.dart';
-import 'package:pips/presentation/controllers/options_controller.dart';
-import 'package:pips/presentation/screens/pipolstatus_controller.dart';
-import 'package:pips/presentation/widgets/loading_dialog.dart';
 
+import '../../application/providers/searchhistory_provider.dart';
+import '../../domain/models/pipsstatus.dart';
+import '../../presentation/controllers/options_controller.dart';
+import '../../presentation/screens/pipolstatus_controller.dart';
+import '../../presentation/widgets/loading_dialog.dart';
 import '../../application/app_router.dart';
 import '../../data/repositories/pipolstatus_repository.dart';
 import '../controllers/home_controller.dart';

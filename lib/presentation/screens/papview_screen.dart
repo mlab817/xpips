@@ -1,14 +1,9 @@
-import 'dart:math';
-
 import 'package:auto_route/auto_route.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
-import 'package:url_launcher/url_launcher.dart';
 
-import '../../data/responses/patchproject_response.dart';
 import '../../presentation/widgets/papform/common/scheduleeditor.dart';
 import '../resources/strings_manager.dart';
 import '../widgets/papform/common/fsinvestmenteditor.dart';
@@ -18,12 +13,10 @@ import '../../application/app_router.dart';
 import '../../application/extensions.dart';
 import '../../application/providers/numberformatter_provider.dart';
 import '../../data/repositories/repositories.dart';
-import '../../data/requests/requests.dart';
 import '../../data/responses/responses.dart';
 import '../../domain/models/models.dart';
 import '../../presentation/controllers/controllers.dart';
-import '../../presentation/widgets/message_bubble.dart';
-import '../widgets/papform/common/SwitchEditor.dart';
+import '../widgets/papform/common/switcheditor.dart';
 import '../widgets/papform/common/dateeditor.dart';
 import '../widgets/papform/common/radioeditor.dart';
 import '../widgets/papform/common/sliverstickyheader.dart';
@@ -47,17 +40,6 @@ class PapViewScreen extends ConsumerStatefulWidget {
 }
 
 class _PapViewScreenState extends ConsumerState<PapViewScreen> {
-  bool _isExpanded = false;
-
-  final TextEditingController _textEditingController = TextEditingController();
-  final Random _random = Random();
-
-  void _toggleExpanded() {
-    setState(() {
-      _isExpanded = !_isExpanded;
-    });
-  }
-
   Future<PatchProjectResponse> _handleSubmit({
     required String uuid,
     required String fieldKey,
@@ -174,7 +156,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
           ),
         ],
       ),
-      floatingActionButton: !_isExpanded ? _buildChatBadge() : null,
+      floatingActionButton: _buildChatBadge(),
       body: Stack(
         children: [
           // content
@@ -193,8 +175,6 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
               child: CircularProgressIndicator(),
             ),
           ),
-          // chat box
-          _buildChat(),
         ],
       ),
     );
@@ -209,16 +189,13 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         child: FloatingActionButton(
           onPressed: () {
             // expand messenger like
-            setState(() {
-              _isExpanded = !_isExpanded;
-            });
             AutoRouter.of(context).push(CommentsRoute(uuid: widget.uuid));
           },
           child: const Icon(Icons.chat_bubble),
         ),
       );
     }, error: (error, stacktrace) {
-      return Container();
+      return const Badge();
     }, loading: () {
       return Container();
     });
@@ -1172,6 +1149,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
               ScheduleEditor(
                 title: 'Resettlement Action Plan Schedule',
                 oldValue: project.rapCost ?? CostSchedule.initial(),
+                enabled: project.cip ?? false,
                 onSubmit: (CostSchedule newValue) {
                   //
                   //
@@ -3387,119 +3365,6 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
             ],
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildChat() {
-    final liveComments = ref.watch(combinedCommentsProvider(uuid: widget.uuid));
-
-    print('live comments length: ');
-
-    return AnimatedPositioned(
-      duration: const Duration(milliseconds: 250),
-      curve: Curves.easeInOut,
-      right: _isExpanded ? 0 : -368,
-      bottom: 0,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(
-            minHeight: 600,
-            maxHeight: 600,
-            minWidth: 300,
-            maxWidth: 360,
-          ),
-          child: Container(
-            height: 600,
-            width: 360,
-            padding: EdgeInsets.zero,
-            decoration: BoxDecoration(
-              color: Theme.of(context).canvasColor,
-              border: Border.all(color: Colors.grey, width: 0.5),
-              borderRadius: BorderRadius.circular(8.0),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: [
-                      const Text('Comments'),
-                      const Spacer(),
-                      IconButton(
-                        onPressed: _toggleExpanded,
-                        icon: const Icon(Icons.close),
-                      ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: liveComments.when(
-                    data: (data) {
-                      return ListView.builder(
-                        physics: const ClampingScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: data.length,
-                        itemBuilder: (context, index) {
-                          final comment = data[index];
-
-                          return MessageBubble(comment: comment);
-                        },
-                      );
-                    },
-                    error: (error, stacktrace) {
-                      return Center(
-                        child: Text('Error: ${error.toString()}'),
-                      );
-                    },
-                    loading: () => const CircularProgressIndicator(),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    maxLines: 1,
-                    controller: _textEditingController,
-                    decoration: const InputDecoration(
-                      suffixIcon: Icon(Icons.send),
-                    ),
-                    onFieldSubmitted: (String? value) {
-                      debugPrint(value);
-                      if (value == null) {
-                        return;
-                      }
-                      //
-
-                      ref
-                          .read(newCommentRepositoryProvider(uuid: widget.uuid))
-                          .addComment(CommentRequest(comment: value));
-
-                      ref
-                          .read(newCommentLocalStreamControllerProvider)
-                          .sink
-                          .add(Comment(
-                            id: 6000000 + _random.nextInt(100),
-                            comment: value,
-                            createdAt: DateTime.now(),
-                            updatedAt: DateTime.now(),
-                            isResolved: false,
-                            userId: ref.watch(currentUserProvider)?.id,
-                            user: ref
-                                .watch(currentUserProvider)
-                                ?.toQuickResource(),
-                          ));
-
-                      _textEditingController.clear();
-                    },
-                  ),
-                ),
-                // Add more chat messages as needed
-              ],
-            ),
-          ),
-        ),
       ),
     );
   }

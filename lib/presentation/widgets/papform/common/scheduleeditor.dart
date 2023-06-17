@@ -42,6 +42,7 @@ class _ScheduleEditorState extends ConsumerState<ScheduleEditor> {
         tileColor: Theme.of(context).primaryColor.withOpacity(0.1),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         title: Text(widget.title),
+        enabled: widget.enabled,
         trailing: EditButton(onPressed: () {
           _edit();
         }),
