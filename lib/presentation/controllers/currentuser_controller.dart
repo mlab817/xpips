@@ -1,7 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:pips/application/providers/appserviceclient_provider.dart';
+import 'package:pips/application/providers/bearertoken_provider.dart';
 import 'package:pips/application/providers/sharedpreferences.dart';
+import 'package:pips/data/responses/user_response.dart';
 import 'package:pips/presentation/controllers/controllers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -10,24 +13,29 @@ import '../../domain/models/models.dart';
 part 'currentuser_controller.g.dart';
 
 @Riverpod(keepAlive: true)
-User? currentUser(CurrentUserRef ref) {
-  final loginResponse = ref.watch(loginProvider).value;
+Future<UserResponse?> getCurrentUser(GetCurrentUserRef ref) async {
+  // listen to login provider
+  final bearerToken = ref.watch(bearerTokenProvider);
 
-  if (kDebugMode) {
-    print('currentUser provider triggered');
-  }
+  // if bearer token is not null, this means the user has logged in
+  if (bearerToken != null) {
+    final client = ref.watch(appServiceClientProvider);
 
-  if (loginResponse?.user != null) {
-    print('currentUser is not null');
+    final user = await client.getCurrentUser();
+
+    // save to shared preferences
     ref
         .watch(sharedPreferencesProvider)
-        .setString('CURRENT_USER', jsonEncode(loginResponse!.user));
+        .setString('CURRENT_USER', jsonEncode(user.user));
+
+    return user;
+  } else {
+    return null;
   }
+}
 
-  final userFromSharedPrefs =
-      ref.watch(sharedPreferencesProvider).getString('CURRENT_USER');
-
-  return userFromSharedPrefs != null
-      ? User.fromJson(jsonDecode(userFromSharedPrefs))
-      : null;
+@Riverpod(keepAlive: true)
+User? currentUser(CurrentUserRef ref) {
+  // retrieve current user
+  return ref.watch(getCurrentUserProvider).value?.user;
 }

@@ -72,6 +72,8 @@ abstract class ProjectRepository {
 
   // Duplicates the PAP to be edited on the current updating period
   Future<ProjectResponse> duplicate(String uuid);
+
+  Future<ProjectsResponse> search(String query);
 }
 
 class ProjectRepositoryImplementer implements ProjectRepository {
@@ -158,6 +160,11 @@ class ProjectRepositoryImplementer implements ProjectRepository {
   Future<ProjectResponse> duplicate(String uuid) async {
     // TODO: implement duplicate
     throw UnimplementedError();
+  }
+
+  @override
+  Future<ProjectsResponse> search(String query) async {
+    return client.search(query);
   }
 }
 

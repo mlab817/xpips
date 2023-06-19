@@ -1,7 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 
 import '../../application/providers/searchhistory_provider.dart';
 import '../../domain/models/pipsstatus.dart';
@@ -11,6 +10,7 @@ import '../../presentation/widgets/loading_dialog.dart';
 import '../../application/app_router.dart';
 import '../../data/repositories/pipolstatus_repository.dart';
 import '../controllers/home_controller.dart';
+import '../controllers/homesearch_controller.dart';
 import '../widgets/project_list_tile.dart';
 
 @RoutePage()
@@ -80,6 +80,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             onPressed: _showFilters,
             icon: const Icon(Icons.tune_outlined),
           ),
+          _buildSearchBox(),
         ],
       ),
       // show drawer for smaller screens
@@ -193,209 +194,222 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               width: 250,
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        SizedBox(
-                          height: 40,
-                          width: 100,
-                          child: FilledButton(
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SizedBox(
+                            height: 40,
+                            width: 100,
+                            child: FilledButton(
+                              onPressed: () {
+                                AutoRouter.of(context)
+                                    .push(const NewPapRoute());
+                              },
+                              child: const Text('New'),
+                            ),
+                          ),
+                          IconButton(
                             onPressed: () {
-                              AutoRouter.of(context).push(const NewPapRoute());
+                              // reload the pips status
+                              ref.invalidate(pipsStatusControllerProvider);
+
+                              // reload pipol Status
+                              ref.invalidate(pipolStatusControllerProvider);
                             },
-                            child: const Text('New'),
+                            icon: const Icon(Icons.refresh),
+                            tooltip: 'Reload',
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      ListTile(
+                        dense: true,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(50),
+                            bottomRight: Radius.circular(50),
                           ),
                         ),
-                        IconButton(
-                          onPressed: () {
-                            // reload the pips status
-                            ref.invalidate(pipsStatusControllerProvider);
+                        selected: _showAll,
+                        title: const Text('ALL'),
+                        selectedTileColor: Theme.of(context)
+                            .colorScheme
+                            .primary
+                            .withOpacity(0.2),
+                        onTap: () {
+                          setState(() {
+                            _pipsStatus = null;
+                            _pipolStatus = null;
+                          });
 
-                            // reload pipol Status
-                            ref.invalidate(pipolStatusControllerProvider);
-                          },
-                          icon: const Icon(Icons.refresh),
-                          tooltip: 'Reload',
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    ListTile(
-                      dense: true,
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(50),
-                          bottomRight: Radius.circular(50),
-                        ),
-                      ),
-                      selected: _showAll,
-                      title: const Text('ALL'),
-                      selectedTileColor: Theme.of(context)
-                          .colorScheme
-                          .primary
-                          .withOpacity(0.2),
-                      onTap: () {
-                        setState(() {
-                          _pipsStatus = null;
-                          _pipolStatus = null;
-                        });
-
-                        // set pips status to current id and reset to page 1
-                        ref
-                            .read(projectsRequestControllerProvider.notifier)
-                            .update(
-                          pipsStatuses: [],
-                          pipolStatuses: [],
-                          page: 1,
-                        );
-                      },
-                    ),
-                    // PIPS STATUS MENU
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        'PIPS STATUS',
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodySmall
-                            ?.apply(color: Theme.of(context).primaryColor),
-                      ),
-                    ),
-                    menuAsync.when(
-                      data: (data) {
-                        return ListView.builder(
-                          physics: const ClampingScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount: data.data.length,
-                          itemBuilder: (context, index) {
-                            return ListTile(
-                              dense: true,
-                              shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.only(
-                                  topRight: Radius.circular(50),
-                                  bottomRight: Radius.circular(50),
-                                ),
-                              ),
-                              selected: projectsRequest.pipsStatuses != null &&
-                                  projectsRequest.pipsStatuses!.isNotEmpty &&
-                                  projectsRequest.pipsStatuses![0] ==
-                                      data.data[index].id,
-                              title: Text(data.data[index].name),
-                              trailing: Text(
-                                  data.data[index].projectsCount.toString()),
-                              selectedTileColor: Theme.of(context)
-                                  .colorScheme
-                                  .primary
-                                  .withOpacity(0.2),
-                              onTap: () {
-                                setState(() {
-                                  _pipsStatus = data.data[index];
-                                  _showAll = false;
-                                });
-
-                                // set pips status to current id and reset to page 1
-                                ref
-                                    .read(projectsRequestControllerProvider
-                                        .notifier)
-                                    .update(
-                                  pipsStatuses: [data.data[index].id],
-                                  pipolStatuses: [], // clear pipol status
-                                  page: 1,
-                                );
-                              },
-                            );
-                          },
-                        );
-                      },
-                      error: (error, stackTrace) => Center(
-                        child: Text(error.toString()),
-                      ),
-                      loading: () => const Center(
-                        child: Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: CircularProgressIndicator(),
-                        ),
-                      ),
-                    ),
-                    // PIPOL STATUS MENU
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        'PIPOL STATUS',
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodySmall
-                            ?.apply(color: Theme.of(context).primaryColor),
-                      ),
-                    ),
-                    pipolAsync.when(
-                      data: (data) {
-                        if (data.data.isEmpty) {
-                          return const Center(
-                            child: Text('NO ITEMS TO SHOW.'),
+                          // set pips status to current id and reset to page 1
+                          ref
+                              .read(projectsRequestControllerProvider.notifier)
+                              .update(
+                            pipsStatuses: [],
+                            pipolStatuses: [],
+                            page: 1,
                           );
-                        }
-
-                        return ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: data.data.length,
-                          itemBuilder: (context, index) {
-                            return ListTile(
-                              dense: true,
-                              shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.only(
-                                  topRight: Radius.circular(50),
-                                  bottomRight: Radius.circular(50),
-                                ),
-                              ),
-                              selected: projectsRequest.pipolStatuses != null &&
-                                  projectsRequest.pipolStatuses!.isNotEmpty &&
-                                  projectsRequest.pipolStatuses![0] ==
-                                      data.data[index].id,
-                              title: Text(data.data[index].name),
-                              trailing: Text(
-                                  data.data[index].projectsCount.toString()),
-                              selectedTileColor: Theme.of(context)
-                                  .colorScheme
-                                  .primary
-                                  .withOpacity(0.2),
-                              onTap: () {
-                                setState(() {
-                                  _pipolStatus = data.data[index];
-                                  _showAll = false;
-                                });
-
-                                // set pips status to current id and reset to page 1
-                                ref
-                                    .read(projectsRequestControllerProvider
-                                        .notifier)
-                                    .update(
-                                        pipolStatuses: [data.data[index].id],
-                                        pipsStatuses: [], // clear pips status
-                                        page: 1);
-                              },
-                            );
-                          },
-                        );
-                      },
-                      error: (error, stackTrace) => Center(
-                        child: Text(error.toString()),
+                        },
                       ),
-                      loading: () => const Center(
-                        child: Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: CircularProgressIndicator(),
+                      // PIPS STATUS MENU
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          'PIPS STATUS',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall
+                              ?.apply(color: Theme.of(context).primaryColor),
                         ),
                       ),
-                    ),
-                  ],
+                      menuAsync.when(
+                        data: (data) {
+                          if (menuAsync.isRefreshing) {
+                            return const CircularProgressIndicator();
+                          }
+
+                          return ListView.builder(
+                            physics: const ClampingScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: data.data.length,
+                            itemBuilder: (context, index) {
+                              return ListTile(
+                                dense: true,
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.only(
+                                    topRight: Radius.circular(50),
+                                    bottomRight: Radius.circular(50),
+                                  ),
+                                ),
+                                selected: projectsRequest.pipsStatuses !=
+                                        null &&
+                                    projectsRequest.pipsStatuses!.isNotEmpty &&
+                                    projectsRequest.pipsStatuses![0] ==
+                                        data.data[index].id,
+                                title: Text(data.data[index].name),
+                                trailing: Text(
+                                    data.data[index].projectsCount.toString()),
+                                selectedTileColor: Theme.of(context)
+                                    .colorScheme
+                                    .primary
+                                    .withOpacity(0.2),
+                                onTap: () {
+                                  setState(() {
+                                    _pipsStatus = data.data[index];
+                                    _showAll = false;
+                                  });
+
+                                  // set pips status to current id and reset to page 1
+                                  ref
+                                      .read(projectsRequestControllerProvider
+                                          .notifier)
+                                      .update(
+                                    pipsStatuses: [data.data[index].id],
+                                    pipolStatuses: [], // clear pipol status
+                                    page: 1,
+                                  );
+                                },
+                              );
+                            },
+                          );
+                        },
+                        error: (error, stackTrace) => Center(
+                          child: Text(error.toString()),
+                        ),
+                        loading: () => const Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: CircularProgressIndicator(),
+                          ),
+                        ),
+                      ),
+                      // PIPOL STATUS MENU
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          'PIPOL STATUS',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall
+                              ?.apply(color: Theme.of(context).primaryColor),
+                        ),
+                      ),
+                      pipolAsync.when(
+                        data: (data) {
+                          if (pipolAsync.isRefreshing) {
+                            return const CircularProgressIndicator();
+                          }
+
+                          if (data.data.isEmpty) {
+                            return const Center(
+                              child: Text('NO ITEMS TO SHOW.'),
+                            );
+                          }
+
+                          return ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: data.data.length,
+                            itemBuilder: (context, index) {
+                              return ListTile(
+                                dense: true,
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.only(
+                                    topRight: Radius.circular(50),
+                                    bottomRight: Radius.circular(50),
+                                  ),
+                                ),
+                                selected: projectsRequest.pipolStatuses !=
+                                        null &&
+                                    projectsRequest.pipolStatuses!.isNotEmpty &&
+                                    projectsRequest.pipolStatuses![0] ==
+                                        data.data[index].id,
+                                title: Text(data.data[index].name),
+                                trailing: Text(
+                                    data.data[index].projectsCount.toString()),
+                                selectedTileColor: Theme.of(context)
+                                    .colorScheme
+                                    .primary
+                                    .withOpacity(0.2),
+                                onTap: () {
+                                  setState(() {
+                                    _pipolStatus = data.data[index];
+                                    _showAll = false;
+                                  });
+
+                                  // set pips status to current id and reset to page 1
+                                  ref
+                                      .read(projectsRequestControllerProvider
+                                          .notifier)
+                                      .update(
+                                          pipolStatuses: [data.data[index].id],
+                                          pipsStatuses: [], // clear pips status
+                                          page: 1);
+                                },
+                              );
+                            },
+                          );
+                        },
+                        error: (error, stackTrace) => Center(
+                          child: Text(error.toString()),
+                        ),
+                        loading: () => const Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: CircularProgressIndicator(),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -415,11 +429,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   child: Row(
                     children: [
                       _buildTitle(),
-                      _buildSearchBox(),
                       const Spacer(),
-                      const SizedBox(
-                        width: 10,
-                      ),
                       _buildPageSelector(),
                     ],
                   ),
@@ -449,17 +459,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             );
           }
 
-          return SlidableAutoCloseBehavior(
-            closeWhenOpened: true,
-            child: ListView.builder(
-              physics: const ClampingScrollPhysics(),
-              itemCount: data.data.length,
-              itemBuilder: (context, index) {
-                final project = data.data[index];
+          return ListView.builder(
+            physics: const ClampingScrollPhysics(),
+            itemCount: data.data.length,
+            itemBuilder: (context, index) {
+              final project = data.data[index];
 
-                return ProjectListTile(project: project);
-              },
-            ),
+              return ProjectListTile(project: project);
+            },
           );
         },
         error: (error, _) => Center(
@@ -531,37 +538,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   Widget _buildSearchBox() {
-    return Expanded(
-      child: TextFormField(
-        controller: _searchController,
-        decoration: InputDecoration(
-          fillColor: Colors.transparent,
-          hoverColor: Colors.transparent,
-          focusColor: Colors.transparent,
-          prefixIcon: const Icon(Icons.search),
-          suffixIcon: ref.watch(projectsRequestControllerProvider).q != null &&
-                  ref.watch(projectsRequestControllerProvider).q!.isNotEmpty
-              ? IconButton(
-                  icon: const Icon(Icons.clear),
-                  onPressed: () {
-                    ref
-                        .read(projectsRequestControllerProvider.notifier)
-                        .clearQuery();
-
-                    _searchController.clear();
-                  })
-              : null,
-          border: InputBorder.none,
-          focusedBorder: InputBorder.none,
-          enabledBorder: InputBorder.none,
-          hintText: 'Type and press enter to search',
-        ),
-        onFieldSubmitted: (String value) {
-          // update the query value in the provider
-          ref
-              .read(projectsRequestControllerProvider.notifier)
-              .update(q: value, pipsStatuses: [], pipolStatuses: []);
-        },
+    return IconButton(
+      onPressed: () {
+        showSearch(context: context, delegate: _HomeScreenSearchDelegate());
+      },
+      icon: const Icon(
+        Icons.search,
       ),
     );
   }
@@ -960,6 +942,98 @@ class _ProjectRequestBottomSheetState
             );
           },
           loading: () => const LoadingOverlay()),
+    );
+  }
+}
+
+class _HomeScreenSearchDelegate extends SearchDelegate<void> {
+  @override
+  List<Widget>? buildActions(BuildContext context) {
+    return [];
+  }
+
+  @override
+  Widget? buildLeading(BuildContext context) {
+    return IconButton(
+      onPressed: () {
+        Navigator.pop(context);
+      },
+      icon: const Icon(
+        Icons.close,
+      ),
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+        return SearchResultScreen(
+          query: query,
+        );
+      }));
+    });
+
+    return Container();
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    // TODO: implement buildSuggestions
+    return Container();
+  }
+}
+
+class SearchResultScreen extends ConsumerStatefulWidget {
+  const SearchResultScreen({
+    super.key,
+    required this.query,
+  });
+
+  final String query;
+
+  @override
+  ConsumerState<SearchResultScreen> createState() => _SearchResultScreenState();
+}
+
+class _SearchResultScreenState extends ConsumerState<SearchResultScreen> {
+  @override
+  Widget build(BuildContext context) {
+    final results = ref.watch(homeSearchProvider(query: widget.query));
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Search Results for "${widget.query}"'),
+        leading: IconButton(
+            icon: const Icon(Icons.close),
+            onPressed: () {
+              AutoRouter.of(context).push(const HomeRoute());
+            }),
+      ),
+      body: results.when(data: (data) {
+        final projects = data.data;
+
+        return ListView.builder(
+          itemCount: projects.length,
+          itemBuilder: (context, index) {
+            final project = projects[index];
+
+            return ListTile(
+              title: Text(project.title),
+              subtitle: Text(project.office?.acronym ?? ''),
+              onTap: () {
+                AutoRouter.of(context).push(
+                  PapViewRoute(uuid: project.uuid),
+                );
+              },
+            );
+          },
+        );
+      }, error: (error, stacktrace) {
+        return Container();
+      }, loading: () {
+        return const LoadingOverlay();
+      }),
     );
   }
 }
