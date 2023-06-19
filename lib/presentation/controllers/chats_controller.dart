@@ -1,10 +1,10 @@
 import 'dart:async';
 
-import 'package:pips/data/requests/chats_request.dart';
-import 'package:pips/data/responses/responses.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../data/repositories/chats_repository.dart';
+import '../../data/requests/chats_request.dart';
+import '../../data/responses/responses.dart';
 
 part 'chats_controller.g.dart';
 
