@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../application/functions.dart';
-import '../../../data/requests/pagination_request.dart';
 import '../../../data/responses/notifications_response.dart';
 import '../../../presentation/controllers/notifications_controller.dart';
 import '../../../presentation/widgets/loading_dialog.dart';

@@ -20,18 +20,11 @@ class _RequestReactivationScreenState
     extends ConsumerState<RequestReactivationScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  final List<XFile> _list = [];
-
-  final bool _dragging = false;
-
-  String? _uploadedPath;
-  String? _uploadError;
-
   final TextEditingController _emailController = TextEditingController();
 
   @override
   void initState() {
-    // TODO: implement initState
+
     super.initState();
 
     _emailController.addListener(() {
@@ -59,7 +52,6 @@ class _RequestReactivationScreenState
       ref
           .read(reactivationRequestControllerProvider.notifier)
           .update(authorization: next.value?.path ?? '');
-      _uploadedPath = next.value?.path;
     });
 
     ref.listen(requestReactivationControllerProvider, (previous, next) {
@@ -71,10 +63,6 @@ class _RequestReactivationScreenState
       }
     });
 
-    final submissionAsync =
-        ref.watch(requestReactivationControllerProvider.future);
-
-    // TODO: add email and upload
     return Scaffold(
       body: Center(
         child: ConstrainedBox(

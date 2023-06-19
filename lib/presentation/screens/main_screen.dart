@@ -10,10 +10,6 @@ import '../../application/app_router.dart';
 import '../../domain/models/notifications.dart';
 import '../controllers/notificationsstream_controller.dart';
 import '../widgets/logout_button.dart';
-import 'chat_screen.dart';
-import 'home_screen.dart';
-import 'notifications_screen.dart';
-import 'settings_screen.dart';
 
 @RoutePage()
 class MainScreen extends ConsumerStatefulWidget {
@@ -24,13 +20,6 @@ class MainScreen extends ConsumerStatefulWidget {
 }
 
 class _MainScreenState extends ConsumerState<MainScreen> {
-  final _screens = [
-    const HomeScreen(),
-    const ChatScreen(),
-    const NotificationsScreen(),
-    const SettingsScreen(),
-  ];
-
   final List<NavigationRailDestination> _destinations =
       const <NavigationRailDestination>[
     NavigationRailDestination(
