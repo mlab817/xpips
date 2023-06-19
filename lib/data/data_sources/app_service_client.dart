@@ -8,6 +8,7 @@ import '../../data/requests/requests.dart';
 import '../../data/responses/responses.dart';
 import '../../domain/models/models.dart';
 import '../repositories/pipolstatus_repository.dart';
+import '../responses/user_response.dart';
 
 part 'app_service_client.g.dart';
 
@@ -136,4 +137,10 @@ abstract class AppServiceClient {
     @Part(name: 'attachment') required File attachment,
     @Part(name: 'attachment_type_id') required int attachmentTypeId,
   });
+
+  @GET('/search')
+  Future<ProjectsResponse> search(@Query('q') String query);
+
+  @GET('/me')
+  Future<UserResponse> getCurrentUser();
 }
