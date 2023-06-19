@@ -6,7 +6,22 @@ part of 'currentuser_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$currentUserHash() => r'3bd6bebfb5bc9d6ab10035eb703844a9a427ed47';
+String _$getCurrentUserHash() => r'14d06c0264c85d8fa4513e4c30e959214484455f';
+
+/// See also [getCurrentUser].
+@ProviderFor(getCurrentUser)
+final getCurrentUserProvider = FutureProvider<UserResponse?>.internal(
+  getCurrentUser,
+  name: r'getCurrentUserProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$getCurrentUserHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef GetCurrentUserRef = FutureProviderRef<UserResponse?>;
+String _$currentUserHash() => r'628113e7c64d6dec3dcc9f521768d270975f50db';
 
 /// See also [currentUser].
 @ProviderFor(currentUser)
