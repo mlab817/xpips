@@ -28,6 +28,14 @@ class NotificationsRequestController extends _$NotificationsRequestController {
       filter: filter ?? state.filter,
     );
   }
+
+  void previousPage() {
+    state = state.copyWith(page: state.page-1);
+  }
+
+  void nextPage() {
+    state = state.copyWith(page: state.page+1);
+  }
 }
 
 @Riverpod(keepAlive: true)

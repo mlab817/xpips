@@ -28,12 +28,16 @@ class ProjectsRequest with _$ProjectsRequest {
     @JsonKey(name: "offices[]", includeIfNull: false) List<int>? offices,
     @JsonKey(name: "funding_sources[]", includeIfNull: false)
     List<int>? fundingSources,
+    @JsonKey(name: "sort") String? sort,
   }) = _ProjectsRequest;
 
   factory ProjectsRequest.fromJson(Map<String, dynamic> json) =>
       _$ProjectsRequestFromJson(json);
 
   static ProjectsRequest initial() {
-    return ProjectsRequest(perPage: 1, page: 1); // TODO: return to 25
+    return ProjectsRequest(
+      perPage: 1,
+      page: 25,
+    );
   }
 }

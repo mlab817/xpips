@@ -75,6 +75,7 @@ class ProjectsRequestController extends Notifier<ProjectsRequest> {
     List<int>? pipsStatuses,
     List<int>? offices,
     List<int>? fundingSources,
+    String? sort,
   }) {
     state = state.copyWith(
       perPage: perPage ?? 25,
@@ -93,6 +94,7 @@ class ProjectsRequestController extends Notifier<ProjectsRequest> {
       pipsStatuses: pipsStatuses ?? state.pipsStatuses,
       offices: offices ?? state.offices,
       fundingSources: fundingSources ?? state.fundingSources,
+      sort: sort ?? state.sort,
     );
   }
 

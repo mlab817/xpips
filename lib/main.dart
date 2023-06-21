@@ -4,7 +4,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hive/hive.dart';
+import 'package:pips/domain/models/models.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:window_size/window_size.dart';
 
@@ -16,11 +17,18 @@ void main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Hive.initFlutter();
+  var path = Directory.current.path;
+
+  // initialize hive and register adapters
+  Hive
+    ..init(path)
+    ..registerAdapter(FormOptionsAdapter())
+    ..registerAdapter(OptionAdapter())
+    ..registerAdapter(OfficeAdapter());
 
   // set window size for desktop
   if (!kIsWeb && (Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
-    setWindowTitle('PIPS');
+    setWindowTitle('Public Investment Program System');
     setWindowMinSize(const Size(320, 600));
     setWindowMaxSize(Size.infinite);
   }
@@ -31,9 +39,9 @@ void main() async {
     DeviceOrientation.portraitUp,
   ]);
 
-  final sharedPrefs = await SharedPreferences.getInstance();
-
   HttpOverrides.global = MyHttpOverrides();
+
+  final sharedPrefs = await SharedPreferences.getInstance();
 
   runApp(ProviderScope(
     overrides: [

@@ -1,6 +1,6 @@
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:pips/application/providers/hivebox_provider.dart';
 import 'package:pips/data/data_sources/app_service_client.dart';
+import 'package:pips/domain/models/form_options.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../application/providers/appserviceclient_provider.dart';
@@ -9,32 +9,56 @@ import '../responses/options_response.dart';
 part 'options_repository.g.dart';
 
 abstract class OptionsRepository {
-  Future<OptionsResponse> get();
+  Future<FormOptions> get();
 }
 
 class OptionsRepositoryImplementer implements OptionsRepository {
   final AppServiceClient client;
-  // final Box box;
 
   OptionsRepositoryImplementer({
     required this.client,
-    // required this.box,
   });
 
   @override
-  Future<OptionsResponse> get() async {
-    return await client.getOptions();
+  Future<FormOptions> get() async {
+    final OptionsResponse optionsResponse = await client.getOptions();
+
+    return optionsResponse.data;
+    // print('opening box');
+
+    // final box = await Hive.openBox<FormOptions>('form_options');
+
+    // print('box $box');
+
+    // final OptionsResponse optionsResponse = await client.getOptions();
+
+    // print(optionsResponse.data);
+
+    // // check first from hive if there is data,
+    // // else retrieve from server first
     // if (box.isEmpty) {
-    //   final OptionsResponse response = await client.getOptions();
+    //   print('box is empty --- retrieving data from server');
 
-    //   box.add(response);
+    //   final OptionsResponse optionsResponse = await client.getOptions();
 
-    //   return response;
+    //   box.put('form_options', optionsResponse.data);
+
+    //   box.close();
+
+    //   print(optionsResponse.data.agenda);
+
+    //   return box.get('form_options') as FormOptions;
     // } else {
-    //   final List<OptionsResponse> values =
-    //       box.values.cast<OptionsResponse>().toList();
+    //   print('box is not empty --- retrieving data from hive');
 
-    //   return Future.value(values.first);
+    //   final formOptions = box.get('form_options') as FormOptions;
+
+    //   print('--- agenda --- ');
+    //   print(formOptions.agenda);
+
+    //   box.close();
+
+    //   return formOptions;
     // }
   }
 }
@@ -42,6 +66,5 @@ class OptionsRepositoryImplementer implements OptionsRepository {
 @Riverpod(keepAlive: true)
 OptionsRepository optionsRepository(OptionsRepositoryRef ref) =>
     OptionsRepositoryImplementer(
-      // box: ref.watch(hiveBoxProvider),
       client: ref.watch(appServiceClientProvider),
     );

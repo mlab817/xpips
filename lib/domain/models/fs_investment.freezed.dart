@@ -70,8 +70,6 @@ abstract class $FsInvestmentCopyWith<$Res> {
       @JsonKey(name: "y2027") double? y2027,
       @JsonKey(name: "y2028") double? y2028,
       @JsonKey(name: "y2029") double? y2029});
-
-  $OptionCopyWith<$Res>? get fundingSource;
 }
 
 /// @nodoc
@@ -151,18 +149,6 @@ class _$FsInvestmentCopyWithImpl<$Res, $Val extends FsInvestment>
               as double?,
     ) as $Val);
   }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $OptionCopyWith<$Res>? get fundingSource {
-    if (_value.fundingSource == null) {
-      return null;
-    }
-
-    return $OptionCopyWith<$Res>(_value.fundingSource!, (value) {
-      return _then(_value.copyWith(fundingSource: value) as $Val);
-    });
-  }
 }
 
 /// @nodoc
@@ -186,9 +172,6 @@ abstract class _$$_FsInvestmentCopyWith<$Res>
       @JsonKey(name: "y2027") double? y2027,
       @JsonKey(name: "y2028") double? y2028,
       @JsonKey(name: "y2029") double? y2029});
-
-  @override
-  $OptionCopyWith<$Res>? get fundingSource;
 }
 
 /// @nodoc

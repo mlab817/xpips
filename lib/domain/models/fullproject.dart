@@ -107,6 +107,13 @@ class FullProject with _$FullProject {
     @JsonKey(name: "provinces") required List<Option> provinces,
     @JsonKey(name: "attachments")
     required List<UploadAttachmentResponseData> attachments,
+    @JsonKey(name: "pipol_code") String? pipolCode,
+    @JsonKey(name: "pipol_status") Option? pipolStatus,
+    @JsonKey(name: "pipol_url") String? pipolUrl,
+    @JsonKey(name: "permissions") required Permissions permissions,
+    @JsonKey(name: "updating_period") Option? updatingPeriod,
+    required bool readonly,
+    required bool outdated,
   }) = _FullProject;
 
   factory FullProject.fromJson(Map<String, Object?> json) =>

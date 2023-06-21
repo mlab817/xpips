@@ -7,7 +7,7 @@ part of 'fullproject_controller.dart';
 // **************************************************************************
 
 String _$fullProjectControllerHash() =>
-    r'f8202a6590df8e288c41d25ea9e65ea74b131d1b';
+    r'6cc9efb539b4a608833fc368f4f9afa7f8e58ffb';
 
 /// Copied from Dart SDK
 class _SystemHash {

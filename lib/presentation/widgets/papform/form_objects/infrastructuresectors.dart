@@ -29,13 +29,33 @@ class UpdateInfraSectors extends ConsumerWidget {
         enabled: project.trip ?? false,
         title: const Text('Main Infrastructure Sector/Subsector'),
         subtitle: oldValue.isNotEmpty
-            ? Text(oldValue.map((element) => element.label).join(', '))
+            ? _buildList(oldValue)
             : const Text('NO ITEM(S) SELECTED'),
         onTap: () {
           _selectInfraSectors(context);
         },
       ),
     );
+  }
+
+  Widget _buildList(List<Option> selected) {
+    return Wrap(
+        children: selected
+            .map(
+              (element) => Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: Chip(
+                  label: Text(element.label),
+                  visualDensity: VisualDensity.compact,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(50),
+                    ),
+                  ),
+                ),
+              ),
+            )
+            .toList());
   }
 
   Future<void> _selectInfraSectors(BuildContext context) async {

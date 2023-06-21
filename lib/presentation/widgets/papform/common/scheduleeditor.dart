@@ -4,17 +4,19 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pips/application/providers/numberformatter_provider.dart';
 import 'package:pips/presentation/widgets/papform/common/editbutton.dart';
 
-import '../../../../domain/models/cost_schedule.dart';
+import '../../../../domain/models/models.dart';
 
 class ScheduleEditor extends ConsumerStatefulWidget {
   const ScheduleEditor({
     super.key,
+    required this.project,
     required this.title,
     required this.oldValue,
     required this.onSubmit,
     this.enabled = true,
   });
 
+  final FullProject project;
   final String title;
   final CostSchedule oldValue;
   final Function(CostSchedule newValue) onSubmit;
@@ -43,9 +45,11 @@ class _ScheduleEditorState extends ConsumerState<ScheduleEditor> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         title: Text(widget.title),
         enabled: widget.enabled,
-        trailing: EditButton(onPressed: () {
-          _edit();
-        }),
+        trailing: widget.project.readonly
+            ? null
+            : EditButton(onPressed: () {
+                _edit();
+              }),
         subtitle: SizedBox(
           width: double.infinity,
           child: Table(

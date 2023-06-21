@@ -25,6 +25,9 @@ class Project with _$Project {
     @JsonKey(name: "notes") String? notes,
     @JsonKey(name: "permissions") required Permissions permissions,
     @JsonKey(name: "comments_count") required int commentsCount,
+    @JsonKey(name: "readonly") required bool readonly,
+    @JsonKey(name: "outdated") required bool outdated,
+    @JsonKey(name: "updating_period") Option? updatingPeriod,
   }) = _Project;
 
   factory Project.fromJson(Map<String, dynamic> json) =>
@@ -41,7 +44,8 @@ class Permissions with _$Permissions {
     required bool unlock,
     required bool validate,
     required bool drop,
-    required bool updatePipol,
+    @JsonKey(name: "update_pipol") required bool updatePipol,
+    @JsonKey(name: "submit_for_review") required bool submitForReview,
   }) = _Permissions;
 
   factory Permissions.fromJson(Map<String, dynamic> json) =>

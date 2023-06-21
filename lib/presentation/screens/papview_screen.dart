@@ -1,11 +1,14 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 
 import '../../presentation/widgets/papform/common/scheduleeditor.dart';
+import '../controllers/updatingperiod_controller.dart';
 import '../resources/strings_manager.dart';
+import '../widgets/loading_dialog.dart';
 import '../widgets/papform/common/fsinvestmenteditor.dart';
 import '../widgets/papform/common/regionalinvestmenteditor.dart';
 import '../widgets/papform/common/checkboxeditor.dart';
@@ -54,6 +57,131 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         .submit(uuid: uuid, payload: payload);
   }
 
+  Future<void> _confirmDuplicate() async {
+    showDialog(
+        context: context,
+        builder: (context) {
+          //
+          return AlertDialog(title: const Text('Confirm Duplicate'), actions: [
+            TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text('I\'ll do it later')),
+            FilledButton(
+              onPressed: _handleDuplicate,
+              child: const Text('Do it now'),
+            ),
+          ]);
+        });
+  }
+
+  Future<void> _handleDuplicate() async {
+    print('executing duplicate now');
+
+    //
+    try {
+      final response =
+          await ref.read(projectRepositoryProvider).duplicate(widget.uuid);
+
+      final uuid = response.project.uuid;
+
+      print(uuid);
+
+      // invalidate homeScreen
+      ref.invalidate(homeScreenControllerProvider);
+
+      // show Dialog
+      if (mounted) {
+        showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                content:
+                    const Text('Successfully duplicated project. View now?'),
+                actions: [
+                  FilledButton(
+                    onPressed: () async {
+                      await AutoRouter.of(context)
+                          .push(PapViewRoute(uuid: uuid));
+                    },
+                    child: const Text('GO NOW'),
+                  ),
+                ],
+              );
+            });
+      }
+    } catch (error) {
+      // handle error
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(error.toString())));
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    Future.delayed(const Duration(milliseconds: 1500), () {
+      final updatingPeriod = ref.watch(updatingPeriodValueProvider);
+
+      print('updatingPeriodId: ');
+      print(updatingPeriod?.id);
+
+      if (updatingPeriod?.id !=
+          ref
+              .watch(futureProjectProvider(uuid: widget.uuid))
+              .value
+              ?.project
+              .updatingPeriod
+              ?.value) {
+        showDialog(
+            context: context,
+            builder: (context) {
+              return Dialog(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.warning,
+                      size: 100,
+                      color: Theme.of(context).colorScheme.error,
+                    ),
+                    const Divider(),
+                    const Text(
+                        'Current Updating Period and Project Updating Period are not the same.'),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    const Text(
+                        'You need to duplicate this PAP before you can make any changes.'),
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: const Text('I\'ll do it later')),
+                            FilledButton(
+                              onPressed: _handleDuplicate,
+                              child: const Text('Do it now'),
+                            ),
+                          ]),
+                    ),
+                  ],
+                ),
+              );
+            });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final projectProfileAsync =
@@ -73,95 +201,146 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
     });
 
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        leading: IconButton(
-          onPressed: () {
-            AutoRouter.of(context).push(const HomeRoute());
-          },
-          icon: const Icon(Icons.arrow_back),
-        ),
-        title: Text(
-          projectProfileAsync.value?.project.title ?? 'NO TITLE',
-          overflow: TextOverflow.ellipsis,
-        ),
-        // scrolledUnderElevation: 0.0,
-        actions: [
-          IconButton(
-            onPressed: () {
-              // reload the project
-              ref.invalidate(futureProjectProvider(uuid: widget.uuid));
-            },
-            icon: const Icon(Icons.refresh),
-            tooltip: 'Reload',
-          ),
-          IconButton(
-            onPressed: () async {
-              // todo: handle confirm delete
-              await showDialog(
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      title: const Text('Confirm Delete'),
-                      content: const Text(
-                          'Deleted PAPs cannot be restored. If you wish to go back to this PAP later, drop it instead. If you still wish to proceed, tap Confirm button below.'),
-                      actions: [
-                        ElevatedButton(
-                          onPressed: () {
-                            // TODO: handle drop
-                          },
-                          child: const Text('DROP'),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: const Text('CANCEL'),
-                        ),
-                        FilledButton(
-                          onPressed: () async {
-                            // TODO: handle deletion
-                            try {
-                              await ref
-                                  .read(projectRepositoryProvider)
-                                  .delete(widget.uuid);
-                            } catch (error) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text(error.toString())));
-                            } finally {
-                              Navigator.pop(context);
-                            }
-                          },
-                          child: const Text('CONFIRM'),
-                        ),
-                      ],
-                    );
-                  });
-            },
-            icon: const Icon(Icons.delete),
-            tooltip: AppStrings.delete,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Tooltip(
-              message:
-                  'Ensure that all fields have been filled up and are consistent.',
-              child: FilledButton(
+      appBar: projectProfileAsync.when(
+          data: (data) {
+            return AppBar(
+              automaticallyImplyLeading: false,
+              leading: IconButton(
                 onPressed: () {
-                  //
+                  AutoRouter.of(context).push(const HomeRoute());
                 },
-                child: const Text('SUBMIT'),
+                icon: const Icon(Icons.arrow_back),
               ),
-            ),
-          ),
-        ],
-      ),
+              title: RichText(
+                text: TextSpan(
+                  style: Theme.of(context).textTheme.titleLarge?.apply(
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                  children: [
+                    TextSpan(text: data.project.title ?? 'NO TITLE'),
+                    if (data.project.readonly)
+                      const TextSpan(text: ' [READONLY]')
+                  ],
+                ),
+              ),
+              // scrolledUnderElevation: 0.0,
+              actions: [
+                Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: FilledButton.icon(
+                    onPressed: () {
+                      // reload the project
+                      ref.invalidate(futureProjectProvider(uuid: widget.uuid));
+                    },
+                    icon: const Icon(Icons.refresh),
+                    label: const Text('Reload'),
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateColor.resolveWith(
+                        (states) => Theme.of(context).colorScheme.secondary,
+                      ),
+                    ),
+                  ),
+                ),
+                if (!data.project.outdated)
+                  Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: FilledButton.icon(
+                        onPressed: data.project.permissions.delete
+                            ? () async {
+                                // todo: handle confirm delete
+                                await showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: const Text('Confirm Delete'),
+                                        content: const Text(
+                                            'Deleted PAPs cannot be restored. If you wish to go back to this PAP later, drop it instead. If you still wish to proceed, tap Confirm button below.'),
+                                        actions: [
+                                          ElevatedButton(
+                                            onPressed: () {
+                                              // TODO: handle drop
+                                            },
+                                            child: const Text('DROP'),
+                                          ),
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                            child: const Text('CANCEL'),
+                                          ),
+                                          FilledButton(
+                                            onPressed: () async {
+                                              // TODO: handle deletion
+                                              try {
+                                                await ref
+                                                    .read(
+                                                        projectRepositoryProvider)
+                                                    .delete(widget.uuid);
+                                              } catch (error) {
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(SnackBar(
+                                                        content: Text(
+                                                            error.toString())));
+                                              } finally {
+                                                Navigator.pop(context);
+                                              }
+                                            },
+                                            child: const Text('CONFIRM'),
+                                          ),
+                                        ],
+                                      );
+                                    });
+                              }
+                            : null,
+                        icon: const Icon(Icons.delete),
+                        label: const Text(AppStrings.delete),
+                        style: ButtonStyle(
+                            backgroundColor: MaterialStateColor.resolveWith(
+                          (states) => Theme.of(context).colorScheme.error,
+                        ))),
+                  ),
+                if (!data.project.outdated)
+                  Tooltip(
+                    message:
+                        'Ensure that all fields have been filled up and are consistent.',
+                    child: FilledButton.icon(
+                      icon: const Icon(CupertinoIcons.share),
+                      onPressed: data.project.permissions.submitForReview
+                          ? () {
+                              //
+                            }
+                          : null,
+                      label: const Text('SUBMIT FOR REVIEW'),
+                    ),
+                  ),
+                if (data.project.outdated)
+                  Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: FilledButton.icon(
+                      onPressed: _confirmDuplicate,
+                      icon: const Icon(Icons.copy),
+                      label: const Text('Duplicate'),
+                    ),
+                  ),
+              ],
+            );
+          },
+          error: (error, _) {
+            return AppBar(title: Text(error.toString()));
+          },
+          loading: () => AppBar(
+                title: const Text('Loading'),
+              )),
       floatingActionButton: _buildChatBadge(),
       body: Stack(
         children: [
           // content
           projectProfileAsync.when(
             data: (data) {
+              if (projectProfileAsync.isRefreshing) {
+                return const LoadingOverlay();
+              }
+
               return _buildShow(data);
             },
             error: (error, stacktrace) {
@@ -172,7 +351,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
               );
             },
             loading: () => const Center(
-              child: CircularProgressIndicator(),
+              child: LoadingOverlay(),
             ),
           ),
         ],
@@ -205,8 +384,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
     final FullProject project =
         ref.watch(fullProjectControllerProvider(widget.uuid));
 
-    final options =
-        ref.watch(optionsControllerProvider).value?.data ?? FormOptions();
+    final options = ref.watch(optionsControllerProvider).value ?? FormOptions();
 
     final uuid = widget.uuid;
 
@@ -276,8 +454,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   project: project,
                   fieldLabel: 'Basis for Implementation',
                   options:
-                      ref.watch(optionsControllerProvider).value?.data.bases ??
-                          [],
+                      ref.watch(optionsControllerProvider).value?.bases ?? [],
                   oldValue: ref
                       .watch(fullProjectControllerProvider(widget.uuid))
                       .bases,
@@ -371,8 +548,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   options: ref
                           .watch(optionsControllerProvider)
                           .value
-                          ?.data
-                          .operatingUnits ??
+                          ?.operatingUnits ??
                       [],
                   onSubmit: (List<Option> newValue) async {
                     // convert to List<int>
@@ -405,8 +581,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 options: ref
                         .watch(optionsControllerProvider)
                         .value
-                        ?.data
-                        .spatialCoverages ??
+                        ?.spatialCoverages ??
                     [],
                 oldValue: project.spatialCoverage,
                 onSubmit: (Option newValue) async {
@@ -511,8 +686,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 options: ref
                         .watch(optionsControllerProvider)
                         .value
-                        ?.data
-                        .approvalLevels ??
+                        ?.approvalLevels ??
                     [],
               ),
               DateEditor(
@@ -584,12 +758,9 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                             fullProjectControllerProvider(widget.uuid).notifier)
                         .update(typology: newValue);
                   },
-                  options: ref
-                          .watch(optionsControllerProvider)
-                          .value
-                          ?.data
-                          .typologies ??
-                      []),
+                  options:
+                      ref.watch(optionsControllerProvider).value?.typologies ??
+                          []),
               SwitchEditor(
                 project: project,
                 fieldLabel: 'Core Investment Programs/Projects (CIP)',
@@ -625,12 +796,9 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                             fullProjectControllerProvider(widget.uuid).notifier)
                         .update(cipType: newValue);
                   },
-                  options: ref
-                          .watch(optionsControllerProvider)
-                          .value
-                          ?.data
-                          .cipTypes ??
-                      []),
+                  options:
+                      ref.watch(optionsControllerProvider).value?.cipTypes ??
+                          []),
               SwitchEditor(
                 project: project,
                 fieldLabel: 'Three Year Rolling Infrastructure Program',
@@ -730,12 +898,9 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                             fullProjectControllerProvider(widget.uuid).notifier)
                         .update(pdpChapter: newValue);
                   },
-                  options: ref
-                          .watch(optionsControllerProvider)
-                          .value
-                          ?.data
-                          .pdpChapters ??
-                      [],
+                  options:
+                      ref.watch(optionsControllerProvider).value?.pdpChapters ??
+                          [],
                 ),
                 CheckboxEditor(
                   project: project,
@@ -759,12 +924,9 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                             fullProjectControllerProvider(widget.uuid).notifier)
                         .update(pdpChapters: newValue);
                   },
-                  options: ref
-                          .watch(optionsControllerProvider)
-                          .value
-                          ?.data
-                          .pdpChapters ??
-                      [],
+                  options:
+                      ref.watch(optionsControllerProvider).value?.pdpChapters ??
+                          [],
                 ),
               ],
             ),
@@ -802,8 +964,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   options: ref
                           .watch(optionsControllerProvider)
                           .value
-                          ?.data
-                          .prerequisites ??
+                          ?.prerequisites ??
                       [],
                   oldValue: project.prerequisites,
                   enabled: ref
@@ -887,8 +1048,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   project: project,
                   fieldLabel: '8-Point Socioeconomic Agenda',
                   options:
-                      ref.watch(optionsControllerProvider).value?.data.agenda ??
-                          [],
+                      ref.watch(optionsControllerProvider).value?.agenda ?? [],
                   oldValue: project.agenda,
                   onSubmit: (List<Option> newValue) async {
                     final List<int> valueToSubmit =
@@ -918,8 +1078,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   project: project,
                   fieldLabel: 'Sustainable Development Goals',
                   options:
-                      ref.watch(optionsControllerProvider).value?.data.sdgs ??
-                          [],
+                      ref.watch(optionsControllerProvider).value?.sdgs ?? [],
                   oldValue: project.sdgs,
                   onSubmit: (List<Option> newValue) async {
                     final List<int> valueToSubmit =
@@ -965,8 +1124,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                         .update(gad: newValue);
                   },
                   options:
-                      ref.watch(optionsControllerProvider).value?.data.gads ??
-                          []),
+                      ref.watch(optionsControllerProvider).value?.gads ?? []),
             ]),
           ),
         ),
@@ -1033,6 +1191,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 options: options.fsStatuses ?? [],
               ),
               ScheduleEditor(
+                project: project,
                 title: 'Schedule of Feasibility Study',
                 oldValue: project.fsCost ?? CostSchedule.initial(),
                 enabled: project.cip ?? false,
@@ -1093,6 +1252,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                         .update(rowAffectedHouseholds: int.tryParse(newValue));
                   }),
               ScheduleEditor(
+                project: project,
                 title: 'Right of Way Schedule',
                 oldValue: project.rowCost ?? CostSchedule.initial(),
                 enabled: project.cip ?? false, // enable if CIP
@@ -1147,6 +1307,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   }),
               // ROWA
               ScheduleEditor(
+                project: project,
                 title: 'Resettlement Action Plan Schedule',
                 oldValue: project.rapCost ?? CostSchedule.initial(),
                 enabled: project.cip ?? false,
@@ -1268,8 +1429,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 options: ref
                         .watch(optionsControllerProvider)
                         .value
-                        ?.data
-                        .fundingSources ??
+                        ?.fundingSources ??
                     [],
               ),
               CheckboxEditor(
@@ -1278,8 +1438,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   options: ref
                           .watch(optionsControllerProvider)
                           .value
-                          ?.data
-                          .fundingSources
+                          ?.fundingSources
                           ?.where((element) =>
                               ref
                                   .watch(fullProjectControllerProvider(
@@ -1310,8 +1469,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   options: ref
                           .watch(optionsControllerProvider)
                           .value
-                          ?.data
-                          .fundingInstitutions ??
+                          ?.fundingInstitutions ??
                       [],
                   oldValue: project.fundingInstitutions,
                   onSubmit: (List<Option> newValue) async {
@@ -1350,8 +1508,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 options: ref
                         .watch(optionsControllerProvider)
                         .value
-                        ?.data
-                        .implementationModes ??
+                        ?.implementationModes ??
                     [],
               ),
             ]),
@@ -1365,7 +1522,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
             delegate: SliverChildListDelegate(
               [
                 _buildFinancialTable(project, options),
-                _buildAddFs(project, options),
+                if (!project.readonly) _buildAddFs(project, options),
               ],
             ),
           ),
@@ -1379,7 +1536,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
               [
                 _buildRegionalTable(project, options),
                 // TODO: only enable if current regions < all regions
-                _buildAddRegion(project),
+                if (!project.readonly) _buildAddRegion(project),
               ],
             ),
           ),
@@ -1409,12 +1566,9 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                       .read(fullProjectControllerProvider(uuid).notifier)
                       .update(category: newValue);
                 },
-                options: ref
-                        .watch(optionsControllerProvider)
-                        .value
-                        ?.data
-                        .categories ??
-                    [],
+                options:
+                    ref.watch(optionsControllerProvider).value?.categories ??
+                        [],
               ),
               RadioEditor(
                 project: project,
@@ -1435,8 +1589,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 options: ref
                         .watch(optionsControllerProvider)
                         .value
-                        ?.data
-                        .projectStatuses ??
+                        ?.projectStatuses ??
                     [],
               ),
               RadioEditor(
@@ -1458,8 +1611,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 options: ref
                         .watch(optionsControllerProvider)
                         .value
-                        ?.data
-                        .readinessLevels ??
+                        ?.readinessLevels ??
                     [],
               ),
               SwitchEditor(
@@ -1542,8 +1694,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                       .update(startYear: newValue);
                 },
                 options:
-                    ref.watch(optionsControllerProvider).value?.data.years ??
-                        [],
+                    ref.watch(optionsControllerProvider).value?.years ?? [],
               ),
               RadioEditor(
                 project: project,
@@ -1562,8 +1713,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                       .update(endYear: newValue);
                 },
                 options:
-                    ref.watch(optionsControllerProvider).value?.data.years ??
-                        [],
+                    ref.watch(optionsControllerProvider).value?.years ?? [],
               ),
             ]),
           ),
@@ -1701,6 +1851,79 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                         .read(
                             fullProjectControllerProvider(widget.uuid).notifier)
                         .update(notes: newValue);
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+        SliverStickyHeader(
+          header: const SliverStickyHeaderComponent(
+            title: 'SECRETARIAT ONLY',
+          ),
+          sliver: SliverList(
+            delegate: SliverChildListDelegate(
+              [
+                TextEditor(
+                  project: project,
+                  fieldLabel: 'PIPOL Code',
+                  oldValue: project.pipolCode ?? 'NO DATA',
+                  onSubmit: (String newValue) async {
+                    //
+                    await _handleSubmit(
+                      fieldKey: 'pipol_code',
+                      uuid: uuid,
+                      value: newValue,
+                    );
+
+                    // update the provider
+                    ref
+                        .read(
+                            fullProjectControllerProvider(widget.uuid).notifier)
+                        .update(pipolCode: newValue);
+                  },
+                ),
+                TextEditor(
+                  project: project,
+                  fieldLabel: 'PIPOL URL (Link)',
+                  oldValue: project.pipolUrl ?? 'NO DATA',
+                  onSubmit: (String newValue) async {
+                    //
+                    await _handleSubmit(
+                      fieldKey: 'pipol_url',
+                      uuid: uuid,
+                      value: newValue,
+                    );
+
+                    // update the provider
+                    ref
+                        .read(
+                            fullProjectControllerProvider(widget.uuid).notifier)
+                        .update(pipolUrl: newValue);
+                  },
+                ),
+                RadioEditor(
+                  project: project,
+                  fieldLabel: 'PIPOL Status',
+                  oldValue: project.pipolStatus,
+                  options: ref
+                          .watch(optionsControllerProvider)
+                          .value
+                          ?.pipolStatuses ??
+                      [],
+                  onSubmit: (Option newValue) async {
+                    //
+                    await _handleSubmit(
+                      fieldKey: 'pipol_status_id',
+                      uuid: uuid,
+                      value: newValue.value,
+                    );
+
+                    // update the provider
+                    ref
+                        .read(
+                            fullProjectControllerProvider(widget.uuid).notifier)
+                        .update(pipolStatus: newValue);
                   },
                 ),
               ],
@@ -2003,69 +2226,75 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 TableCell(
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        IconButton(
-                          visualDensity: VisualDensity.compact,
-                          icon: const Icon(
-                            Icons.edit,
-                            size: 20,
-                          ),
-                          onPressed: () async {
-                            Navigator.of(context)
-                                .push(MaterialPageRoute(builder: (context) {
-                              //
-                              return RegionalInvestmentEditor(
-                                  project: project,
-                                  options: ref
-                                          .watch(optionsControllerProvider)
-                                          .value
-                                          ?.data
-                                          .regions ??
-                                      [],
-                                  oldValue: e,
-                                  onSubmit: (newValue) async {
-                                    final response = await ref
-                                        .read(projectRepositoryProvider)
-                                        .updateRegionalInvestment(
-                                            widget.uuid, newValue);
-
+                    child: project.readonly
+                        ? Container()
+                        : Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              IconButton(
+                                visualDensity: VisualDensity.compact,
+                                icon: const Icon(
+                                  Icons.edit,
+                                  size: 20,
+                                ),
+                                onPressed: () async {
+                                  Navigator.of(context).push(
+                                      MaterialPageRoute(builder: (context) {
                                     //
-                                    ref
-                                        .read(fullProjectControllerProvider(
-                                                widget.uuid)
-                                            .notifier)
-                                        .updateRegionalInvestment(
-                                            currentIndex:
-                                                regionInvestments.indexOf(e),
-                                            regionalInvestment: response.data);
-                                  });
-                            }));
-                          },
-                        ),
-                        IconButton(
-                          visualDensity: VisualDensity.compact,
-                          icon: const Icon(Icons.delete, size: 20),
-                          onPressed: () {
-                            // if id is not null, it means that it exists in the server
-                            if (e.id != null) {
-                              ref
-                                  .read(projectRepositoryProvider)
-                                  .removeRegionalInvestment(e.id!);
-                            }
+                                    return RegionalInvestmentEditor(
+                                        project: project,
+                                        options: ref
+                                                .watch(
+                                                    optionsControllerProvider)
+                                                .value
+                                                ?.regions ??
+                                            [],
+                                        oldValue: e,
+                                        onSubmit: (newValue) async {
+                                          final response = await ref
+                                              .read(projectRepositoryProvider)
+                                              .updateRegionalInvestment(
+                                                  widget.uuid, newValue);
 
-                            //
-                            ref
-                                .read(fullProjectControllerProvider(widget.uuid)
-                                    .notifier)
-                                .removeRegionalInvestment(
-                                  index: regionInvestments.indexOf(e),
-                                );
-                          },
-                        ),
-                      ],
-                    ),
+                                          //
+                                          ref
+                                              .read(
+                                                  fullProjectControllerProvider(
+                                                          widget.uuid)
+                                                      .notifier)
+                                              .updateRegionalInvestment(
+                                                  currentIndex:
+                                                      regionInvestments
+                                                          .indexOf(e),
+                                                  regionalInvestment:
+                                                      response.data);
+                                        });
+                                  }));
+                                },
+                              ),
+                              IconButton(
+                                visualDensity: VisualDensity.compact,
+                                icon: const Icon(Icons.delete, size: 20),
+                                onPressed: () {
+                                  // if id is not null, it means that it exists in the server
+                                  if (e.id != null) {
+                                    ref
+                                        .read(projectRepositoryProvider)
+                                        .removeRegionalInvestment(e.id!);
+                                  }
+
+                                  //
+                                  ref
+                                      .read(fullProjectControllerProvider(
+                                              widget.uuid)
+                                          .notifier)
+                                      .removeRegionalInvestment(
+                                        index: regionInvestments.indexOf(e),
+                                      );
+                                },
+                              ),
+                            ],
+                          ),
                   ),
                 ),
               ],
@@ -2479,55 +2708,60 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 TableCell(
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        IconButton(
-                            visualDensity: VisualDensity.compact,
-                            icon: const Icon(Icons.edit, size: 20),
-                            onPressed: () {
-                              Navigator.of(context)
-                                  .push(MaterialPageRoute(builder: (context) {
-                                return FsInvestmentEditor(
-                                    project: project,
-                                    oldValue: e,
-                                    options: options.fundingSources ?? [],
-                                    onSubmit: (newValue) async {
-                                      final response = await ref
-                                          .read(projectRepositoryProvider)
-                                          .updateFsInvestment(
-                                              widget.uuid, newValue);
-                                      //
+                    child: project.readonly
+                        ? Container()
+                        : Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              IconButton(
+                                  visualDensity: VisualDensity.compact,
+                                  icon: const Icon(Icons.edit, size: 20),
+                                  onPressed: () {
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(builder: (context) {
+                                      return FsInvestmentEditor(
+                                          project: project,
+                                          oldValue: e,
+                                          options: options.fundingSources ?? [],
+                                          onSubmit: (newValue) async {
+                                            final response = await ref
+                                                .read(projectRepositoryProvider)
+                                                .updateFsInvestment(
+                                                    widget.uuid, newValue);
+                                            //
+                                            ref
+                                                .read(
+                                                    fullProjectControllerProvider(
+                                                            widget.uuid)
+                                                        .notifier)
+                                                .updateFsInvestment(
+                                                    index: fsInvestments
+                                                        .indexOf(e),
+                                                    fsInvestment:
+                                                        response.data);
+                                          });
+                                    }));
+                                  }),
+                              IconButton(
+                                  visualDensity: VisualDensity.compact,
+                                  icon: const Icon(Icons.delete, size: 20),
+                                  onPressed: () {
+                                    if (e.id != null) {
                                       ref
-                                          .read(fullProjectControllerProvider(
-                                                  widget.uuid)
-                                              .notifier)
-                                          .updateFsInvestment(
-                                              index: fsInvestments.indexOf(e),
-                                              fsInvestment: response.data);
-                                    });
-                              }));
-                            }),
-                        IconButton(
-                            visualDensity: VisualDensity.compact,
-                            icon: const Icon(Icons.delete, size: 20),
-                            onPressed: () {
-                              if (e.id != null) {
-                                ref
-                                    .read(projectRepositoryProvider)
-                                    .removeFsInvestment(e.id!);
-                              }
+                                          .read(projectRepositoryProvider)
+                                          .removeFsInvestment(e.id!);
+                                    }
 
-                              int index = fsInvestments.indexOf(e);
+                                    int index = fsInvestments.indexOf(e);
 
-                              ref
-                                  .read(
-                                      fullProjectControllerProvider(widget.uuid)
-                                          .notifier)
-                                  .removeFsInvestment(index: index);
-                            }),
-                      ],
-                    ),
+                                    ref
+                                        .read(fullProjectControllerProvider(
+                                                widget.uuid)
+                                            .notifier)
+                                        .removeFsInvestment(index: index);
+                                  }),
+                            ],
+                          ),
                   ),
                 ),
               ],
@@ -2787,26 +3021,27 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    IconButton(
-                      visualDensity: VisualDensity.compact,
-                      icon: const Icon(
-                        Icons.edit,
-                        size: 20,
+                    if (!project.readonly)
+                      IconButton(
+                        visualDensity: VisualDensity.compact,
+                        icon: const Icon(
+                          Icons.edit,
+                          size: 20,
+                        ),
+                        onPressed: () {
+                          Navigator.of(context)
+                              .push(MaterialPageRoute(builder: (context) {
+                            return FinancialAccomplishmentForm(
+                              project: project,
+                              year: 2023,
+                              nep: financialAccomplishment.nep2023 ?? 0,
+                              gaa: financialAccomplishment.gaa2023 ?? 0,
+                              disbursement:
+                                  financialAccomplishment.disbursement2023 ?? 0,
+                            );
+                          }));
+                        },
                       ),
-                      onPressed: () {
-                        Navigator.of(context)
-                            .push(MaterialPageRoute(builder: (context) {
-                          return FinancialAccomplishmentForm(
-                            project: project,
-                            year: 2023,
-                            nep: financialAccomplishment.nep2023 ?? 0,
-                            gaa: financialAccomplishment.gaa2023 ?? 0,
-                            disbursement:
-                                financialAccomplishment.disbursement2023 ?? 0,
-                          );
-                        }));
-                      },
-                    ),
                   ],
                 ),
               ),
@@ -2888,26 +3123,27 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    IconButton(
-                      visualDensity: VisualDensity.compact,
-                      icon: const Icon(
-                        Icons.edit,
-                        size: 20,
+                    if (!project.readonly)
+                      IconButton(
+                        visualDensity: VisualDensity.compact,
+                        icon: const Icon(
+                          Icons.edit,
+                          size: 20,
+                        ),
+                        onPressed: () {
+                          Navigator.of(context)
+                              .push(MaterialPageRoute(builder: (context) {
+                            return FinancialAccomplishmentForm(
+                              project: project,
+                              year: 2024,
+                              nep: financialAccomplishment.nep2024 ?? 0,
+                              gaa: financialAccomplishment.gaa2024 ?? 0,
+                              disbursement:
+                                  financialAccomplishment.disbursement2024 ?? 0,
+                            );
+                          }));
+                        },
                       ),
-                      onPressed: () {
-                        Navigator.of(context)
-                            .push(MaterialPageRoute(builder: (context) {
-                          return FinancialAccomplishmentForm(
-                            project: project,
-                            year: 2024,
-                            nep: financialAccomplishment.nep2024 ?? 0,
-                            gaa: financialAccomplishment.gaa2024 ?? 0,
-                            disbursement:
-                                financialAccomplishment.disbursement2024 ?? 0,
-                          );
-                        }));
-                      },
-                    ),
                   ],
                 ),
               ),
@@ -2989,26 +3225,27 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    IconButton(
-                      visualDensity: VisualDensity.compact,
-                      icon: const Icon(
-                        Icons.edit,
-                        size: 20,
+                    if (!project.readonly)
+                      IconButton(
+                        visualDensity: VisualDensity.compact,
+                        icon: const Icon(
+                          Icons.edit,
+                          size: 20,
+                        ),
+                        onPressed: () {
+                          Navigator.of(context)
+                              .push(MaterialPageRoute(builder: (context) {
+                            return FinancialAccomplishmentForm(
+                              project: project,
+                              year: 2025,
+                              nep: financialAccomplishment.nep2025 ?? 0,
+                              gaa: financialAccomplishment.gaa2025 ?? 0,
+                              disbursement:
+                                  financialAccomplishment.disbursement2025 ?? 0,
+                            );
+                          }));
+                        },
                       ),
-                      onPressed: () {
-                        Navigator.of(context)
-                            .push(MaterialPageRoute(builder: (context) {
-                          return FinancialAccomplishmentForm(
-                            project: project,
-                            year: 2025,
-                            nep: financialAccomplishment.nep2025 ?? 0,
-                            gaa: financialAccomplishment.gaa2025 ?? 0,
-                            disbursement:
-                                financialAccomplishment.disbursement2025 ?? 0,
-                          );
-                        }));
-                      },
-                    ),
                   ],
                 ),
               ),
@@ -3090,26 +3327,27 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    IconButton(
-                      visualDensity: VisualDensity.compact,
-                      icon: const Icon(
-                        Icons.edit,
-                        size: 20,
+                    if (!project.readonly)
+                      IconButton(
+                        visualDensity: VisualDensity.compact,
+                        icon: const Icon(
+                          Icons.edit,
+                          size: 20,
+                        ),
+                        onPressed: () {
+                          Navigator.of(context)
+                              .push(MaterialPageRoute(builder: (context) {
+                            return FinancialAccomplishmentForm(
+                              project: project,
+                              year: 2026,
+                              nep: financialAccomplishment.nep2026 ?? 0,
+                              gaa: financialAccomplishment.gaa2026 ?? 0,
+                              disbursement:
+                                  financialAccomplishment.disbursement2026 ?? 0,
+                            );
+                          }));
+                        },
                       ),
-                      onPressed: () {
-                        Navigator.of(context)
-                            .push(MaterialPageRoute(builder: (context) {
-                          return FinancialAccomplishmentForm(
-                            project: project,
-                            year: 2026,
-                            nep: financialAccomplishment.nep2026 ?? 0,
-                            gaa: financialAccomplishment.gaa2026 ?? 0,
-                            disbursement:
-                                financialAccomplishment.disbursement2026 ?? 0,
-                          );
-                        }));
-                      },
-                    ),
                   ],
                 ),
               ),
@@ -3191,26 +3429,27 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    IconButton(
-                      visualDensity: VisualDensity.compact,
-                      icon: const Icon(
-                        Icons.edit,
-                        size: 20,
+                    if (!project.readonly)
+                      IconButton(
+                        visualDensity: VisualDensity.compact,
+                        icon: const Icon(
+                          Icons.edit,
+                          size: 20,
+                        ),
+                        onPressed: () {
+                          Navigator.of(context)
+                              .push(MaterialPageRoute(builder: (context) {
+                            return FinancialAccomplishmentForm(
+                              project: project,
+                              year: 2027,
+                              nep: financialAccomplishment.nep2027 ?? 0,
+                              gaa: financialAccomplishment.gaa2027 ?? 0,
+                              disbursement:
+                                  financialAccomplishment.disbursement2027 ?? 0,
+                            );
+                          }));
+                        },
                       ),
-                      onPressed: () {
-                        Navigator.of(context)
-                            .push(MaterialPageRoute(builder: (context) {
-                          return FinancialAccomplishmentForm(
-                            project: project,
-                            year: 2027,
-                            nep: financialAccomplishment.nep2027 ?? 0,
-                            gaa: financialAccomplishment.gaa2027 ?? 0,
-                            disbursement:
-                                financialAccomplishment.disbursement2027 ?? 0,
-                          );
-                        }));
-                      },
-                    ),
                   ],
                 ),
               ),
@@ -3292,26 +3531,27 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    IconButton(
-                      visualDensity: VisualDensity.compact,
-                      icon: const Icon(
-                        Icons.edit,
-                        size: 20,
+                    if (!project.readonly)
+                      IconButton(
+                        visualDensity: VisualDensity.compact,
+                        icon: const Icon(
+                          Icons.edit,
+                          size: 20,
+                        ),
+                        onPressed: () {
+                          Navigator.of(context)
+                              .push(MaterialPageRoute(builder: (context) {
+                            return FinancialAccomplishmentForm(
+                              project: project,
+                              year: 2028,
+                              nep: financialAccomplishment.nep2028 ?? 0,
+                              gaa: financialAccomplishment.gaa2028 ?? 0,
+                              disbursement:
+                                  financialAccomplishment.disbursement2028 ?? 0,
+                            );
+                          }));
+                        },
                       ),
-                      onPressed: () {
-                        Navigator.of(context)
-                            .push(MaterialPageRoute(builder: (context) {
-                          return FinancialAccomplishmentForm(
-                            project: project,
-                            year: 2028,
-                            nep: financialAccomplishment.nep2028 ?? 0,
-                            gaa: financialAccomplishment.gaa2028 ?? 0,
-                            disbursement:
-                                financialAccomplishment.disbursement2028 ?? 0,
-                          );
-                        }));
-                      },
-                    ),
                   ],
                 ),
               ),
@@ -3371,7 +3611,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
 
   Widget _buildAddRegion(project) {
     final regionsCount =
-        ref.watch(optionsControllerProvider).value?.data.regions?.length ?? 0;
+        ref.watch(optionsControllerProvider).value?.regions?.length ?? 0;
     final regionalInvestmentsCount = project.regionalInvestments.length;
 
     return Padding(
@@ -3392,8 +3632,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                             options: ref
                                     .watch(optionsControllerProvider)
                                     .value
-                                    ?.data
-                                    .regions ??
+                                    ?.regions ??
                                 [],
                             oldValue: RegionalInvestment.initial(
                                 projectId: project.id),
@@ -3425,13 +3664,8 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
   }
 
   Widget _buildAddFs(FullProject project, FormOptions options) {
-    final fsCount = ref
-            .watch(optionsControllerProvider)
-            .value
-            ?.data
-            .fundingSources
-            ?.length ??
-        0;
+    final fsCount =
+        ref.watch(optionsControllerProvider).value?.fundingSources?.length ?? 0;
     final fsInvestmentsCount = project.fsInvestments.length;
 
     return Padding(

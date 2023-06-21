@@ -1,4 +1,3 @@
-import 'package:pips/data/responses/createproject_response.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../application/providers/appserviceclient_provider.dart';
@@ -6,11 +5,8 @@ import '../../domain/models/cost_schedule.dart';
 import '../../domain/models/fs_investment.dart';
 import '../../domain/models/regional_investment.dart';
 import '../data_sources/app_service_client.dart';
-import '../requests/newproject_request.dart';
 import '../requests/requests.dart';
-import '../responses/patchproject_response.dart';
 import '../responses/responses.dart';
-import '../responses/updatefinancialaccomplishment_response.dart';
 
 part 'project_repository.g.dart';
 
@@ -74,6 +70,8 @@ abstract class ProjectRepository {
   Future<ProjectResponse> duplicate(String uuid);
 
   Future<ProjectsResponse> search(String query);
+
+  Future<ProjectsResponse> getArchived(ArchiveRequest input);
 }
 
 class ProjectRepositoryImplementer implements ProjectRepository {
@@ -158,13 +156,17 @@ class ProjectRepositoryImplementer implements ProjectRepository {
 
   @override
   Future<ProjectResponse> duplicate(String uuid) async {
-    // TODO: implement duplicate
-    throw UnimplementedError();
+    return await client.clone(uuid);
   }
 
   @override
   Future<ProjectsResponse> search(String query) async {
-    return client.search(query);
+    return await client.search(query);
+  }
+
+  @override
+  Future<ProjectsResponse> getArchived(ArchiveRequest input) async {
+    return await client.getArchived(input);
   }
 }
 

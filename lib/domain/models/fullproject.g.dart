@@ -186,6 +186,18 @@ _$_FullProject _$$_FullProjectFromJson(Map<String, dynamic> json) =>
           .map((e) =>
               UploadAttachmentResponseData.fromJson(e as Map<String, dynamic>))
           .toList(),
+      pipolCode: json['pipol_code'] as String?,
+      pipolStatus: json['pipol_status'] == null
+          ? null
+          : Option.fromJson(json['pipol_status'] as Map<String, dynamic>),
+      pipolUrl: json['pipol_url'] as String?,
+      permissions:
+          Permissions.fromJson(json['permissions'] as Map<String, dynamic>),
+      updatingPeriod: json['updating_period'] == null
+          ? null
+          : Option.fromJson(json['updating_period'] as Map<String, dynamic>),
+      readonly: json['readonly'] as bool,
+      outdated: json['outdated'] as bool,
     );
 
 Map<String, dynamic> _$$_FullProjectToJson(_$_FullProject instance) =>
@@ -281,4 +293,11 @@ Map<String, dynamic> _$$_FullProjectToJson(_$_FullProject instance) =>
       'regions': instance.regions,
       'provinces': instance.provinces,
       'attachments': instance.attachments,
+      'pipol_code': instance.pipolCode,
+      'pipol_status': instance.pipolStatus,
+      'pipol_url': instance.pipolUrl,
+      'permissions': instance.permissions,
+      'updating_period': instance.updatingPeriod,
+      'readonly': instance.readonly,
+      'outdated': instance.outdated,
     };

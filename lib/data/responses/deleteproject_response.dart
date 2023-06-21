@@ -6,7 +6,7 @@ part 'deleteproject_response.g.dart';
 @freezed
 class DeleteProjectResponse with _$DeleteProjectResponse {
   factory DeleteProjectResponse({
-    required String status,
+    required String message,
   }) = _DeleteProjectResponse;
 
   factory DeleteProjectResponse.fromJson(Map<String, dynamic> json) =>

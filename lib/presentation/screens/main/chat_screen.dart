@@ -2,13 +2,13 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../application/providers/dateformatter_provider.dart';
-import '../../../domain/models/chatroom.dart';
-import '../../../data/responses/responses.dart';
-import '../../../presentation/controllers/controllers.dart';
-import '../../../presentation/widgets/loading_dialog.dart';
-import '../../../presentation/widgets/logout_button.dart';
-import '../../application/app_router.dart';
+import '../../../../application/providers/dateformatter_provider.dart';
+import '../../../../domain/models/chatroom.dart';
+import '../../../../data/responses/responses.dart';
+import '../../../../presentation/controllers/controllers.dart';
+import '../../../../presentation/widgets/loading_dialog.dart';
+import '../../../../presentation/widgets/logout_button.dart';
+import '../../../application/app_router.dart';
 
 @RoutePage()
 class ChatScreen extends ConsumerStatefulWidget {
@@ -43,7 +43,6 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           ),
           child: Row(
             children: [
-              Text('Page $currentPage of $lastPage'),
               const Spacer(),
               IconButton(
                   onPressed: currentPage > 1
@@ -54,6 +53,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                         }
                       : null,
                   icon: const Icon(Icons.chevron_left)),
+              Text('$currentPage/$lastPage'),
               IconButton(
                   onPressed: currentPage < lastPage
                       ? () {

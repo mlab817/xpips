@@ -126,7 +126,7 @@ class MarkAsReadProvider extends AutoDisposeFutureProvider<Notifications> {
 }
 
 String _$notificationsRequestControllerHash() =>
-    r'f22a29fe2cdc8f02cfe130cabad405b80fd4ebb5';
+    r'cbc290ff2fb91f918e4827aa07d28aef72773967';
 
 /// See also [NotificationsRequestController].
 @ProviderFor(NotificationsRequestController)

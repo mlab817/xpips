@@ -27,6 +27,10 @@ class _MainScreenState extends ConsumerState<MainScreen> {
       label: Text('Home'),
     ),
     NavigationRailDestination(
+      icon: Icon(Icons.archive),
+      label: Text('Archive'),
+    ),
+    NavigationRailDestination(
       icon: Icon(Icons.chat_bubble),
       label: Text('Chat'),
     ),
@@ -68,6 +72,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
     return AutoTabsRouter(
         routes: const [
           HomeRoute(),
+          ArchiveRoute(),
           ChatRoute(),
           NotificationsRoute(),
           SettingsRoute(),
@@ -152,6 +157,10 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                       BottomNavigationBarItem(
                         icon: Icon(Icons.home),
                         label: 'Home',
+                      ),
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.archive),
+                        label: 'Archive',
                       ),
                       BottomNavigationBarItem(
                         icon: Icon(Icons.chat_bubble),

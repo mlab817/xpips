@@ -125,7 +125,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         autofocus: kIsWeb, // autofocus on web
                         onChanged: (String? value) {
                           ref
-                              .read(loginCredentialsControllerProvider.notifier)
+                              .read(loginRequestControllerProvider.notifier)
                               .update(username: value);
                         },
                       ),
@@ -159,7 +159,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         obscureText: _obscuredText,
                         onChanged: (String? value) {
                           ref
-                              .read(loginCredentialsControllerProvider.notifier)
+                              .read(loginRequestControllerProvider.notifier)
                               .update(password: value);
                         },
                       ),

@@ -1,17 +1,19 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pips/presentation/controllers/updatingperiod_controller.dart';
 
-import '../../application/providers/searchhistory_provider.dart';
-import '../../domain/models/pipsstatus.dart';
-import '../../presentation/controllers/options_controller.dart';
-import '../../presentation/screens/pipolstatus_controller.dart';
-import '../../presentation/widgets/loading_dialog.dart';
-import '../../application/app_router.dart';
-import '../../data/repositories/pipolstatus_repository.dart';
-import '../controllers/home_controller.dart';
-import '../controllers/homesearch_controller.dart';
-import '../widgets/project_list_tile.dart';
+import '../../../application/providers/searchhistory_provider.dart';
+import '../../../domain/models/models.dart';
+import '../../../domain/models/pipsstatus.dart';
+import '../../controllers/options_controller.dart';
+import '../pipolstatus_controller.dart';
+import '../../widgets/loading_dialog.dart';
+import '../../../application/app_router.dart';
+import '../../controllers/deadline_controller.dart';
+import '../../controllers/home_controller.dart';
+import '../../controllers/homesearch_controller.dart';
+import '../../widgets/project_list_tile.dart';
 
 @RoutePage()
 class HomeScreen extends ConsumerStatefulWidget {
@@ -69,6 +71,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     // trigger optionsAsync so that showBottomSheet is available any time
     ref.watch(optionsControllerProvider);
+
+    // fetch updating period provider
+    ref.watch(updatingPeriodProvider);
+
+    // fetch deadline provider
+    ref.watch(deadlineProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -346,7 +354,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       pipolAsync.when(
                         data: (data) {
                           if (pipolAsync.isRefreshing) {
-                            return const CircularProgressIndicator();
+                            return const Center(
+                                child: CircularProgressIndicator());
                           }
 
                           if (data.data.isEmpty) {
@@ -356,6 +365,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           }
 
                           return ListView.builder(
+                            physics: const ClampingScrollPhysics(),
                             shrinkWrap: true,
                             itemCount: data.data.length,
                             itemBuilder: (context, index) {
@@ -430,6 +440,34 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     children: [
                       _buildTitle(),
                       const Spacer(),
+                      DropdownButton<String>(
+                          icon: const Icon(Icons.sort),
+                          items: const [
+                            DropdownMenuItem(
+                              value: 'title',
+                              child: Text('Title'),
+                            ),
+                            DropdownMenuItem(
+                              value: 'office_id',
+                              child: Text('Office'),
+                            ),
+                            DropdownMenuItem(
+                              value: 'updated_at',
+                              child: Text('Date Last Updated'),
+                            ),
+                          ],
+                          value:
+                              ref.watch(projectsRequestControllerProvider).sort,
+                          hint: const Text('Sort by'),
+                          onChanged: (String? value) {
+                            ref
+                                .read(
+                                    projectsRequestControllerProvider.notifier)
+                                .update(sort: value);
+                          }),
+                      const SizedBox(
+                        width: 10,
+                      ),
                       _buildPageSelector(),
                     ],
                   ),
@@ -485,7 +523,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
           ],
         )),
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const Center(child: LoadingOverlay()),
       ),
     );
   }
@@ -511,7 +549,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   enabled: currentValue != currentPage,
                   // disable when currently selected
                   value: currentValue,
-                  child: Text("Page $currentValue of $lastPage"));
+                  child: Text("$currentValue/$lastPage"));
             }),
             onChanged: (int? newValue) {
               ref
@@ -600,7 +638,7 @@ class _ProjectRequestBottomSheetState
                       ),
                     ),
                     Wrap(
-                      children: data.data.offices?.map((office) {
+                      children: data.offices?.map((office) {
                             return Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
@@ -647,7 +685,7 @@ class _ProjectRequestBottomSheetState
                       ),
                     ),
                     Wrap(
-                      children: data.data.types?.map((type) {
+                      children: data.types?.map((type) {
                             return Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
@@ -694,8 +732,7 @@ class _ProjectRequestBottomSheetState
                       ),
                     ),
                     Wrap(
-                      children: data.data.spatialCoverages
-                              ?.map((spatialCoverage) {
+                      children: data.spatialCoverages?.map((spatialCoverage) {
                             return Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
@@ -829,7 +866,7 @@ class _ProjectRequestBottomSheetState
                       ),
                     ),
                     Wrap(
-                      children: data.data.fundingSources?.map((fundingSource) {
+                      children: data.fundingSources?.map((fundingSource) {
                             return Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
@@ -879,7 +916,7 @@ class _ProjectRequestBottomSheetState
                       ),
                     ),
                     Wrap(
-                      children: data.data.projectStatuses?.map((projectStatus) {
+                      children: data.projectStatuses?.map((projectStatus) {
                             return Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
@@ -979,7 +1016,6 @@ class _HomeScreenSearchDelegate extends SearchDelegate<void> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    // TODO: implement buildSuggestions
     return Container();
   }
 }

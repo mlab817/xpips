@@ -207,6 +207,18 @@ mixin _$FullProject {
   @JsonKey(name: "attachments")
   List<UploadAttachmentResponseData> get attachments =>
       throw _privateConstructorUsedError;
+  @JsonKey(name: "pipol_code")
+  String? get pipolCode => throw _privateConstructorUsedError;
+  @JsonKey(name: "pipol_status")
+  Option? get pipolStatus => throw _privateConstructorUsedError;
+  @JsonKey(name: "pipol_url")
+  String? get pipolUrl => throw _privateConstructorUsedError;
+  @JsonKey(name: "permissions")
+  Permissions get permissions => throw _privateConstructorUsedError;
+  @JsonKey(name: "updating_period")
+  Option? get updatingPeriod => throw _privateConstructorUsedError;
+  bool get readonly => throw _privateConstructorUsedError;
+  bool get outdated => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -404,30 +416,27 @@ abstract class $FullProjectCopyWith<$Res> {
       @JsonKey(name: "provinces")
           List<Option> provinces,
       @JsonKey(name: "attachments")
-          List<UploadAttachmentResponseData> attachments});
+          List<UploadAttachmentResponseData> attachments,
+      @JsonKey(name: "pipol_code")
+          String? pipolCode,
+      @JsonKey(name: "pipol_status")
+          Option? pipolStatus,
+      @JsonKey(name: "pipol_url")
+          String? pipolUrl,
+      @JsonKey(name: "permissions")
+          Permissions permissions,
+      @JsonKey(name: "updating_period")
+          Option? updatingPeriod,
+      bool readonly,
+      bool outdated});
 
-  $OptionCopyWith<$Res>? get type;
-  $OptionCopyWith<$Res>? get spatialCoverage;
-  $OptionCopyWith<$Res>? get approvalLevel;
-  $OptionCopyWith<$Res>? get typology;
-  $OptionCopyWith<$Res>? get cipType;
-  $OptionCopyWith<$Res>? get pdpChapter;
-  $OptionCopyWith<$Res>? get gad;
-  $OptionCopyWith<$Res>? get preparationDocument;
-  $OptionCopyWith<$Res>? get fsStatus;
   $CostScheduleCopyWith<$Res>? get fsCost;
   $CostScheduleCopyWith<$Res>? get rowCost;
   $CostScheduleCopyWith<$Res>? get rapCost;
-  $OptionCopyWith<$Res>? get fundingSource;
-  $OptionCopyWith<$Res>? get implementationMode;
-  $OptionCopyWith<$Res>? get category;
-  $OptionCopyWith<$Res>? get readinessLevel;
-  $OptionCopyWith<$Res>? get startYear;
-  $OptionCopyWith<$Res>? get endYear;
-  $OptionCopyWith<$Res>? get projectStatus;
   $OfficeCopyWith<$Res>? get office;
   $UserCopyWith<$Res>? get user;
   $FinancialAccomplishmentCopyWith<$Res>? get financialAccomplishment;
+  $PermissionsCopyWith<$Res> get permissions;
 }
 
 /// @nodoc
@@ -535,6 +544,13 @@ class _$FullProjectCopyWithImpl<$Res, $Val extends FullProject>
     Object? regions = null,
     Object? provinces = null,
     Object? attachments = null,
+    Object? pipolCode = freezed,
+    Object? pipolStatus = freezed,
+    Object? pipolUrl = freezed,
+    Object? permissions = null,
+    Object? updatingPeriod = freezed,
+    Object? readonly = null,
+    Object? outdated = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -905,115 +921,35 @@ class _$FullProjectCopyWithImpl<$Res, $Val extends FullProject>
           ? _value.attachments
           : attachments // ignore: cast_nullable_to_non_nullable
               as List<UploadAttachmentResponseData>,
+      pipolCode: freezed == pipolCode
+          ? _value.pipolCode
+          : pipolCode // ignore: cast_nullable_to_non_nullable
+              as String?,
+      pipolStatus: freezed == pipolStatus
+          ? _value.pipolStatus
+          : pipolStatus // ignore: cast_nullable_to_non_nullable
+              as Option?,
+      pipolUrl: freezed == pipolUrl
+          ? _value.pipolUrl
+          : pipolUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
+      permissions: null == permissions
+          ? _value.permissions
+          : permissions // ignore: cast_nullable_to_non_nullable
+              as Permissions,
+      updatingPeriod: freezed == updatingPeriod
+          ? _value.updatingPeriod
+          : updatingPeriod // ignore: cast_nullable_to_non_nullable
+              as Option?,
+      readonly: null == readonly
+          ? _value.readonly
+          : readonly // ignore: cast_nullable_to_non_nullable
+              as bool,
+      outdated: null == outdated
+          ? _value.outdated
+          : outdated // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $OptionCopyWith<$Res>? get type {
-    if (_value.type == null) {
-      return null;
-    }
-
-    return $OptionCopyWith<$Res>(_value.type!, (value) {
-      return _then(_value.copyWith(type: value) as $Val);
-    });
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $OptionCopyWith<$Res>? get spatialCoverage {
-    if (_value.spatialCoverage == null) {
-      return null;
-    }
-
-    return $OptionCopyWith<$Res>(_value.spatialCoverage!, (value) {
-      return _then(_value.copyWith(spatialCoverage: value) as $Val);
-    });
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $OptionCopyWith<$Res>? get approvalLevel {
-    if (_value.approvalLevel == null) {
-      return null;
-    }
-
-    return $OptionCopyWith<$Res>(_value.approvalLevel!, (value) {
-      return _then(_value.copyWith(approvalLevel: value) as $Val);
-    });
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $OptionCopyWith<$Res>? get typology {
-    if (_value.typology == null) {
-      return null;
-    }
-
-    return $OptionCopyWith<$Res>(_value.typology!, (value) {
-      return _then(_value.copyWith(typology: value) as $Val);
-    });
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $OptionCopyWith<$Res>? get cipType {
-    if (_value.cipType == null) {
-      return null;
-    }
-
-    return $OptionCopyWith<$Res>(_value.cipType!, (value) {
-      return _then(_value.copyWith(cipType: value) as $Val);
-    });
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $OptionCopyWith<$Res>? get pdpChapter {
-    if (_value.pdpChapter == null) {
-      return null;
-    }
-
-    return $OptionCopyWith<$Res>(_value.pdpChapter!, (value) {
-      return _then(_value.copyWith(pdpChapter: value) as $Val);
-    });
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $OptionCopyWith<$Res>? get gad {
-    if (_value.gad == null) {
-      return null;
-    }
-
-    return $OptionCopyWith<$Res>(_value.gad!, (value) {
-      return _then(_value.copyWith(gad: value) as $Val);
-    });
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $OptionCopyWith<$Res>? get preparationDocument {
-    if (_value.preparationDocument == null) {
-      return null;
-    }
-
-    return $OptionCopyWith<$Res>(_value.preparationDocument!, (value) {
-      return _then(_value.copyWith(preparationDocument: value) as $Val);
-    });
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $OptionCopyWith<$Res>? get fsStatus {
-    if (_value.fsStatus == null) {
-      return null;
-    }
-
-    return $OptionCopyWith<$Res>(_value.fsStatus!, (value) {
-      return _then(_value.copyWith(fsStatus: value) as $Val);
-    });
   }
 
   @override
@@ -1054,90 +990,6 @@ class _$FullProjectCopyWithImpl<$Res, $Val extends FullProject>
 
   @override
   @pragma('vm:prefer-inline')
-  $OptionCopyWith<$Res>? get fundingSource {
-    if (_value.fundingSource == null) {
-      return null;
-    }
-
-    return $OptionCopyWith<$Res>(_value.fundingSource!, (value) {
-      return _then(_value.copyWith(fundingSource: value) as $Val);
-    });
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $OptionCopyWith<$Res>? get implementationMode {
-    if (_value.implementationMode == null) {
-      return null;
-    }
-
-    return $OptionCopyWith<$Res>(_value.implementationMode!, (value) {
-      return _then(_value.copyWith(implementationMode: value) as $Val);
-    });
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $OptionCopyWith<$Res>? get category {
-    if (_value.category == null) {
-      return null;
-    }
-
-    return $OptionCopyWith<$Res>(_value.category!, (value) {
-      return _then(_value.copyWith(category: value) as $Val);
-    });
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $OptionCopyWith<$Res>? get readinessLevel {
-    if (_value.readinessLevel == null) {
-      return null;
-    }
-
-    return $OptionCopyWith<$Res>(_value.readinessLevel!, (value) {
-      return _then(_value.copyWith(readinessLevel: value) as $Val);
-    });
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $OptionCopyWith<$Res>? get startYear {
-    if (_value.startYear == null) {
-      return null;
-    }
-
-    return $OptionCopyWith<$Res>(_value.startYear!, (value) {
-      return _then(_value.copyWith(startYear: value) as $Val);
-    });
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $OptionCopyWith<$Res>? get endYear {
-    if (_value.endYear == null) {
-      return null;
-    }
-
-    return $OptionCopyWith<$Res>(_value.endYear!, (value) {
-      return _then(_value.copyWith(endYear: value) as $Val);
-    });
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $OptionCopyWith<$Res>? get projectStatus {
-    if (_value.projectStatus == null) {
-      return null;
-    }
-
-    return $OptionCopyWith<$Res>(_value.projectStatus!, (value) {
-      return _then(_value.copyWith(projectStatus: value) as $Val);
-    });
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
   $OfficeCopyWith<$Res>? get office {
     if (_value.office == null) {
       return null;
@@ -1170,6 +1022,14 @@ class _$FullProjectCopyWithImpl<$Res, $Val extends FullProject>
     return $FinancialAccomplishmentCopyWith<$Res>(
         _value.financialAccomplishment!, (value) {
       return _then(_value.copyWith(financialAccomplishment: value) as $Val);
+    });
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $PermissionsCopyWith<$Res> get permissions {
+    return $PermissionsCopyWith<$Res>(_value.permissions, (value) {
+      return _then(_value.copyWith(permissions: value) as $Val);
     });
   }
 }
@@ -1366,26 +1226,20 @@ abstract class _$$_FullProjectCopyWith<$Res>
       @JsonKey(name: "provinces")
           List<Option> provinces,
       @JsonKey(name: "attachments")
-          List<UploadAttachmentResponseData> attachments});
+          List<UploadAttachmentResponseData> attachments,
+      @JsonKey(name: "pipol_code")
+          String? pipolCode,
+      @JsonKey(name: "pipol_status")
+          Option? pipolStatus,
+      @JsonKey(name: "pipol_url")
+          String? pipolUrl,
+      @JsonKey(name: "permissions")
+          Permissions permissions,
+      @JsonKey(name: "updating_period")
+          Option? updatingPeriod,
+      bool readonly,
+      bool outdated});
 
-  @override
-  $OptionCopyWith<$Res>? get type;
-  @override
-  $OptionCopyWith<$Res>? get spatialCoverage;
-  @override
-  $OptionCopyWith<$Res>? get approvalLevel;
-  @override
-  $OptionCopyWith<$Res>? get typology;
-  @override
-  $OptionCopyWith<$Res>? get cipType;
-  @override
-  $OptionCopyWith<$Res>? get pdpChapter;
-  @override
-  $OptionCopyWith<$Res>? get gad;
-  @override
-  $OptionCopyWith<$Res>? get preparationDocument;
-  @override
-  $OptionCopyWith<$Res>? get fsStatus;
   @override
   $CostScheduleCopyWith<$Res>? get fsCost;
   @override
@@ -1393,25 +1247,13 @@ abstract class _$$_FullProjectCopyWith<$Res>
   @override
   $CostScheduleCopyWith<$Res>? get rapCost;
   @override
-  $OptionCopyWith<$Res>? get fundingSource;
-  @override
-  $OptionCopyWith<$Res>? get implementationMode;
-  @override
-  $OptionCopyWith<$Res>? get category;
-  @override
-  $OptionCopyWith<$Res>? get readinessLevel;
-  @override
-  $OptionCopyWith<$Res>? get startYear;
-  @override
-  $OptionCopyWith<$Res>? get endYear;
-  @override
-  $OptionCopyWith<$Res>? get projectStatus;
-  @override
   $OfficeCopyWith<$Res>? get office;
   @override
   $UserCopyWith<$Res>? get user;
   @override
   $FinancialAccomplishmentCopyWith<$Res>? get financialAccomplishment;
+  @override
+  $PermissionsCopyWith<$Res> get permissions;
 }
 
 /// @nodoc
@@ -1517,6 +1359,13 @@ class __$$_FullProjectCopyWithImpl<$Res>
     Object? regions = null,
     Object? provinces = null,
     Object? attachments = null,
+    Object? pipolCode = freezed,
+    Object? pipolStatus = freezed,
+    Object? pipolUrl = freezed,
+    Object? permissions = null,
+    Object? updatingPeriod = freezed,
+    Object? readonly = null,
+    Object? outdated = null,
   }) {
     return _then(_$_FullProject(
       id: null == id
@@ -1887,6 +1736,34 @@ class __$$_FullProjectCopyWithImpl<$Res>
           ? _value._attachments
           : attachments // ignore: cast_nullable_to_non_nullable
               as List<UploadAttachmentResponseData>,
+      pipolCode: freezed == pipolCode
+          ? _value.pipolCode
+          : pipolCode // ignore: cast_nullable_to_non_nullable
+              as String?,
+      pipolStatus: freezed == pipolStatus
+          ? _value.pipolStatus
+          : pipolStatus // ignore: cast_nullable_to_non_nullable
+              as Option?,
+      pipolUrl: freezed == pipolUrl
+          ? _value.pipolUrl
+          : pipolUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
+      permissions: null == permissions
+          ? _value.permissions
+          : permissions // ignore: cast_nullable_to_non_nullable
+              as Permissions,
+      updatingPeriod: freezed == updatingPeriod
+          ? _value.updatingPeriod
+          : updatingPeriod // ignore: cast_nullable_to_non_nullable
+              as Option?,
+      readonly: null == readonly
+          ? _value.readonly
+          : readonly // ignore: cast_nullable_to_non_nullable
+              as bool,
+      outdated: null == outdated
+          ? _value.outdated
+          : outdated // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -2078,7 +1955,19 @@ class _$_FullProject extends _FullProject {
       @JsonKey(name: "provinces")
           required final List<Option> provinces,
       @JsonKey(name: "attachments")
-          required final List<UploadAttachmentResponseData> attachments})
+          required final List<UploadAttachmentResponseData> attachments,
+      @JsonKey(name: "pipol_code")
+          this.pipolCode,
+      @JsonKey(name: "pipol_status")
+          this.pipolStatus,
+      @JsonKey(name: "pipol_url")
+          this.pipolUrl,
+      @JsonKey(name: "permissions")
+          required this.permissions,
+      @JsonKey(name: "updating_period")
+          this.updatingPeriod,
+      required this.readonly,
+      required this.outdated})
       : _bases = bases,
         _operatingUnits = operatingUnits,
         _pdpChapters = pdpChapters,
@@ -2469,8 +2358,28 @@ class _$_FullProject extends _FullProject {
   }
 
   @override
+  @JsonKey(name: "pipol_code")
+  final String? pipolCode;
+  @override
+  @JsonKey(name: "pipol_status")
+  final Option? pipolStatus;
+  @override
+  @JsonKey(name: "pipol_url")
+  final String? pipolUrl;
+  @override
+  @JsonKey(name: "permissions")
+  final Permissions permissions;
+  @override
+  @JsonKey(name: "updating_period")
+  final Option? updatingPeriod;
+  @override
+  final bool readonly;
+  @override
+  final bool outdated;
+
+  @override
   String toString() {
-    return 'FullProject(id: $id, uuid: $uuid, title: $title, typeId: $typeId, type: $type, regularProgram: $regularProgram, description: $description, totalCost: $totalCost, expectedOutputs: $expectedOutputs, spatialCoverageId: $spatialCoverageId, spatialCoverage: $spatialCoverage, approvalLevelId: $approvalLevelId, approvalLevel: $approvalLevel, approvalLevelDate: $approvalLevelDate, pip: $pip, typologyId: $typologyId, typology: $typology, cip: $cip, iccable: $iccable, cipTypeId: $cipTypeId, cipType: $cipType, trip: $trip, rdip: $rdip, covid: $covid, research: $research, bases: $bases, operatingUnits: $operatingUnits, rdcEndorsementRequired: $rdcEndorsementRequired, pdpChapterId: $pdpChapterId, pdpChapter: $pdpChapter, pdpChapters: $pdpChapters, risk: $risk, agenda: $agenda, sdgs: $sdgs, gadId: $gadId, gad: $gad, preparationDocumentId: $preparationDocumentId, preparationDocument: $preparationDocument, fsNeedsAssistance: $fsNeedsAssistance, fsStatusId: $fsStatusId, fsStatus: $fsStatus, fsTotalCost: $fsTotalCost, fsCost: $fsCost, fsCompletionDate: $fsCompletionDate, hasRow: $hasRow, rowAffectedHouseholds: $rowAffectedHouseholds, rowTotalCost: $rowTotalCost, rowCost: $rowCost, hasRap: $hasRap, rapAffectedHouseholds: $rapAffectedHouseholds, rapTotalCost: $rapTotalCost, rapCost: $rapCost, hasRowRap: $hasRowRap, prerequisites: $prerequisites, locations: $locations, infrastructureSectors: $infrastructureSectors, fundingInstitutions: $fundingInstitutions, fundingSourceId: $fundingSourceId, fundingSource: $fundingSource, fundingSources: $fundingSources, implementationMode: $implementationMode, pureGrant: $pureGrant, fsInvestments: $fsInvestments, regionalInvestments: $regionalInvestments, implementationModeId: $implementationModeId, projectStatusId: $projectStatusId, categoryId: $categoryId, category: $category, readinessLevelId: $readinessLevelId, readinessLevel: $readinessLevel, startYearId: $startYearId, startYear: $startYear, endYearId: $endYearId, endYear: $endYear, updates: $updates, asOf: $asOf, employmentGenerated: $employmentGenerated, employedMale: $employedMale, employedFemale: $employedFemale, projectStatus: $projectStatus, office: $office, updatedAt: $updatedAt, user: $user, remarks: $remarks, uacsCode: $uacsCode, financialAccomplishment: $financialAccomplishment, contactInformation: $contactInformation, notes: $notes, iccResubmission: $iccResubmission, regions: $regions, provinces: $provinces, attachments: $attachments)';
+    return 'FullProject(id: $id, uuid: $uuid, title: $title, typeId: $typeId, type: $type, regularProgram: $regularProgram, description: $description, totalCost: $totalCost, expectedOutputs: $expectedOutputs, spatialCoverageId: $spatialCoverageId, spatialCoverage: $spatialCoverage, approvalLevelId: $approvalLevelId, approvalLevel: $approvalLevel, approvalLevelDate: $approvalLevelDate, pip: $pip, typologyId: $typologyId, typology: $typology, cip: $cip, iccable: $iccable, cipTypeId: $cipTypeId, cipType: $cipType, trip: $trip, rdip: $rdip, covid: $covid, research: $research, bases: $bases, operatingUnits: $operatingUnits, rdcEndorsementRequired: $rdcEndorsementRequired, pdpChapterId: $pdpChapterId, pdpChapter: $pdpChapter, pdpChapters: $pdpChapters, risk: $risk, agenda: $agenda, sdgs: $sdgs, gadId: $gadId, gad: $gad, preparationDocumentId: $preparationDocumentId, preparationDocument: $preparationDocument, fsNeedsAssistance: $fsNeedsAssistance, fsStatusId: $fsStatusId, fsStatus: $fsStatus, fsTotalCost: $fsTotalCost, fsCost: $fsCost, fsCompletionDate: $fsCompletionDate, hasRow: $hasRow, rowAffectedHouseholds: $rowAffectedHouseholds, rowTotalCost: $rowTotalCost, rowCost: $rowCost, hasRap: $hasRap, rapAffectedHouseholds: $rapAffectedHouseholds, rapTotalCost: $rapTotalCost, rapCost: $rapCost, hasRowRap: $hasRowRap, prerequisites: $prerequisites, locations: $locations, infrastructureSectors: $infrastructureSectors, fundingInstitutions: $fundingInstitutions, fundingSourceId: $fundingSourceId, fundingSource: $fundingSource, fundingSources: $fundingSources, implementationMode: $implementationMode, pureGrant: $pureGrant, fsInvestments: $fsInvestments, regionalInvestments: $regionalInvestments, implementationModeId: $implementationModeId, projectStatusId: $projectStatusId, categoryId: $categoryId, category: $category, readinessLevelId: $readinessLevelId, readinessLevel: $readinessLevel, startYearId: $startYearId, startYear: $startYear, endYearId: $endYearId, endYear: $endYear, updates: $updates, asOf: $asOf, employmentGenerated: $employmentGenerated, employedMale: $employedMale, employedFemale: $employedFemale, projectStatus: $projectStatus, office: $office, updatedAt: $updatedAt, user: $user, remarks: $remarks, uacsCode: $uacsCode, financialAccomplishment: $financialAccomplishment, contactInformation: $contactInformation, notes: $notes, iccResubmission: $iccResubmission, regions: $regions, provinces: $provinces, attachments: $attachments, pipolCode: $pipolCode, pipolStatus: $pipolStatus, pipolUrl: $pipolUrl, permissions: $permissions, updatingPeriod: $updatingPeriod, readonly: $readonly, outdated: $outdated)';
   }
 
   @override
@@ -2611,7 +2520,14 @@ class _$_FullProject extends _FullProject {
             (identical(other.iccResubmission, iccResubmission) || other.iccResubmission == iccResubmission) &&
             const DeepCollectionEquality().equals(other._regions, _regions) &&
             const DeepCollectionEquality().equals(other._provinces, _provinces) &&
-            const DeepCollectionEquality().equals(other._attachments, _attachments));
+            const DeepCollectionEquality().equals(other._attachments, _attachments) &&
+            (identical(other.pipolCode, pipolCode) || other.pipolCode == pipolCode) &&
+            (identical(other.pipolStatus, pipolStatus) || other.pipolStatus == pipolStatus) &&
+            (identical(other.pipolUrl, pipolUrl) || other.pipolUrl == pipolUrl) &&
+            (identical(other.permissions, permissions) || other.permissions == permissions) &&
+            (identical(other.updatingPeriod, updatingPeriod) || other.updatingPeriod == updatingPeriod) &&
+            (identical(other.readonly, readonly) || other.readonly == readonly) &&
+            (identical(other.outdated, outdated) || other.outdated == outdated));
   }
 
   @JsonKey(ignore: true)
@@ -2709,7 +2625,14 @@ class _$_FullProject extends _FullProject {
         iccResubmission,
         const DeepCollectionEquality().hash(_regions),
         const DeepCollectionEquality().hash(_provinces),
-        const DeepCollectionEquality().hash(_attachments)
+        const DeepCollectionEquality().hash(_attachments),
+        pipolCode,
+        pipolStatus,
+        pipolUrl,
+        permissions,
+        updatingPeriod,
+        readonly,
+        outdated
       ]);
 
   @JsonKey(ignore: true)
@@ -2728,191 +2651,202 @@ class _$_FullProject extends _FullProject {
 
 abstract class _FullProject extends FullProject {
   factory _FullProject(
-          {@JsonKey(name: "id")
-              required final int id,
-          @JsonKey(name: "uuid")
-              required final String uuid,
-          @JsonKey(name: "title")
-              final String? title,
-          @JsonKey(name: "type_id")
-              final int? typeId,
-          @JsonKey(name: "type")
-              final Option? type,
-          @JsonKey(name: "regular_program")
-              final bool? regularProgram,
-          @JsonKey(name: "description")
-              final String? description,
-          @JsonKey(name: "total_cost")
-              final double? totalCost,
-          @JsonKey(name: "expected_outputs")
-              final String? expectedOutputs,
-          @JsonKey(name: "spatial_coverage_id")
-              final int? spatialCoverageId,
-          @JsonKey(name: "spatial_coverage")
-              final Option? spatialCoverage,
-          @JsonKey(name: "approval_level_id")
-              final int? approvalLevelId,
-          @JsonKey(name: "approval_level", includeToJson: false)
-              final Option? approvalLevel,
-          @JsonKey(name: "approval_level_date")
-              final DateTime? approvalLevelDate,
-          @JsonKey(name: "pip")
-              final bool? pip,
-          @JsonKey(name: "typology_id")
-              final int? typologyId,
-          @JsonKey(name: "typology")
-              final Option? typology,
-          @JsonKey(name: "cip")
-              final bool? cip,
-          @JsonKey(name: "iccable")
-              final bool? iccable,
-          @JsonKey(name: "cip_type_id")
-              final int? cipTypeId,
-          @JsonKey(name: "cip_type")
-              final Option? cipType,
-          @JsonKey(name: "trip")
-              final bool? trip,
-          @JsonKey(name: "rdip")
-              final bool? rdip,
-          @JsonKey(name: "covid")
-              final bool? covid,
-          @JsonKey(name: "research")
-              final bool? research,
-          @JsonKey(name: "bases")
-              required final List<Option> bases,
-          @JsonKey(name: "operating_units")
-              required final List<Option> operatingUnits,
-          @JsonKey(name: "rdc_endorsement_required")
-              final bool? rdcEndorsementRequired,
-          @JsonKey(name: "pdp_chapter_id")
-              final int? pdpChapterId,
-          @JsonKey(name: "pdp_chapter")
-              final Option? pdpChapter,
-          @JsonKey(name: "pdp_chapters")
-              required final List<Option> pdpChapters,
-          @JsonKey(name: "implementation_risk")
-              final String? risk,
-          @JsonKey(name: "agenda")
-              required final List<Option> agenda,
-          @JsonKey(name: "sdgs")
-              required final List<Option> sdgs,
-          @JsonKey(name: "gad_id")
-              final int? gadId,
-          @JsonKey(name: "gad")
-              final Option? gad,
-          @JsonKey(name: "preparation_document_id")
-              final int? preparationDocumentId,
-          @JsonKey(name: "preparation_document")
-              final Option? preparationDocument,
-          @JsonKey(name: "fs_needs_assistance")
-              final bool? fsNeedsAssistance,
-          @JsonKey(name: "fs_status_id")
-              final int? fsStatusId,
-          @JsonKey(name: "fs_status")
-              final Option? fsStatus,
-          @JsonKey(name: "fs_total_cost")
-              final String? fsTotalCost,
-          @JsonKey(name: "fs_cost")
-              final CostSchedule? fsCost,
-          @JsonKey(name: "fs_completion_date")
-              final DateTime? fsCompletionDate,
-          @JsonKey(name: "has_row")
-              final bool? hasRow,
-          @JsonKey(name: "row_affected_households")
-              final int? rowAffectedHouseholds,
-          @JsonKey(name: "row_total_cost")
-              final double? rowTotalCost,
-          @JsonKey(name: "row_cost")
-              final CostSchedule? rowCost,
-          @JsonKey(name: "has_rap")
-              final bool? hasRap,
-          @JsonKey(name: "rap_affected_households")
-              final int? rapAffectedHouseholds,
-          @JsonKey(name: "rap_total_cost")
-              final double? rapTotalCost,
-          @JsonKey(name: "rap_cost")
-              final CostSchedule? rapCost,
-          @JsonKey(name: "has_row_rap")
-              final bool? hasRowRap,
-          @JsonKey(name: "prerequisites")
-              required final List<Option> prerequisites,
-          @JsonKey(name: "locations")
-              required final List<Option> locations,
-          @JsonKey(name: "infrastructure_sectors")
-              required final List<Option> infrastructureSectors,
-          @JsonKey(name: "funding_institutions")
-              required final List<Option> fundingInstitutions,
-          @JsonKey(name: "funding_source_id")
-              final int? fundingSourceId,
-          @JsonKey(name: "funding_source")
-              final Option? fundingSource,
-          @JsonKey(name: "funding_sources")
-              required final List<Option> fundingSources,
-          @JsonKey(name: "implementation_mode")
-              final Option? implementationMode,
-          @JsonKey(name: "pure_grant")
-              final bool? pureGrant,
-          @JsonKey(name: "fs_investments")
-              required final List<FsInvestment> fsInvestments,
-          @JsonKey(name: "regional_investments")
-              required final List<RegionalInvestment> regionalInvestments,
-          @JsonKey(name: "implementation_mode_id")
-              final int? implementationModeId,
-          @JsonKey(name: "project_status_id")
-              final int? projectStatusId,
-          @JsonKey(name: "category_id")
-              final int? categoryId,
-          @JsonKey(name: "category")
-              final Option? category,
-          @JsonKey(name: "readiness_level_id")
-              final int? readinessLevelId,
-          @JsonKey(name: "readiness_level")
-              final Option? readinessLevel,
-          @JsonKey(name: "start_year_id")
-              final int? startYearId,
-          @JsonKey(name: "start_year")
-              final Option? startYear,
-          @JsonKey(name: "end_year_id")
-              final int? endYearId,
-          @JsonKey(name: "end_year")
-              final Option? endYear,
-          @JsonKey(name: "updates")
-              final String? updates,
-          @JsonKey(name: "updates_as_of")
-              final DateTime? asOf,
-          @JsonKey(name: "employment_generated")
-              final int? employmentGenerated,
-          @JsonKey(name: "employed_male")
-              final int? employedMale,
-          @JsonKey(name: "employed_female")
-              final int? employedFemale,
-          @JsonKey(name: "project_status")
-              final Option? projectStatus,
-          @JsonKey(name: "office")
-              final Office? office,
-          @JsonKey(name: "updated_at")
-              final DateTime? updatedAt,
-          @JsonKey(name: "user")
-              final User? user,
-          @JsonKey(name: "remarks")
-              final String? remarks,
-          @JsonKey(name: "uacs_code")
-              final String? uacsCode,
-          @JsonKey(name: "financial_accomplishment")
-              final FinancialAccomplishment? financialAccomplishment,
-          @JsonKey(name: "contact_information")
-              final String? contactInformation,
-          @JsonKey(name: "notes")
-              final String? notes,
-          @JsonKey(name: "icc_resubmission")
-              final bool? iccResubmission,
-          @JsonKey(name: "regions")
-              required final List<Option> regions,
-          @JsonKey(name: "provinces")
-              required final List<Option> provinces,
-          @JsonKey(name: "attachments")
-              required final List<UploadAttachmentResponseData> attachments}) =
-      _$_FullProject;
+      {@JsonKey(name: "id")
+          required final int id,
+      @JsonKey(name: "uuid")
+          required final String uuid,
+      @JsonKey(name: "title")
+          final String? title,
+      @JsonKey(name: "type_id")
+          final int? typeId,
+      @JsonKey(name: "type")
+          final Option? type,
+      @JsonKey(name: "regular_program")
+          final bool? regularProgram,
+      @JsonKey(name: "description")
+          final String? description,
+      @JsonKey(name: "total_cost")
+          final double? totalCost,
+      @JsonKey(name: "expected_outputs")
+          final String? expectedOutputs,
+      @JsonKey(name: "spatial_coverage_id")
+          final int? spatialCoverageId,
+      @JsonKey(name: "spatial_coverage")
+          final Option? spatialCoverage,
+      @JsonKey(name: "approval_level_id")
+          final int? approvalLevelId,
+      @JsonKey(name: "approval_level", includeToJson: false)
+          final Option? approvalLevel,
+      @JsonKey(name: "approval_level_date")
+          final DateTime? approvalLevelDate,
+      @JsonKey(name: "pip")
+          final bool? pip,
+      @JsonKey(name: "typology_id")
+          final int? typologyId,
+      @JsonKey(name: "typology")
+          final Option? typology,
+      @JsonKey(name: "cip")
+          final bool? cip,
+      @JsonKey(name: "iccable")
+          final bool? iccable,
+      @JsonKey(name: "cip_type_id")
+          final int? cipTypeId,
+      @JsonKey(name: "cip_type")
+          final Option? cipType,
+      @JsonKey(name: "trip")
+          final bool? trip,
+      @JsonKey(name: "rdip")
+          final bool? rdip,
+      @JsonKey(name: "covid")
+          final bool? covid,
+      @JsonKey(name: "research")
+          final bool? research,
+      @JsonKey(name: "bases")
+          required final List<Option> bases,
+      @JsonKey(name: "operating_units")
+          required final List<Option> operatingUnits,
+      @JsonKey(name: "rdc_endorsement_required")
+          final bool? rdcEndorsementRequired,
+      @JsonKey(name: "pdp_chapter_id")
+          final int? pdpChapterId,
+      @JsonKey(name: "pdp_chapter")
+          final Option? pdpChapter,
+      @JsonKey(name: "pdp_chapters")
+          required final List<Option> pdpChapters,
+      @JsonKey(name: "implementation_risk")
+          final String? risk,
+      @JsonKey(name: "agenda")
+          required final List<Option> agenda,
+      @JsonKey(name: "sdgs")
+          required final List<Option> sdgs,
+      @JsonKey(name: "gad_id")
+          final int? gadId,
+      @JsonKey(name: "gad")
+          final Option? gad,
+      @JsonKey(name: "preparation_document_id")
+          final int? preparationDocumentId,
+      @JsonKey(name: "preparation_document")
+          final Option? preparationDocument,
+      @JsonKey(name: "fs_needs_assistance")
+          final bool? fsNeedsAssistance,
+      @JsonKey(name: "fs_status_id")
+          final int? fsStatusId,
+      @JsonKey(name: "fs_status")
+          final Option? fsStatus,
+      @JsonKey(name: "fs_total_cost")
+          final String? fsTotalCost,
+      @JsonKey(name: "fs_cost")
+          final CostSchedule? fsCost,
+      @JsonKey(name: "fs_completion_date")
+          final DateTime? fsCompletionDate,
+      @JsonKey(name: "has_row")
+          final bool? hasRow,
+      @JsonKey(name: "row_affected_households")
+          final int? rowAffectedHouseholds,
+      @JsonKey(name: "row_total_cost")
+          final double? rowTotalCost,
+      @JsonKey(name: "row_cost")
+          final CostSchedule? rowCost,
+      @JsonKey(name: "has_rap")
+          final bool? hasRap,
+      @JsonKey(name: "rap_affected_households")
+          final int? rapAffectedHouseholds,
+      @JsonKey(name: "rap_total_cost")
+          final double? rapTotalCost,
+      @JsonKey(name: "rap_cost")
+          final CostSchedule? rapCost,
+      @JsonKey(name: "has_row_rap")
+          final bool? hasRowRap,
+      @JsonKey(name: "prerequisites")
+          required final List<Option> prerequisites,
+      @JsonKey(name: "locations")
+          required final List<Option> locations,
+      @JsonKey(name: "infrastructure_sectors")
+          required final List<Option> infrastructureSectors,
+      @JsonKey(name: "funding_institutions")
+          required final List<Option> fundingInstitutions,
+      @JsonKey(name: "funding_source_id")
+          final int? fundingSourceId,
+      @JsonKey(name: "funding_source")
+          final Option? fundingSource,
+      @JsonKey(name: "funding_sources")
+          required final List<Option> fundingSources,
+      @JsonKey(name: "implementation_mode")
+          final Option? implementationMode,
+      @JsonKey(name: "pure_grant")
+          final bool? pureGrant,
+      @JsonKey(name: "fs_investments")
+          required final List<FsInvestment> fsInvestments,
+      @JsonKey(name: "regional_investments")
+          required final List<RegionalInvestment> regionalInvestments,
+      @JsonKey(name: "implementation_mode_id")
+          final int? implementationModeId,
+      @JsonKey(name: "project_status_id")
+          final int? projectStatusId,
+      @JsonKey(name: "category_id")
+          final int? categoryId,
+      @JsonKey(name: "category")
+          final Option? category,
+      @JsonKey(name: "readiness_level_id")
+          final int? readinessLevelId,
+      @JsonKey(name: "readiness_level")
+          final Option? readinessLevel,
+      @JsonKey(name: "start_year_id")
+          final int? startYearId,
+      @JsonKey(name: "start_year")
+          final Option? startYear,
+      @JsonKey(name: "end_year_id")
+          final int? endYearId,
+      @JsonKey(name: "end_year")
+          final Option? endYear,
+      @JsonKey(name: "updates")
+          final String? updates,
+      @JsonKey(name: "updates_as_of")
+          final DateTime? asOf,
+      @JsonKey(name: "employment_generated")
+          final int? employmentGenerated,
+      @JsonKey(name: "employed_male")
+          final int? employedMale,
+      @JsonKey(name: "employed_female")
+          final int? employedFemale,
+      @JsonKey(name: "project_status")
+          final Option? projectStatus,
+      @JsonKey(name: "office")
+          final Office? office,
+      @JsonKey(name: "updated_at")
+          final DateTime? updatedAt,
+      @JsonKey(name: "user")
+          final User? user,
+      @JsonKey(name: "remarks")
+          final String? remarks,
+      @JsonKey(name: "uacs_code")
+          final String? uacsCode,
+      @JsonKey(name: "financial_accomplishment")
+          final FinancialAccomplishment? financialAccomplishment,
+      @JsonKey(name: "contact_information")
+          final String? contactInformation,
+      @JsonKey(name: "notes")
+          final String? notes,
+      @JsonKey(name: "icc_resubmission")
+          final bool? iccResubmission,
+      @JsonKey(name: "regions")
+          required final List<Option> regions,
+      @JsonKey(name: "provinces")
+          required final List<Option> provinces,
+      @JsonKey(name: "attachments")
+          required final List<UploadAttachmentResponseData> attachments,
+      @JsonKey(name: "pipol_code")
+          final String? pipolCode,
+      @JsonKey(name: "pipol_status")
+          final Option? pipolStatus,
+      @JsonKey(name: "pipol_url")
+          final String? pipolUrl,
+      @JsonKey(name: "permissions")
+          required final Permissions permissions,
+      @JsonKey(name: "updating_period")
+          final Option? updatingPeriod,
+      required final bool readonly,
+      required final bool outdated}) = _$_FullProject;
   _FullProject._() : super._();
 
   factory _FullProject.fromJson(Map<String, dynamic> json) =
@@ -3194,6 +3128,25 @@ abstract class _FullProject extends FullProject {
   @override
   @JsonKey(name: "attachments")
   List<UploadAttachmentResponseData> get attachments;
+  @override
+  @JsonKey(name: "pipol_code")
+  String? get pipolCode;
+  @override
+  @JsonKey(name: "pipol_status")
+  Option? get pipolStatus;
+  @override
+  @JsonKey(name: "pipol_url")
+  String? get pipolUrl;
+  @override
+  @JsonKey(name: "permissions")
+  Permissions get permissions;
+  @override
+  @JsonKey(name: "updating_period")
+  Option? get updatingPeriod;
+  @override
+  bool get readonly;
+  @override
+  bool get outdated;
   @override
   @JsonKey(ignore: true)
   _$$_FullProjectCopyWith<_$_FullProject> get copyWith =>

@@ -1,7 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../application/app_router.dart';
@@ -68,136 +67,154 @@ class _ProjectListTileState extends ConsumerState<ProjectListTile> {
   }
 
   void _showDialog() {
-    showGeneralDialog(
+    showDialog(
       context: context,
       barrierDismissible: true,
-      barrierLabel: 'Label',
-      pageBuilder: (context, _, __) {
-        return Dialog(
-          child: Container(
-            padding: const EdgeInsets.all(16),
+      builder: (context) {
+        return AlertDialog(
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                _project.title,
+                overflow: TextOverflow.ellipsis,
+              ),
+              IconButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                icon: const Icon(Icons.close),
+              ),
+            ],
+          ),
+          actions: [
+            FilledButton.icon(
+              onPressed: _project.permissions.delete
+                  ? () {
+                      _confirmDelete();
+                    }
+                  : null,
+              icon: const Icon(Icons.delete),
+              label: const Text('Delete'),
+              style: ButtonStyle(
+                backgroundColor: MaterialStateColor.resolveWith(
+                    (states) => Theme.of(context).colorScheme.error),
+              ),
+            ),
+            FilledButton.icon(
+              onPressed: _openInNewWindow,
+              icon: const Icon(Icons.picture_as_pdf),
+              label: const Text('PDF'),
+              style: ButtonStyle(
+                backgroundColor: MaterialStateColor.resolveWith(
+                    (states) => Theme.of(context).colorScheme.secondary),
+              ),
+            ),
+            FilledButton.icon(
+              onPressed: _project.permissions.update
+                  ? () {
+                      AutoRouter.of(context).push(PapViewRoute(
+                        uuid: _project.uuid,
+                      ));
+                    }
+                  : null,
+              icon: const Icon(Icons.edit),
+              label: const Text('Edit'),
+            ),
+          ],
+          contentPadding: EdgeInsets.zero,
+          content: SizedBox(
             width: double.infinity,
             height: double.infinity,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                AppBar(
-                  title: Text(
-                    _project.title,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  backgroundColor: Colors.transparent,
-                  actions: [
-                    IconButton(
-                      onPressed: _project.permissions.delete
-                          ? () {
-                              _confirmDelete();
-                            }
-                          : null,
-                      icon: const Icon(Icons.delete),
-                      tooltip: 'Delete',
-                    ),
-                    IconButton(
-                      onPressed: _openInNewWindow,
-                      icon: const Icon(Icons.picture_as_pdf),
-                      tooltip: 'PDF',
-                    ),
-                    IconButton(
-                      onPressed: _project.permissions.view
-                          ? () {
-                              AutoRouter.of(context).push(PapViewRoute(
-                                uuid: _project.uuid,
-                              ));
-                            }
-                          : null,
-                      icon: const Icon(Icons.visibility),
-                      tooltip: 'View',
-                    ),
-                  ],
-                ),
                 const Divider(),
-                Container(
+                Padding(
                   padding: const EdgeInsets.all(8.0),
-                  width: double.infinity,
-                  height: 40,
-                  decoration: BoxDecoration(
-                      color: Theme.of(context).primaryColor.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(8.0)),
-                  child: Text(
-                    "Office: ${_project.office?.acronym ?? 'NO OFFICE'}",
-                    textAlign: TextAlign.start,
+                  child: Container(
+                    padding: const EdgeInsets.all(8.0),
+                    width: double.infinity,
+                    height: 40,
+                    decoration: BoxDecoration(
+                        color: Theme.of(context).primaryColor.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8.0)),
+                    child: Text(
+                      "Office: ${_project.office?.acronym ?? 'NO OFFICE'}",
+                      textAlign: TextAlign.start,
+                    ),
                   ),
                 ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Container(
+                Padding(
                   padding: const EdgeInsets.all(8.0),
-                  width: double.infinity,
-                  height: 90,
-                  decoration: BoxDecoration(
-                      color: Theme.of(context).primaryColor.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(8.0)),
-                  child: Text(
-                    "Description: ${_project.description ?? 'No description'}",
-                    textAlign: TextAlign.start,
+                  child: Container(
+                    padding: const EdgeInsets.all(8.0),
+                    width: double.infinity,
+                    height: 90,
+                    decoration: BoxDecoration(
+                        color: Theme.of(context).primaryColor.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8.0)),
+                    child: Text(
+                      "Description: ${_project.description ?? 'No description'}",
+                      textAlign: TextAlign.start,
+                    ),
                   ),
                 ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Container(
+                Padding(
                   padding: const EdgeInsets.all(8.0),
-                  width: double.infinity,
-                  height: 40,
-                  decoration: BoxDecoration(
-                      color: Theme.of(context).primaryColor.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(8.0)),
-                  child: Text(
-                    'PIPOL Code: ${_project.pipolCode ?? 'N/A'}',
-                    textAlign: TextAlign.start,
+                  child: Container(
+                    padding: const EdgeInsets.all(8.0),
+                    width: double.infinity,
+                    height: 40,
+                    decoration: BoxDecoration(
+                        color: Theme.of(context).primaryColor.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8.0)),
+                    child: Text(
+                      'PIPOL Code: ${_project.pipolCode ?? 'N/A'}',
+                      textAlign: TextAlign.start,
+                    ),
                   ),
                 ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Container(
+                Padding(
                   padding: const EdgeInsets.all(8.0),
-                  width: double.infinity,
-                  height: 40,
-                  decoration: BoxDecoration(
-                      color: Theme.of(context).primaryColor.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(8.0)),
-                  child: Text(
-                    'Total Cost: PHP ${ref.watch(numberFormatterProvider).format(_project.totalCost)}',
-                    textAlign: TextAlign.start,
+                  child: Container(
+                    padding: const EdgeInsets.all(8.0),
+                    width: double.infinity,
+                    height: 40,
+                    decoration: BoxDecoration(
+                        color: Theme.of(context).primaryColor.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8.0)),
+                    child: Text(
+                      'Total Cost: PHP ${ref.watch(numberFormatterProvider).format(_project.totalCost)}',
+                      textAlign: TextAlign.start,
+                    ),
                   ),
                 ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Container(
+                Padding(
                   padding: const EdgeInsets.all(8.0),
-                  width: double.infinity,
-                  height: 90,
-                  decoration: BoxDecoration(
-                      color: Theme.of(context).primaryColor.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(8.0)),
-                  child: Text(
-                      "Contact Information: ${_project.contactInformation ?? 'NONE'}"),
+                  child: Container(
+                    padding: const EdgeInsets.all(8.0),
+                    width: double.infinity,
+                    height: 90,
+                    decoration: BoxDecoration(
+                        color: Theme.of(context).primaryColor.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8.0)),
+                    child: Text(
+                        "Contact Information: ${_project.contactInformation ?? 'NONE'}"),
+                  ),
                 ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Container(
+                Padding(
                   padding: const EdgeInsets.all(8.0),
-                  width: double.infinity,
-                  height: 90,
-                  decoration: BoxDecoration(
-                      color: Theme.of(context).primaryColor.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(8.0)),
-                  child: Text("Notes: ${_project.notes ?? 'NO NOTES'}"),
+                  child: Container(
+                    padding: const EdgeInsets.all(8.0),
+                    width: double.infinity,
+                    height: 90,
+                    decoration: BoxDecoration(
+                        color: Theme.of(context).primaryColor.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8.0)),
+                    child: Text("Notes: ${_project.notes ?? 'NO NOTES'}"),
+                  ),
                 ),
               ],
             ),
@@ -235,14 +252,27 @@ class _ProjectListTileState extends ConsumerState<ProjectListTile> {
       leading: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Tooltip(
-            message: _project.user?.fullname ?? 'NA',
-            child: CircleAvatar(
-              child: Text(
-                _project.user?.avatar ?? 'NA',
-              ),
-            ),
-          ),
+          _project.outdated
+              ? Tooltip(
+                  message:
+                      'This PAP was submitted during ${_project.updatingPeriod?.label}. Duplicate to update and submit it this updating period.',
+                  child: CircleAvatar(
+                      backgroundColor:
+                          Theme.of(context).colorScheme.errorContainer,
+                      radius: 20,
+                      child: Icon(
+                        Icons.warning,
+                        size: 18,
+                        color: Theme.of(context).colorScheme.error,
+                      )),
+                )
+              : const CircleAvatar(
+                  radius: 20,
+                  child: Icon(
+                    Icons.edit,
+                    size: 18,
+                  ),
+                ),
         ],
       ),
       subtitle: Text(
@@ -262,7 +292,17 @@ class _ProjectListTileState extends ConsumerState<ProjectListTile> {
                   _project.office?.acronym.toUpperCase() ?? 'OFFICE',
                   style: Theme.of(context).textTheme.titleSmall,
                 ),
+                const Text(' - '),
+                Text(
+                  _project.user?.fullname ?? 'NA',
+                  style: Theme.of(context).textTheme.titleSmall,
+                ),
                 const Spacer(),
+                if (_project.notes != null)
+                  Tooltip(
+                    message: _project.notes,
+                    child: const Icon(Icons.note_outlined),
+                  ),
                 if (_project.commentsCount > 0)
                   Badge(
                     label: Text(

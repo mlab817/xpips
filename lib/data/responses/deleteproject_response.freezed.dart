@@ -21,7 +21,7 @@ DeleteProjectResponse _$DeleteProjectResponseFromJson(
 
 /// @nodoc
 mixin _$DeleteProjectResponse {
-  String get status => throw _privateConstructorUsedError;
+  String get message => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -35,7 +35,7 @@ abstract class $DeleteProjectResponseCopyWith<$Res> {
           $Res Function(DeleteProjectResponse) then) =
       _$DeleteProjectResponseCopyWithImpl<$Res, DeleteProjectResponse>;
   @useResult
-  $Res call({String status});
+  $Res call({String message});
 }
 
 /// @nodoc
@@ -52,12 +52,12 @@ class _$DeleteProjectResponseCopyWithImpl<$Res,
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? status = null,
+    Object? message = null,
   }) {
     return _then(_value.copyWith(
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
+      message: null == message
+          ? _value.message
+          : message // ignore: cast_nullable_to_non_nullable
               as String,
     ) as $Val);
   }
@@ -71,7 +71,7 @@ abstract class _$$_DeleteProjectResponseCopyWith<$Res>
       __$$_DeleteProjectResponseCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String status});
+  $Res call({String message});
 }
 
 /// @nodoc
@@ -85,12 +85,12 @@ class __$$_DeleteProjectResponseCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? status = null,
+    Object? message = null,
   }) {
     return _then(_$_DeleteProjectResponse(
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
+      message: null == message
+          ? _value.message
+          : message // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }
@@ -99,17 +99,17 @@ class __$$_DeleteProjectResponseCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$_DeleteProjectResponse implements _DeleteProjectResponse {
-  _$_DeleteProjectResponse({required this.status});
+  _$_DeleteProjectResponse({required this.message});
 
   factory _$_DeleteProjectResponse.fromJson(Map<String, dynamic> json) =>
       _$$_DeleteProjectResponseFromJson(json);
 
   @override
-  final String status;
+  final String message;
 
   @override
   String toString() {
-    return 'DeleteProjectResponse(status: $status)';
+    return 'DeleteProjectResponse(message: $message)';
   }
 
   @override
@@ -117,12 +117,12 @@ class _$_DeleteProjectResponse implements _DeleteProjectResponse {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_DeleteProjectResponse &&
-            (identical(other.status, status) || other.status == status));
+            (identical(other.message, message) || other.message == message));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, status);
+  int get hashCode => Object.hash(runtimeType, message);
 
   @JsonKey(ignore: true)
   @override
@@ -140,14 +140,14 @@ class _$_DeleteProjectResponse implements _DeleteProjectResponse {
 }
 
 abstract class _DeleteProjectResponse implements DeleteProjectResponse {
-  factory _DeleteProjectResponse({required final String status}) =
+  factory _DeleteProjectResponse({required final String message}) =
       _$_DeleteProjectResponse;
 
   factory _DeleteProjectResponse.fromJson(Map<String, dynamic> json) =
       _$_DeleteProjectResponse.fromJson;
 
   @override
-  String get status;
+  String get message;
   @override
   @JsonKey(ignore: true)
   _$$_DeleteProjectResponseCopyWith<_$_DeleteProjectResponse> get copyWith =>

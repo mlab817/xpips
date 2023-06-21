@@ -1,15 +1,15 @@
-import 'package:pips/data/repositories/auth_repository.dart';
-import 'package:pips/domain/models/login_credentials.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../data/repositories/auth_repository.dart';
+import '../../data/requests/login_request.dart';
 import '../../data/responses/responses.dart';
 
 part 'login_controller.g.dart';
 
 @Riverpod(keepAlive: true)
-class LoginCredentialsController extends _$LoginCredentialsController {
+class LoginRequestController extends _$LoginRequestController {
   @override
-  LoginCredentials build() => LoginCredentials.initial();
+  LoginRequest build() => LoginRequest.initial();
 
   void update({
     String? username,
@@ -28,7 +28,7 @@ class Login extends _$Login {
   FutureOr<LoginResponse?> build() => null;
 
   Future<LoginResponse?> login() async {
-    final credentials = ref.read(loginCredentialsControllerProvider);
+    final credentials = ref.read(loginRequestControllerProvider);
     final repository = ref.read(authRepositoryProvider);
 
     state = const AsyncLoading();

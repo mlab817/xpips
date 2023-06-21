@@ -20,20 +20,28 @@ Office _$OfficeFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Office {
+  @HiveField(0)
   @JsonKey(name: "id")
   int get id => throw _privateConstructorUsedError;
+  @HiveField(1)
   @JsonKey(name: "name")
   String get name => throw _privateConstructorUsedError;
+  @HiveField(2)
   @JsonKey(name: "acronym")
   String get acronym => throw _privateConstructorUsedError;
+  @HiveField(3)
   @JsonKey(name: "uuid")
   String? get uuid => throw _privateConstructorUsedError;
+  @HiveField(4)
   @JsonKey(name: "head_name")
   String? get headName => throw _privateConstructorUsedError;
+  @HiveField(5)
   @JsonKey(name: "head_position")
   String? get headPosition => throw _privateConstructorUsedError;
+  @HiveField(6)
   @JsonKey(name: "email")
   String? get email => throw _privateConstructorUsedError;
+  @HiveField(7)
   @JsonKey(name: "phone_number")
   String? get phoneNumber => throw _privateConstructorUsedError;
 
@@ -48,14 +56,14 @@ abstract class $OfficeCopyWith<$Res> {
       _$OfficeCopyWithImpl<$Res, Office>;
   @useResult
   $Res call(
-      {@JsonKey(name: "id") int id,
-      @JsonKey(name: "name") String name,
-      @JsonKey(name: "acronym") String acronym,
-      @JsonKey(name: "uuid") String? uuid,
-      @JsonKey(name: "head_name") String? headName,
-      @JsonKey(name: "head_position") String? headPosition,
-      @JsonKey(name: "email") String? email,
-      @JsonKey(name: "phone_number") String? phoneNumber});
+      {@HiveField(0) @JsonKey(name: "id") int id,
+      @HiveField(1) @JsonKey(name: "name") String name,
+      @HiveField(2) @JsonKey(name: "acronym") String acronym,
+      @HiveField(3) @JsonKey(name: "uuid") String? uuid,
+      @HiveField(4) @JsonKey(name: "head_name") String? headName,
+      @HiveField(5) @JsonKey(name: "head_position") String? headPosition,
+      @HiveField(6) @JsonKey(name: "email") String? email,
+      @HiveField(7) @JsonKey(name: "phone_number") String? phoneNumber});
 }
 
 /// @nodoc
@@ -124,14 +132,14 @@ abstract class _$$_OfficeCopyWith<$Res> implements $OfficeCopyWith<$Res> {
   @override
   @useResult
   $Res call(
-      {@JsonKey(name: "id") int id,
-      @JsonKey(name: "name") String name,
-      @JsonKey(name: "acronym") String acronym,
-      @JsonKey(name: "uuid") String? uuid,
-      @JsonKey(name: "head_name") String? headName,
-      @JsonKey(name: "head_position") String? headPosition,
-      @JsonKey(name: "email") String? email,
-      @JsonKey(name: "phone_number") String? phoneNumber});
+      {@HiveField(0) @JsonKey(name: "id") int id,
+      @HiveField(1) @JsonKey(name: "name") String name,
+      @HiveField(2) @JsonKey(name: "acronym") String acronym,
+      @HiveField(3) @JsonKey(name: "uuid") String? uuid,
+      @HiveField(4) @JsonKey(name: "head_name") String? headName,
+      @HiveField(5) @JsonKey(name: "head_position") String? headPosition,
+      @HiveField(6) @JsonKey(name: "email") String? email,
+      @HiveField(7) @JsonKey(name: "phone_number") String? phoneNumber});
 }
 
 /// @nodoc
@@ -194,41 +202,49 @@ class __$$_OfficeCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_Office extends _Office {
   _$_Office(
-      {@JsonKey(name: "id") required this.id,
-      @JsonKey(name: "name") required this.name,
-      @JsonKey(name: "acronym") required this.acronym,
-      @JsonKey(name: "uuid") this.uuid,
-      @JsonKey(name: "head_name") this.headName,
-      @JsonKey(name: "head_position") this.headPosition,
-      @JsonKey(name: "email") this.email,
-      @JsonKey(name: "phone_number") this.phoneNumber})
+      {@HiveField(0) @JsonKey(name: "id") required this.id,
+      @HiveField(1) @JsonKey(name: "name") required this.name,
+      @HiveField(2) @JsonKey(name: "acronym") required this.acronym,
+      @HiveField(3) @JsonKey(name: "uuid") this.uuid,
+      @HiveField(4) @JsonKey(name: "head_name") this.headName,
+      @HiveField(5) @JsonKey(name: "head_position") this.headPosition,
+      @HiveField(6) @JsonKey(name: "email") this.email,
+      @HiveField(7) @JsonKey(name: "phone_number") this.phoneNumber})
       : super._();
 
   factory _$_Office.fromJson(Map<String, dynamic> json) =>
       _$$_OfficeFromJson(json);
 
   @override
+  @HiveField(0)
   @JsonKey(name: "id")
   final int id;
   @override
+  @HiveField(1)
   @JsonKey(name: "name")
   final String name;
   @override
+  @HiveField(2)
   @JsonKey(name: "acronym")
   final String acronym;
   @override
+  @HiveField(3)
   @JsonKey(name: "uuid")
   final String? uuid;
   @override
+  @HiveField(4)
   @JsonKey(name: "head_name")
   final String? headName;
   @override
+  @HiveField(5)
   @JsonKey(name: "head_position")
   final String? headPosition;
   @override
+  @HiveField(6)
   @JsonKey(name: "email")
   final String? email;
   @override
+  @HiveField(7)
   @JsonKey(name: "phone_number")
   final String? phoneNumber;
 
@@ -276,40 +292,64 @@ class _$_Office extends _Office {
 
 abstract class _Office extends Office {
   factory _Office(
-      {@JsonKey(name: "id") required final int id,
-      @JsonKey(name: "name") required final String name,
-      @JsonKey(name: "acronym") required final String acronym,
-      @JsonKey(name: "uuid") final String? uuid,
-      @JsonKey(name: "head_name") final String? headName,
-      @JsonKey(name: "head_position") final String? headPosition,
-      @JsonKey(name: "email") final String? email,
-      @JsonKey(name: "phone_number") final String? phoneNumber}) = _$_Office;
+      {@HiveField(0)
+      @JsonKey(name: "id")
+          required final int id,
+      @HiveField(1)
+      @JsonKey(name: "name")
+          required final String name,
+      @HiveField(2)
+      @JsonKey(name: "acronym")
+          required final String acronym,
+      @HiveField(3)
+      @JsonKey(name: "uuid")
+          final String? uuid,
+      @HiveField(4)
+      @JsonKey(name: "head_name")
+          final String? headName,
+      @HiveField(5)
+      @JsonKey(name: "head_position")
+          final String? headPosition,
+      @HiveField(6)
+      @JsonKey(name: "email")
+          final String? email,
+      @HiveField(7)
+      @JsonKey(name: "phone_number")
+          final String? phoneNumber}) = _$_Office;
   _Office._() : super._();
 
   factory _Office.fromJson(Map<String, dynamic> json) = _$_Office.fromJson;
 
   @override
+  @HiveField(0)
   @JsonKey(name: "id")
   int get id;
   @override
+  @HiveField(1)
   @JsonKey(name: "name")
   String get name;
   @override
+  @HiveField(2)
   @JsonKey(name: "acronym")
   String get acronym;
   @override
+  @HiveField(3)
   @JsonKey(name: "uuid")
   String? get uuid;
   @override
+  @HiveField(4)
   @JsonKey(name: "head_name")
   String? get headName;
   @override
+  @HiveField(5)
   @JsonKey(name: "head_position")
   String? get headPosition;
   @override
+  @HiveField(6)
   @JsonKey(name: "email")
   String? get email;
   @override
+  @HiveField(7)
   @JsonKey(name: "phone_number")
   String? get phoneNumber;
   @override
