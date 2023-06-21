@@ -70,8 +70,6 @@ abstract class $RegionalInvestmentCopyWith<$Res> {
       @JsonKey(name: "y2027") double? y2027,
       @JsonKey(name: "y2028") double? y2028,
       @JsonKey(name: "y2029") double? y2029});
-
-  $OptionCopyWith<$Res>? get region;
 }
 
 /// @nodoc
@@ -151,18 +149,6 @@ class _$RegionalInvestmentCopyWithImpl<$Res, $Val extends RegionalInvestment>
               as double?,
     ) as $Val);
   }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $OptionCopyWith<$Res>? get region {
-    if (_value.region == null) {
-      return null;
-    }
-
-    return $OptionCopyWith<$Res>(_value.region!, (value) {
-      return _then(_value.copyWith(region: value) as $Val);
-    });
-  }
 }
 
 /// @nodoc
@@ -186,9 +172,6 @@ abstract class _$$_RegionalInvestmentCopyWith<$Res>
       @JsonKey(name: "y2027") double? y2027,
       @JsonKey(name: "y2028") double? y2028,
       @JsonKey(name: "y2029") double? y2029});
-
-  @override
-  $OptionCopyWith<$Res>? get region;
 }
 
 /// @nodoc

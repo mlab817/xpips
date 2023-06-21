@@ -6,24 +6,24 @@ part of 'login_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$loginCredentialsControllerHash() =>
-    r'f08785809d67192d22a44c160a4f0d83c4c5db51';
+String _$loginRequestControllerHash() =>
+    r'ad6db7d30419838c9f805cd57920d53e4f96f802';
 
-/// See also [LoginCredentialsController].
-@ProviderFor(LoginCredentialsController)
-final loginCredentialsControllerProvider =
-    NotifierProvider<LoginCredentialsController, LoginCredentials>.internal(
-  LoginCredentialsController.new,
-  name: r'loginCredentialsControllerProvider',
+/// See also [LoginRequestController].
+@ProviderFor(LoginRequestController)
+final loginRequestControllerProvider =
+    NotifierProvider<LoginRequestController, LoginRequest>.internal(
+  LoginRequestController.new,
+  name: r'loginRequestControllerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$loginCredentialsControllerHash,
+      : _$loginRequestControllerHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$LoginCredentialsController = Notifier<LoginCredentials>;
-String _$loginHash() => r'420f73a8ab8121bdb8687ab12beabd2a00fd86e6';
+typedef _$LoginRequestController = Notifier<LoginRequest>;
+String _$loginHash() => r'51079476d9ec92429373417261c29eb109dd6cc2';
 
 /// See also [Login].
 @ProviderFor(Login)

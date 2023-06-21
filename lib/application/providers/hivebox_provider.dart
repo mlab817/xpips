@@ -6,5 +6,5 @@ import '../../domain/models/form_options.dart';
 part 'hivebox_provider.g.dart';
 
 @Riverpod(keepAlive: true)
-Box<FormOptions> hiveBox(HiveBoxRef ref) =>
-    Hive.box<FormOptions>('form_options');
+Box<FormOptions> hiveBox(HiveBoxRef ref, {required String boxName}) =>
+    Hive.box<FormOptions>(boxName);

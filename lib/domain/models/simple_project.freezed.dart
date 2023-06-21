@@ -48,8 +48,6 @@ abstract class $SimpleProjectCopyWith<$Res> {
       List<Option> bases,
       String description,
       @JsonKey(name: "total_cost") double totalCost});
-
-  $OptionCopyWith<$Res>? get type;
 }
 
 /// @nodoc
@@ -99,18 +97,6 @@ class _$SimpleProjectCopyWithImpl<$Res, $Val extends SimpleProject>
               as double,
     ) as $Val);
   }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $OptionCopyWith<$Res>? get type {
-    if (_value.type == null) {
-      return null;
-    }
-
-    return $OptionCopyWith<$Res>(_value.type!, (value) {
-      return _then(_value.copyWith(type: value) as $Val);
-    });
-  }
 }
 
 /// @nodoc
@@ -128,9 +114,6 @@ abstract class _$$_SimpleProjectCopyWith<$Res>
       List<Option> bases,
       String description,
       @JsonKey(name: "total_cost") double totalCost});
-
-  @override
-  $OptionCopyWith<$Res>? get type;
 }
 
 /// @nodoc

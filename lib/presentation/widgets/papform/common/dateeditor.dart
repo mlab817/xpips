@@ -45,13 +45,28 @@ class _RadioEditor extends ConsumerState<DateEditor> {
       child: ListTile(
         tileColor: Theme.of(context).primaryColor.withOpacity(0.1),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        subtitle: widget.oldValue != null
-            ? Text(ref.watch(dateFormatterProvider).format(widget.oldValue!))
-            : const Text('NONE'),
-        title: Text(widget.fieldLabel),
-        trailing: EditButton(
-          onPressed: widget.enabled ? () => _edit() : null,
+        subtitle: Row(
+          children: [
+            Chip(
+              label: widget.oldValue != null
+                  ? Text(
+                      ref.watch(dateFormatterProvider).format(widget.oldValue!))
+                  : const Text('NONE'),
+              visualDensity: VisualDensity.compact,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(50),
+                ),
+              ),
+            ),
+          ],
         ),
+        title: Text(widget.fieldLabel),
+        trailing: widget.project.readonly
+            ? null
+            : EditButton(
+                onPressed: widget.enabled ? () => _edit() : null,
+              ),
         enabled: widget.enabled,
         onTap: () => _edit(),
       ),

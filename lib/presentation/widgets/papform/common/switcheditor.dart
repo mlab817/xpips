@@ -44,13 +44,27 @@ class _RadioEditor extends ConsumerState<SwitchEditor> {
       child: ListTile(
         tileColor: Theme.of(context).primaryColor.withOpacity(0.1),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        subtitle: Text(widget.oldValue ? 'YES' : 'NO'),
-        title: Text(widget.fieldLabel),
-        trailing: EditButton(
-          onPressed: () => _edit(),
+        subtitle: Row(
+          children: [
+            Chip(
+              label: Text(widget.oldValue ? 'YES' : 'NO'),
+              visualDensity: VisualDensity.compact,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(50),
+                ),
+              ),
+            ),
+          ],
         ),
+        title: Text(widget.fieldLabel),
+        trailing: widget.project.readonly
+            ? null
+            : EditButton(
+                onPressed: () => _edit(),
+              ),
         enabled: widget.enabled,
-        onTap: () => _edit(),
+        onTap: widget.project.readonly ? null : () => _edit(),
       ),
     );
   }

@@ -52,6 +52,8 @@ mixin _$ProjectsRequest {
   List<int>? get offices => throw _privateConstructorUsedError;
   @JsonKey(name: "funding_sources[]", includeIfNull: false)
   List<int>? get fundingSources => throw _privateConstructorUsedError;
+  @JsonKey(name: "sort")
+  String? get sort => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -97,7 +99,9 @@ abstract class $ProjectsRequestCopyWith<$Res> {
       @JsonKey(name: "offices[]", includeIfNull: false)
           List<int>? offices,
       @JsonKey(name: "funding_sources[]", includeIfNull: false)
-          List<int>? fundingSources});
+          List<int>? fundingSources,
+      @JsonKey(name: "sort")
+          String? sort});
 }
 
 /// @nodoc
@@ -129,6 +133,7 @@ class _$ProjectsRequestCopyWithImpl<$Res, $Val extends ProjectsRequest>
     Object? pipsStatuses = freezed,
     Object? offices = freezed,
     Object? fundingSources = freezed,
+    Object? sort = freezed,
   }) {
     return _then(_value.copyWith(
       perPage: null == perPage
@@ -195,6 +200,10 @@ class _$ProjectsRequestCopyWithImpl<$Res, $Val extends ProjectsRequest>
           ? _value.fundingSources
           : fundingSources // ignore: cast_nullable_to_non_nullable
               as List<int>?,
+      sort: freezed == sort
+          ? _value.sort
+          : sort // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -239,7 +248,9 @@ abstract class _$$_ProjectsRequestCopyWith<$Res>
       @JsonKey(name: "offices[]", includeIfNull: false)
           List<int>? offices,
       @JsonKey(name: "funding_sources[]", includeIfNull: false)
-          List<int>? fundingSources});
+          List<int>? fundingSources,
+      @JsonKey(name: "sort")
+          String? sort});
 }
 
 /// @nodoc
@@ -269,6 +280,7 @@ class __$$_ProjectsRequestCopyWithImpl<$Res>
     Object? pipsStatuses = freezed,
     Object? offices = freezed,
     Object? fundingSources = freezed,
+    Object? sort = freezed,
   }) {
     return _then(_$_ProjectsRequest(
       perPage: null == perPage
@@ -335,6 +347,10 @@ class __$$_ProjectsRequestCopyWithImpl<$Res>
           ? _value._fundingSources
           : fundingSources // ignore: cast_nullable_to_non_nullable
               as List<int>?,
+      sort: freezed == sort
+          ? _value.sort
+          : sort // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -374,7 +390,9 @@ class _$_ProjectsRequest implements _ProjectsRequest {
       @JsonKey(name: "offices[]", includeIfNull: false)
           final List<int>? offices,
       @JsonKey(name: "funding_sources[]", includeIfNull: false)
-          final List<int>? fundingSources})
+          final List<int>? fundingSources,
+      @JsonKey(name: "sort")
+          this.sort})
       : _types = types,
         _spatialCoverages = spatialCoverages,
         _pdpChapters = pdpChapters,
@@ -510,8 +528,12 @@ class _$_ProjectsRequest implements _ProjectsRequest {
   }
 
   @override
+  @JsonKey(name: "sort")
+  final String? sort;
+
+  @override
   String toString() {
-    return 'ProjectsRequest(perPage: $perPage, page: $page, q: $q, types: $types, spatialCoverages: $spatialCoverages, pip: $pip, cip: $cip, trip: $trip, rdip: $rdip, pdpChapters: $pdpChapters, projectStatuses: $projectStatuses, categories: $categories, pipolStatuses: $pipolStatuses, pipsStatuses: $pipsStatuses, offices: $offices, fundingSources: $fundingSources)';
+    return 'ProjectsRequest(perPage: $perPage, page: $page, q: $q, types: $types, spatialCoverages: $spatialCoverages, pip: $pip, cip: $cip, trip: $trip, rdip: $rdip, pdpChapters: $pdpChapters, projectStatuses: $projectStatuses, categories: $categories, pipolStatuses: $pipolStatuses, pipsStatuses: $pipsStatuses, offices: $offices, fundingSources: $fundingSources, sort: $sort)';
   }
 
   @override
@@ -541,7 +563,8 @@ class _$_ProjectsRequest implements _ProjectsRequest {
                 .equals(other._pipsStatuses, _pipsStatuses) &&
             const DeepCollectionEquality().equals(other._offices, _offices) &&
             const DeepCollectionEquality()
-                .equals(other._fundingSources, _fundingSources));
+                .equals(other._fundingSources, _fundingSources) &&
+            (identical(other.sort, sort) || other.sort == sort));
   }
 
   @JsonKey(ignore: true)
@@ -563,7 +586,8 @@ class _$_ProjectsRequest implements _ProjectsRequest {
       const DeepCollectionEquality().hash(_pipolStatuses),
       const DeepCollectionEquality().hash(_pipsStatuses),
       const DeepCollectionEquality().hash(_offices),
-      const DeepCollectionEquality().hash(_fundingSources));
+      const DeepCollectionEquality().hash(_fundingSources),
+      sort);
 
   @JsonKey(ignore: true)
   @override
@@ -612,7 +636,9 @@ abstract class _ProjectsRequest implements ProjectsRequest {
       @JsonKey(name: "offices[]", includeIfNull: false)
           final List<int>? offices,
       @JsonKey(name: "funding_sources[]", includeIfNull: false)
-          final List<int>? fundingSources}) = _$_ProjectsRequest;
+          final List<int>? fundingSources,
+      @JsonKey(name: "sort")
+          final String? sort}) = _$_ProjectsRequest;
 
   factory _ProjectsRequest.fromJson(Map<String, dynamic> json) =
       _$_ProjectsRequest.fromJson;
@@ -665,6 +691,9 @@ abstract class _ProjectsRequest implements ProjectsRequest {
   @override
   @JsonKey(name: "funding_sources[]", includeIfNull: false)
   List<int>? get fundingSources;
+  @override
+  @JsonKey(name: "sort")
+  String? get sort;
   @override
   @JsonKey(ignore: true)
   _$$_ProjectsRequestCopyWith<_$_ProjectsRequest> get copyWith =>

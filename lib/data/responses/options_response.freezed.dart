@@ -35,8 +35,6 @@ abstract class $OptionsResponseCopyWith<$Res> {
       _$OptionsResponseCopyWithImpl<$Res, OptionsResponse>;
   @useResult
   $Res call({FormOptions data});
-
-  $FormOptionsCopyWith<$Res> get data;
 }
 
 /// @nodoc
@@ -61,14 +59,6 @@ class _$OptionsResponseCopyWithImpl<$Res, $Val extends OptionsResponse>
               as FormOptions,
     ) as $Val);
   }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $FormOptionsCopyWith<$Res> get data {
-    return $FormOptionsCopyWith<$Res>(_value.data, (value) {
-      return _then(_value.copyWith(data: value) as $Val);
-    });
-  }
 }
 
 /// @nodoc
@@ -80,9 +70,6 @@ abstract class _$$_OptionsResponseCopyWith<$Res>
   @override
   @useResult
   $Res call({FormOptions data});
-
-  @override
-  $FormOptionsCopyWith<$Res> get data;
 }
 
 /// @nodoc

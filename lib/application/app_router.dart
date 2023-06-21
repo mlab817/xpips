@@ -1,17 +1,18 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
-import '../presentation/screens/chat_screen.dart';
+import '../presentation/screens/main/archive_screen.dart';
+import '../presentation/screens/main/chat_screen.dart';
 import '../presentation/screens/comments_screen.dart';
 import '../presentation/screens/forgotpassword_screen.dart';
-import '../presentation/screens/home_screen.dart';
+import '../presentation/screens/main/home_screen.dart';
 import '../presentation/screens/login_screen.dart';
 import '../presentation/screens/main_screen.dart';
 import '../presentation/screens/newpap_screen.dart';
-import '../presentation/screens/notifications_screen.dart';
+import '../presentation/screens/main/notifications_screen.dart';
 import '../presentation/screens/papview_screen.dart';
 import '../presentation/screens/requestreactivation_screen.dart';
-import '../presentation/screens/settings_screen.dart';
+import '../presentation/screens/main/settings_screen.dart';
 import '../presentation/screens/signup_screen.dart';
 import '../presentation/screens/splash_screen.dart';
 
@@ -40,6 +41,10 @@ class AppRouter extends _$AppRouter implements AutoRouteGuard {
             AutoRoute(
               path: '',
               page: HomeRoute.page,
+            ),
+            AutoRoute(
+              path: 'archive',
+              page: ArchiveRoute.page,
             ),
             AutoRoute(
               path: 'chats',

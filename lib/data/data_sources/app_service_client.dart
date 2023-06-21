@@ -8,6 +8,7 @@ import '../../data/requests/requests.dart';
 import '../../data/responses/responses.dart';
 import '../../domain/models/models.dart';
 import '../repositories/pipolstatus_repository.dart';
+import '../requests/login_request.dart';
 import '../responses/user_response.dart';
 
 part 'app_service_client.g.dart';
@@ -17,7 +18,7 @@ abstract class AppServiceClient {
   factory AppServiceClient(Dio dio, {String baseUrl}) = _AppServiceClient;
 
   @POST('/login')
-  Future<LoginResponse> login(@Body() LoginCredentials input);
+  Future<LoginResponse> login(@Body() LoginRequest input);
 
   @GET('/projects')
   Future<ProjectsResponse> getAllProjects(@Queries() ProjectsRequest input);
@@ -138,9 +139,21 @@ abstract class AppServiceClient {
     @Part(name: 'attachment_type_id') required int attachmentTypeId,
   });
 
+  @POST('/projects/{uuid}/clone')
+  Future<ProjectResponse> clone(@Path('uuid') String uuid);
+
   @GET('/search')
   Future<ProjectsResponse> search(@Query('q') String query);
 
   @GET('/me')
   Future<UserResponse> getCurrentUser();
+
+  @GET('/deadline')
+  Future<DeadlineResponse> deadline();
+
+  @GET('/updating-period')
+  Future<UpdatingPeriodResponse> updatingPeriod();
+
+  @GET('/archived')
+  Future<ProjectsResponse> getArchived(@Queries() ArchiveRequest input);
 }

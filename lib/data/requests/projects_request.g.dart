@@ -39,6 +39,7 @@ _$_ProjectsRequest _$$_ProjectsRequestFromJson(Map<String, dynamic> json) =>
       fundingSources: (json['funding_sources[]'] as List<dynamic>?)
           ?.map((e) => e as int)
           .toList(),
+      sort: json['sort'] as String?,
     );
 
 Map<String, dynamic> _$$_ProjectsRequestToJson(_$_ProjectsRequest instance) {
@@ -67,5 +68,6 @@ Map<String, dynamic> _$$_ProjectsRequestToJson(_$_ProjectsRequest instance) {
   writeNotNull('pips_statuses[]', instance.pipsStatuses);
   writeNotNull('offices[]', instance.offices);
   writeNotNull('funding_sources[]', instance.fundingSources);
+  val['sort'] = instance.sort;
   return val;
 }

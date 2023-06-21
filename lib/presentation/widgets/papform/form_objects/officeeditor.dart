@@ -48,12 +48,26 @@ class _RadioEditor extends ConsumerState<OfficeEditor> {
       child: ListTile(
         tileColor: Theme.of(context).primaryColor.withOpacity(0.1),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        subtitle: Text(widget.oldValue?.label ?? 'NONE'),
-        title: Text(widget.fieldLabel),
-        trailing: EditButton(
-          onPressed: widget.enabled ? () => _edit() : null,
+        subtitle: Row(
+          children: [
+            Chip(
+              label: Text(widget.oldValue?.label ?? 'NONE'),
+              visualDensity: VisualDensity.compact,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(50),
+                ),
+              ),
+            ),
+          ],
         ),
-        onTap: () => _edit(),
+        title: Text(widget.fieldLabel),
+        trailing: widget.project.readonly
+            ? null
+            : EditButton(
+                onPressed: widget.enabled ? () => _edit() : null,
+              ),
+        onTap: widget.project.readonly ? null : () => _edit(),
       ),
     );
   }

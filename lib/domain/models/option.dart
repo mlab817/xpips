@@ -1,34 +1,34 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:hive/hive.dart';
 
-part 'option.freezed.dart';
 part 'option.g.dart';
 
-abstract class BaseOption {
+@HiveType(typeId: 1)
+@JsonSerializable()
+class Option {
+  @HiveField(0)
   String label;
 
+  @HiveField(1)
   int value;
 
+  @HiveField(2)
   String? description;
 
+  @HiveField(3)
   List<Option>? children;
 
-  BaseOption({
+  @HiveField(4)
+  @JsonKey(name: 'parent_id')
+  int? parentId;
+
+  Option({
     required this.label,
     required this.value,
     this.description,
     this.children,
+    this.parentId,
   });
-}
-
-@freezed
-class Option with _$Option {
-  factory Option({
-    required String label,
-    required int value,
-    String? description,
-    List<Option>? children,
-    @JsonKey(name: 'parent_id') int? parentId,
-  }) = _Option;
 
   factory Option.fromJson(Map<String, dynamic> json) => _$OptionFromJson(json);
 }

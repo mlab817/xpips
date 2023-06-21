@@ -88,7 +88,7 @@ class _NewPapScreenState extends ConsumerState<NewPapScreen> {
               const Text('Program or Project'),
               const SizedBox(height: 10),
               Row(
-                children: optionsAsync?.data.types
+                children: optionsAsync?.types
                         ?.map((type) => Flexible(
                               child: InkWell(
                                 onTap: () {
@@ -142,7 +142,8 @@ class _NewPapScreenState extends ConsumerState<NewPapScreen> {
                             .update(regularProgram: value);
                       },
                     ),
-                    const Text('Check if this is a regular program'),
+                    const Text(
+                        'Tick the checkbox if the PAP is a regular program'),
                   ],
                 ),
               ),
@@ -150,7 +151,7 @@ class _NewPapScreenState extends ConsumerState<NewPapScreen> {
               const Text('Basis for Implementation'),
               const SizedBox(height: 10),
               Column(
-                children: optionsAsync?.data.bases?.map(
+                children: optionsAsync?.bases?.map(
                       (basis) {
                         return InkWell(
                           onTap: () {

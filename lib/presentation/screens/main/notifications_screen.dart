@@ -2,12 +2,12 @@ import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../application/functions.dart';
-import '../../../data/responses/notifications_response.dart';
-import '../../../presentation/controllers/notifications_controller.dart';
-import '../../../presentation/widgets/loading_dialog.dart';
-import '../../../presentation/widgets/logout_button.dart';
-import '../resources/strings_manager.dart';
+import '../../../../application/functions.dart';
+import '../../../../data/responses/notifications_response.dart';
+import '../../../../presentation/controllers/notifications_controller.dart';
+import '../../../../presentation/widgets/loading_dialog.dart';
+import '../../../../presentation/widgets/logout_button.dart';
+import '../../resources/strings_manager.dart';
 
 enum NotificationStatus {
   all,
@@ -25,8 +25,6 @@ class NotificationsScreen extends ConsumerStatefulWidget {
 }
 
 class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
-  int _page = 1;
-
   NotificationStatus _selected = NotificationStatus.all;
 
   @override
@@ -60,6 +58,11 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
   }
 
   Widget _buildPaginationControls() {
+    final currentPage =
+        ref.watch(notificationsProvider).value?.meta.pagination.current;
+    final lastPage =
+        ref.watch(notificationsProvider).value?.meta.pagination.last;
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Row(
@@ -123,24 +126,23 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
             },
           ),
           IconButton(
-              onPressed: () {
-                setState(() {
-                  _page--;
-                });
-                ref
-                    .read(notificationsRequestControllerProvider.notifier)
-                    .update(page: _page);
-              },
+              onPressed: currentPage == 1
+                  ? null
+                  : () {
+                      ref
+                          .read(notificationsRequestControllerProvider.notifier)
+                          .previousPage();
+                    },
               icon: const Icon(Icons.chevron_left)),
+          Text('$currentPage/$lastPage'),
           IconButton(
-              onPressed: () {
-                setState(() {
-                  _page++;
-                });
-                ref
-                    .read(notificationsRequestControllerProvider.notifier)
-                    .update(page: _page);
-              },
+              onPressed: currentPage == lastPage
+                  ? null
+                  : () {
+                      ref
+                          .read(notificationsRequestControllerProvider.notifier)
+                          .nextPage();
+                    },
               icon: const Icon(Icons.chevron_right)),
         ],
       ),
@@ -237,7 +239,6 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
 
     // handle mark as read
     try {
-      // TODO: handle response
       ref.read(markAsReadProvider(notification: notification));
 
       if (context.mounted) {

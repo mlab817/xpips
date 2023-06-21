@@ -29,6 +29,11 @@ _$_Project _$$_ProjectFromJson(Map<String, dynamic> json) => _$_Project(
       permissions:
           Permissions.fromJson(json['permissions'] as Map<String, dynamic>),
       commentsCount: json['comments_count'] as int,
+      readonly: json['readonly'] as bool,
+      outdated: json['outdated'] as bool,
+      updatingPeriod: json['updating_period'] == null
+          ? null
+          : Option.fromJson(json['updating_period'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$_ProjectToJson(_$_Project instance) =>
@@ -48,6 +53,9 @@ Map<String, dynamic> _$$_ProjectToJson(_$_Project instance) =>
       'notes': instance.notes,
       'permissions': instance.permissions,
       'comments_count': instance.commentsCount,
+      'readonly': instance.readonly,
+      'outdated': instance.outdated,
+      'updating_period': instance.updatingPeriod,
     };
 
 _$_Permissions _$$_PermissionsFromJson(Map<String, dynamic> json) =>
@@ -59,7 +67,8 @@ _$_Permissions _$$_PermissionsFromJson(Map<String, dynamic> json) =>
       unlock: json['unlock'] as bool,
       validate: json['validate'] as bool,
       drop: json['drop'] as bool,
-      updatePipol: json['updatePipol'] as bool,
+      updatePipol: json['update_pipol'] as bool,
+      submitForReview: json['submit_for_review'] as bool,
     );
 
 Map<String, dynamic> _$$_PermissionsToJson(_$_Permissions instance) =>
@@ -71,5 +80,6 @@ Map<String, dynamic> _$$_PermissionsToJson(_$_Permissions instance) =>
       'unlock': instance.unlock,
       'validate': instance.validate,
       'drop': instance.drop,
-      'updatePipol': instance.updatePipol,
+      'update_pipol': instance.updatePipol,
+      'submit_for_review': instance.submitForReview,
     };

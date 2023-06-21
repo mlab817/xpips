@@ -45,19 +45,40 @@ class _TextEditor extends ConsumerState<TextEditor> {
       child: ListTile(
         tileColor: Theme.of(context).primaryColor.withOpacity(0.1),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        subtitle: Text(widget.oldValue),
-        title: Text(widget.fieldLabel),
-        trailing: EditButton(
-          onPressed: widget.enabled ? () => _edit() : null,
+        subtitle: Container(
+          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+          decoration: BoxDecoration(
+            color: Theme.of(context).canvasColor,
+            borderRadius: BorderRadius.circular(
+              16,
+            ),
+            border: Border.all(
+              color: Theme.of(context).chipTheme.shadowColor ?? Colors.black38,
+            ),
+          ),
+          child: Wrap(
+            children: [
+              Text(widget.oldValue),
+            ],
+          ),
         ),
-        onTap: () async {
-          await Clipboard.setData(ClipboardData(text: widget.oldValue))
-              .then((_) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text("${widget.fieldLabel} copied to clipboard")));
-          });
-          _edit();
-        },
+        title: Text(widget.fieldLabel),
+        trailing: widget.project.readonly
+            ? null
+            : EditButton(
+                onPressed: widget.enabled ? () => _edit() : null,
+              ),
+        onTap: widget.project.readonly
+            ? null
+            : () async {
+                await Clipboard.setData(ClipboardData(text: widget.oldValue))
+                    .then((_) {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content:
+                          Text("${widget.fieldLabel} copied to clipboard")));
+                });
+                _edit();
+              },
         enabled: widget.enabled,
       ),
     );

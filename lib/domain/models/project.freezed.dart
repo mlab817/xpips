@@ -50,6 +50,12 @@ mixin _$Project {
   Permissions get permissions => throw _privateConstructorUsedError;
   @JsonKey(name: "comments_count")
   int get commentsCount => throw _privateConstructorUsedError;
+  @JsonKey(name: "readonly")
+  bool get readonly => throw _privateConstructorUsedError;
+  @JsonKey(name: "outdated")
+  bool get outdated => throw _privateConstructorUsedError;
+  @JsonKey(name: "updating_period")
+  Option? get updatingPeriod => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -76,9 +82,11 @@ abstract class $ProjectCopyWith<$Res> {
       @JsonKey(name: "contact_information") String? contactInformation,
       @JsonKey(name: "notes") String? notes,
       @JsonKey(name: "permissions") Permissions permissions,
-      @JsonKey(name: "comments_count") int commentsCount});
+      @JsonKey(name: "comments_count") int commentsCount,
+      @JsonKey(name: "readonly") bool readonly,
+      @JsonKey(name: "outdated") bool outdated,
+      @JsonKey(name: "updating_period") Option? updatingPeriod});
 
-  $OptionCopyWith<$Res>? get spatialCoverage;
   $OfficeCopyWith<$Res>? get office;
   $UserCopyWith<$Res>? get user;
   $PermissionsCopyWith<$Res> get permissions;
@@ -112,6 +120,9 @@ class _$ProjectCopyWithImpl<$Res, $Val extends Project>
     Object? notes = freezed,
     Object? permissions = null,
     Object? commentsCount = null,
+    Object? readonly = null,
+    Object? outdated = null,
+    Object? updatingPeriod = freezed,
   }) {
     return _then(_value.copyWith(
       uuid: null == uuid
@@ -174,19 +185,19 @@ class _$ProjectCopyWithImpl<$Res, $Val extends Project>
           ? _value.commentsCount
           : commentsCount // ignore: cast_nullable_to_non_nullable
               as int,
+      readonly: null == readonly
+          ? _value.readonly
+          : readonly // ignore: cast_nullable_to_non_nullable
+              as bool,
+      outdated: null == outdated
+          ? _value.outdated
+          : outdated // ignore: cast_nullable_to_non_nullable
+              as bool,
+      updatingPeriod: freezed == updatingPeriod
+          ? _value.updatingPeriod
+          : updatingPeriod // ignore: cast_nullable_to_non_nullable
+              as Option?,
     ) as $Val);
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $OptionCopyWith<$Res>? get spatialCoverage {
-    if (_value.spatialCoverage == null) {
-      return null;
-    }
-
-    return $OptionCopyWith<$Res>(_value.spatialCoverage!, (value) {
-      return _then(_value.copyWith(spatialCoverage: value) as $Val);
-    });
   }
 
   @override
@@ -244,10 +255,11 @@ abstract class _$$_ProjectCopyWith<$Res> implements $ProjectCopyWith<$Res> {
       @JsonKey(name: "contact_information") String? contactInformation,
       @JsonKey(name: "notes") String? notes,
       @JsonKey(name: "permissions") Permissions permissions,
-      @JsonKey(name: "comments_count") int commentsCount});
+      @JsonKey(name: "comments_count") int commentsCount,
+      @JsonKey(name: "readonly") bool readonly,
+      @JsonKey(name: "outdated") bool outdated,
+      @JsonKey(name: "updating_period") Option? updatingPeriod});
 
-  @override
-  $OptionCopyWith<$Res>? get spatialCoverage;
   @override
   $OfficeCopyWith<$Res>? get office;
   @override
@@ -281,6 +293,9 @@ class __$$_ProjectCopyWithImpl<$Res>
     Object? notes = freezed,
     Object? permissions = null,
     Object? commentsCount = null,
+    Object? readonly = null,
+    Object? outdated = null,
+    Object? updatingPeriod = freezed,
   }) {
     return _then(_$_Project(
       uuid: null == uuid
@@ -343,6 +358,18 @@ class __$$_ProjectCopyWithImpl<$Res>
           ? _value.commentsCount
           : commentsCount // ignore: cast_nullable_to_non_nullable
               as int,
+      readonly: null == readonly
+          ? _value.readonly
+          : readonly // ignore: cast_nullable_to_non_nullable
+              as bool,
+      outdated: null == outdated
+          ? _value.outdated
+          : outdated // ignore: cast_nullable_to_non_nullable
+              as bool,
+      updatingPeriod: freezed == updatingPeriod
+          ? _value.updatingPeriod
+          : updatingPeriod // ignore: cast_nullable_to_non_nullable
+              as Option?,
     ));
   }
 }
@@ -365,7 +392,10 @@ class _$_Project implements _Project {
       @JsonKey(name: "contact_information") this.contactInformation,
       @JsonKey(name: "notes") this.notes,
       @JsonKey(name: "permissions") required this.permissions,
-      @JsonKey(name: "comments_count") required this.commentsCount});
+      @JsonKey(name: "comments_count") required this.commentsCount,
+      @JsonKey(name: "readonly") required this.readonly,
+      @JsonKey(name: "outdated") required this.outdated,
+      @JsonKey(name: "updating_period") this.updatingPeriod});
 
   factory _$_Project.fromJson(Map<String, dynamic> json) =>
       _$$_ProjectFromJson(json);
@@ -415,10 +445,19 @@ class _$_Project implements _Project {
   @override
   @JsonKey(name: "comments_count")
   final int commentsCount;
+  @override
+  @JsonKey(name: "readonly")
+  final bool readonly;
+  @override
+  @JsonKey(name: "outdated")
+  final bool outdated;
+  @override
+  @JsonKey(name: "updating_period")
+  final Option? updatingPeriod;
 
   @override
   String toString() {
-    return 'Project(uuid: $uuid, title: $title, totalCost: $totalCost, isLocked: $isLocked, updatedAt: $updatedAt, pipolCode: $pipolCode, description: $description, spatialCoverage: $spatialCoverage, office: $office, user: $user, isRead: $isRead, contactInformation: $contactInformation, notes: $notes, permissions: $permissions, commentsCount: $commentsCount)';
+    return 'Project(uuid: $uuid, title: $title, totalCost: $totalCost, isLocked: $isLocked, updatedAt: $updatedAt, pipolCode: $pipolCode, description: $description, spatialCoverage: $spatialCoverage, office: $office, user: $user, isRead: $isRead, contactInformation: $contactInformation, notes: $notes, permissions: $permissions, commentsCount: $commentsCount, readonly: $readonly, outdated: $outdated, updatingPeriod: $updatingPeriod)';
   }
 
   @override
@@ -449,7 +488,13 @@ class _$_Project implements _Project {
             (identical(other.permissions, permissions) ||
                 other.permissions == permissions) &&
             (identical(other.commentsCount, commentsCount) ||
-                other.commentsCount == commentsCount));
+                other.commentsCount == commentsCount) &&
+            (identical(other.readonly, readonly) ||
+                other.readonly == readonly) &&
+            (identical(other.outdated, outdated) ||
+                other.outdated == outdated) &&
+            (identical(other.updatingPeriod, updatingPeriod) ||
+                other.updatingPeriod == updatingPeriod));
   }
 
   @JsonKey(ignore: true)
@@ -470,7 +515,10 @@ class _$_Project implements _Project {
       contactInformation,
       notes,
       permissions,
-      commentsCount);
+      commentsCount,
+      readonly,
+      outdated,
+      updatingPeriod);
 
   @JsonKey(ignore: true)
   @override
@@ -517,7 +565,13 @@ abstract class _Project implements Project {
       @JsonKey(name: "permissions")
           required final Permissions permissions,
       @JsonKey(name: "comments_count")
-          required final int commentsCount}) = _$_Project;
+          required final int commentsCount,
+      @JsonKey(name: "readonly")
+          required final bool readonly,
+      @JsonKey(name: "outdated")
+          required final bool outdated,
+      @JsonKey(name: "updating_period")
+          final Option? updatingPeriod}) = _$_Project;
 
   factory _Project.fromJson(Map<String, dynamic> json) = _$_Project.fromJson;
 
@@ -567,6 +621,15 @@ abstract class _Project implements Project {
   @JsonKey(name: "comments_count")
   int get commentsCount;
   @override
+  @JsonKey(name: "readonly")
+  bool get readonly;
+  @override
+  @JsonKey(name: "outdated")
+  bool get outdated;
+  @override
+  @JsonKey(name: "updating_period")
+  Option? get updatingPeriod;
+  @override
   @JsonKey(ignore: true)
   _$$_ProjectCopyWith<_$_Project> get copyWith =>
       throw _privateConstructorUsedError;
@@ -585,7 +648,10 @@ mixin _$Permissions {
   bool get unlock => throw _privateConstructorUsedError;
   bool get validate => throw _privateConstructorUsedError;
   bool get drop => throw _privateConstructorUsedError;
+  @JsonKey(name: "update_pipol")
   bool get updatePipol => throw _privateConstructorUsedError;
+  @JsonKey(name: "submit_for_review")
+  bool get submitForReview => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -607,7 +673,8 @@ abstract class $PermissionsCopyWith<$Res> {
       bool unlock,
       bool validate,
       bool drop,
-      bool updatePipol});
+      @JsonKey(name: "update_pipol") bool updatePipol,
+      @JsonKey(name: "submit_for_review") bool submitForReview});
 }
 
 /// @nodoc
@@ -631,6 +698,7 @@ class _$PermissionsCopyWithImpl<$Res, $Val extends Permissions>
     Object? validate = null,
     Object? drop = null,
     Object? updatePipol = null,
+    Object? submitForReview = null,
   }) {
     return _then(_value.copyWith(
       view: null == view
@@ -665,6 +733,10 @@ class _$PermissionsCopyWithImpl<$Res, $Val extends Permissions>
           ? _value.updatePipol
           : updatePipol // ignore: cast_nullable_to_non_nullable
               as bool,
+      submitForReview: null == submitForReview
+          ? _value.submitForReview
+          : submitForReview // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -685,7 +757,8 @@ abstract class _$$_PermissionsCopyWith<$Res>
       bool unlock,
       bool validate,
       bool drop,
-      bool updatePipol});
+      @JsonKey(name: "update_pipol") bool updatePipol,
+      @JsonKey(name: "submit_for_review") bool submitForReview});
 }
 
 /// @nodoc
@@ -707,6 +780,7 @@ class __$$_PermissionsCopyWithImpl<$Res>
     Object? validate = null,
     Object? drop = null,
     Object? updatePipol = null,
+    Object? submitForReview = null,
   }) {
     return _then(_$_Permissions(
       view: null == view
@@ -741,6 +815,10 @@ class __$$_PermissionsCopyWithImpl<$Res>
           ? _value.updatePipol
           : updatePipol // ignore: cast_nullable_to_non_nullable
               as bool,
+      submitForReview: null == submitForReview
+          ? _value.submitForReview
+          : submitForReview // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -756,7 +834,8 @@ class _$_Permissions implements _Permissions {
       required this.unlock,
       required this.validate,
       required this.drop,
-      required this.updatePipol});
+      @JsonKey(name: "update_pipol") required this.updatePipol,
+      @JsonKey(name: "submit_for_review") required this.submitForReview});
 
   factory _$_Permissions.fromJson(Map<String, dynamic> json) =>
       _$$_PermissionsFromJson(json);
@@ -776,11 +855,15 @@ class _$_Permissions implements _Permissions {
   @override
   final bool drop;
   @override
+  @JsonKey(name: "update_pipol")
   final bool updatePipol;
+  @override
+  @JsonKey(name: "submit_for_review")
+  final bool submitForReview;
 
   @override
   String toString() {
-    return 'Permissions(view: $view, update: $update, delete: $delete, lock: $lock, unlock: $unlock, validate: $validate, drop: $drop, updatePipol: $updatePipol)';
+    return 'Permissions(view: $view, update: $update, delete: $delete, lock: $lock, unlock: $unlock, validate: $validate, drop: $drop, updatePipol: $updatePipol, submitForReview: $submitForReview)';
   }
 
   @override
@@ -797,13 +880,15 @@ class _$_Permissions implements _Permissions {
                 other.validate == validate) &&
             (identical(other.drop, drop) || other.drop == drop) &&
             (identical(other.updatePipol, updatePipol) ||
-                other.updatePipol == updatePipol));
+                other.updatePipol == updatePipol) &&
+            (identical(other.submitForReview, submitForReview) ||
+                other.submitForReview == submitForReview));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, view, update, delete, lock,
-      unlock, validate, drop, updatePipol);
+      unlock, validate, drop, updatePipol, submitForReview);
 
   @JsonKey(ignore: true)
   @override
@@ -828,7 +913,10 @@ abstract class _Permissions implements Permissions {
       required final bool unlock,
       required final bool validate,
       required final bool drop,
-      required final bool updatePipol}) = _$_Permissions;
+      @JsonKey(name: "update_pipol")
+          required final bool updatePipol,
+      @JsonKey(name: "submit_for_review")
+          required final bool submitForReview}) = _$_Permissions;
 
   factory _Permissions.fromJson(Map<String, dynamic> json) =
       _$_Permissions.fromJson;
@@ -848,7 +936,11 @@ abstract class _Permissions implements Permissions {
   @override
   bool get drop;
   @override
+  @JsonKey(name: "update_pipol")
   bool get updatePipol;
+  @override
+  @JsonKey(name: "submit_for_review")
+  bool get submitForReview;
   @override
   @JsonKey(ignore: true)
   _$$_PermissionsCopyWith<_$_Permissions> get copyWith =>

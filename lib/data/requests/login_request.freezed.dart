@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'login_credentials.dart';
+part of 'login_request.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -14,12 +14,12 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
-LoginCredentials _$LoginCredentialsFromJson(Map<String, dynamic> json) {
+LoginRequest _$LoginRequestFromJson(Map<String, dynamic> json) {
   return _LoginCredentials.fromJson(json);
 }
 
 /// @nodoc
-mixin _$LoginCredentials {
+mixin _$LoginRequest {
   @JsonKey(name: "username")
   String get username => throw _privateConstructorUsedError;
   @JsonKey(name: "password")
@@ -27,15 +27,15 @@ mixin _$LoginCredentials {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $LoginCredentialsCopyWith<LoginCredentials> get copyWith =>
+  $LoginRequestCopyWith<LoginRequest> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $LoginCredentialsCopyWith<$Res> {
-  factory $LoginCredentialsCopyWith(
-          LoginCredentials value, $Res Function(LoginCredentials) then) =
-      _$LoginCredentialsCopyWithImpl<$Res, LoginCredentials>;
+abstract class $LoginRequestCopyWith<$Res> {
+  factory $LoginRequestCopyWith(
+          LoginRequest value, $Res Function(LoginRequest) then) =
+      _$LoginRequestCopyWithImpl<$Res, LoginRequest>;
   @useResult
   $Res call(
       {@JsonKey(name: "username") String username,
@@ -43,9 +43,9 @@ abstract class $LoginCredentialsCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$LoginCredentialsCopyWithImpl<$Res, $Val extends LoginCredentials>
-    implements $LoginCredentialsCopyWith<$Res> {
-  _$LoginCredentialsCopyWithImpl(this._value, this._then);
+class _$LoginRequestCopyWithImpl<$Res, $Val extends LoginRequest>
+    implements $LoginRequestCopyWith<$Res> {
+  _$LoginRequestCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -73,7 +73,7 @@ class _$LoginCredentialsCopyWithImpl<$Res, $Val extends LoginCredentials>
 
 /// @nodoc
 abstract class _$$_LoginCredentialsCopyWith<$Res>
-    implements $LoginCredentialsCopyWith<$Res> {
+    implements $LoginRequestCopyWith<$Res> {
   factory _$$_LoginCredentialsCopyWith(
           _$_LoginCredentials value, $Res Function(_$_LoginCredentials) then) =
       __$$_LoginCredentialsCopyWithImpl<$Res>;
@@ -86,7 +86,7 @@ abstract class _$$_LoginCredentialsCopyWith<$Res>
 
 /// @nodoc
 class __$$_LoginCredentialsCopyWithImpl<$Res>
-    extends _$LoginCredentialsCopyWithImpl<$Res, _$_LoginCredentials>
+    extends _$LoginRequestCopyWithImpl<$Res, _$_LoginCredentials>
     implements _$$_LoginCredentialsCopyWith<$Res> {
   __$$_LoginCredentialsCopyWithImpl(
       _$_LoginCredentials _value, $Res Function(_$_LoginCredentials) _then)
@@ -130,7 +130,7 @@ class _$_LoginCredentials implements _LoginCredentials {
 
   @override
   String toString() {
-    return 'LoginCredentials(username: $username, password: $password)';
+    return 'LoginRequest(username: $username, password: $password)';
   }
 
   @override
@@ -162,7 +162,7 @@ class _$_LoginCredentials implements _LoginCredentials {
   }
 }
 
-abstract class _LoginCredentials implements LoginCredentials {
+abstract class _LoginCredentials implements LoginRequest {
   factory _LoginCredentials(
           {@JsonKey(name: "username") required final String username,
           @JsonKey(name: "password") required final String password}) =

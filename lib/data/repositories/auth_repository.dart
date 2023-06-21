@@ -1,17 +1,15 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:pips/application/providers/appserviceclient_provider.dart';
-import 'package:pips/application/providers/sharedpreferences.dart';
-import 'package:pips/data/data_sources/app_service_client.dart';
-import 'package:pips/data/requests/reactivation_request.dart';
-import 'package:pips/data/requests/signup_request.dart';
-import 'package:pips/data/requests/updateprofile_request.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../domain/models/login_credentials.dart';
+import '../../application/providers/appserviceclient_provider.dart';
+import '../../application/providers/sharedpreferences.dart';
+import '../../data/data_sources/app_service_client.dart';
+import '../../data/requests/requests.dart';
 import '../../domain/models/user.dart';
+import '../requests/login_request.dart';
 import '../responses/login_response.dart';
 import '../responses/reactivation_response.dart';
 import '../responses/signup_response.dart';
@@ -22,7 +20,7 @@ part 'auth_repository.g.dart';
 // see https://codewithandrea.com/articles/flutter-presentation-layer/
 
 abstract class AuthRepository {
-  Future<LoginResponse> login(LoginCredentials input);
+  Future<LoginResponse> login(LoginRequest input);
 
   Future<void> signOut();
 
@@ -47,7 +45,7 @@ class AuthRepositoryImplementer implements AuthRepository {
       {required this.client, required this.sharedPreferences});
 
   @override
-  Future<LoginResponse> login(LoginCredentials input) async {
+  Future<LoginResponse> login(LoginRequest input) async {
     return await client.login(input);
   }
 

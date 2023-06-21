@@ -57,13 +57,35 @@ class _CheckboxEditorState extends ConsumerState<CheckboxEditor> {
         title: Text(widget.fieldLabel),
         subtitle: widget.oldValue.isEmpty
             ? const Text('NO ITEM(S) SELECTED')
-            : Text(widget.oldValue.map((e) => e.label).join(', ')),
+            : _buildList(widget
+                .oldValue), // Text(widget.oldValue.map((e) => e.label).join(', ')),
         onTap: () => _edit(),
-        trailing: EditButton(
-          onPressed: widget.enabled ? () => _edit() : null,
-        ),
+        trailing: widget.project.readonly
+            ? null
+            : EditButton(
+                onPressed: widget.enabled ? () => _edit() : null,
+              ),
         enabled: widget.enabled,
       ),
+    );
+  }
+
+  Widget _buildList(List<Option> selected) {
+    return Wrap(
+      children: selected
+          .map((e) => Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: Chip(
+                  label: Text(e.label),
+                  visualDensity: VisualDensity.compact,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(50),
+                    ),
+                  ),
+                ),
+              ))
+          .toList(),
     );
   }
 }
@@ -130,10 +152,13 @@ class _CheckboxFormState extends ConsumerState<CheckboxForm> {
             final option = widget.options[index];
 
             return CheckboxListTile.adaptive(
-              value: newValue.contains(option),
+              value: newValue
+                  .where((element) => option.value == element.value)
+                  .isNotEmpty,
               subtitle:
                   option.description != null ? Text(option.description!) : null,
               activeColor: Theme.of(context).primaryColor,
+              controlAffinity: ListTileControlAffinity.leading,
               onChanged: (bool? value) {
                 setState(() {
                   if (value ?? false) {
