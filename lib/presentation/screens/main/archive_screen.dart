@@ -40,6 +40,7 @@ class _ArchiveScreenState extends ConsumerState<ArchiveScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Archive'),
+        automaticallyImplyLeading: false,
         actions: [
           IconButton(
             onPressed: () {

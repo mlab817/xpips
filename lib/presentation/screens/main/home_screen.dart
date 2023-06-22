@@ -5,7 +5,6 @@ import 'package:pips/presentation/controllers/updatingperiod_controller.dart';
 
 import '../../../application/providers/searchhistory_provider.dart';
 import '../../../domain/models/models.dart';
-import '../../../domain/models/pipsstatus.dart';
 import '../../controllers/options_controller.dart';
 import '../pipolstatus_controller.dart';
 import '../../widgets/loading_dialog.dart';
@@ -77,6 +76,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     // fetch deadline provider
     ref.watch(deadlineProvider);
+
+    final currentPage = ref
+            .watch(homeScreenControllerProvider)
+            .value
+            ?.meta
+            .pagination
+            .current ??
+        1;
+    final lastPage =
+        ref.watch(homeScreenControllerProvider).value?.meta.pagination.last ??
+            1;
 
     return Scaffold(
       appBar: AppBar(
@@ -468,7 +478,27 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       const SizedBox(
                         width: 10,
                       ),
+                      IconButton(
+                          onPressed: currentPage == 1
+                              ? null
+                              : () {
+                                  ref
+                                      .read(projectsRequestControllerProvider
+                                          .notifier)
+                                      .previousPage();
+                                },
+                          icon: const Icon(Icons.chevron_left)),
                       _buildPageSelector(),
+                      IconButton(
+                          onPressed: currentPage == lastPage
+                              ? null
+                              : () {
+                                  ref
+                                      .read(projectsRequestControllerProvider
+                                          .notifier)
+                                      .nextPage();
+                                },
+                          icon: const Icon(Icons.chevron_right)),
                     ],
                   ),
                 ),
@@ -529,34 +559,36 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   Widget _buildPageSelector() {
-    // get the current value of the home screen provider as "last page"
-    final valueAsync = ref.watch(homeScreenControllerProvider).value;
-
     // get the currentPage from request provider
-    final currentPage = ref.watch(projectsRequestControllerProvider).page;
+    final currentPage = ref
+            .watch(homeScreenControllerProvider)
+            .value
+            ?.meta
+            .pagination
+            .current ??
+        1;
 
-    // get the last page from homescreencontroller and assign 1 if it has no value
-    final int lastPage = valueAsync?.meta.pagination.last ?? 1;
+    final lastPage =
+        ref.watch(homeScreenControllerProvider).value?.meta.pagination.last ??
+            1;
 
-    return valueAsync != null
-        ? DropdownButton(
-            value: currentPage,
-            focusColor: Colors.transparent,
-            underline: Container(),
-            items: List.generate(lastPage, (index) {
-              final currentValue = index + 1;
-              return DropdownMenuItem<int>(
-                  enabled: currentValue != currentPage,
-                  // disable when currently selected
-                  value: currentValue,
-                  child: Text("$currentValue/$lastPage"));
-            }),
-            onChanged: (int? newValue) {
-              ref
-                  .read(projectsRequestControllerProvider.notifier)
-                  .update(page: newValue);
-            })
-        : Container();
+    return DropdownButton(
+        value: currentPage,
+        focusColor: Colors.transparent,
+        underline: Container(),
+        items: List.generate(lastPage, (index) {
+          final currentValue = index + 1;
+          return DropdownMenuItem<int>(
+              enabled: currentValue != currentPage,
+              // disable when currently selected
+              value: currentValue,
+              child: Text("$currentValue/$lastPage"));
+        }),
+        onChanged: (int? newValue) {
+          ref
+              .read(projectsRequestControllerProvider.notifier)
+              .update(page: newValue);
+        });
   }
 
   Widget _buildTitle() {
@@ -647,8 +679,6 @@ class _ProjectRequestBottomSheetState
                                             ?.contains(office.value) ??
                                         false,
                                     onChanged: (bool? value) {
-                                      print('value: $value');
-
                                       final updatedSelection = ref
                                               .watch(
                                                   projectsRequestControllerProvider)
@@ -690,31 +720,31 @@ class _ProjectRequestBottomSheetState
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Checkbox(
-                                    value:
-                                        selection.types?.contains(type.value) ??
-                                            false,
-                                    onChanged: (bool? value) {
-                                      print('value: $value');
+                                  value:
+                                      selection.types?.contains(type.value) ??
+                                          false,
+                                  onChanged: (bool? value) {
+                                    print('value: $value');
 
-                                      final updatedSelection = ref
-                                              .watch(
-                                                  projectsRequestControllerProvider)
-                                              .offices
-                                              ?.toList() ??
-                                          [];
+                                    final updatedSelection = ref
+                                            .watch(
+                                                projectsRequestControllerProvider)
+                                            .offices
+                                            ?.toList() ??
+                                        [];
 
-                                      if (value != null && value) {
-                                        updatedSelection.add(type.value);
-                                      } else {
-                                        updatedSelection.remove(type.value);
-                                      }
-                                      //
-                                      ref
-                                          .read(
-                                              projectsRequestControllerProvider
-                                                  .notifier)
-                                          .update(types: updatedSelection);
-                                    }),
+                                    if (value != null && value) {
+                                      updatedSelection.add(type.value);
+                                    } else {
+                                      updatedSelection.remove(type.value);
+                                    }
+                                    //
+                                    ref
+                                        .read(projectsRequestControllerProvider
+                                            .notifier)
+                                        .update(types: updatedSelection);
+                                  },
+                                ),
                                 Text(type.label),
                               ],
                             );
@@ -741,8 +771,6 @@ class _ProjectRequestBottomSheetState
                                             ?.contains(spatialCoverage.value) ??
                                         false,
                                     onChanged: (bool? value) {
-                                      print('value: $value');
-
                                       final updatedSelection = ref
                                               .watch(
                                                   projectsRequestControllerProvider)
@@ -960,7 +988,7 @@ class _ProjectRequestBottomSheetState
               ),
             );
           },
-          error: (error, stacktrace) {
+          error: (error, _) {
             return Center(
               child: Column(
                 children: [

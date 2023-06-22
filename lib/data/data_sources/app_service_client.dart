@@ -7,7 +7,6 @@ import '../../application/config.dart';
 import '../../data/requests/requests.dart';
 import '../../data/responses/responses.dart';
 import '../../domain/models/models.dart';
-import '../repositories/pipolstatus_repository.dart';
 import '../requests/login_request.dart';
 import '../responses/user_response.dart';
 

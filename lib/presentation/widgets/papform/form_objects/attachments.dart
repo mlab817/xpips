@@ -56,7 +56,6 @@ class _AttachmentsState extends ConsumerState<Attachments> {
                     allowMultiple: true,
                   );
 
-                  // TODO: handle file upload
                   if (result != null) {
                     for (var file in result.files) {
                       final response = await uploadRepository.upload(file);

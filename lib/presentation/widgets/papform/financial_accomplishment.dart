@@ -63,9 +63,12 @@ class _FinancialAccomplishmentFormState
 
                     // send to server
                     ref.read(projectRepositoryProvider).updateFa(
-                          widget.project.uuid!,
+                          widget.project.uuid,
                           payload,
                         );
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Success!')));
 
                     // update locally saved
                     switch (widget.year) {

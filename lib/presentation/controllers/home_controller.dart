@@ -102,6 +102,14 @@ class ProjectsRequestController extends Notifier<ProjectsRequest> {
     state = state.copyWith(q: '', pipolStatuses: [], pipsStatuses: []);
   }
 
+  void previousPage() {
+    state = state.copyWith(page: state.page - 1);
+  }
+
+  void nextPage() {
+    state = state.copyWith(page: state.page + 1);
+  }
+
   @override
   ProjectsRequest build() {
     return ProjectsRequest(perPage: 25, page: 1, pipsStatuses: []);

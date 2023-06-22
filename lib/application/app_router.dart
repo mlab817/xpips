@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
+import '../domain/models/models.dart';
 import '../presentation/screens/main/archive_screen.dart';
 import '../presentation/screens/main/chat_screen.dart';
 import '../presentation/screens/comments_screen.dart';
@@ -10,6 +11,7 @@ import '../presentation/screens/login_screen.dart';
 import '../presentation/screens/main_screen.dart';
 import '../presentation/screens/newpap_screen.dart';
 import '../presentation/screens/main/notifications_screen.dart';
+import '../presentation/screens/papevaluation_screen.dart';
 import '../presentation/screens/papview_screen.dart';
 import '../presentation/screens/requestreactivation_screen.dart';
 import '../presentation/screens/main/settings_screen.dart';
@@ -67,6 +69,10 @@ class AppRouter extends _$AppRouter implements AutoRouteGuard {
         AutoRoute(
           path: '/project/:uuid', // '/project/:uuid',
           page: PapViewRoute.page,
+        ),
+        AutoRoute(
+          path: '/project/:uuid/evaluate', // '/project/:uuid',
+          page: PapEvaluationRoute.page,
         ),
         AutoRoute(
           path: '/comments/:uuid', // '/project/:uuid',

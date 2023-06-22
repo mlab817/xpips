@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:universal_io/io.dart';
@@ -7,7 +8,8 @@ import '../config.dart';
 part 'onesignal_provider.g.dart';
 
 @Riverpod(keepAlive: true)
-Future<void> onesignal(OnesignalRef ref) async {
+Future<void> onesignal(OnesignalRef ref,
+    {required BuildContext context}) async {
   bool requiresConsent = false;
 
   // only run this code when the platform is android
@@ -80,5 +82,17 @@ Future<void> onesignal(OnesignalRef ref) async {
     bool userProvidedPrivacyConsent =
         await OneSignal.shared.userProvidedPrivacyConsent();
     print("USER PROVIDED PRIVACY CONSENT: $userProvidedPrivacyConsent");
+
+    OneSignal.shared.promptUserForPushNotificationPermission().then((accepted) {
+      print("Accepted permission: $accepted");
+    });
+  } else {
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Push notifications is not supported in your device.')));
   }
+}
+
+@Riverpod(keepAlive: true)
+Future<void> oneSignalController(OneSignalControllerRef ref) async {
+  //
 }

@@ -7,8 +7,10 @@ import '../../application/app_router.dart';
 import '../../application/providers/numberformatter_provider.dart';
 import '../../application/config.dart';
 import '../../application/functions.dart';
+import '../../data/repositories/repositories.dart';
 import '../../domain/models/models.dart';
 import '../controllers/controllers.dart';
+import 'loading_dialog.dart';
 
 class ProjectListTile extends ConsumerStatefulWidget {
   const ProjectListTile({Key? key, required this.project}) : super(key: key);
@@ -66,6 +68,62 @@ class _ProjectListTileState extends ConsumerState<ProjectListTile> {
     final response = ref.watch(deleteProjectControllerProvider(_project.uuid));
   }
 
+  Future<void> _handleDuplicate() async {
+    print('executing duplicate now');
+
+    // close first dialog
+    Navigator.pop(context);
+
+    // show loading dialog
+    showGeneralDialog(
+        context: context,
+        pageBuilder: (context, _, __) {
+          return const Center(child: LoadingOverlay());
+        });
+
+    //
+    try {
+      final response = await ref
+          .read(projectRepositoryProvider)
+          .duplicate(widget.project.uuid);
+
+      final uuid = response.project.uuid;
+
+      print(uuid);
+
+      // invalidate homeScreen
+      ref.invalidate(homeScreenControllerProvider);
+
+      // show Dialog
+      if (mounted) {
+        // close the dialog
+        Navigator.pop(context);
+
+        showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                content:
+                    const Text('Successfully duplicated project. View now?'),
+                actions: [
+                  FilledButton(
+                    onPressed: () {
+                      // open next screen
+                      AutoRouter.of(context).push(PapViewRoute(uuid: uuid));
+                    },
+                    child: const Text('GO NOW'),
+                  ),
+                ],
+              );
+            });
+      }
+    } catch (error) {
+      // handle error
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(error.toString())));
+    }
+  }
+
   void _showDialog() {
     showDialog(
       context: context,
@@ -88,18 +146,38 @@ class _ProjectListTileState extends ConsumerState<ProjectListTile> {
             ],
           ),
           actions: [
-            FilledButton.icon(
-              onPressed: _project.permissions.delete
-                  ? () {
-                      _confirmDelete();
-                    }
-                  : null,
-              icon: const Icon(Icons.delete),
-              label: const Text('Delete'),
-              style: ButtonStyle(
-                backgroundColor: MaterialStateColor.resolveWith(
-                    (states) => Theme.of(context).colorScheme.error),
+            if (!widget.project.readonly)
+              FilledButton.icon(
+                onPressed: _project.permissions.delete
+                    ? () {
+                        _confirmDelete();
+                      }
+                    : null,
+                icon: const Icon(Icons.delete),
+                label: const Text('Delete'),
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateColor.resolveWith(
+                      (states) => Theme.of(context).colorScheme.error),
+                ),
               ),
+            if (widget.project.readonly)
+              FilledButton.icon(
+                style: ButtonStyle(
+                    backgroundColor: MaterialStateColor.resolveWith(
+                  (states) => Theme.of(context).colorScheme.tertiary,
+                )),
+                onPressed: _project.permissions.update
+                    ? () {
+                        // TODO: handle duplicate
+                        _handleDuplicate();
+                      }
+                    : null,
+                icon: const Icon(Icons.copy),
+                label: const Text('Duplicate'),
+              ),
+            VerticalDivider(
+              color: Theme.of(context).colorScheme.primary,
+              width: 1,
             ),
             FilledButton.icon(
               onPressed: _openInNewWindow,
@@ -118,105 +196,117 @@ class _ProjectListTileState extends ConsumerState<ProjectListTile> {
                       ));
                     }
                   : null,
-              icon: const Icon(Icons.edit),
-              label: const Text('Edit'),
+              icon: widget.project.readonly
+                  ? const Icon(Icons.visibility)
+                  : const Icon(Icons.edit),
+              label: widget.project.readonly
+                  ? const Text('View')
+                  : const Text('Edit'),
             ),
           ],
           contentPadding: EdgeInsets.zero,
           content: SizedBox(
             width: double.infinity,
             height: double.infinity,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Divider(),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Divider(),
+                  Padding(
                     padding: const EdgeInsets.all(8.0),
-                    width: double.infinity,
-                    height: 40,
-                    decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColor.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(8.0)),
-                    child: Text(
-                      "Office: ${_project.office?.acronym ?? 'NO OFFICE'}",
-                      textAlign: TextAlign.start,
+                    child: Container(
+                      padding: const EdgeInsets.all(8.0),
+                      width: double.infinity,
+                      height: 40,
+                      decoration: BoxDecoration(
+                          color:
+                              Theme.of(context).primaryColor.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(8.0)),
+                      child: Text(
+                        "Office: ${_project.office?.acronym ?? 'NO OFFICE'}",
+                        textAlign: TextAlign.start,
+                      ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
+                  Padding(
                     padding: const EdgeInsets.all(8.0),
-                    width: double.infinity,
-                    height: 90,
-                    decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColor.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(8.0)),
-                    child: Text(
-                      "Description: ${_project.description ?? 'No description'}",
-                      textAlign: TextAlign.start,
+                    child: Container(
+                      padding: const EdgeInsets.all(8.0),
+                      width: double.infinity,
+                      height: 90,
+                      decoration: BoxDecoration(
+                          color:
+                              Theme.of(context).primaryColor.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(8.0)),
+                      child: Text(
+                        "Description: ${_project.description ?? 'No description'}",
+                        textAlign: TextAlign.start,
+                      ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
+                  Padding(
                     padding: const EdgeInsets.all(8.0),
-                    width: double.infinity,
-                    height: 40,
-                    decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColor.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(8.0)),
-                    child: Text(
-                      'PIPOL Code: ${_project.pipolCode ?? 'N/A'}',
-                      textAlign: TextAlign.start,
+                    child: Container(
+                      padding: const EdgeInsets.all(8.0),
+                      width: double.infinity,
+                      height: 40,
+                      decoration: BoxDecoration(
+                          color:
+                              Theme.of(context).primaryColor.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(8.0)),
+                      child: Text(
+                        'PIPOL Code: ${_project.pipolCode ?? 'N/A'}',
+                        textAlign: TextAlign.start,
+                      ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
+                  Padding(
                     padding: const EdgeInsets.all(8.0),
-                    width: double.infinity,
-                    height: 40,
-                    decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColor.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(8.0)),
-                    child: Text(
-                      'Total Cost: PHP ${ref.watch(numberFormatterProvider).format(_project.totalCost)}',
-                      textAlign: TextAlign.start,
+                    child: Container(
+                      padding: const EdgeInsets.all(8.0),
+                      width: double.infinity,
+                      height: 40,
+                      decoration: BoxDecoration(
+                          color:
+                              Theme.of(context).primaryColor.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(8.0)),
+                      child: Text(
+                        'Total Cost: PHP ${ref.watch(numberFormatterProvider).format(_project.totalCost)}',
+                        textAlign: TextAlign.start,
+                      ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
+                  Padding(
                     padding: const EdgeInsets.all(8.0),
-                    width: double.infinity,
-                    height: 90,
-                    decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColor.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(8.0)),
-                    child: Text(
-                        "Contact Information: ${_project.contactInformation ?? 'NONE'}"),
+                    child: Container(
+                      padding: const EdgeInsets.all(8.0),
+                      width: double.infinity,
+                      height: 90,
+                      decoration: BoxDecoration(
+                          color:
+                              Theme.of(context).primaryColor.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(8.0)),
+                      child: Text(
+                          "Contact Information: ${_project.contactInformation ?? 'NONE'}"),
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
+                  Padding(
                     padding: const EdgeInsets.all(8.0),
-                    width: double.infinity,
-                    height: 90,
-                    decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColor.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(8.0)),
-                    child: Text("Notes: ${_project.notes ?? 'NO NOTES'}"),
+                    child: Container(
+                      padding: const EdgeInsets.all(8.0),
+                      width: double.infinity,
+                      height: 90,
+                      decoration: BoxDecoration(
+                          color:
+                              Theme.of(context).primaryColor.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(8.0)),
+                      child: Text("Notes: ${_project.notes ?? 'NO NOTES'}"),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         );
@@ -255,13 +345,13 @@ class _ProjectListTileState extends ConsumerState<ProjectListTile> {
           _project.outdated
               ? Tooltip(
                   message:
-                      'This PAP was submitted during ${_project.updatingPeriod?.label}. Duplicate to update and submit it this updating period.',
+                      '[READONLY MODE] \n\nThis PAP was submitted during ${_project.updatingPeriod?.label}. \nDuplicate to update and submit it this updating period.',
                   child: CircleAvatar(
                       backgroundColor:
                           Theme.of(context).colorScheme.errorContainer,
                       radius: 20,
                       child: Icon(
-                        Icons.warning,
+                        Icons.visibility,
                         size: 18,
                         color: Theme.of(context).colorScheme.error,
                       )),

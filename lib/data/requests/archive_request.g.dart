@@ -13,18 +13,9 @@ _$_ArchiveRequest _$$_ArchiveRequestFromJson(Map<String, dynamic> json) =>
       q: json['q'] as String?,
     );
 
-Map<String, dynamic> _$$_ArchiveRequestToJson(_$_ArchiveRequest instance) {
-  final val = <String, dynamic>{
-    'per_page': instance.perPage,
-    'page': instance.page,
-  };
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('q', instance.q);
-  return val;
-}
+Map<String, dynamic> _$$_ArchiveRequestToJson(_$_ArchiveRequest instance) =>
+    <String, dynamic>{
+      'per_page': instance.perPage,
+      'page': instance.page,
+      'q': instance.q,
+    };

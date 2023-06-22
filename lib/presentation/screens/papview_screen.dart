@@ -322,6 +322,14 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                       label: const Text('Duplicate'),
                     ),
                   ),
+                // todo: check if  user has permission to evaluate and if project is endorsed/finalized
+                FilledButton(
+                    onPressed: () {
+                      AutoRouter.of(context).push(PapEvaluationRoute(
+                        project: projectProfileAsync.value!.project,
+                      ));
+                    },
+                    child: const Text('EVALUATE')),
               ],
             );
           },

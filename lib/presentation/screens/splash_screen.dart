@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pips/application/providers/bearertoken_provider.dart';
+import 'package:pips/presentation/widgets/loading_dialog.dart';
 
 import '../../../application/app_router.dart';
 
@@ -14,8 +17,13 @@ class SplashScreen extends ConsumerStatefulWidget {
 }
 
 class _SplashScreenState extends ConsumerState<SplashScreen> {
-  @override
-  Widget build(BuildContext context) {
+  Timer? _timer;
+
+  void _startDelay() {
+    _timer = Timer(Duration.zero, _goNext);
+  }
+
+  void _goNext() {
     final token = ref.watch(bearerTokenProvider);
 
     debugPrint("token @splashScreen: ${token.toString()}");
@@ -26,7 +34,28 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     } else {
       AutoRouter.of(context).replace(const LoginRoute());
     }
+  }
 
-    return Container();
+  @override
+  void initState() {
+    super.initState();
+
+    _startDelay();
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      body: Center(
+        child: LoadingOverlay(),
+      ),
+    );
   }
 }

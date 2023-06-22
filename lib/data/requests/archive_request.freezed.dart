@@ -24,7 +24,7 @@ mixin _$ArchiveRequest {
   int get perPage => throw _privateConstructorUsedError;
   @JsonKey(name: "page")
   int get page => throw _privateConstructorUsedError;
-  @JsonKey(name: "q", includeIfNull: false)
+  @JsonKey(name: "q", includeIfNull: true)
   String? get q => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -42,7 +42,7 @@ abstract class $ArchiveRequestCopyWith<$Res> {
   $Res call(
       {@JsonKey(name: "per_page") int perPage,
       @JsonKey(name: "page") int page,
-      @JsonKey(name: "q", includeIfNull: false) String? q});
+      @JsonKey(name: "q", includeIfNull: true) String? q});
 }
 
 /// @nodoc
@@ -90,7 +90,7 @@ abstract class _$$_ArchiveRequestCopyWith<$Res>
   $Res call(
       {@JsonKey(name: "per_page") int perPage,
       @JsonKey(name: "page") int page,
-      @JsonKey(name: "q", includeIfNull: false) String? q});
+      @JsonKey(name: "q", includeIfNull: true) String? q});
 }
 
 /// @nodoc
@@ -131,7 +131,7 @@ class _$_ArchiveRequest implements _ArchiveRequest {
   _$_ArchiveRequest(
       {@JsonKey(name: "per_page") required this.perPage,
       @JsonKey(name: "page") required this.page,
-      @JsonKey(name: "q", includeIfNull: false) this.q});
+      @JsonKey(name: "q", includeIfNull: true) this.q});
 
   factory _$_ArchiveRequest.fromJson(Map<String, dynamic> json) =>
       _$$_ArchiveRequestFromJson(json);
@@ -143,7 +143,7 @@ class _$_ArchiveRequest implements _ArchiveRequest {
   @JsonKey(name: "page")
   final int page;
   @override
-  @JsonKey(name: "q", includeIfNull: false)
+  @JsonKey(name: "q", includeIfNull: true)
   final String? q;
 
   @override
@@ -183,7 +183,7 @@ abstract class _ArchiveRequest implements ArchiveRequest {
   factory _ArchiveRequest(
           {@JsonKey(name: "per_page") required final int perPage,
           @JsonKey(name: "page") required final int page,
-          @JsonKey(name: "q", includeIfNull: false) final String? q}) =
+          @JsonKey(name: "q", includeIfNull: true) final String? q}) =
       _$_ArchiveRequest;
 
   factory _ArchiveRequest.fromJson(Map<String, dynamic> json) =
@@ -196,7 +196,7 @@ abstract class _ArchiveRequest implements ArchiveRequest {
   @JsonKey(name: "page")
   int get page;
   @override
-  @JsonKey(name: "q", includeIfNull: false)
+  @JsonKey(name: "q", includeIfNull: true)
   String? get q;
   @override
   @JsonKey(ignore: true)

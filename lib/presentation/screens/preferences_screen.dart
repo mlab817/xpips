@@ -2,6 +2,7 @@ import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pips/application/providers/onesignal_provider.dart';
 import 'package:pips/presentation/controllers/pushnotifications_controller.dart';
 import 'package:pips/presentation/controllers/theme_controller.dart';
 
@@ -30,6 +31,8 @@ class _PreferencesScreenState extends ConsumerState<PreferencesScreen> {
                     'Receive push notifications even when you are not using the app. Android only'),
                 value: ref.watch(pushNotificationsControllerProvider),
                 onChanged: (bool value) {
+                  ref.read(oneSignalControllerProvider);
+
                   ref
                       .read(pushNotificationsControllerProvider.notifier)
                       .toggle();
