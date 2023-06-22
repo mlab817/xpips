@@ -112,7 +112,11 @@ class ProjectsRequestController extends Notifier<ProjectsRequest> {
 
   @override
   ProjectsRequest build() {
-    return ProjectsRequest(perPage: 25, page: 1, pipsStatuses: []);
+    return ProjectsRequest(
+      perPage: 25,
+      page: 1,
+      pipsStatuses: [1],
+    );
   }
 }
 

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pips/application/providers/dateformatter_provider.dart';
-import 'package:pips/presentation/controllers/currentuser_controller.dart';
 
+import '../../application/providers/dateformatter_provider.dart';
 import '../../domain/models/models.dart';
+import '../../presentation/controllers/currentuser_controller.dart';
 
 class MessageBubble extends ConsumerStatefulWidget {
   const MessageBubble({Key? key, required this.comment}) : super(key: key);

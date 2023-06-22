@@ -56,6 +56,8 @@ mixin _$Project {
   bool get outdated => throw _privateConstructorUsedError;
   @JsonKey(name: "updating_period")
   Option? get updatingPeriod => throw _privateConstructorUsedError;
+  @JsonKey(name: "pips_status")
+  Option? get pipsStatus => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -85,7 +87,8 @@ abstract class $ProjectCopyWith<$Res> {
       @JsonKey(name: "comments_count") int commentsCount,
       @JsonKey(name: "readonly") bool readonly,
       @JsonKey(name: "outdated") bool outdated,
-      @JsonKey(name: "updating_period") Option? updatingPeriod});
+      @JsonKey(name: "updating_period") Option? updatingPeriod,
+      @JsonKey(name: "pips_status") Option? pipsStatus});
 
   $OfficeCopyWith<$Res>? get office;
   $UserCopyWith<$Res>? get user;
@@ -123,6 +126,7 @@ class _$ProjectCopyWithImpl<$Res, $Val extends Project>
     Object? readonly = null,
     Object? outdated = null,
     Object? updatingPeriod = freezed,
+    Object? pipsStatus = freezed,
   }) {
     return _then(_value.copyWith(
       uuid: null == uuid
@@ -197,6 +201,10 @@ class _$ProjectCopyWithImpl<$Res, $Val extends Project>
           ? _value.updatingPeriod
           : updatingPeriod // ignore: cast_nullable_to_non_nullable
               as Option?,
+      pipsStatus: freezed == pipsStatus
+          ? _value.pipsStatus
+          : pipsStatus // ignore: cast_nullable_to_non_nullable
+              as Option?,
     ) as $Val);
   }
 
@@ -258,7 +266,8 @@ abstract class _$$_ProjectCopyWith<$Res> implements $ProjectCopyWith<$Res> {
       @JsonKey(name: "comments_count") int commentsCount,
       @JsonKey(name: "readonly") bool readonly,
       @JsonKey(name: "outdated") bool outdated,
-      @JsonKey(name: "updating_period") Option? updatingPeriod});
+      @JsonKey(name: "updating_period") Option? updatingPeriod,
+      @JsonKey(name: "pips_status") Option? pipsStatus});
 
   @override
   $OfficeCopyWith<$Res>? get office;
@@ -296,6 +305,7 @@ class __$$_ProjectCopyWithImpl<$Res>
     Object? readonly = null,
     Object? outdated = null,
     Object? updatingPeriod = freezed,
+    Object? pipsStatus = freezed,
   }) {
     return _then(_$_Project(
       uuid: null == uuid
@@ -370,6 +380,10 @@ class __$$_ProjectCopyWithImpl<$Res>
           ? _value.updatingPeriod
           : updatingPeriod // ignore: cast_nullable_to_non_nullable
               as Option?,
+      pipsStatus: freezed == pipsStatus
+          ? _value.pipsStatus
+          : pipsStatus // ignore: cast_nullable_to_non_nullable
+              as Option?,
     ));
   }
 }
@@ -395,7 +409,8 @@ class _$_Project implements _Project {
       @JsonKey(name: "comments_count") required this.commentsCount,
       @JsonKey(name: "readonly") required this.readonly,
       @JsonKey(name: "outdated") required this.outdated,
-      @JsonKey(name: "updating_period") this.updatingPeriod});
+      @JsonKey(name: "updating_period") this.updatingPeriod,
+      @JsonKey(name: "pips_status") this.pipsStatus});
 
   factory _$_Project.fromJson(Map<String, dynamic> json) =>
       _$$_ProjectFromJson(json);
@@ -454,10 +469,13 @@ class _$_Project implements _Project {
   @override
   @JsonKey(name: "updating_period")
   final Option? updatingPeriod;
+  @override
+  @JsonKey(name: "pips_status")
+  final Option? pipsStatus;
 
   @override
   String toString() {
-    return 'Project(uuid: $uuid, title: $title, totalCost: $totalCost, isLocked: $isLocked, updatedAt: $updatedAt, pipolCode: $pipolCode, description: $description, spatialCoverage: $spatialCoverage, office: $office, user: $user, isRead: $isRead, contactInformation: $contactInformation, notes: $notes, permissions: $permissions, commentsCount: $commentsCount, readonly: $readonly, outdated: $outdated, updatingPeriod: $updatingPeriod)';
+    return 'Project(uuid: $uuid, title: $title, totalCost: $totalCost, isLocked: $isLocked, updatedAt: $updatedAt, pipolCode: $pipolCode, description: $description, spatialCoverage: $spatialCoverage, office: $office, user: $user, isRead: $isRead, contactInformation: $contactInformation, notes: $notes, permissions: $permissions, commentsCount: $commentsCount, readonly: $readonly, outdated: $outdated, updatingPeriod: $updatingPeriod, pipsStatus: $pipsStatus)';
   }
 
   @override
@@ -494,31 +512,35 @@ class _$_Project implements _Project {
             (identical(other.outdated, outdated) ||
                 other.outdated == outdated) &&
             (identical(other.updatingPeriod, updatingPeriod) ||
-                other.updatingPeriod == updatingPeriod));
+                other.updatingPeriod == updatingPeriod) &&
+            (identical(other.pipsStatus, pipsStatus) ||
+                other.pipsStatus == pipsStatus));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      uuid,
-      title,
-      totalCost,
-      isLocked,
-      updatedAt,
-      pipolCode,
-      description,
-      spatialCoverage,
-      office,
-      user,
-      isRead,
-      contactInformation,
-      notes,
-      permissions,
-      commentsCount,
-      readonly,
-      outdated,
-      updatingPeriod);
+  int get hashCode => Object.hashAll([
+        runtimeType,
+        uuid,
+        title,
+        totalCost,
+        isLocked,
+        updatedAt,
+        pipolCode,
+        description,
+        spatialCoverage,
+        office,
+        user,
+        isRead,
+        contactInformation,
+        notes,
+        permissions,
+        commentsCount,
+        readonly,
+        outdated,
+        updatingPeriod,
+        pipsStatus
+      ]);
 
   @JsonKey(ignore: true)
   @override
@@ -536,42 +558,25 @@ class _$_Project implements _Project {
 
 abstract class _Project implements Project {
   factory _Project(
-      {@JsonKey(name: "uuid")
-          required final String uuid,
-      @JsonKey(name: "title")
-          required final String title,
-      @JsonKey(name: "total_cost")
-          required final double? totalCost,
-      @JsonKey(name: "is_locked")
-          required final bool isLocked,
-      @JsonKey(name: "updated_at")
-          required final String updatedAt,
-      @JsonKey(name: "pipol_code")
-          required final String? pipolCode,
-      @JsonKey(name: "description")
-          required final String? description,
-      @JsonKey(name: "spatial_coverage")
-          required final Option? spatialCoverage,
-      @JsonKey(name: "office")
-          required final Office? office,
-      @JsonKey(name: "user")
-          required final User? user,
-      @JsonKey(name: "is_read")
-          required final bool isRead,
-      @JsonKey(name: "contact_information")
-          final String? contactInformation,
-      @JsonKey(name: "notes")
-          final String? notes,
-      @JsonKey(name: "permissions")
-          required final Permissions permissions,
-      @JsonKey(name: "comments_count")
-          required final int commentsCount,
-      @JsonKey(name: "readonly")
-          required final bool readonly,
-      @JsonKey(name: "outdated")
-          required final bool outdated,
-      @JsonKey(name: "updating_period")
-          final Option? updatingPeriod}) = _$_Project;
+      {@JsonKey(name: "uuid") required final String uuid,
+      @JsonKey(name: "title") required final String title,
+      @JsonKey(name: "total_cost") required final double? totalCost,
+      @JsonKey(name: "is_locked") required final bool isLocked,
+      @JsonKey(name: "updated_at") required final String updatedAt,
+      @JsonKey(name: "pipol_code") required final String? pipolCode,
+      @JsonKey(name: "description") required final String? description,
+      @JsonKey(name: "spatial_coverage") required final Option? spatialCoverage,
+      @JsonKey(name: "office") required final Office? office,
+      @JsonKey(name: "user") required final User? user,
+      @JsonKey(name: "is_read") required final bool isRead,
+      @JsonKey(name: "contact_information") final String? contactInformation,
+      @JsonKey(name: "notes") final String? notes,
+      @JsonKey(name: "permissions") required final Permissions permissions,
+      @JsonKey(name: "comments_count") required final int commentsCount,
+      @JsonKey(name: "readonly") required final bool readonly,
+      @JsonKey(name: "outdated") required final bool outdated,
+      @JsonKey(name: "updating_period") final Option? updatingPeriod,
+      @JsonKey(name: "pips_status") final Option? pipsStatus}) = _$_Project;
 
   factory _Project.fromJson(Map<String, dynamic> json) = _$_Project.fromJson;
 
@@ -630,6 +635,9 @@ abstract class _Project implements Project {
   @JsonKey(name: "updating_period")
   Option? get updatingPeriod;
   @override
+  @JsonKey(name: "pips_status")
+  Option? get pipsStatus;
+  @override
   @JsonKey(ignore: true)
   _$$_ProjectCopyWith<_$_Project> get copyWith =>
       throw _privateConstructorUsedError;
@@ -648,6 +656,8 @@ mixin _$Permissions {
   bool get unlock => throw _privateConstructorUsedError;
   bool get validate => throw _privateConstructorUsedError;
   bool get drop => throw _privateConstructorUsedError;
+  bool get duplicate => throw _privateConstructorUsedError;
+  bool get evaluate => throw _privateConstructorUsedError;
   @JsonKey(name: "update_pipol")
   bool get updatePipol => throw _privateConstructorUsedError;
   @JsonKey(name: "submit_for_review")
@@ -673,6 +683,8 @@ abstract class $PermissionsCopyWith<$Res> {
       bool unlock,
       bool validate,
       bool drop,
+      bool duplicate,
+      bool evaluate,
       @JsonKey(name: "update_pipol") bool updatePipol,
       @JsonKey(name: "submit_for_review") bool submitForReview});
 }
@@ -697,6 +709,8 @@ class _$PermissionsCopyWithImpl<$Res, $Val extends Permissions>
     Object? unlock = null,
     Object? validate = null,
     Object? drop = null,
+    Object? duplicate = null,
+    Object? evaluate = null,
     Object? updatePipol = null,
     Object? submitForReview = null,
   }) {
@@ -729,6 +743,14 @@ class _$PermissionsCopyWithImpl<$Res, $Val extends Permissions>
           ? _value.drop
           : drop // ignore: cast_nullable_to_non_nullable
               as bool,
+      duplicate: null == duplicate
+          ? _value.duplicate
+          : duplicate // ignore: cast_nullable_to_non_nullable
+              as bool,
+      evaluate: null == evaluate
+          ? _value.evaluate
+          : evaluate // ignore: cast_nullable_to_non_nullable
+              as bool,
       updatePipol: null == updatePipol
           ? _value.updatePipol
           : updatePipol // ignore: cast_nullable_to_non_nullable
@@ -757,6 +779,8 @@ abstract class _$$_PermissionsCopyWith<$Res>
       bool unlock,
       bool validate,
       bool drop,
+      bool duplicate,
+      bool evaluate,
       @JsonKey(name: "update_pipol") bool updatePipol,
       @JsonKey(name: "submit_for_review") bool submitForReview});
 }
@@ -779,6 +803,8 @@ class __$$_PermissionsCopyWithImpl<$Res>
     Object? unlock = null,
     Object? validate = null,
     Object? drop = null,
+    Object? duplicate = null,
+    Object? evaluate = null,
     Object? updatePipol = null,
     Object? submitForReview = null,
   }) {
@@ -811,6 +837,14 @@ class __$$_PermissionsCopyWithImpl<$Res>
           ? _value.drop
           : drop // ignore: cast_nullable_to_non_nullable
               as bool,
+      duplicate: null == duplicate
+          ? _value.duplicate
+          : duplicate // ignore: cast_nullable_to_non_nullable
+              as bool,
+      evaluate: null == evaluate
+          ? _value.evaluate
+          : evaluate // ignore: cast_nullable_to_non_nullable
+              as bool,
       updatePipol: null == updatePipol
           ? _value.updatePipol
           : updatePipol // ignore: cast_nullable_to_non_nullable
@@ -834,6 +868,8 @@ class _$_Permissions implements _Permissions {
       required this.unlock,
       required this.validate,
       required this.drop,
+      required this.duplicate,
+      required this.evaluate,
       @JsonKey(name: "update_pipol") required this.updatePipol,
       @JsonKey(name: "submit_for_review") required this.submitForReview});
 
@@ -855,6 +891,10 @@ class _$_Permissions implements _Permissions {
   @override
   final bool drop;
   @override
+  final bool duplicate;
+  @override
+  final bool evaluate;
+  @override
   @JsonKey(name: "update_pipol")
   final bool updatePipol;
   @override
@@ -863,7 +903,7 @@ class _$_Permissions implements _Permissions {
 
   @override
   String toString() {
-    return 'Permissions(view: $view, update: $update, delete: $delete, lock: $lock, unlock: $unlock, validate: $validate, drop: $drop, updatePipol: $updatePipol, submitForReview: $submitForReview)';
+    return 'Permissions(view: $view, update: $update, delete: $delete, lock: $lock, unlock: $unlock, validate: $validate, drop: $drop, duplicate: $duplicate, evaluate: $evaluate, updatePipol: $updatePipol, submitForReview: $submitForReview)';
   }
 
   @override
@@ -879,6 +919,10 @@ class _$_Permissions implements _Permissions {
             (identical(other.validate, validate) ||
                 other.validate == validate) &&
             (identical(other.drop, drop) || other.drop == drop) &&
+            (identical(other.duplicate, duplicate) ||
+                other.duplicate == duplicate) &&
+            (identical(other.evaluate, evaluate) ||
+                other.evaluate == evaluate) &&
             (identical(other.updatePipol, updatePipol) ||
                 other.updatePipol == updatePipol) &&
             (identical(other.submitForReview, submitForReview) ||
@@ -887,8 +931,19 @@ class _$_Permissions implements _Permissions {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, view, update, delete, lock,
-      unlock, validate, drop, updatePipol, submitForReview);
+  int get hashCode => Object.hash(
+      runtimeType,
+      view,
+      update,
+      delete,
+      lock,
+      unlock,
+      validate,
+      drop,
+      duplicate,
+      evaluate,
+      updatePipol,
+      submitForReview);
 
   @JsonKey(ignore: true)
   @override
@@ -913,6 +968,8 @@ abstract class _Permissions implements Permissions {
       required final bool unlock,
       required final bool validate,
       required final bool drop,
+      required final bool duplicate,
+      required final bool evaluate,
       @JsonKey(name: "update_pipol")
           required final bool updatePipol,
       @JsonKey(name: "submit_for_review")
@@ -935,6 +992,10 @@ abstract class _Permissions implements Permissions {
   bool get validate;
   @override
   bool get drop;
+  @override
+  bool get duplicate;
+  @override
+  bool get evaluate;
   @override
   @JsonKey(name: "update_pipol")
   bool get updatePipol;

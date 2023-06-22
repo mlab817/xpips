@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pips/application/providers/theme_provider.dart';
@@ -36,86 +35,9 @@ class MyApp extends ConsumerWidget {
       // set to true until further notice
       themeMode: ref.watch(themeControllerProvider),
       // dark theme
-      darkTheme: FlexThemeData.dark(
-        scheme: ref.watch(themeProvider).scheme,
-        subThemesData: const FlexSubThemesData(
-          interactionEffects: false,
-          tintedDisabledControls: false,
-          useTextTheme: true,
-          inputDecoratorBorderType: FlexInputBorderType.underline,
-          inputDecoratorUnfocusedBorderIsColored: false,
-          tooltipRadius: 4,
-          tooltipSchemeColor: SchemeColor.inverseSurface,
-          tooltipOpacity: 0.9,
-          snackBarElevation: 6,
-          snackBarBackgroundSchemeColor: SchemeColor.inverseSurface,
-          navigationBarSelectedLabelSchemeColor: SchemeColor.onSurface,
-          navigationBarUnselectedLabelSchemeColor: SchemeColor.onSurface,
-          navigationBarMutedUnselectedLabel: false,
-          navigationBarSelectedIconSchemeColor: SchemeColor.onSurface,
-          navigationBarUnselectedIconSchemeColor: SchemeColor.onSurface,
-          navigationBarMutedUnselectedIcon: false,
-          navigationBarIndicatorSchemeColor: SchemeColor.secondaryContainer,
-          navigationBarIndicatorOpacity: 1.00,
-          navigationRailSelectedLabelSchemeColor: SchemeColor.onSurface,
-          navigationRailUnselectedLabelSchemeColor: SchemeColor.onSurface,
-          navigationRailMutedUnselectedLabel: false,
-          navigationRailSelectedIconSchemeColor: SchemeColor.onSurface,
-          navigationRailUnselectedIconSchemeColor: SchemeColor.onSurface,
-          navigationRailMutedUnselectedIcon: false,
-          navigationRailIndicatorSchemeColor: SchemeColor.secondaryContainer,
-          navigationRailIndicatorOpacity: 1.00,
-          navigationRailBackgroundSchemeColor: SchemeColor.surface,
-          navigationRailLabelType: NavigationRailLabelType.none,
-        ),
-        keyColors: const FlexKeyColors(),
-        visualDensity: FlexColorScheme.comfortablePlatformDensity,
-        useMaterial3: true,
-        swapLegacyOnMaterial3: true,
-        // To use the Playground font, add GoogleFonts package and uncomment
-        fontFamily: ref.watch(themeProvider).fontFamily,
-      ),
+      darkTheme: ref.watch(darkThemeProvider),
       // light theme
-      theme: FlexThemeData.light(
-        scheme: ref.watch(themeProvider).scheme,
-        lightIsWhite: true,
-        subThemesData: const FlexSubThemesData(
-          interactionEffects: false,
-          tintedDisabledControls: false,
-          useTextTheme: true,
-          inputDecoratorBorderType: FlexInputBorderType.underline,
-          inputDecoratorUnfocusedBorderIsColored: false,
-          tooltipRadius: 4,
-          tooltipSchemeColor: SchemeColor.inverseSurface,
-          tooltipOpacity: 0.9,
-          snackBarElevation: 6,
-          snackBarBackgroundSchemeColor: SchemeColor.inverseSurface,
-          navigationBarSelectedLabelSchemeColor: SchemeColor.onSurface,
-          navigationBarUnselectedLabelSchemeColor: SchemeColor.onSurface,
-          navigationBarMutedUnselectedLabel: false,
-          navigationBarSelectedIconSchemeColor: SchemeColor.onSurface,
-          navigationBarUnselectedIconSchemeColor: SchemeColor.onSurface,
-          navigationBarMutedUnselectedIcon: false,
-          navigationBarIndicatorSchemeColor: SchemeColor.secondaryContainer,
-          navigationBarIndicatorOpacity: 1.00,
-          navigationRailSelectedLabelSchemeColor: SchemeColor.onSurface,
-          navigationRailUnselectedLabelSchemeColor: SchemeColor.onSurface,
-          navigationRailMutedUnselectedLabel: false,
-          navigationRailSelectedIconSchemeColor: SchemeColor.onSurface,
-          navigationRailUnselectedIconSchemeColor: SchemeColor.onSurface,
-          navigationRailMutedUnselectedIcon: false,
-          navigationRailIndicatorSchemeColor: SchemeColor.secondaryContainer,
-          navigationRailIndicatorOpacity: 1.00,
-          navigationRailBackgroundSchemeColor: SchemeColor.surface,
-          navigationRailLabelType: NavigationRailLabelType.none,
-        ),
-        keyColors: const FlexKeyColors(),
-        visualDensity: FlexColorScheme.comfortablePlatformDensity,
-        useMaterial3: true,
-        swapLegacyOnMaterial3: true,
-        // To use the Playground font, add GoogleFonts package and uncomment
-        fontFamily: ref.watch(themeProvider).fontFamily,
-      ),
+      theme: ref.watch(lightThemeProvider),
       routerConfig: appRouter.config(),
     );
   }

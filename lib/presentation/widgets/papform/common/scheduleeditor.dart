@@ -45,11 +45,11 @@ class _ScheduleEditorState extends ConsumerState<ScheduleEditor> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         title: Text(widget.title),
         enabled: widget.enabled,
-        trailing: widget.project.readonly
-            ? null
-            : EditButton(onPressed: () {
+        trailing: widget.enabled
+            ? EditButton(onPressed: () {
                 _edit();
-              }),
+              })
+            : null,
         subtitle: SizedBox(
           width: double.infinity,
           child: Table(

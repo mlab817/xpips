@@ -107,6 +107,8 @@ class _UpdateFormState extends ConsumerState<UpdateForm> {
 
   @override
   Widget build(BuildContext context) {
+    final options = widget.options;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.fieldLabel),
@@ -136,18 +138,19 @@ class _UpdateFormState extends ConsumerState<UpdateForm> {
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: ListView.builder(
-            itemCount: widget.options.length,
+            itemCount: options.length,
             itemBuilder: (context, index) {
               return RadioListTile(
-                  value: widget.options[index],
-                  groupValue: newValue,
-                  title: Text(widget.options[index].label),
-                  onChanged: (value) {
-                    //
-                    setState(() {
-                      newValue = value!;
-                    });
+                value: options[index].value,
+                groupValue: newValue?.value,
+                title: Text(options[index].label),
+                onChanged: (value) {
+                  //
+                  setState(() {
+                    newValue = options[index];
                   });
+                },
+              );
             }),
       ),
     );

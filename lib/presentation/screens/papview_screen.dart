@@ -317,19 +317,24 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   Padding(
                     padding: const EdgeInsets.only(right: 8.0),
                     child: FilledButton.icon(
-                      onPressed: _confirmDuplicate,
+                      onPressed: data.project.permissions.duplicate
+                          ? _confirmDuplicate
+                          : null,
                       icon: const Icon(Icons.copy),
-                      label: const Text('Duplicate'),
+                      label: const Text('DUPLICATE'),
                     ),
                   ),
                 // todo: check if  user has permission to evaluate and if project is endorsed/finalized
-                FilledButton(
-                    onPressed: () {
-                      AutoRouter.of(context).push(PapEvaluationRoute(
-                        project: projectProfileAsync.value!.project,
-                      ));
-                    },
-                    child: const Text('EVALUATE')),
+                if (data.project.permissions.evaluate)
+                  FilledButton(
+                      onPressed: data.project.permissions.evaluate
+                          ? () {
+                              AutoRouter.of(context).push(PapEvaluationRoute(
+                                project: projectProfileAsync.value!.project,
+                              ));
+                            }
+                          : null,
+                      child: const Text('EVALUATE')),
               ],
             );
           },

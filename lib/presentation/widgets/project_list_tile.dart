@@ -349,18 +349,14 @@ class _ProjectListTileState extends ConsumerState<ProjectListTile> {
                   child: CircleAvatar(
                       backgroundColor:
                           Theme.of(context).colorScheme.errorContainer,
-                      radius: 20,
                       child: Icon(
                         Icons.visibility,
-                        size: 18,
                         color: Theme.of(context).colorScheme.error,
                       )),
                 )
               : const CircleAvatar(
-                  radius: 20,
                   child: Icon(
                     Icons.edit,
-                    size: 18,
                   ),
                 ),
         ],
@@ -380,12 +376,10 @@ class _ProjectListTileState extends ConsumerState<ProjectListTile> {
               children: [
                 Text(
                   _project.office?.acronym.toUpperCase() ?? 'OFFICE',
-                  style: Theme.of(context).textTheme.titleSmall,
                 ),
                 const Text(' - '),
                 Text(
                   _project.user?.fullname ?? 'NA',
-                  style: Theme.of(context).textTheme.titleSmall,
                 ),
                 const Spacer(),
                 if (_project.notes != null)

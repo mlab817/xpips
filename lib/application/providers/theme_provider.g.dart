@@ -6,7 +6,35 @@ part of 'theme_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$themeHash() => r'4ee3faf6a8280144d0b173796b9c1aaa4a3c34ea';
+String _$darkThemeHash() => r'13263e6ad5903722ea3fda706b2814721ad7b75a';
+
+/// See also [darkTheme].
+@ProviderFor(darkTheme)
+final darkThemeProvider = Provider<ThemeData>.internal(
+  darkTheme,
+  name: r'darkThemeProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$darkThemeHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef DarkThemeRef = ProviderRef<ThemeData>;
+String _$lightThemeHash() => r'592821fcfc45e2f0bedd1834b8960f410bc5a655';
+
+/// See also [lightTheme].
+@ProviderFor(lightTheme)
+final lightThemeProvider = Provider<ThemeData>.internal(
+  lightTheme,
+  name: r'lightThemeProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$lightThemeHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef LightThemeRef = ProviderRef<ThemeData>;
+String _$themeHash() => r'5a500a5426502e33df40a6909d25162fd973be5a';
 
 /// See also [Theme].
 @ProviderFor(Theme)

@@ -1,7 +1,7 @@
 class AppStrings {
-  static const String close = 'Close';
-  static const String markAsRead = 'Mark as Read';
-  static const String notifications = 'Notifications';
-  static const String delete = 'Delete';
-  static const String generalInformation = 'General Information';
+  static const String close = 'CLOSE';
+  static const String markAsRead = 'MARK AS READ';
+  static const String notifications = 'NOTIFICATIONS';
+  static const String delete = 'DELETE';
+  static const String generalInformation = 'GENERAL INFORMATION';
 }

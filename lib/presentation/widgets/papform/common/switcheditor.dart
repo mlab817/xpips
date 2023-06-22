@@ -64,7 +64,7 @@ class _RadioEditor extends ConsumerState<SwitchEditor> {
                 onPressed: () => _edit(),
               ),
         enabled: widget.enabled,
-        onTap: widget.project.readonly ? null : () => _edit(),
+        onTap: widget.enabled ? () => _edit() : null,
       ),
     );
   }
