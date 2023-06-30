@@ -13,8 +13,7 @@ class EditButton extends StatelessWidget {
     return IconButton(
       onPressed: onPressed,
       icon: const Icon(
-        Icons.chevron_right,
-        size: 28,
+        Icons.edit,
       ),
     );
   }

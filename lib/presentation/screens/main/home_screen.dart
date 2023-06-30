@@ -1,20 +1,18 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/src/foundation/diagnostics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pips/presentation/controllers/updatingperiod_controller.dart';
 
+import '../../../application/app_router.dart';
 import '../../../application/providers/searchhistory_provider.dart';
 import '../../../domain/models/models.dart';
-import '../../controllers/options_controller.dart';
-import '../pipolstatus_controller.dart';
-import '../../widgets/loading_dialog.dart';
-import '../../../application/app_router.dart';
 import '../../controllers/deadline_controller.dart';
 import '../../controllers/home_controller.dart';
 import '../../controllers/homesearch_controller.dart';
+import '../../controllers/options_controller.dart';
+import '../../controllers/updatingperiod_controller.dart';
+import '../../widgets/loading_dialog.dart';
 import '../../widgets/project_list_tile.dart';
+import '../pipolstatus_controller.dart';
 
 @RoutePage()
 class HomeScreen extends ConsumerStatefulWidget {
@@ -47,7 +45,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     Future.delayed(Duration.zero, () {
       ref.read(searchHistoryProvider.notifier).retrieve();
       _searchController.text =
-          ref.watch(projectsRequestControllerProvider).q ?? '';
+          ref
+              .watch(projectsRequestControllerProvider)
+              .q ?? '';
     });
   }
 
@@ -60,7 +60,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
+    var size = MediaQuery
+        .of(context)
+        .size;
     double width = size.width;
 
     final menuAsync = ref.watch(pipsStatusControllerProvider);
@@ -78,20 +80,25 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     ref.watch(deadlineProvider);
 
     final currentPage = ref
+        .watch(homeScreenControllerProvider)
+        .value
+        ?.meta
+        .pagination
+        .current ??
+        1;
+    final lastPage =
+        ref
             .watch(homeScreenControllerProvider)
             .value
             ?.meta
             .pagination
-            .current ??
-        1;
-    final lastPage =
-        ref.watch(homeScreenControllerProvider).value?.meta.pagination.last ??
+            .last ??
             1;
 
     return Scaffold(
       appBar: AppBar(
         scrolledUnderElevation: 0.0,
-        title: const Text('Home'),
+        title: const Text('HOME'),
         automaticallyImplyLeading: false,
         elevation: 0.0,
         actions: [
@@ -105,66 +112,69 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       // show drawer for smaller screens
       drawer: width < 768
           ? Drawer(
-              child: menuAsync.when(
-                data: (data) {
-                  if (menuAsync.isRefreshing) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
+        child: menuAsync.when(
+          data: (data) {
+            if (menuAsync.isRefreshing) {
+              return const Center(
+                child: LoadingOverlay(),
+              );
+            }
 
-                  return ListView.builder(
-                    physics: const ClampingScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: data.data.length,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        dense: true,
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(50),
-                            bottomRight: Radius.circular(50),
-                          ),
-                        ),
-                        selected: projectsRequest.pipsStatuses != null &&
-                            projectsRequest.pipsStatuses!.isNotEmpty &&
-                            projectsRequest.pipsStatuses![0] ==
-                                data.data[index - 1].id,
-                        title: Text(data.data[index - 1].name),
-                        trailing:
-                            Text(data.data[index - 1].projectsCount.toString()),
-                        selectedTileColor: Theme.of(context)
-                            .colorScheme
-                            .primary
-                            .withOpacity(0.2),
-                        onTap: () {
-                          setState(() {
-                            _pipsStatus = data.data[index - 1];
-                          });
-
-                          // set pips status to current id and reset to page 1
-                          ref
-                              .read(projectsRequestControllerProvider.notifier)
-                              .update(
-                                  pipsStatuses: [data.data[index].id], page: 1);
-
-                          Navigator.pop(context);
-                        },
-                      );
-                    },
-                  );
-                },
-                error: (error, stackTrace) => Center(
-                  child: Text(error.toString()),
-                ),
-                loading: () => const Center(
-                  child: Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: CircularProgressIndicator(),
+            return ListView.builder(
+              physics: const ClampingScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: data.data.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  dense: true,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(50),
+                      bottomRight: Radius.circular(50),
+                    ),
                   ),
-                ),
+                  selected: projectsRequest.pipsStatuses != null &&
+                      projectsRequest.pipsStatuses!.isNotEmpty &&
+                      projectsRequest.pipsStatuses![0] ==
+                          data.data[index - 1].id,
+                  title: Text(data.data[index - 1].name),
+                  trailing:
+                  Text(data.data[index - 1].projectsCount.toString()),
+                  selectedTileColor: Theme
+                      .of(context)
+                      .colorScheme
+                      .primary
+                      .withOpacity(0.2),
+                  onTap: () {
+                    setState(() {
+                      _pipsStatus = data.data[index - 1];
+                    });
+
+                    // set pips status to current id and reset to page 1
+                    ref
+                        .read(projectsRequestControllerProvider.notifier)
+                        .update(
+                        pipsStatuses: [data.data[index].id], page: 1);
+
+                    Navigator.pop(context);
+                  },
+                );
+              },
+            );
+          },
+          error: (error, stackTrace) =>
+              Center(
+                child: Text(error.toString()),
               ),
-            )
+          loading: () =>
+          const Center(
+            child: Padding(
+              padding: EdgeInsets.all(8.0),
+              child: CircularProgressIndicator(),
+            ),
+          ),
+        ),
+      )
           : null,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -207,7 +217,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Container(
-                color: Theme.of(context).colorScheme.background,
+                color: Theme
+                    .of(context)
+                    .colorScheme
+                    .background,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -245,7 +258,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 child: Text(
                   'PIPS STATUS',
                   style: TextStyle(
-                    color: Theme.of(context).primaryColor,
+                    color: Theme
+                        .of(context)
+                        .primaryColor,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -253,7 +268,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               menuAsync.when(
                 data: (data) {
                   if (menuAsync.isRefreshing) {
-                    return const CircularProgressIndicator();
+                    return const LoadingOverlay();
                   }
 
                   return ListView.builder(
@@ -275,39 +290,42 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                 data.data[index].id,
                         title: Text(data.data[index].name),
                         trailing:
-                            Text(data.data[index].projectsCount.toString()),
-                        selectedTileColor: Theme.of(context)
+                        Text(data.data[index].projectsCount.toString()),
+                        selectedTileColor: Theme
+                            .of(context)
                             .colorScheme
                             .primary
                             .withOpacity(0.2),
                         onTap: _pipsStatus == data.data[index]
                             ? null
                             : () {
-                                setState(() {
-                                  _pipsStatus = data.data[index];
-                                });
+                          setState(() {
+                            _pipsStatus = data.data[index];
+                          });
 
-                                // set pips status to current id and reset to page 1
-                                ref
-                                    .read(projectsRequestControllerProvider
-                                        .notifier)
-                                    .update(
-                                  pipsStatuses: [data.data[index].id],
-                                  pipolStatuses: [], // clear pipol status
-                                  page: 1,
-                                );
-                              },
+                          // set pips status to current id and reset to page 1
+                          ref
+                              .read(projectsRequestControllerProvider
+                              .notifier)
+                              .update(
+                            pipsStatuses: [data.data[index].id],
+                            pipolStatuses: [], // clear pipol status
+                            page: 1,
+                          );
+                        },
                       );
                     },
                   );
                 },
-                error: (error, stackTrace) => Center(
-                  child: Text(error.toString()),
-                ),
-                loading: () => const Center(
+                error: (error, stackTrace) =>
+                    Center(
+                      child: Text(error.toString()),
+                    ),
+                loading: () =>
+                const Center(
                   child: Padding(
                     padding: EdgeInsets.all(8.0),
-                    child: CircularProgressIndicator(),
+                    child: LoadingOverlay(),
                   ),
                 ),
               ),
@@ -317,7 +335,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 child: Text(
                   'PIPOL STATUS',
                   style: TextStyle(
-                    color: Theme.of(context).primaryColor,
+                    color: Theme
+                        .of(context)
+                        .primaryColor,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -325,7 +345,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               pipolAsync.when(
                 data: (data) {
                   if (pipolAsync.isRefreshing) {
-                    return const Center(child: CircularProgressIndicator());
+                    return const Center(child: LoadingOverlay());
                   }
 
                   if (data.data.isEmpty) {
@@ -353,49 +373,52 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                 data.data[index].id,
                         title: Text(data.data[index].name),
                         trailing:
-                            Text(data.data[index].projectsCount.toString()),
-                        selectedTileColor: Theme.of(context)
+                        Text(data.data[index].projectsCount.toString()),
+                        selectedTileColor: Theme
+                            .of(context)
                             .colorScheme
                             .primary
                             .withOpacity(0.2),
                         onTap: _pipolStatus == data.data[index]
                             ? null
                             : () {
-                                setState(() {
-                                  _pipolStatus = data.data[index];
-                                });
+                          setState(() {
+                            _pipolStatus = data.data[index];
+                          });
 
-                                // set pips status to current id and reset to page 1
-                                ref
-                                    .read(projectsRequestControllerProvider
-                                        .notifier)
-                                    .update(
-                                        pipolStatuses: [data.data[index].id],
-                                        pipsStatuses: [], // clear pips status
-                                        page: 1);
-                              },
+                          // set pips status to current id and reset to page 1
+                          ref
+                              .read(projectsRequestControllerProvider
+                              .notifier)
+                              .update(
+                              pipolStatuses: [data.data[index].id],
+                              pipsStatuses: [], // clear pips status
+                              page: 1);
+                        },
                       );
                     },
                   );
                 },
-                error: (error, stackTrace) => Center(
-                  child: Column(
-                    children: [
-                      Text(error.toString()),
-                      const SizedBox(
-                        height: 10,
+                error: (error, stackTrace) =>
+                    Center(
+                      child: Column(
+                        children: [
+                          Text(error.toString()),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          FilledButton.icon(
+                            onPressed: () {
+                              ref.invalidate(homeScreenControllerProvider);
+                            },
+                            icon: const Icon(Icons.refresh),
+                            label: const Text('TRY AGAIN'),
+                          ),
+                        ],
                       ),
-                      FilledButton.icon(
-                        onPressed: () {
-                          ref.invalidate(homeScreenControllerProvider);
-                        },
-                        icon: const Icon(Icons.refresh),
-                        label: const Text('TRY AGAIN'),
-                      ),
-                    ],
-                  ),
-                ),
-                loading: () => const Center(
+                    ),
+                loading: () =>
+                const Center(
                   child: Padding(
                     padding: EdgeInsets.all(8.0),
                     child: LoadingOverlay(),
@@ -431,7 +454,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   child: Text('Date Last Updated'),
                 ),
               ],
-              value: ref.watch(projectsRequestControllerProvider).sort,
+              value: ref
+                  .watch(projectsRequestControllerProvider)
+                  .sort,
               hint: const Text('Sort by'),
               onChanged: (String? value) {
                 ref
@@ -445,20 +470,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               onPressed: currentPage == 1
                   ? null
                   : () {
-                      ref
-                          .read(projectsRequestControllerProvider.notifier)
-                          .previousPage();
-                    },
+                ref
+                    .read(projectsRequestControllerProvider.notifier)
+                    .previousPage();
+              },
               icon: const Icon(Icons.chevron_left)),
           _buildPageSelector(),
           IconButton(
               onPressed: currentPage == lastPage
                   ? null
                   : () {
-                      ref
-                          .read(projectsRequestControllerProvider.notifier)
-                          .nextPage();
-                    },
+                ref
+                    .read(projectsRequestControllerProvider.notifier)
+                    .nextPage();
+              },
               icon: const Icon(Icons.chevron_right)),
         ],
       ),
@@ -488,22 +513,23 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             },
           );
         },
-        error: (error, _) => Center(
-            child: Column(
-          children: [
-            Text(error.toString()),
-            const SizedBox(
-              height: 10,
-            ),
-            FilledButton(
-              onPressed: () {
-                // refresh the provider
-                ref.invalidate(homeScreenControllerProvider);
-              },
-              child: const Text('TRY AGAIN'),
-            ),
-          ],
-        )),
+        error: (error, _) =>
+            Center(
+                child: Column(
+                  children: [
+                    Text(error.toString()),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    FilledButton(
+                      onPressed: () {
+                        // refresh the provider
+                        ref.invalidate(homeScreenControllerProvider);
+                      },
+                      child: const Text('TRY AGAIN'),
+                    ),
+                  ],
+                )),
         loading: () => const Center(child: LoadingOverlay()),
       ),
     );
@@ -512,15 +538,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget _buildPageSelector() {
     // get the currentPage from request provider
     final currentPage = ref
+        .watch(homeScreenControllerProvider)
+        .value
+        ?.meta
+        .pagination
+        .current ??
+        1;
+
+    final lastPage =
+        ref
             .watch(homeScreenControllerProvider)
             .value
             ?.meta
             .pagination
-            .current ??
-        1;
-
-    final lastPage =
-        ref.watch(homeScreenControllerProvider).value?.meta.pagination.last ??
+            .last ??
             1;
 
     return DropdownButton(
@@ -606,37 +637,37 @@ class _ProjectRequestBottomSheetState
                     ),
                     Wrap(
                       children: data.offices?.map((office) {
-                            return Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Checkbox(
-                                    value: selection.offices
-                                            ?.contains(office.value) ??
-                                        false,
-                                    onChanged: (bool? value) {
-                                      final updatedSelection = ref
-                                              .watch(
-                                                  projectsRequestControllerProvider)
-                                              .offices
-                                              ?.toList() ??
-                                          [];
+                        return Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Checkbox(
+                                value: selection.offices
+                                    ?.contains(office.value) ??
+                                    false,
+                                onChanged: (bool? value) {
+                                  final updatedSelection = ref
+                                      .watch(
+                                      projectsRequestControllerProvider)
+                                      .offices
+                                      ?.toList() ??
+                                      [];
 
-                                      if (value != null && value) {
-                                        updatedSelection.add(office.value);
-                                      } else {
-                                        updatedSelection.remove(office.value);
-                                      }
-                                      //
-                                      ref
-                                          .read(
-                                              projectsRequestControllerProvider
-                                                  .notifier)
-                                          .update(offices: updatedSelection);
-                                    }),
-                                Text(office.label),
-                              ],
-                            );
-                          }).toList() ??
+                                  if (value != null && value) {
+                                    updatedSelection.add(office.value);
+                                  } else {
+                                    updatedSelection.remove(office.value);
+                                  }
+                                  //
+                                  ref
+                                      .read(
+                                      projectsRequestControllerProvider
+                                          .notifier)
+                                      .update(offices: updatedSelection);
+                                }),
+                            Text(office.label),
+                          ],
+                        );
+                      }).toList() ??
                           [],
                     ),
                     const SizedBox(
@@ -651,39 +682,39 @@ class _ProjectRequestBottomSheetState
                     ),
                     Wrap(
                       children: data.types?.map((type) {
-                            return Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Checkbox(
-                                  value:
-                                      selection.types?.contains(type.value) ??
-                                          false,
-                                  onChanged: (bool? value) {
-                                    print('value: $value');
+                        return Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Checkbox(
+                              value:
+                              selection.types?.contains(type.value) ??
+                                  false,
+                              onChanged: (bool? value) {
+                                print('value: $value');
 
-                                    final updatedSelection = ref
-                                            .watch(
-                                                projectsRequestControllerProvider)
-                                            .offices
-                                            ?.toList() ??
-                                        [];
+                                final updatedSelection = ref
+                                    .watch(
+                                    projectsRequestControllerProvider)
+                                    .offices
+                                    ?.toList() ??
+                                    [];
 
-                                    if (value != null && value) {
-                                      updatedSelection.add(type.value);
-                                    } else {
-                                      updatedSelection.remove(type.value);
-                                    }
-                                    //
-                                    ref
-                                        .read(projectsRequestControllerProvider
-                                            .notifier)
-                                        .update(types: updatedSelection);
-                                  },
-                                ),
-                                Text(type.label),
-                              ],
-                            );
-                          }).toList() ??
+                                if (value != null && value) {
+                                  updatedSelection.add(type.value);
+                                } else {
+                                  updatedSelection.remove(type.value);
+                                }
+                                //
+                                ref
+                                    .read(projectsRequestControllerProvider
+                                    .notifier)
+                                    .update(types: updatedSelection);
+                              },
+                            ),
+                            Text(type.label),
+                          ],
+                        );
+                      }).toList() ??
                           [],
                     ),
                     const SizedBox(
@@ -698,41 +729,41 @@ class _ProjectRequestBottomSheetState
                     ),
                     Wrap(
                       children: data.spatialCoverages?.map((spatialCoverage) {
-                            return Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Checkbox(
-                                    value: selection.spatialCoverages
-                                            ?.contains(spatialCoverage.value) ??
-                                        false,
-                                    onChanged: (bool? value) {
-                                      final updatedSelection = ref
-                                              .watch(
-                                                  projectsRequestControllerProvider)
-                                              .spatialCoverages
-                                              ?.toList() ??
-                                          [];
+                        return Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Checkbox(
+                                value: selection.spatialCoverages
+                                    ?.contains(spatialCoverage.value) ??
+                                    false,
+                                onChanged: (bool? value) {
+                                  final updatedSelection = ref
+                                      .watch(
+                                      projectsRequestControllerProvider)
+                                      .spatialCoverages
+                                      ?.toList() ??
+                                      [];
 
-                                      if (value != null && value) {
-                                        updatedSelection
-                                            .add(spatialCoverage.value);
-                                      } else {
-                                        updatedSelection
-                                            .remove(spatialCoverage.value);
-                                      }
-                                      //
-                                      ref
-                                          .read(
-                                              projectsRequestControllerProvider
-                                                  .notifier)
-                                          .update(
-                                              spatialCoverages:
-                                                  updatedSelection);
-                                    }),
-                                Text(spatialCoverage.label),
-                              ],
-                            );
-                          }).toList() ??
+                                  if (value != null && value) {
+                                    updatedSelection
+                                        .add(spatialCoverage.value);
+                                  } else {
+                                    updatedSelection
+                                        .remove(spatialCoverage.value);
+                                  }
+                                  //
+                                  ref
+                                      .read(
+                                      projectsRequestControllerProvider
+                                          .notifier)
+                                      .update(
+                                      spatialCoverages:
+                                      updatedSelection);
+                                }),
+                            Text(spatialCoverage.label),
+                          ],
+                        );
+                      }).toList() ??
                           [],
                     ),
                     const SizedBox(
@@ -758,7 +789,7 @@ class _ProjectRequestBottomSheetState
                               onChanged: (bool? value) {
                                 ref
                                     .read(projectsRequestControllerProvider
-                                        .notifier)
+                                    .notifier)
                                     .update(pip: value);
                               },
                             ),
@@ -776,7 +807,7 @@ class _ProjectRequestBottomSheetState
                               onChanged: (bool? value) {
                                 ref
                                     .read(projectsRequestControllerProvider
-                                        .notifier)
+                                    .notifier)
                                     .update(cip: value);
                               },
                             ),
@@ -794,7 +825,7 @@ class _ProjectRequestBottomSheetState
                               onChanged: (bool? value) {
                                 ref
                                     .read(projectsRequestControllerProvider
-                                        .notifier)
+                                    .notifier)
                                     .update(trip: value);
                               },
                             ),
@@ -812,7 +843,7 @@ class _ProjectRequestBottomSheetState
                               onChanged: (bool? value) {
                                 ref
                                     .read(projectsRequestControllerProvider
-                                        .notifier)
+                                    .notifier)
                                     .update(rdip: value);
                               },
                             ),
@@ -830,42 +861,42 @@ class _ProjectRequestBottomSheetState
                     ),
                     Wrap(
                       children: data.fundingSources?.map((fundingSource) {
-                            return Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Checkbox(
-                                  value: ref
-                                          .watch(
-                                              projectsRequestControllerProvider)
-                                          .fundingSources
-                                          ?.contains(fundingSource.value) ??
-                                      false,
-                                  onChanged: (bool? value) {
-                                    final updatedSelection = ref
-                                            .watch(
-                                                projectsRequestControllerProvider)
-                                            .fundingSources
-                                            ?.toList() ??
-                                        [];
+                        return Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Checkbox(
+                              value: ref
+                                  .watch(
+                                  projectsRequestControllerProvider)
+                                  .fundingSources
+                                  ?.contains(fundingSource.value) ??
+                                  false,
+                              onChanged: (bool? value) {
+                                final updatedSelection = ref
+                                    .watch(
+                                    projectsRequestControllerProvider)
+                                    .fundingSources
+                                    ?.toList() ??
+                                    [];
 
-                                    if (value != null && value) {
-                                      updatedSelection.add(fundingSource.value);
-                                    } else {
-                                      updatedSelection
-                                          .remove(fundingSource.value);
-                                    }
-                                    //
-                                    ref
-                                        .read(projectsRequestControllerProvider
-                                            .notifier)
-                                        .update(
-                                            fundingSources: updatedSelection);
-                                  },
-                                ),
-                                Text(fundingSource.label),
-                              ],
-                            );
-                          }).toList() ??
+                                if (value != null && value) {
+                                  updatedSelection.add(fundingSource.value);
+                                } else {
+                                  updatedSelection
+                                      .remove(fundingSource.value);
+                                }
+                                //
+                                ref
+                                    .read(projectsRequestControllerProvider
+                                    .notifier)
+                                    .update(
+                                    fundingSources: updatedSelection);
+                              },
+                            ),
+                            Text(fundingSource.label),
+                          ],
+                        );
+                      }).toList() ??
                           [],
                     ),
                     const SizedBox(
@@ -880,42 +911,42 @@ class _ProjectRequestBottomSheetState
                     ),
                     Wrap(
                       children: data.projectStatuses?.map((projectStatus) {
-                            return Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Checkbox(
-                                  value: ref
-                                          .watch(
-                                              projectsRequestControllerProvider)
-                                          .projectStatuses
-                                          ?.contains(projectStatus.value) ??
-                                      false,
-                                  onChanged: (bool? value) {
-                                    final updatedSelection = ref
-                                            .watch(
-                                                projectsRequestControllerProvider)
-                                            .projectStatuses
-                                            ?.toList() ??
-                                        [];
+                        return Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Checkbox(
+                              value: ref
+                                  .watch(
+                                  projectsRequestControllerProvider)
+                                  .projectStatuses
+                                  ?.contains(projectStatus.value) ??
+                                  false,
+                              onChanged: (bool? value) {
+                                final updatedSelection = ref
+                                    .watch(
+                                    projectsRequestControllerProvider)
+                                    .projectStatuses
+                                    ?.toList() ??
+                                    [];
 
-                                    if (value != null && value) {
-                                      updatedSelection.add(projectStatus.value);
-                                    } else {
-                                      updatedSelection
-                                          .remove(projectStatus.value);
-                                    }
+                                if (value != null && value) {
+                                  updatedSelection.add(projectStatus.value);
+                                } else {
+                                  updatedSelection
+                                      .remove(projectStatus.value);
+                                }
 
-                                    ref
-                                        .read(projectsRequestControllerProvider
-                                            .notifier)
-                                        .update(
-                                            projectStatuses: updatedSelection);
-                                  },
-                                ),
-                                Text(projectStatus.label),
-                              ],
-                            );
-                          }).toList() ??
+                                ref
+                                    .read(projectsRequestControllerProvider
+                                    .notifier)
+                                    .update(
+                                    projectStatuses: updatedSelection);
+                              },
+                            ),
+                            Text(projectStatus.label),
+                          ],
+                        );
+                      }).toList() ??
                           [],
                     ),
                   ],

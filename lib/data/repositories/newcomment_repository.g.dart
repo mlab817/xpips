@@ -7,7 +7,7 @@ part of 'newcomment_repository.dart';
 // **************************************************************************
 
 String _$newCommentRepositoryHash() =>
-    r'ace1776e1c8ded8c765776da958881f65bfa2f56';
+    r'c72522c1ad9465a233d2cc9ddc6870de5eaa15ca';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -30,7 +30,7 @@ class _SystemHash {
   }
 }
 
-typedef NewCommentRepositoryRef = AutoDisposeProviderRef<NewCommentRepository>;
+typedef NewCommentRepositoryRef = ProviderRef<NewCommentRepository>;
 
 /// See also [newCommentRepository].
 @ProviderFor(newCommentRepository)
@@ -75,8 +75,7 @@ class NewCommentRepositoryFamily extends Family<NewCommentRepository> {
 }
 
 /// See also [newCommentRepository].
-class NewCommentRepositoryProvider
-    extends AutoDisposeProvider<NewCommentRepository> {
+class NewCommentRepositoryProvider extends Provider<NewCommentRepository> {
   /// See also [newCommentRepository].
   NewCommentRepositoryProvider({
     required this.uuid,

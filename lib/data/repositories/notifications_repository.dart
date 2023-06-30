@@ -9,8 +9,10 @@ import '../responses/notifications_response.dart';
 part 'notifications_repository.g.dart';
 
 abstract class NotificationsRepository {
+  /// Retrieve all notifications based on the provided `NotificationsRequest`
   Future<NotificationsResponse> getAll(NotificationsRequest input);
 
+  /// Mark a notification as read based on given String `id`
   Future<Notifications> markNotificationAsRead(String id);
 }
 
@@ -30,7 +32,7 @@ class NotificationsRepositoryImplementer implements NotificationsRepository {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 NotificationsRepository notificationsRepository(
         NotificationsRepositoryRef ref) =>
     NotificationsRepositoryImplementer(

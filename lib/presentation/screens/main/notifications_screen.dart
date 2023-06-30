@@ -46,7 +46,13 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
           children: [
             _buildPaginationControls(),
             valueAsync.when(
-              data: (data) => _buildList(data, ref),
+              data: (data) {
+                if (valueAsync.isRefreshing) {
+                  return const LoadingOverlay();
+                }
+
+                return _buildList(data, ref);
+                },
               error: (error, stackTrace) => _buildError(error),
               loading: () =>
                   const Expanded(child: Center(child: LoadingOverlay())),
@@ -244,6 +250,8 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
       if (context.mounted) {
         ScaffoldMessenger.of(context)
             .showSnackBar(const SnackBar(content: Text('Success!')));
+
+        ref.invalidate(notificationsProvider);
       }
     } catch (error) {
       ScaffoldMessenger.of(context)

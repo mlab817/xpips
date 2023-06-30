@@ -86,7 +86,7 @@ class _CommentsScreenState extends ConsumerState<CommentsScreen> {
 
                   ref
                       .read(newCommentRepositoryProvider(uuid: widget.uuid))
-                      .addComment(CommentRequest(comment: value));
+                      .addComment(widget.uuid, CommentRequest(comment: value));
 
                   ref
                       .read(newCommentLocalStreamControllerProvider)

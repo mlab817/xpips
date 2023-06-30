@@ -6,6 +6,7 @@ import 'package:retrofit/retrofit.dart';
 import '../../application/config.dart';
 import '../../data/requests/requests.dart';
 import '../../data/responses/responses.dart';
+import '../../domain/models/evaluation_report.dart';
 import '../../domain/models/models.dart';
 import '../requests/login_request.dart';
 import '../responses/user_response.dart';
@@ -155,4 +156,24 @@ abstract class AppServiceClient {
 
   @GET('/archived')
   Future<ProjectsResponse> getArchived(@Queries() ArchiveRequest input);
+
+  @GET('/projects/{uuid}/evaluation-reports')
+  Future<EvaluationReportResponse> getEvaluation(
+      {@Path('uuid') required String uuid});
+
+  @POST('/projects/{uuid}/evaluation-reports')
+  Future<EvaluationReportResponse> postEvaluation({
+    @Path('uuid') required String uuid,
+    @Body() required EvaluationReport request,
+  });
+
+  @PUT('evaluation-reports/{id}')
+  Future<EvaluationReportResponse> putEvaluation({
+    @Path('uuid') required int id,
+    @Body() required EvaluationReport request,
+  });
+
+  @DELETE('evaluation-reports/{id}')
+  Future<EvaluationReportResponse> deleteEvaluation(
+      {@Path('uuid') required int id});
 }

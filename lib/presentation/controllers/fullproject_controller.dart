@@ -238,3 +238,52 @@ class FullProjectController extends _$FullProjectController {
     return asyncProject.value!.project;
   }
 }
+
+@Riverpod(keepAlive: true)
+bool fullProjectIsValid(FullProjectIsValidRef ref, {required String uuid}) {
+  final project = ref.watch(fullProjectControllerProvider(uuid));
+
+  final Map<String, String> errors = <String, String>{};
+
+  if (project.title!.isEmpty) {
+    errors['title'] = 'Title should not be empty';
+  }
+
+  if (project.type == null) {
+    errors['type'] = 'Type is required';
+  }
+
+  if (project.bases.isEmpty) {
+    errors['bases'] = 'Basis for implementation is required';
+  }
+
+  if (project.description!.isEmpty) {
+    errors['description'] = 'Description is required';
+  }
+
+  if (project.totalCost == null) {
+    errors['totalCost'] = 'Total cost is required';
+  }
+
+  if (project.office == null) {
+    errors['office'] = 'Office is required';
+  }
+
+  if (project.operatingUnits.isEmpty) {
+    errors['operatingUnits'] = 'Operating units are required';
+  }
+
+  if (project.spatialCoverage == null) {
+    errors['spatialCoverage'] = 'Spatial coverage is required';
+  }
+
+  if (project.regions.isEmpty) {
+    errors['regions'] = 'Regions are required';
+  }
+
+  if (project.provinces.isEmpty) {
+    errors['provinces'] = 'Provinces are required';
+  }
+
+  return errors.isEmpty;
+}

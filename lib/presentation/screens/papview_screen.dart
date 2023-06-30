@@ -43,6 +43,10 @@ class PapViewScreen extends ConsumerStatefulWidget {
 }
 
 class _PapViewScreenState extends ConsumerState<PapViewScreen> {
+  bool _isExtended = true;
+
+  ScrollController _scrollController = ScrollController();
+
   Future<PatchProjectResponse> _handleSubmit({
     required String uuid,
     required String fieldKey,
@@ -183,6 +187,13 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
   }
 
   @override
+  void dispose() {
+    _scrollController.dispose();
+
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final projectProfileAsync =
         ref.watch(futureProjectProvider(uuid: widget.uuid));
@@ -197,6 +208,23 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
       // if the patch request was successful, show success message
       if (next.hasValue) {
         next.showSnackbarOnSuccess(context);
+      }
+    });
+
+    // turn off extend fab when scrolling position exceeds screen height
+    _scrollController.addListener(() {
+      //
+      double screenHeight = MediaQuery.sizeOf(context).height;
+      double currentScrollPosition = _scrollController.position.pixels;
+
+      if (currentScrollPosition <= screenHeight) {
+        setState(() {
+          _isExtended = true;
+        });
+      } else {
+        setState(() {
+          _isExtended = false;
+        });
       }
     });
 
@@ -233,7 +261,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                       ref.invalidate(futureProjectProvider(uuid: widget.uuid));
                     },
                     icon: const Icon(Icons.refresh),
-                    label: const Text('Reload'),
+                    label: const Text('RELOAD'),
                     style: ButtonStyle(
                       backgroundColor: MaterialStateColor.resolveWith(
                         (states) => Theme.of(context).colorScheme.secondary,
@@ -303,14 +331,43 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   Tooltip(
                     message:
                         'Ensure that all fields have been filled up and are consistent.',
-                    child: FilledButton.icon(
-                      icon: const Icon(CupertinoIcons.share),
-                      onPressed: data.project.permissions.submitForReview
-                          ? () {
-                              //
-                            }
-                          : null,
-                      label: const Text('SUBMIT FOR REVIEW'),
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: FilledButton.icon(
+                        icon: const Icon(CupertinoIcons.share),
+                        onPressed: data.project.permissions.submitForReview
+                            ? () {
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: const Text('Confirm Submission'),
+                                        content: const Text(
+                                          'Once you submit this PAP for review of the Secretariat, you will NOT be able to edit it anymore. Are you sure you want to continue?',
+                                        ),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              //
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: const Text(
+                                                'NO, I WANT TO GO BACK'),
+                                          ),
+                                          FilledButton(
+                                            onPressed: () {
+                                              //
+                                            },
+                                            child: const Text(
+                                                'YES, SUBMIT FOR REVIEW'),
+                                          ),
+                                        ],
+                                      );
+                                    });
+                              }
+                            : null,
+                        label: const Text('SUBMIT FOR REVIEW'),
+                      ),
                     ),
                   ),
                 if (data.project.outdated)
@@ -378,12 +435,14 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
     return asyncValue.when(data: (data) {
       return Badge(
         label: Text(data.length.toString()),
-        child: FloatingActionButton(
+        child: FloatingActionButton.extended(
+          label: const Text('Comments'),
+          isExtended: _isExtended,
           onPressed: () {
             // expand messenger like
             AutoRouter.of(context).push(CommentsRoute(uuid: widget.uuid));
           },
-          child: const Icon(Icons.chat_bubble),
+          icon: const Icon(Icons.chat_bubble),
         ),
       );
     }, error: (error, stacktrace) {
@@ -402,6 +461,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
     final uuid = widget.uuid;
 
     return CustomScrollView(
+      controller: _scrollController,
       physics: const ClampingScrollPhysics(),
       slivers: [
         // General Information
@@ -1881,6 +1941,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   project: project,
                   fieldLabel: 'PIPOL Code',
                   oldValue: project.pipolCode ?? 'NO DATA',
+                  enabled: project.permissions.updatePipol,
                   onSubmit: (String newValue) async {
                     //
                     await _handleSubmit(
@@ -1900,6 +1961,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   project: project,
                   fieldLabel: 'PIPOL URL (Link)',
                   oldValue: project.pipolUrl ?? 'NO DATA',
+                  enabled: project.permissions.updatePipol,
                   onSubmit: (String newValue) async {
                     //
                     await _handleSubmit(
@@ -1919,6 +1981,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                   project: project,
                   fieldLabel: 'PIPOL Status',
                   oldValue: project.pipolStatus,
+                  enabled: project.permissions.updatePipol,
                   options: ref
                           .watch(optionsControllerProvider)
                           .value

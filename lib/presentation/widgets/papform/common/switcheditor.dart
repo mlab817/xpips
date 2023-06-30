@@ -13,6 +13,7 @@ class SwitchEditor extends ConsumerStatefulWidget {
     required this.oldValue,
     required this.onSubmit,
     this.enabled = true,
+    this.fieldDescription,
   });
 
   final FullProject project;
@@ -20,6 +21,7 @@ class SwitchEditor extends ConsumerStatefulWidget {
   final bool oldValue;
   final Function(bool newValue) onSubmit;
   final bool enabled;
+  final String? fieldDescription;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _RadioEditor();
@@ -77,12 +79,14 @@ class UpdateForm extends ConsumerStatefulWidget {
     required this.oldValue,
     required this.fieldLabel,
     required this.onSubmit,
+    this.fieldDescription,
   });
 
   final FullProject project;
   final bool oldValue;
   final String fieldLabel;
   final Function(bool newValue) onSubmit;
+  final String? fieldDescription;
 
   @override
   ConsumerState<UpdateForm> createState() => _UpdateFormState();
@@ -146,6 +150,9 @@ class _UpdateFormState extends ConsumerState<UpdateForm> {
                     });
                   },
                   title: Text(widget.fieldLabel),
+                  subtitle: widget.fieldDescription != null
+                      ? Text(widget.fieldDescription!)
+                      : null,
                   activeColor: Theme.of(context).primaryColor,
                 ),
               ),

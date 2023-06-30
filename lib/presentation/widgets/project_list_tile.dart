@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../application/app_router.dart';
@@ -130,13 +131,16 @@ class _ProjectListTileState extends ConsumerState<ProjectListTile> {
       barrierDismissible: true,
       builder: (context) {
         return AlertDialog(
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                _project.title,
-                overflow: TextOverflow.ellipsis,
-              ),
+          titlePadding: const EdgeInsets.symmetric(horizontal: 8.0),
+          title: AppBar(
+            backgroundColor: Colors.transparent,
+            automaticallyImplyLeading: false,
+            elevation: 0.0,
+            title: Text(
+              _project.title,
+              overflow: TextOverflow.ellipsis,
+            ),
+            actions: [
               IconButton(
                 onPressed: () {
                   Navigator.pop(context);
@@ -168,7 +172,6 @@ class _ProjectListTileState extends ConsumerState<ProjectListTile> {
                 )),
                 onPressed: _project.permissions.update
                     ? () {
-                        // TODO: handle duplicate
                         _handleDuplicate();
                       }
                     : null,
@@ -235,7 +238,6 @@ class _ProjectListTileState extends ConsumerState<ProjectListTile> {
                     child: Container(
                       padding: const EdgeInsets.all(8.0),
                       width: double.infinity,
-                      height: 90,
                       decoration: BoxDecoration(
                           color:
                               Theme.of(context).primaryColor.withOpacity(0.1),
@@ -273,7 +275,7 @@ class _ProjectListTileState extends ConsumerState<ProjectListTile> {
                               Theme.of(context).primaryColor.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(8.0)),
                       child: Text(
-                        'Total Cost: PHP ${ref.watch(numberFormatterProvider).format(_project.totalCost)}',
+                        'Total Cost: PHP ${NumberFormat('#,###', 'en_US').format(_project.totalCost)}',
                         textAlign: TextAlign.start,
                       ),
                     ),
@@ -305,6 +307,21 @@ class _ProjectListTileState extends ConsumerState<ProjectListTile> {
                       child: Text("Notes: ${_project.notes ?? 'NO NOTES'}"),
                     ),
                   ),
+                  const Divider(),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      padding: const EdgeInsets.all(8.0),
+                      width: double.infinity,
+                      height: 90,
+                      decoration: BoxDecoration(
+                          color:
+                              Theme.of(context).primaryColor.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(8.0)),
+                      child: Text(
+                          "Updating Period: ${_project.updatingPeriod?.label ?? 'NOT INDICATED'}"),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -323,87 +340,93 @@ class _ProjectListTileState extends ConsumerState<ProjectListTile> {
 
   @override
   Widget build(BuildContext context) {
-    var width = MediaQuery.of(context).size.width;
-
-    return ListTile(
-      minVerticalPadding: 8.0,
-      tileColor: _project.isRead
-          ? Colors.transparent
-          : Theme.of(context).hoverColor.withAlpha(9),
-      trailing: Padding(
-        padding: const EdgeInsets.only(top: 8.0),
-        child: Column(
+    return Container(
+      decoration: BoxDecoration(
+          border: Border(
+              bottom: BorderSide(
+        color: Theme.of(context).colorScheme.outline.withAlpha(100),
+      ))),
+      child: ListTile(
+        minVerticalPadding: 8.0,
+        tileColor: _project.isRead
+            ? Colors.transparent
+            : Theme.of(context).hoverColor.withAlpha(9),
+        trailing: Padding(
+          padding: const EdgeInsets.only(top: 8.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text(formatDate(_project.updatedAt)),
+            ],
+          ),
+        ),
+        leading: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Text(formatDate(_project.updatedAt)),
-          ],
-        ),
-      ),
-      leading: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          _project.outdated
-              ? Tooltip(
-                  message:
-                      '[READONLY MODE] \n\nThis PAP was submitted during ${_project.updatingPeriod?.label}. \nDuplicate to update and submit it this updating period.',
-                  child: CircleAvatar(
-                      backgroundColor:
-                          Theme.of(context).colorScheme.errorContainer,
-                      child: Icon(
-                        Icons.visibility,
-                        color: Theme.of(context).colorScheme.error,
-                      )),
-                )
-              : const CircleAvatar(
-                  child: Icon(
-                    Icons.edit,
-                  ),
-                ),
-        ],
-      ),
-      subtitle: Text(
-        _project.title,
-        maxLines: 2,
-        overflow: TextOverflow.ellipsis,
-        style: Theme.of(context).textTheme.bodyMedium,
-      ),
-      title: Padding(
-        padding: const EdgeInsets.all(0.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Text(
-                  _project.office?.acronym.toUpperCase() ?? 'OFFICE',
-                ),
-                const Text(' - '),
-                Text(
-                  _project.user?.fullname ?? 'NA',
-                ),
-                const Spacer(),
-                if (_project.notes != null)
-                  Tooltip(
-                    message: _project.notes,
-                    child: const Icon(Icons.note_outlined),
-                  ),
-                if (_project.commentsCount > 0)
-                  Badge(
-                    label: Text(
-                      _project.commentsCount.toString(),
-                      style: const TextStyle(fontSize: 8.0),
-                    ),
-                    child: const Icon(
-                      Icons.chat_bubble_outline,
-                      size: 20.0,
+            _project.outdated
+                ? Tooltip(
+                    message:
+                        '[READONLY MODE] \n\nThis PAP was submitted during ${_project.updatingPeriod?.label}. \nDuplicate to update and submit it this updating period.',
+                    child: CircleAvatar(
+                        backgroundColor:
+                            Theme.of(context).colorScheme.errorContainer,
+                        child: Icon(
+                          Icons.visibility,
+                          color: Theme.of(context).colorScheme.error,
+                        )),
+                  )
+                : const CircleAvatar(
+                    child: Icon(
+                      Icons.edit,
                     ),
                   ),
-              ],
-            ),
           ],
         ),
+        title: Text(
+          _project.title,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+        ),
+        subtitle: Padding(
+          padding: const EdgeInsets.all(0.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Text(
+                    _project.office?.acronym.toUpperCase() ?? 'OFFICE',
+                  ),
+                  const Text(
+                    ' - ',
+                  ),
+                  Text(
+                    _project.user?.fullname ?? 'NA',
+                  ),
+                  const Spacer(),
+                  if (_project.notes != null)
+                    Tooltip(
+                      message: _project.notes,
+                      child: const Icon(Icons.note_outlined),
+                    ),
+                  if (_project.commentsCount > 0)
+                    Badge(
+                      label: Text(
+                        _project.commentsCount.toString(),
+                        style: const TextStyle(fontSize: 8.0),
+                      ),
+                      child: const Icon(
+                        Icons.chat_bubble_outline,
+                        size: 20.0,
+                      ),
+                    ),
+                ],
+              ),
+            ],
+          ),
+        ),
+        onTap: _showDialog,
       ),
-      onTap: _showDialog,
     );
   }
 }

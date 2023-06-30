@@ -28,7 +28,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Chats'),
+        title: const Text('COMMENTS'),
         scrolledUnderElevation: 0.0,
         automaticallyImplyLeading: false,
         actions: const [
@@ -69,6 +69,12 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         Expanded(
           child: chatsAsync.when(
             data: (data) {
+              if (data.data.isEmpty) {
+                return const Center(
+                  child: Text('NO COMMENTS'),
+                );
+              }
+
               return Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: _buildList(data),
@@ -90,7 +96,9 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     final chats = data.data;
 
     if (chats.isEmpty) {
-      return Container();
+      return const Center(
+        child: Text('NO COMMENTS'),
+      );
     }
 
     return ListView.builder(

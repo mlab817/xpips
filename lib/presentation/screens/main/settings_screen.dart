@@ -58,10 +58,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(_titles[_currentIndex]),
-        automaticallyImplyLeading: false,
-      ),
       drawer: Platform.isAndroid
           ? Drawer(
               child: Column(
@@ -156,6 +152,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     itemCount: _menu.length,
                     itemBuilder: (context, index) {
                       return ListTile(
+                        dense: true,
                         title: Text(_menu[index]),
                         onTap: () {
                           setState(() {
@@ -217,7 +214,17 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               ),
             ),
           Expanded(
-            child: _screens[_currentIndex],
+            child: Column(
+              children: [
+                AppBar(
+                  title: Text(_titles[_currentIndex]),
+                  automaticallyImplyLeading: false,
+                ),
+                Expanded(
+                  child: _screens[_currentIndex],
+                ),
+              ],
+            ),
           ),
         ],
       ),

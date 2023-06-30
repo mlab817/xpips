@@ -71,12 +71,12 @@ class _TextEditor extends ConsumerState<TextEditor> {
         onTap: widget.project.readonly
             ? null
             : () async {
-                await Clipboard.setData(ClipboardData(text: widget.oldValue))
-                    .then((_) {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content:
-                          Text("${widget.fieldLabel} copied to clipboard")));
-                });
+                // await Clipboard.setData(ClipboardData(text: widget.oldValue))
+                //     .then((_) {
+                //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                //       content:
+                //           Text("${widget.fieldLabel} copied to clipboard")));
+                // });
                 _edit();
               },
         enabled: widget.enabled,

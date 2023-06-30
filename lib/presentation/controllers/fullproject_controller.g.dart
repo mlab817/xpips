@@ -6,8 +6,8 @@ part of 'fullproject_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$fullProjectControllerHash() =>
-    r'6cc9efb539b4a608833fc368f4f9afa7f8e58ffb';
+String _$fullProjectIsValidHash() =>
+    r'6cbd93c4ddbbeef2d94df3d8300dad6325608975';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -29,6 +29,90 @@ class _SystemHash {
     return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
   }
 }
+
+typedef FullProjectIsValidRef = ProviderRef<bool>;
+
+/// See also [fullProjectIsValid].
+@ProviderFor(fullProjectIsValid)
+const fullProjectIsValidProvider = FullProjectIsValidFamily();
+
+/// See also [fullProjectIsValid].
+class FullProjectIsValidFamily extends Family<bool> {
+  /// See also [fullProjectIsValid].
+  const FullProjectIsValidFamily();
+
+  /// See also [fullProjectIsValid].
+  FullProjectIsValidProvider call({
+    required String uuid,
+  }) {
+    return FullProjectIsValidProvider(
+      uuid: uuid,
+    );
+  }
+
+  @override
+  FullProjectIsValidProvider getProviderOverride(
+    covariant FullProjectIsValidProvider provider,
+  ) {
+    return call(
+      uuid: provider.uuid,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'fullProjectIsValidProvider';
+}
+
+/// See also [fullProjectIsValid].
+class FullProjectIsValidProvider extends Provider<bool> {
+  /// See also [fullProjectIsValid].
+  FullProjectIsValidProvider({
+    required this.uuid,
+  }) : super.internal(
+          (ref) => fullProjectIsValid(
+            ref,
+            uuid: uuid,
+          ),
+          from: fullProjectIsValidProvider,
+          name: r'fullProjectIsValidProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$fullProjectIsValidHash,
+          dependencies: FullProjectIsValidFamily._dependencies,
+          allTransitiveDependencies:
+              FullProjectIsValidFamily._allTransitiveDependencies,
+        );
+
+  final String uuid;
+
+  @override
+  bool operator ==(Object other) {
+    return other is FullProjectIsValidProvider && other.uuid == uuid;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, uuid.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+String _$fullProjectControllerHash() =>
+    r'6cc9efb539b4a608833fc368f4f9afa7f8e58ffb';
 
 abstract class _$FullProjectController extends BuildlessNotifier<FullProject> {
   late final String uuid;

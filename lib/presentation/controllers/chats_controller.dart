@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../data/repositories/chats_repository.dart';
+import '../../data/repositories/chat_repository.dart';
 import '../../data/requests/chats_request.dart';
 import '../../data/responses/responses.dart';
 
@@ -10,7 +10,7 @@ part 'chats_controller.g.dart';
 
 @Riverpod(keepAlive: true)
 Future<ChatRoomsResponse> chatRooms(ChatRoomsRef ref) async {
-  final repository = ref.watch(chatsRepositoryProvider);
+  final repository = ref.watch(chatRepositoryProvider);
   final request = ref.watch(chatsRequestControllerProvider);
 
   return await repository.get(request);

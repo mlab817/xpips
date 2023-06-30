@@ -31,7 +31,7 @@ class Theme extends _$Theme {
   @override
   AppTheme build() => AppTheme(
         scheme: FlexScheme.greenM3,
-        fontFamily: GoogleFonts.sairaExtraCondensed().fontFamily!,
+        fontFamily: GoogleFonts.poppins().fontFamily!,
       );
 
   void update({
@@ -132,48 +132,49 @@ ThemeData lightTheme(LightThemeRef ref) {
     scheme: ref.watch(themeProvider).scheme,
     lightIsWhite: true,
     appBarStyle: FlexAppBarStyle.material,
-    // textTheme: TextTheme(
-    //   // used in AppBar title
-    //   titleLarge: GoogleFonts.bebasNeue().copyWith(
-    //     fontSize: 18,
-    //   ),
-    //   // input text, dropdown, controls
-    //   titleMedium: GoogleFonts.bebasNeue().copyWith(
-    //     fontSize: 14,
-    //   ),
-    //   titleSmall: GoogleFonts.roboto().copyWith(
-    //     fontSize: 14,
-    //   ),
-    //   headlineLarge: GoogleFonts.roboto().copyWith(
-    //     fontSize: 12,
-    //   ),
-    //   headlineMedium: GoogleFonts.roboto().copyWith(
-    //     fontSize: 10,
-    //   ),
-    //   headlineSmall: GoogleFonts.roboto().copyWith(
-    //     fontSize: 9,
-    //   ),
-    //   bodyLarge: GoogleFonts.roboto().copyWith(
-    //     fontSize: 14,
-    //   ),
-    //   bodyMedium: GoogleFonts.roboto().copyWith(
-    //     fontSize: 12,
-    //   ),
-    //   bodySmall: GoogleFonts.roboto().copyWith(
-    //     fontSize: 10,
-    //   ),
-    //   // button, chip
-    //   labelLarge: GoogleFonts.bebasNeue().copyWith(
-    //     fontSize: 13,
-    //   ),
-    //   labelMedium: GoogleFonts.roboto().copyWith(
-    //     fontSize: 13,
-    //   ),
-    //   // list tile trailing
-    //   labelSmall: GoogleFonts.bebasNeue().copyWith(
-    //     fontSize: 12,
-    //   ),
-    // ),
+    textTheme: TextTheme(
+      // used in AppBar title
+      titleLarge: GoogleFonts.sairaExtraCondensed().copyWith(
+        fontSize: 24,
+      ),
+      // input text, dropdown, controls
+      titleMedium: GoogleFonts.sairaExtraCondensed().copyWith(
+        fontSize: 14,
+      ),
+      titleSmall: GoogleFonts.sairaExtraCondensed().copyWith(
+        fontSize: 14,
+      ),
+      headlineLarge: GoogleFonts.sairaExtraCondensed().copyWith(
+        fontSize: 16,
+      ),
+      headlineMedium: GoogleFonts.sairaExtraCondensed().copyWith(
+        fontSize: 14,
+      ),
+      headlineSmall: GoogleFonts.sairaExtraCondensed().copyWith(
+        fontSize: 14,
+      ),
+      bodyLarge: GoogleFonts.sairaExtraCondensed().copyWith(
+        fontSize: 18,
+      ),
+      bodyMedium: GoogleFonts.sairaExtraCondensed().copyWith(
+        fontSize: 16,
+      ),
+      bodySmall: GoogleFonts.sairaExtraCondensed().copyWith(
+        fontSize: 14,
+      ),
+      // Used for text on ElevatedButton, TextButton and OutlinedButton.
+      labelLarge: GoogleFonts.sairaExtraCondensed().copyWith(
+        fontSize: 16,
+      ),
+      // text inside of components or very small supporting text in the content body, like captions.
+      labelMedium: GoogleFonts.sairaExtraCondensed().copyWith(
+        fontSize: 14,
+      ),
+      // text inside of components or very small supporting text in the content body, like captions.
+      labelSmall: GoogleFonts.sairaExtraCondensed().copyWith(
+        fontSize: 14,
+      ),
+    ),
     subThemesData: const FlexSubThemesData(
       interactionEffects: false,
       tintedDisabledControls: false,

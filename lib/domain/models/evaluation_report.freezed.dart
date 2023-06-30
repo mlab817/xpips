@@ -22,30 +22,22 @@ EvaluationReport _$EvaluationReportFromJson(Map<String, dynamic> json) {
 mixin _$EvaluationReport {
   @JsonKey(name: 'project_id')
   int? get projectId => throw _privateConstructorUsedError;
-  @JsonKey(name: 'title')
   String? get title => throw _privateConstructorUsedError;
   @JsonKey(name: 'funding_sources')
   String? get fundingSources => throw _privateConstructorUsedError;
   @JsonKey(name: 'implementing_units')
   String? get implementingUnits => throw _privateConstructorUsedError;
-  @JsonKey(name: 'background')
   String? get background => throw _privateConstructorUsedError;
-  @JsonKey(name: 'rationale')
   String? get rationale => throw _privateConstructorUsedError;
-  @JsonKey(name: 'objectives')
   String? get objectives => throw _privateConstructorUsedError;
-  @JsonKey(name: 'beneficiaries')
   String? get beneficiaries => throw _privateConstructorUsedError;
   @JsonKey(name: 'spatial_coverage')
   String? get spatialCoverage => throw _privateConstructorUsedError;
-  @JsonKey(name: 'components')
   String? get components => throw _privateConstructorUsedError;
   @JsonKey(name: 'budget_estimate')
-  String? get budgetEstimate => throw _privateConstructorUsedError;
+  double? get budgetEstimate => throw _privateConstructorUsedError;
   @JsonKey(name: 'implementation_period')
   String? get implementationPeriod => throw _privateConstructorUsedError;
-  @JsonKey(name: 'responsiveness')
-  String? get responsiveness => throw _privateConstructorUsedError;
   @JsonKey(name: 'responsiveness_sdgs')
   String? get responsivenessSdgs => throw _privateConstructorUsedError;
   @JsonKey(name: 'responsiveness_agenda')
@@ -56,9 +48,7 @@ mixin _$EvaluationReport {
   String? get responsivenessNafmip => throw _privateConstructorUsedError;
   @JsonKey(name: 'responsiveness_pbp')
   String? get responsivenessPbp => throw _privateConstructorUsedError;
-  @JsonKey(name: 'readiness')
   String? get readiness => throw _privateConstructorUsedError;
-  @JsonKey(name: 'typology')
   String? get typology => throw _privateConstructorUsedError;
   @JsonKey(name: 'other_comments')
   String? get otherComments => throw _privateConstructorUsedError;
@@ -81,25 +71,24 @@ abstract class $EvaluationReportCopyWith<$Res> {
   @useResult
   $Res call(
       {@JsonKey(name: 'project_id') int? projectId,
-      @JsonKey(name: 'title') String? title,
+      String? title,
       @JsonKey(name: 'funding_sources') String? fundingSources,
       @JsonKey(name: 'implementing_units') String? implementingUnits,
-      @JsonKey(name: 'background') String? background,
-      @JsonKey(name: 'rationale') String? rationale,
-      @JsonKey(name: 'objectives') String? objectives,
-      @JsonKey(name: 'beneficiaries') String? beneficiaries,
+      String? background,
+      String? rationale,
+      String? objectives,
+      String? beneficiaries,
       @JsonKey(name: 'spatial_coverage') String? spatialCoverage,
-      @JsonKey(name: 'components') String? components,
-      @JsonKey(name: 'budget_estimate') String? budgetEstimate,
+      String? components,
+      @JsonKey(name: 'budget_estimate') double? budgetEstimate,
       @JsonKey(name: 'implementation_period') String? implementationPeriod,
-      @JsonKey(name: 'responsiveness') String? responsiveness,
       @JsonKey(name: 'responsiveness_sdgs') String? responsivenessSdgs,
       @JsonKey(name: 'responsiveness_agenda') String? responsivenessAgenda,
       @JsonKey(name: 'responsiveness_pdp') String? responsivenessPdp,
       @JsonKey(name: 'responsiveness_nafmip') String? responsivenessNafmip,
       @JsonKey(name: 'responsiveness_pbp') String? responsivenessPbp,
-      @JsonKey(name: 'readiness') String? readiness,
-      @JsonKey(name: 'typology') String? typology,
+      String? readiness,
+      String? typology,
       @JsonKey(name: 'other_comments') String? otherComments,
       @JsonKey(name: 'recommending_approval') bool? recommendingApproval,
       @JsonKey(name: 'other_recommendations') String? otherRecommendations});
@@ -130,7 +119,6 @@ class _$EvaluationReportCopyWithImpl<$Res, $Val extends EvaluationReport>
     Object? components = freezed,
     Object? budgetEstimate = freezed,
     Object? implementationPeriod = freezed,
-    Object? responsiveness = freezed,
     Object? responsivenessSdgs = freezed,
     Object? responsivenessAgenda = freezed,
     Object? responsivenessPdp = freezed,
@@ -186,14 +174,10 @@ class _$EvaluationReportCopyWithImpl<$Res, $Val extends EvaluationReport>
       budgetEstimate: freezed == budgetEstimate
           ? _value.budgetEstimate
           : budgetEstimate // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as double?,
       implementationPeriod: freezed == implementationPeriod
           ? _value.implementationPeriod
           : implementationPeriod // ignore: cast_nullable_to_non_nullable
-              as String?,
-      responsiveness: freezed == responsiveness
-          ? _value.responsiveness
-          : responsiveness // ignore: cast_nullable_to_non_nullable
               as String?,
       responsivenessSdgs: freezed == responsivenessSdgs
           ? _value.responsivenessSdgs
@@ -249,25 +233,24 @@ abstract class _$$_EvaluationReportCopyWith<$Res>
   @useResult
   $Res call(
       {@JsonKey(name: 'project_id') int? projectId,
-      @JsonKey(name: 'title') String? title,
+      String? title,
       @JsonKey(name: 'funding_sources') String? fundingSources,
       @JsonKey(name: 'implementing_units') String? implementingUnits,
-      @JsonKey(name: 'background') String? background,
-      @JsonKey(name: 'rationale') String? rationale,
-      @JsonKey(name: 'objectives') String? objectives,
-      @JsonKey(name: 'beneficiaries') String? beneficiaries,
+      String? background,
+      String? rationale,
+      String? objectives,
+      String? beneficiaries,
       @JsonKey(name: 'spatial_coverage') String? spatialCoverage,
-      @JsonKey(name: 'components') String? components,
-      @JsonKey(name: 'budget_estimate') String? budgetEstimate,
+      String? components,
+      @JsonKey(name: 'budget_estimate') double? budgetEstimate,
       @JsonKey(name: 'implementation_period') String? implementationPeriod,
-      @JsonKey(name: 'responsiveness') String? responsiveness,
       @JsonKey(name: 'responsiveness_sdgs') String? responsivenessSdgs,
       @JsonKey(name: 'responsiveness_agenda') String? responsivenessAgenda,
       @JsonKey(name: 'responsiveness_pdp') String? responsivenessPdp,
       @JsonKey(name: 'responsiveness_nafmip') String? responsivenessNafmip,
       @JsonKey(name: 'responsiveness_pbp') String? responsivenessPbp,
-      @JsonKey(name: 'readiness') String? readiness,
-      @JsonKey(name: 'typology') String? typology,
+      String? readiness,
+      String? typology,
       @JsonKey(name: 'other_comments') String? otherComments,
       @JsonKey(name: 'recommending_approval') bool? recommendingApproval,
       @JsonKey(name: 'other_recommendations') String? otherRecommendations});
@@ -296,7 +279,6 @@ class __$$_EvaluationReportCopyWithImpl<$Res>
     Object? components = freezed,
     Object? budgetEstimate = freezed,
     Object? implementationPeriod = freezed,
-    Object? responsiveness = freezed,
     Object? responsivenessSdgs = freezed,
     Object? responsivenessAgenda = freezed,
     Object? responsivenessPdp = freezed,
@@ -352,14 +334,10 @@ class __$$_EvaluationReportCopyWithImpl<$Res>
       budgetEstimate: freezed == budgetEstimate
           ? _value.budgetEstimate
           : budgetEstimate // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as double?,
       implementationPeriod: freezed == implementationPeriod
           ? _value.implementationPeriod
           : implementationPeriod // ignore: cast_nullable_to_non_nullable
-              as String?,
-      responsiveness: freezed == responsiveness
-          ? _value.responsiveness
-          : responsiveness // ignore: cast_nullable_to_non_nullable
               as String?,
       responsivenessSdgs: freezed == responsivenessSdgs
           ? _value.responsivenessSdgs
@@ -407,31 +385,31 @@ class __$$_EvaluationReportCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_EvaluationReport implements _EvaluationReport {
+class _$_EvaluationReport extends _EvaluationReport {
   _$_EvaluationReport(
       {@JsonKey(name: 'project_id') this.projectId,
-      @JsonKey(name: 'title') this.title,
+      this.title,
       @JsonKey(name: 'funding_sources') this.fundingSources,
       @JsonKey(name: 'implementing_units') this.implementingUnits,
-      @JsonKey(name: 'background') this.background,
-      @JsonKey(name: 'rationale') this.rationale,
-      @JsonKey(name: 'objectives') this.objectives,
-      @JsonKey(name: 'beneficiaries') this.beneficiaries,
+      this.background,
+      this.rationale,
+      this.objectives,
+      this.beneficiaries,
       @JsonKey(name: 'spatial_coverage') this.spatialCoverage,
-      @JsonKey(name: 'components') this.components,
+      this.components,
       @JsonKey(name: 'budget_estimate') this.budgetEstimate,
       @JsonKey(name: 'implementation_period') this.implementationPeriod,
-      @JsonKey(name: 'responsiveness') this.responsiveness,
       @JsonKey(name: 'responsiveness_sdgs') this.responsivenessSdgs,
       @JsonKey(name: 'responsiveness_agenda') this.responsivenessAgenda,
       @JsonKey(name: 'responsiveness_pdp') this.responsivenessPdp,
       @JsonKey(name: 'responsiveness_nafmip') this.responsivenessNafmip,
       @JsonKey(name: 'responsiveness_pbp') this.responsivenessPbp,
-      @JsonKey(name: 'readiness') this.readiness,
-      @JsonKey(name: 'typology') this.typology,
+      this.readiness,
+      this.typology,
       @JsonKey(name: 'other_comments') this.otherComments,
       @JsonKey(name: 'recommending_approval') this.recommendingApproval,
-      @JsonKey(name: 'other_recommendations') this.otherRecommendations});
+      @JsonKey(name: 'other_recommendations') this.otherRecommendations})
+      : super._();
 
   factory _$_EvaluationReport.fromJson(Map<String, dynamic> json) =>
       _$$_EvaluationReportFromJson(json);
@@ -440,7 +418,6 @@ class _$_EvaluationReport implements _EvaluationReport {
   @JsonKey(name: 'project_id')
   final int? projectId;
   @override
-  @JsonKey(name: 'title')
   final String? title;
   @override
   @JsonKey(name: 'funding_sources')
@@ -449,32 +426,24 @@ class _$_EvaluationReport implements _EvaluationReport {
   @JsonKey(name: 'implementing_units')
   final String? implementingUnits;
   @override
-  @JsonKey(name: 'background')
   final String? background;
   @override
-  @JsonKey(name: 'rationale')
   final String? rationale;
   @override
-  @JsonKey(name: 'objectives')
   final String? objectives;
   @override
-  @JsonKey(name: 'beneficiaries')
   final String? beneficiaries;
   @override
   @JsonKey(name: 'spatial_coverage')
   final String? spatialCoverage;
   @override
-  @JsonKey(name: 'components')
   final String? components;
   @override
   @JsonKey(name: 'budget_estimate')
-  final String? budgetEstimate;
+  final double? budgetEstimate;
   @override
   @JsonKey(name: 'implementation_period')
   final String? implementationPeriod;
-  @override
-  @JsonKey(name: 'responsiveness')
-  final String? responsiveness;
   @override
   @JsonKey(name: 'responsiveness_sdgs')
   final String? responsivenessSdgs;
@@ -491,10 +460,8 @@ class _$_EvaluationReport implements _EvaluationReport {
   @JsonKey(name: 'responsiveness_pbp')
   final String? responsivenessPbp;
   @override
-  @JsonKey(name: 'readiness')
   final String? readiness;
   @override
-  @JsonKey(name: 'typology')
   final String? typology;
   @override
   @JsonKey(name: 'other_comments')
@@ -508,7 +475,7 @@ class _$_EvaluationReport implements _EvaluationReport {
 
   @override
   String toString() {
-    return 'EvaluationReport(projectId: $projectId, title: $title, fundingSources: $fundingSources, implementingUnits: $implementingUnits, background: $background, rationale: $rationale, objectives: $objectives, beneficiaries: $beneficiaries, spatialCoverage: $spatialCoverage, components: $components, budgetEstimate: $budgetEstimate, implementationPeriod: $implementationPeriod, responsiveness: $responsiveness, responsivenessSdgs: $responsivenessSdgs, responsivenessAgenda: $responsivenessAgenda, responsivenessPdp: $responsivenessPdp, responsivenessNafmip: $responsivenessNafmip, responsivenessPbp: $responsivenessPbp, readiness: $readiness, typology: $typology, otherComments: $otherComments, recommendingApproval: $recommendingApproval, otherRecommendations: $otherRecommendations)';
+    return 'EvaluationReport(projectId: $projectId, title: $title, fundingSources: $fundingSources, implementingUnits: $implementingUnits, background: $background, rationale: $rationale, objectives: $objectives, beneficiaries: $beneficiaries, spatialCoverage: $spatialCoverage, components: $components, budgetEstimate: $budgetEstimate, implementationPeriod: $implementationPeriod, responsivenessSdgs: $responsivenessSdgs, responsivenessAgenda: $responsivenessAgenda, responsivenessPdp: $responsivenessPdp, responsivenessNafmip: $responsivenessNafmip, responsivenessPbp: $responsivenessPbp, readiness: $readiness, typology: $typology, otherComments: $otherComments, recommendingApproval: $recommendingApproval, otherRecommendations: $otherRecommendations)';
   }
 
   @override
@@ -539,8 +506,6 @@ class _$_EvaluationReport implements _EvaluationReport {
                 other.budgetEstimate == budgetEstimate) &&
             (identical(other.implementationPeriod, implementationPeriod) ||
                 other.implementationPeriod == implementationPeriod) &&
-            (identical(other.responsiveness, responsiveness) ||
-                other.responsiveness == responsiveness) &&
             (identical(other.responsivenessSdgs, responsivenessSdgs) ||
                 other.responsivenessSdgs == responsivenessSdgs) &&
             (identical(other.responsivenessAgenda, responsivenessAgenda) ||
@@ -579,7 +544,6 @@ class _$_EvaluationReport implements _EvaluationReport {
         components,
         budgetEstimate,
         implementationPeriod,
-        responsiveness,
         responsivenessSdgs,
         responsivenessAgenda,
         responsivenessPdp,
@@ -606,34 +570,26 @@ class _$_EvaluationReport implements _EvaluationReport {
   }
 }
 
-abstract class _EvaluationReport implements EvaluationReport {
+abstract class _EvaluationReport extends EvaluationReport {
   factory _EvaluationReport(
       {@JsonKey(name: 'project_id')
           final int? projectId,
-      @JsonKey(name: 'title')
-          final String? title,
+      final String? title,
       @JsonKey(name: 'funding_sources')
           final String? fundingSources,
       @JsonKey(name: 'implementing_units')
           final String? implementingUnits,
-      @JsonKey(name: 'background')
-          final String? background,
-      @JsonKey(name: 'rationale')
-          final String? rationale,
-      @JsonKey(name: 'objectives')
-          final String? objectives,
-      @JsonKey(name: 'beneficiaries')
-          final String? beneficiaries,
+      final String? background,
+      final String? rationale,
+      final String? objectives,
+      final String? beneficiaries,
       @JsonKey(name: 'spatial_coverage')
           final String? spatialCoverage,
-      @JsonKey(name: 'components')
-          final String? components,
+      final String? components,
       @JsonKey(name: 'budget_estimate')
-          final String? budgetEstimate,
+          final double? budgetEstimate,
       @JsonKey(name: 'implementation_period')
           final String? implementationPeriod,
-      @JsonKey(name: 'responsiveness')
-          final String? responsiveness,
       @JsonKey(name: 'responsiveness_sdgs')
           final String? responsivenessSdgs,
       @JsonKey(name: 'responsiveness_agenda')
@@ -644,16 +600,15 @@ abstract class _EvaluationReport implements EvaluationReport {
           final String? responsivenessNafmip,
       @JsonKey(name: 'responsiveness_pbp')
           final String? responsivenessPbp,
-      @JsonKey(name: 'readiness')
-          final String? readiness,
-      @JsonKey(name: 'typology')
-          final String? typology,
+      final String? readiness,
+      final String? typology,
       @JsonKey(name: 'other_comments')
           final String? otherComments,
       @JsonKey(name: 'recommending_approval')
           final bool? recommendingApproval,
       @JsonKey(name: 'other_recommendations')
           final String? otherRecommendations}) = _$_EvaluationReport;
+  _EvaluationReport._() : super._();
 
   factory _EvaluationReport.fromJson(Map<String, dynamic> json) =
       _$_EvaluationReport.fromJson;
@@ -662,7 +617,6 @@ abstract class _EvaluationReport implements EvaluationReport {
   @JsonKey(name: 'project_id')
   int? get projectId;
   @override
-  @JsonKey(name: 'title')
   String? get title;
   @override
   @JsonKey(name: 'funding_sources')
@@ -671,32 +625,24 @@ abstract class _EvaluationReport implements EvaluationReport {
   @JsonKey(name: 'implementing_units')
   String? get implementingUnits;
   @override
-  @JsonKey(name: 'background')
   String? get background;
   @override
-  @JsonKey(name: 'rationale')
   String? get rationale;
   @override
-  @JsonKey(name: 'objectives')
   String? get objectives;
   @override
-  @JsonKey(name: 'beneficiaries')
   String? get beneficiaries;
   @override
   @JsonKey(name: 'spatial_coverage')
   String? get spatialCoverage;
   @override
-  @JsonKey(name: 'components')
   String? get components;
   @override
   @JsonKey(name: 'budget_estimate')
-  String? get budgetEstimate;
+  double? get budgetEstimate;
   @override
   @JsonKey(name: 'implementation_period')
   String? get implementationPeriod;
-  @override
-  @JsonKey(name: 'responsiveness')
-  String? get responsiveness;
   @override
   @JsonKey(name: 'responsiveness_sdgs')
   String? get responsivenessSdgs;
@@ -713,10 +659,8 @@ abstract class _EvaluationReport implements EvaluationReport {
   @JsonKey(name: 'responsiveness_pbp')
   String? get responsivenessPbp;
   @override
-  @JsonKey(name: 'readiness')
   String? get readiness;
   @override
-  @JsonKey(name: 'typology')
   String? get typology;
   @override
   @JsonKey(name: 'other_comments')

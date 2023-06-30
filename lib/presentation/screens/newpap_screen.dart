@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pips/application/app_router.dart';
 import 'package:pips/application/extensions.dart';
 import 'package:pips/data/repositories/repositories.dart';
 
@@ -53,6 +54,32 @@ class _NewPapScreenState extends ConsumerState<NewPapScreen> {
 
                       ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text(response.message.toString())));
+
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: const Text('SUCCESS'),
+                              content: const Text('PAP successfully added.'),
+                              actions: [
+                                // reset
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text('RESET FORM'),
+                                ),
+                                //
+                                FilledButton(
+                                  onPressed: () {
+                                    AutoRouter.of(context).push(
+                                        PapViewRoute(uuid: response.data.uuid));
+                                  },
+                                  child: const Text('VIEW'),
+                                ),
+                              ],
+                            );
+                          });
                     } catch (err) {
                       ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text(err.toString())));
@@ -158,7 +185,7 @@ class _NewPapScreenState extends ConsumerState<NewPapScreen> {
                             final curSelection = simpleProject.bases
                                 .toList(); // copy the current selection
 
-                            if (simpleProject.bases.contains(basis)) {
+                            if (!simpleProject.bases.contains(basis)) {
                               curSelection.add(basis);
                             } else {
                               curSelection.remove(basis);

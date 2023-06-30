@@ -20,7 +20,7 @@ final darkThemeProvider = Provider<ThemeData>.internal(
 );
 
 typedef DarkThemeRef = ProviderRef<ThemeData>;
-String _$lightThemeHash() => r'592821fcfc45e2f0bedd1834b8960f410bc5a655';
+String _$lightThemeHash() => r'1aedbae2f3b9987e40699829c5b2fb926d706c4a';
 
 /// See also [lightTheme].
 @ProviderFor(lightTheme)
@@ -34,7 +34,7 @@ final lightThemeProvider = Provider<ThemeData>.internal(
 );
 
 typedef LightThemeRef = ProviderRef<ThemeData>;
-String _$themeHash() => r'5a500a5426502e33df40a6909d25162fd973be5a';
+String _$themeHash() => r'7e953d31eb183d0d2bc72b2dfa5d9536389348d2';
 
 /// See also [Theme].
 @ProviderFor(Theme)

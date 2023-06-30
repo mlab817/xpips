@@ -8,25 +8,31 @@ import '../responses/newcomment_response.dart';
 part 'newcomment_repository.g.dart';
 
 abstract class NewCommentRepository {
-  Future<NewCommentResponse> addComment(CommentRequest request);
+  /// Add a new comment to a project based on uuid
+  ///
+  /// The `uuid` argument is a String id of the Project.
+  ///
+  /// The `CommentRequest` argument is a simple class that contains the String `comment`.
+  Future<NewCommentResponse> addComment(String uuid, CommentRequest request);
 }
 
 class NewCommentRepositoryImplementer implements NewCommentRepository {
   final AppServiceClient client;
-  final String uuid;
 
-  NewCommentRepositoryImplementer({required this.client, required this.uuid});
+  NewCommentRepositoryImplementer({
+    required this.client,
+  });
 
   @override
-  Future<NewCommentResponse> addComment(CommentRequest request) async {
+  Future<NewCommentResponse> addComment(
+      String uuid, CommentRequest request) async {
     return client.addComment(uuid, request);
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 NewCommentRepository newCommentRepository(NewCommentRepositoryRef ref,
         {required String uuid}) =>
     NewCommentRepositoryImplementer(
-      uuid: uuid,
       client: ref.watch(appServiceClientProvider),
     );

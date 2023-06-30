@@ -22,7 +22,7 @@ final pusherChannelsOptionsProvider = Provider<PusherChannelsOptions>.internal(
 );
 
 typedef PusherChannelsOptionsRef = ProviderRef<PusherChannelsOptions>;
-String _$pusherClientHash() => r'1f1eef9e61dbd22d5c2e866d03b183ec8a8a6054';
+String _$pusherClientHash() => r'cb7036a70dd137200ecf7502ac19ca0be8b28974';
 
 /// See also [pusherClient].
 @ProviderFor(pusherClient)

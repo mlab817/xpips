@@ -4,8 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hive/hive.dart';
-import 'package:pips/domain/models/models.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:window_size/window_size.dart';
 
@@ -16,15 +14,6 @@ void main() async {
   // debugPaintSizeEnabled = true;
 
   WidgetsFlutterBinding.ensureInitialized();
-
-  var path = Directory.current.path;
-
-  // initialize hive and register adapters
-  Hive
-    ..init(path)
-    ..registerAdapter(FormOptionsAdapter())
-    ..registerAdapter(OptionAdapter())
-    ..registerAdapter(OfficeAdapter());
 
   // set window size for desktop
   if (!kIsWeb && (Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
@@ -52,7 +41,7 @@ void main() async {
   ));
 }
 
-// for Android
+// for Android to bypass htpp issues
 class MyHttpOverrides extends HttpOverrides {
   @override
   HttpClient createHttpClient(SecurityContext? context) {

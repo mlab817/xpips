@@ -8,4 +8,4 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 //     NumberFormat('#,##0', 'en_US');
 
 final numberFormatterProvider =
-    Provider<NumberFormat>((ref) => NumberFormat('#,##0', 'en_US'));
+    Provider.autoDispose<NumberFormat>((ref) => NumberFormat('#,##0', 'en_US'));

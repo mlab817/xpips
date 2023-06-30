@@ -3,6 +3,7 @@ export 'chatrooms_response.dart';
 export 'comments_response.dart';
 export 'deadline_response.dart';
 export 'deleteproject_response.dart';
+export 'evaluationreport_response.dart';
 export 'login_response.dart';
 export 'messages_response.dart';
 export 'newcomment_response.dart';

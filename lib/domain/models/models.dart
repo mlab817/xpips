@@ -2,6 +2,7 @@ export 'app_version.dart';
 export 'chatroom.dart';
 export 'comment.dart';
 export 'cost_schedule.dart';
+export 'evaluation_report.dart';
 export 'financial_accomplishment.dart';
 export 'fs_investment.dart';
 export 'fullproject.dart';

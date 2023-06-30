@@ -6,6 +6,7 @@ import '../responses/deadline_response.dart';
 
 part 'deadline_repository.g.dart';
 
+/// Repository for retrieving information on the deadline of submission of PAPs
 class DeadlineRepository {
   final AppServiceClient client;
 

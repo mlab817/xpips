@@ -5,6 +5,7 @@ import '../../domain/models/office.dart';
 part 'offices_response.freezed.dart';
 part 'offices_response.g.dart';
 
+/// 
 @freezed
 class OfficesResponse with _$OfficesResponse {
   factory OfficesResponse({

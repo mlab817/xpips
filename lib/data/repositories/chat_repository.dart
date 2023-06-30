@@ -5,6 +5,7 @@ import '../../application/providers/appserviceclient_provider.dart';
 import '../../domain/models/chatroom.dart';
 import '../../domain/models/message.dart';
 import '../data_sources/app_service_client.dart';
+import '../requests/chats_request.dart';
 import '../requests/newmessage_request.dart';
 import '../requests/users_request.dart';
 import '../responses/chatroom_response.dart';
@@ -15,6 +16,8 @@ import '../responses/users_response.dart';
 part 'chat_repository.g.dart';
 
 abstract class ChatRepository {
+  Future<ChatRoomsResponse> get(ChatsRequest request);
+
   Future<ChatRoomsResponse> getChatRooms();
 
   Future<ChatRoomResponse> getChatRoom(int chatRoomId);
@@ -36,6 +39,11 @@ class ChatRepositoryImplementer implements ChatRepository {
   final AppServiceClient client;
 
   ChatRepositoryImplementer({required this.client});
+
+  @override
+  Future<ChatRoomsResponse> get(ChatsRequest request) async {
+    return client.getChats(request);
+  }
 
   @override
   Future<ChatRoom> createChatRoom(int userId) {
@@ -78,6 +86,6 @@ class ChatRepositoryImplementer implements ChatRepository {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 ChatRepository chatRepository(ChatRepositoryRef ref) =>
     ChatRepositoryImplementer(client: ref.watch(appServiceClientProvider));
