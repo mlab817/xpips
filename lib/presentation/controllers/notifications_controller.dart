@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:pips/data/requests/pagination_request.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../data/repositories/notifications_repository.dart';

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 
 import '../../presentation/widgets/papform/common/scheduleeditor.dart';
+import '../controllers/realtimepapupdates_controller.dart';
 import '../controllers/updatingperiod_controller.dart';
 import '../resources/strings_manager.dart';
 import '../widgets/loading_dialog.dart';
@@ -45,7 +48,7 @@ class PapViewScreen extends ConsumerStatefulWidget {
 class _PapViewScreenState extends ConsumerState<PapViewScreen> {
   bool _isExtended = true;
 
-  ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
 
   Future<PatchProjectResponse> _handleSubmit({
     required String uuid,
@@ -227,6 +230,8 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         });
       }
     });
+
+    ref.watch(realTimePapUpdatesStreamProvider(uuid: widget.uuid));
 
     return Scaffold(
       appBar: projectProfileAsync.when(

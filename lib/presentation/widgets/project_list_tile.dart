@@ -5,7 +5,6 @@ import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../application/app_router.dart';
-import '../../application/providers/numberformatter_provider.dart';
 import '../../application/config.dart';
 import '../../application/functions.dart';
 import '../../data/repositories/repositories.dart';
@@ -76,9 +75,9 @@ class _ProjectListTileState extends ConsumerState<ProjectListTile> {
     Navigator.pop(context);
 
     // show loading dialog
-    showGeneralDialog(
+    showDialog(
         context: context,
-        pageBuilder: (context, _, __) {
+        builder: (BuildContext context) {
           return const Center(child: LoadingOverlay());
         });
 
@@ -97,9 +96,6 @@ class _ProjectListTileState extends ConsumerState<ProjectListTile> {
 
       // show Dialog
       if (mounted) {
-        // close the dialog
-        Navigator.pop(context);
-
         showDialog(
             context: context,
             builder: (context) {
@@ -122,209 +118,232 @@ class _ProjectListTileState extends ConsumerState<ProjectListTile> {
       // handle error
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(error.toString())));
+    } finally {
+      Navigator.pop(context);
     }
   }
 
   void _showDialog() {
-    showDialog(
+    showGeneralDialog(
       context: context,
-      barrierDismissible: true,
-      builder: (context) {
-        return AlertDialog(
-          titlePadding: const EdgeInsets.symmetric(horizontal: 8.0),
-          title: AppBar(
-            backgroundColor: Colors.transparent,
-            automaticallyImplyLeading: false,
-            elevation: 0.0,
-            title: Text(
-              _project.title,
-              overflow: TextOverflow.ellipsis,
-            ),
-            actions: [
-              IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: const Icon(Icons.close),
-              ),
-            ],
-          ),
-          actions: [
-            if (!widget.project.readonly)
-              FilledButton.icon(
-                onPressed: _project.permissions.delete
-                    ? () {
-                        _confirmDelete();
-                      }
-                    : null,
-                icon: const Icon(Icons.delete),
-                label: const Text('Delete'),
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateColor.resolveWith(
-                      (states) => Theme.of(context).colorScheme.error),
+      // barrierDismissible: true,
+      pageBuilder: (context, _, __) {
+        return Dialog(
+          // titlePadding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Column(
+            children: [
+              AppBar(
+                backgroundColor: Colors.transparent,
+                automaticallyImplyLeading: false,
+                elevation: 0.0,
+                title: Text(
+                  _project.title,
+                  overflow: TextOverflow.ellipsis,
                 ),
-              ),
-            if (widget.project.readonly)
-              FilledButton.icon(
-                style: ButtonStyle(
-                    backgroundColor: MaterialStateColor.resolveWith(
-                  (states) => Theme.of(context).colorScheme.tertiary,
-                )),
-                onPressed: _project.permissions.update
-                    ? () {
-                        _handleDuplicate();
-                      }
-                    : null,
-                icon: const Icon(Icons.copy),
-                label: const Text('Duplicate'),
-              ),
-            VerticalDivider(
-              color: Theme.of(context).colorScheme.primary,
-              width: 1,
-            ),
-            FilledButton.icon(
-              onPressed: _openInNewWindow,
-              icon: const Icon(Icons.picture_as_pdf),
-              label: const Text('PDF'),
-              style: ButtonStyle(
-                backgroundColor: MaterialStateColor.resolveWith(
-                    (states) => Theme.of(context).colorScheme.secondary),
-              ),
-            ),
-            FilledButton.icon(
-              onPressed: _project.permissions.update
-                  ? () {
-                      AutoRouter.of(context).push(PapViewRoute(
-                        uuid: _project.uuid,
-                      ));
-                    }
-                  : null,
-              icon: widget.project.readonly
-                  ? const Icon(Icons.visibility)
-                  : const Icon(Icons.edit),
-              label: widget.project.readonly
-                  ? const Text('View')
-                  : const Text('Edit'),
-            ),
-          ],
-          contentPadding: EdgeInsets.zero,
-          content: SizedBox(
-            width: double.infinity,
-            height: double.infinity,
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Divider(),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      padding: const EdgeInsets.all(8.0),
-                      width: double.infinity,
-                      height: 40,
-                      decoration: BoxDecoration(
-                          color:
-                              Theme.of(context).primaryColor.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(8.0)),
-                      child: Text(
-                        "Office: ${_project.office?.acronym ?? 'NO OFFICE'}",
-                        textAlign: TextAlign.start,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      padding: const EdgeInsets.all(8.0),
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                          color:
-                              Theme.of(context).primaryColor.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(8.0)),
-                      child: Text(
-                        "Description: ${_project.description ?? 'No description'}",
-                        textAlign: TextAlign.start,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      padding: const EdgeInsets.all(8.0),
-                      width: double.infinity,
-                      height: 40,
-                      decoration: BoxDecoration(
-                          color:
-                              Theme.of(context).primaryColor.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(8.0)),
-                      child: Text(
-                        'PIPOL Code: ${_project.pipolCode ?? 'N/A'}',
-                        textAlign: TextAlign.start,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      padding: const EdgeInsets.all(8.0),
-                      width: double.infinity,
-                      height: 40,
-                      decoration: BoxDecoration(
-                          color:
-                              Theme.of(context).primaryColor.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(8.0)),
-                      child: Text(
-                        'Total Cost: PHP ${NumberFormat('#,###', 'en_US').format(_project.totalCost)}',
-                        textAlign: TextAlign.start,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      padding: const EdgeInsets.all(8.0),
-                      width: double.infinity,
-                      height: 90,
-                      decoration: BoxDecoration(
-                          color:
-                              Theme.of(context).primaryColor.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(8.0)),
-                      child: Text(
-                          "Contact Information: ${_project.contactInformation ?? 'NONE'}"),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      padding: const EdgeInsets.all(8.0),
-                      width: double.infinity,
-                      height: 90,
-                      decoration: BoxDecoration(
-                          color:
-                              Theme.of(context).primaryColor.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(8.0)),
-                      child: Text("Notes: ${_project.notes ?? 'NO NOTES'}"),
-                    ),
-                  ),
-                  const Divider(),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      padding: const EdgeInsets.all(8.0),
-                      width: double.infinity,
-                      height: 90,
-                      decoration: BoxDecoration(
-                          color:
-                              Theme.of(context).primaryColor.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(8.0)),
-                      child: Text(
-                          "Updating Period: ${_project.updatingPeriod?.label ?? 'NOT INDICATED'}"),
-                    ),
+                actions: [
+                  IconButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    icon: const Icon(Icons.close),
                   ),
                 ],
               ),
-            ),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    // mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Divider(),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          padding: const EdgeInsets.all(8.0),
+                          width: double.infinity,
+                          height: 40,
+                          decoration: BoxDecoration(
+                              color: Theme.of(context)
+                                  .primaryColor
+                                  .withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(8.0)),
+                          child: Text(
+                            "Office: ${_project.office?.acronym ?? 'NO OFFICE'}",
+                            textAlign: TextAlign.start,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          padding: const EdgeInsets.all(8.0),
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                              color: Theme.of(context)
+                                  .primaryColor
+                                  .withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(8.0)),
+                          child: Text(
+                            "Description: ${_project.description ?? 'No description'}",
+                            textAlign: TextAlign.start,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          padding: const EdgeInsets.all(8.0),
+                          width: double.infinity,
+                          height: 40,
+                          decoration: BoxDecoration(
+                              color: Theme.of(context)
+                                  .primaryColor
+                                  .withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(8.0)),
+                          child: Text(
+                            'PIPOL Code: ${_project.pipolCode ?? 'N/A'}',
+                            textAlign: TextAlign.start,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          padding: const EdgeInsets.all(8.0),
+                          width: double.infinity,
+                          height: 40,
+                          decoration: BoxDecoration(
+                              color: Theme.of(context)
+                                  .primaryColor
+                                  .withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(8.0)),
+                          child: Text(
+                            'Total Cost: PHP ${NumberFormat('#,###', 'en_US').format(_project.totalCost)}',
+                            textAlign: TextAlign.start,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          padding: const EdgeInsets.all(8.0),
+                          width: double.infinity,
+                          height: 90,
+                          decoration: BoxDecoration(
+                              color: Theme.of(context)
+                                  .primaryColor
+                                  .withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(8.0)),
+                          child: Text(
+                              "Contact Information: ${_project.contactInformation ?? 'NONE'}"),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          padding: const EdgeInsets.all(8.0),
+                          width: double.infinity,
+                          height: 90,
+                          decoration: BoxDecoration(
+                              color: Theme.of(context)
+                                  .primaryColor
+                                  .withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(8.0)),
+                          child: Text("Notes: ${_project.notes ?? 'NO NOTES'}"),
+                        ),
+                      ),
+                      const Divider(),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          padding: const EdgeInsets.all(8.0),
+                          width: double.infinity,
+                          height: 90,
+                          decoration: BoxDecoration(
+                              color: Theme.of(context)
+                                  .primaryColor
+                                  .withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(8.0)),
+                          child: Text(
+                              "Updating Period: ${_project.updatingPeriod?.label ?? 'NOT INDICATED'}"),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    if (widget.project.readonly)
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: FilledButton.icon(
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStateColor.resolveWith(
+                            (states) => Theme.of(context).colorScheme.tertiary,
+                          )),
+                          onPressed: _project.permissions.duplicate
+                              ? () {
+                                  _handleDuplicate();
+                                }
+                              : null,
+                          icon: const Icon(Icons.copy),
+                          label: const Text('Duplicate'),
+                        ),
+                      ),
+                    const Spacer(),
+                    if (!widget.project.readonly)
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: FilledButton.icon(
+                          onPressed: _project.permissions.delete
+                              ? () {
+                                  _confirmDelete();
+                                }
+                              : null,
+                          icon: const Icon(Icons.delete),
+                          label: const Text('Delete'),
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateColor.resolveWith(
+                                (states) =>
+                                    Theme.of(context).colorScheme.error),
+                          ),
+                        ),
+                      ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: FilledButton.icon(
+                        onPressed: _openInNewWindow,
+                        icon: const Icon(Icons.picture_as_pdf),
+                        label: const Text('PDF'),
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateColor.resolveWith(
+                              (states) =>
+                                  Theme.of(context).colorScheme.secondary),
+                        ),
+                      ),
+                    ),
+                    FilledButton.icon(
+                      onPressed: _project.permissions.update
+                          ? () {
+                              AutoRouter.of(context).push(PapViewRoute(
+                                uuid: _project.uuid,
+                              ));
+                            }
+                          : null,
+                      icon: widget.project.readonly
+                          ? const Icon(Icons.visibility)
+                          : const Icon(Icons.edit),
+                      label: widget.project.readonly
+                          ? const Text('View')
+                          : const Text('Edit'),
+                    ),
+                  ],
+                ),
+              )
+            ],
           ),
         );
       },

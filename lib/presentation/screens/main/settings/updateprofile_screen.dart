@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_network/image_network.dart';
 
-import '../../data/repositories/repositories.dart';
-import '../../presentation/controllers/controllers.dart';
+import '../../../../data/repositories/repositories.dart';
+import '../../../controllers/controllers.dart';
 
 class UpdateProfileScreen extends ConsumerStatefulWidget {
   const UpdateProfileScreen({Key? key}) : super(key: key);

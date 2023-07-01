@@ -6,7 +6,7 @@ import 'package:pips/application/providers/onesignal_provider.dart';
 import 'package:pips/presentation/controllers/pushnotifications_controller.dart';
 import 'package:pips/presentation/controllers/theme_controller.dart';
 
-import '../../application/providers/theme_provider.dart';
+import '../../../../application/providers/theme_provider.dart';
 
 class PreferencesScreen extends ConsumerStatefulWidget {
   const PreferencesScreen({Key? key}) : super(key: key);

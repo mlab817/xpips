@@ -3,10 +3,10 @@ import 'dart:async';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pips/application/providers/bearertoken_provider.dart';
-import 'package:pips/presentation/widgets/loading_dialog.dart';
 
 import '../../../application/app_router.dart';
+import '../../../application/providers/bearertoken_provider.dart';
+import '../../../presentation/widgets/loading_dialog.dart';
 
 @RoutePage()
 class SplashScreen extends ConsumerStatefulWidget {
@@ -20,7 +20,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   Timer? _timer;
 
   void _startDelay() {
-    _timer = Timer(Duration.zero, _goNext);
+    _timer = Timer(const Duration(milliseconds: 1500), _goNext);
   }
 
   void _goNext() {

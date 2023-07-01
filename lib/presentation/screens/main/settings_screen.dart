@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:universal_io/io.dart';
 
-import '../../../../presentation/screens/preferences_screen.dart';
-import '../../../../presentation/screens/updatepassword_screen.dart';
-import '../../../../presentation/screens/updateprofile_screen.dart';
 import '../../../../application/app_router.dart';
 import '../../controllers/auth_controller.dart';
-import '../about_screen.dart';
-import '../accountrecovery_screen.dart';
+import 'settings/about_screen.dart';
+import 'settings/accountrecovery_screen.dart';
+import 'settings/preferences_screen.dart';
+import 'settings/updatepassword_screen.dart';
+import 'settings/updateprofile_screen.dart';
 
 @RoutePage()
 class SettingsScreen extends ConsumerStatefulWidget {
