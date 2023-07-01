@@ -8,13 +8,13 @@ class Config {
 
   String get domain => _domain;
   String get baseUrl => 'https://$domain';
-  String get baseApiUrl => 'https://api.$domain';
+  String get baseApiUrl => 'https://$domain/api';
   String get wsAuthUrl => "$baseApiUrl/api/broadcasting/auth";
   String get generatePdfBaseUrl => "$baseUrl/generate-pdf";
   String get oneSignalAppId => _oneSignalAppId;
 
   static const String apiUrl =
-      'https://api.pipsv2.test'; // 'https://api.pips.da.gov.ph';
+      'https://pipsv2.test/api'; // 'https://api.pips.da.gov.ph';
 }
 
 @Riverpod(keepAlive: true)
