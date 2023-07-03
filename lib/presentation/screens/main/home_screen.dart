@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pips/application/providers/projects_provider.dart';
 
 import '../../../application/app_router.dart';
 import '../../../application/providers/searchhistory_provider.dart';
@@ -177,12 +178,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           if (width >= 768) _sidePanel(),
           // content
           Expanded(
-            child: Column(mainAxisSize: MainAxisSize.min, children: [
-              // top controls
-              _topNavigator(currentPage, lastPage),
-              // content
-              _buildContent(),
-            ]),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Card(
+                child: Column(mainAxisSize: MainAxisSize.min, children: [
+                  // top controls
+                  _topNavigator(currentPage, lastPage),
+                  // content
+                  _buildContent(),
+                ]),
+              ),
+            ),
           ),
         ],
       ),
@@ -440,6 +446,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             width: 10,
           ),
           IconButton(
+            onPressed: () {
+              ref.invalidate(homeScreenControllerProvider);
+            },
+            icon: const Icon(
+              Icons.refresh,
+            ),
+          ),
+          IconButton(
               onPressed: currentPage == 1
                   ? null
                   : () {
@@ -472,7 +486,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         data: (data) {
           if (data.data.isEmpty) {
             return const Center(
-              child: Text('NO PROJECTS HERE.'),
+              child: Text('NO PROJECTS.'),
+            );
+          }
+
+          if (projectsAsync.isRefreshing) {
+            return const Center(
+              child: LoadingOverlay(),
             );
           }
 

@@ -6,7 +6,6 @@ import '../../../../application/functions.dart';
 import '../../../../data/responses/notifications_response.dart';
 import '../../../../presentation/controllers/notifications_controller.dart';
 import '../../../../presentation/widgets/loading_dialog.dart';
-import '../../../../presentation/widgets/logout_button.dart';
 import '../../resources/strings_manager.dart';
 
 enum NotificationStatus {
@@ -36,28 +35,27 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
         title: const Text(AppStrings.notifications),
         scrolledUnderElevation: 0.0,
         automaticallyImplyLeading: false,
-        actions: const [
-          LogoutButton(),
-        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            _buildPaginationControls(),
-            valueAsync.when(
-              data: (data) {
-                if (valueAsync.isRefreshing) {
-                  return const LoadingOverlay();
-                }
+        child: Card(
+          child: Column(
+            children: [
+              _buildPaginationControls(),
+              valueAsync.when(
+                data: (data) {
+                  if (valueAsync.isRefreshing) {
+                    return const LoadingOverlay();
+                  }
 
-                return _buildList(data, ref);
+                  return _buildList(data, ref);
                 },
-              error: (error, stackTrace) => _buildError(error),
-              loading: () =>
-                  const Expanded(child: Center(child: LoadingOverlay())),
-            ),
-          ],
+                error: (error, stackTrace) => _buildError(error),
+                loading: () =>
+                    const Expanded(child: Center(child: LoadingOverlay())),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -69,89 +67,98 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
     final lastPage =
         ref.watch(notificationsProvider).value?.meta.pagination.last;
 
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        children: [
-          Expanded(
-            child: TextField(
-              decoration: const InputDecoration(
-                prefixIcon: Icon(Icons.search),
-                hintText: 'Type and press enter to search',
-                fillColor: Colors.transparent,
-                hoverColor: Colors.transparent,
-                focusColor: Colors.transparent,
-                border: InputBorder.none,
-                focusedBorder: InputBorder.none,
-                enabledBorder: InputBorder.none,
-              ),
-              onSubmitted: (String value) {
-                ref
-                    .read(notificationsRequestControllerProvider.notifier)
-                    .update(q: value);
-              },
+    return Row(
+      children: [
+        Expanded(
+          child: TextField(
+            decoration: const InputDecoration(
+              prefixIcon: Icon(Icons.search),
+              hintText: 'Type and press enter to search',
+              fillColor: Colors.transparent,
+              hoverColor: Colors.transparent,
+              focusColor: Colors.transparent,
+              border: InputBorder.none,
+              focusedBorder: InputBorder.none,
+              enabledBorder: InputBorder.none,
             ),
-          ),
-          const Spacer(),
-          SegmentedButton<NotificationStatus>(
-            selected: {_selected},
-            segments: const <ButtonSegment<NotificationStatus>>[
-              ButtonSegment(
-                value: NotificationStatus.all,
-                label: Text('ALL'),
-              ),
-              ButtonSegment(
-                value: NotificationStatus.unread,
-                label: Text('UNREAD'),
-              ),
-              ButtonSegment(
-                value: NotificationStatus.read,
-                label: Text('READ'),
-              ),
-            ],
-            onSelectionChanged: (Set<NotificationStatus> newSelection) {
-              var filter = '';
-
-              switch (newSelection.first) {
-                case NotificationStatus.all:
-                  filter = 'all';
-                case NotificationStatus.unread:
-                  filter = 'unread';
-                case NotificationStatus.read:
-                  filter = 'read';
-                default:
-                  filter = 'all';
-              }
-
+            onSubmitted: (String value) {
               ref
                   .read(notificationsRequestControllerProvider.notifier)
-                  .update(filter: filter);
-              setState(() {
-                _selected = newSelection.first;
-              });
+                  .update(q: value);
             },
           ),
-          IconButton(
-              onPressed: currentPage == 1
-                  ? null
-                  : () {
-                      ref
-                          .read(notificationsRequestControllerProvider.notifier)
-                          .previousPage();
-                    },
-              icon: const Icon(Icons.chevron_left)),
-          Text('$currentPage/$lastPage'),
-          IconButton(
-              onPressed: currentPage == lastPage
-                  ? null
-                  : () {
-                      ref
-                          .read(notificationsRequestControllerProvider.notifier)
-                          .nextPage();
-                    },
-              icon: const Icon(Icons.chevron_right)),
-        ],
-      ),
+        ),
+        const Spacer(),
+        _buildStatusSwitcher(),
+        IconButton(
+          onPressed: () {
+            ref.invalidate(notificationsProvider);
+          },
+          icon: const Icon(
+            Icons.refresh,
+          ),
+        ),
+        IconButton(
+            onPressed: currentPage == 1
+                ? null
+                : () {
+                    ref
+                        .read(notificationsRequestControllerProvider.notifier)
+                        .previousPage();
+                  },
+            icon: const Icon(Icons.chevron_left)),
+        Text('$currentPage/$lastPage'),
+        IconButton(
+            onPressed: currentPage == lastPage
+                ? null
+                : () {
+                    ref
+                        .read(notificationsRequestControllerProvider.notifier)
+                        .nextPage();
+                  },
+            icon: const Icon(Icons.chevron_right)),
+      ],
+    );
+  }
+
+  Widget _buildStatusSwitcher() {
+    return SegmentedButton<NotificationStatus>(
+      selected: {_selected},
+      segments: const <ButtonSegment<NotificationStatus>>[
+        ButtonSegment(
+          value: NotificationStatus.all,
+          label: Text('ALL'),
+        ),
+        ButtonSegment(
+          value: NotificationStatus.unread,
+          label: Text('UNREAD'),
+        ),
+        ButtonSegment(
+          value: NotificationStatus.read,
+          label: Text('READ'),
+        ),
+      ],
+      onSelectionChanged: (Set<NotificationStatus> newSelection) {
+        var filter = '';
+
+        switch (newSelection.first) {
+          case NotificationStatus.all:
+            filter = 'all';
+          case NotificationStatus.unread:
+            filter = 'unread';
+          case NotificationStatus.read:
+            filter = 'read';
+          default:
+            filter = 'all';
+        }
+
+        ref
+            .read(notificationsRequestControllerProvider.notifier)
+            .update(filter: filter);
+        setState(() {
+          _selected = newSelection.first;
+        });
+      },
     );
   }
 
@@ -160,6 +167,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
 
     return Expanded(
       child: ListView.builder(
+        physics: const ClampingScrollPhysics(),
         itemCount: notifications.length,
         itemBuilder: (context, index) {
           final notification = notifications[index];

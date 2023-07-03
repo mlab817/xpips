@@ -5,7 +5,6 @@ import 'package:pips/domain/models/models.dart';
 import '../data/requests/newproject_request.dart';
 import '../data/requests/updateprofile_request.dart';
 import '../data/responses/project_response.dart';
-import '../domain/models/simple_project.dart';
 
 extension UserToProfileRequest on User {
   UpdateProfileRequest toUpdateProfileRequest() {

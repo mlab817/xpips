@@ -114,7 +114,7 @@ class _FsInvestmentEditorState extends ConsumerState<FsInvestmentEditor> {
     final width = MediaQuery.of(context).size.width;
 
     final curSelectedFs = ref
-        .watch(fullProjectControllerProvider(widget.project.uuid!))
+        .watch(fullProjectControllerProvider(widget.project.uuid))
         .fsInvestments
         .map((e) => e.fundingSource);
 

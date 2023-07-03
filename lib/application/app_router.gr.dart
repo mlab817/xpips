@@ -87,16 +87,6 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const HomeScreen(),
       );
     },
-    PapEvaluationRoute.name: (routeData) {
-      final args = routeData.argsAs<PapEvaluationRouteArgs>();
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: PapEvaluationScreen(
-          key: args.key,
-          project: args.project,
-        ),
-      );
-    },
     MainRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -119,6 +109,16 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const SplashScreen(),
+      );
+    },
+    PapEvaluationRoute.name: (routeData) {
+      final args = routeData.argsAs<PapEvaluationRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: PapEvaluationScreen(
+          key: args.key,
+          project: args.project,
+        ),
       );
     },
   };
@@ -304,44 +304,6 @@ class HomeRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [PapEvaluationScreen]
-class PapEvaluationRoute extends PageRouteInfo<PapEvaluationRouteArgs> {
-  PapEvaluationRoute({
-    Key? key,
-    required FullProject project,
-    List<PageRouteInfo>? children,
-  }) : super(
-          PapEvaluationRoute.name,
-          args: PapEvaluationRouteArgs(
-            key: key,
-            project: project,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'PapEvaluationRoute';
-
-  static const PageInfo<PapEvaluationRouteArgs> page =
-      PageInfo<PapEvaluationRouteArgs>(name);
-}
-
-class PapEvaluationRouteArgs {
-  const PapEvaluationRouteArgs({
-    this.key,
-    required this.project,
-  });
-
-  final Key? key;
-
-  final FullProject project;
-
-  @override
-  String toString() {
-    return 'PapEvaluationRouteArgs{key: $key, project: $project}';
-  }
-}
-
-/// generated route for
 /// [MainScreen]
 class MainRoute extends PageRouteInfo<void> {
   const MainRoute({List<PageRouteInfo>? children})
@@ -406,4 +368,42 @@ class SplashRoute extends PageRouteInfo<void> {
   static const String name = 'SplashRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [PapEvaluationScreen]
+class PapEvaluationRoute extends PageRouteInfo<PapEvaluationRouteArgs> {
+  PapEvaluationRoute({
+    Key? key,
+    required FullProject project,
+    List<PageRouteInfo>? children,
+  }) : super(
+          PapEvaluationRoute.name,
+          args: PapEvaluationRouteArgs(
+            key: key,
+            project: project,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'PapEvaluationRoute';
+
+  static const PageInfo<PapEvaluationRouteArgs> page =
+      PageInfo<PapEvaluationRouteArgs>(name);
+}
+
+class PapEvaluationRouteArgs {
+  const PapEvaluationRouteArgs({
+    this.key,
+    required this.project,
+  });
+
+  final Key? key;
+
+  final FullProject project;
+
+  @override
+  String toString() {
+    return 'PapEvaluationRouteArgs{key: $key, project: $project}';
+  }
 }

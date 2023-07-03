@@ -116,7 +116,7 @@ class _RegionalInvestmentEditorState
     final width = MediaQuery.of(context).size.width;
 
     final curSelectedRegions = ref
-        .watch(fullProjectControllerProvider(widget.project.uuid!))
+        .watch(fullProjectControllerProvider(widget.project.uuid))
         .regionalInvestments
         .map((e) => e.region);
 

@@ -94,6 +94,7 @@ class _NewPapScreenState extends ConsumerState<NewPapScreen> {
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: SingleChildScrollView(
+          physics: const ClampingScrollPhysics(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -112,7 +113,7 @@ class _NewPapScreenState extends ConsumerState<NewPapScreen> {
                 },
               ),
               const SizedBox(height: 30),
-              const Text('Program or Project'),
+              const Text('Select whether the PAP is a Program or Project'),
               const SizedBox(height: 10),
               Row(
                 children: optionsAsync?.types
@@ -176,6 +177,13 @@ class _NewPapScreenState extends ConsumerState<NewPapScreen> {
               ),
               const SizedBox(height: 30),
               const Text('Basis for Implementation'),
+              Text(
+                'Select as many as applicable',
+                style: Theme.of(context)
+                    .textTheme
+                    .bodySmall
+                    ?.apply(color: Colors.black38),
+              ),
               const SizedBox(height: 10),
               Column(
                 children: optionsAsync?.bases?.map(

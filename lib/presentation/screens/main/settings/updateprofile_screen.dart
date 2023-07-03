@@ -25,7 +25,7 @@ class _UpdateProfileScreenState extends ConsumerState<UpdateProfileScreen> {
   late TextEditingController _positionController;
   late TextEditingController _contactNumberController;
 
-  bool _isLoading = false;
+  final bool _isLoading = false;
 
   @override
   void initState() {

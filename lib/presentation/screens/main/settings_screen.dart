@@ -66,6 +66,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   ListView.builder(
+                    physics: const ClampingScrollPhysics(),
                     shrinkWrap: true,
                     itemCount: _menu.length,
                     itemBuilder: (context, index) {
@@ -91,6 +92,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       );
                     },
                   ),
+                  // logout button
                   Center(
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -134,97 +136,105 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               ),
             )
           : null,
-      body: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (!Platform.isAndroid)
-            ConstrainedBox(
-              constraints: const BoxConstraints(
-                maxWidth: 250,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: _menu.length,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        dense: true,
-                        title: Text(_menu[index]),
-                        onTap: () {
-                          setState(() {
-                            _currentIndex = index;
-                          });
-                        },
-                        selected: index == _currentIndex,
-                        selectedTileColor:
-                            Theme.of(context).primaryColor.withOpacity(0.2),
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(50),
-                            bottomRight: Radius.circular(50),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                  Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: FilledButton(
-                        onPressed: () {
-                          showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  title: const Text('Confirm'),
-                                  content: const Text(
-                                      'Are you sure you want to logout?'),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.pop(context, false);
-                                      },
-                                      child: const Text('Cancel'),
-                                    ),
-                                    FilledButton(
-                                      onPressed: () {
-                                        ref
-                                            .read(
-                                                authControllerProvider.notifier)
-                                            .logout();
+      body: Card(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (!Platform.isAndroid) _buildSideMenu(), // content
+            _buildContent(),
+          ],
+        ),
+      ),
+    );
+  }
 
-                                        AutoRouter.of(context)
-                                            .replace(const LoginRoute());
-                                      },
-                                      child: const Text('Confirm'),
-                                    ),
-                                  ],
-                                );
-                              });
-                        },
-                        child: const Text('Logout'),
-                      ),
-                    ),
+  Widget _buildSideMenu() {
+    return ConstrainedBox(
+      constraints: const BoxConstraints(
+        maxWidth: 250,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ListView.builder(
+            shrinkWrap: true,
+            itemCount: _menu.length,
+            itemBuilder: (context, index) {
+              return ListTile(
+                dense: true,
+                title: Text(_menu[index]),
+                onTap: () {
+                  setState(() {
+                    _currentIndex = index;
+                  });
+                },
+                selected: index == _currentIndex,
+                selectedTileColor:
+                    Theme.of(context).primaryColor.withOpacity(0.2),
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(50),
+                    bottomRight: Radius.circular(50),
                   ),
-                ],
-              ),
-            ),
+                ),
+              );
+            },
+          ),
+          _buildLogoutButton(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLogoutButton() {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: FilledButton(
+          onPressed: () {
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: const Text('Confirm'),
+                    content: const Text('Are you sure you want to logout?'),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context, false);
+                        },
+                        child: const Text('Cancel'),
+                      ),
+                      FilledButton(
+                        onPressed: () {
+                          ref.read(authControllerProvider.notifier).logout();
+
+                          AutoRouter.of(context).replace(const LoginRoute());
+                        },
+                        child: const Text('Confirm'),
+                      ),
+                    ],
+                  );
+                });
+          },
+          child: const Text('Logout'),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildContent() {
+    return Expanded(
+      child: Column(
+        children: [
+          AppBar(
+            title: Text(_titles[_currentIndex]),
+            automaticallyImplyLeading: false,
+          ),
           Expanded(
-            child: Column(
-              children: [
-                AppBar(
-                  title: Text(_titles[_currentIndex]),
-                  automaticallyImplyLeading: false,
-                ),
-                Expanded(
-                  child: _screens[_currentIndex],
-                ),
-              ],
-            ),
+            child: _screens[_currentIndex],
           ),
         ],
       ),

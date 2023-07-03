@@ -31,64 +31,78 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         title: const Text('COMMENTS'),
         scrolledUnderElevation: 0.0,
         automaticallyImplyLeading: false,
-        actions: const [
-          LogoutButton(),
-        ],
       ),
-      body: Column(children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(
-            vertical: 8.0,
-            horizontal: 16.0,
-          ),
-          child: Row(
-            children: [
-              const Spacer(),
-              IconButton(
-                  onPressed: currentPage > 1
-                      ? () {
-                          ref
-                              .read(chatsRequestControllerProvider.notifier)
-                              .previousPage();
-                        }
-                      : null,
-                  icon: const Icon(Icons.chevron_left)),
-              Text('$currentPage/$lastPage'),
-              IconButton(
-                  onPressed: currentPage < lastPage
-                      ? () {
-                          ref
-                              .read(chatsRequestControllerProvider.notifier)
-                              .nextPage();
-                        }
-                      : null,
-                  icon: const Icon(Icons.chevron_right)),
-            ],
-          ),
-        ),
-        Expanded(
-          child: chatsAsync.when(
-            data: (data) {
-              if (data.data.isEmpty) {
-                return const Center(
-                  child: Text('NO COMMENTS'),
-                );
-              }
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Card(
+          child: Column(children: [
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.search),
+                      border: InputBorder.none,
+                      enabledBorder: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                      fillColor: Colors.transparent,
+                      filled: false,
+                      hintText: 'Type and press enter to search',
+                    ),
+                    onSubmitted: (String? value) {
+                      if (value == null || value.isEmpty) return;
 
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: _buildList(data),
-              );
-            },
-            error: (error, stackTrace) {
-              return _buildError(error);
-            },
-            loading: () {
-              return const LoadingOverlay();
-            },
-          ),
+                      //
+                      ref
+                          .read(chatsRequestControllerProvider.notifier)
+                          .updateQuery(value);
+                    },
+                  ),
+                ),
+                const Spacer(),
+                IconButton(
+                    onPressed: currentPage > 1
+                        ? () {
+                            ref
+                                .read(chatsRequestControllerProvider.notifier)
+                                .previousPage();
+                          }
+                        : null,
+                    icon: const Icon(Icons.chevron_left)),
+                Text('$currentPage/$lastPage'),
+                IconButton(
+                    onPressed: currentPage < lastPage
+                        ? () {
+                            ref
+                                .read(chatsRequestControllerProvider.notifier)
+                                .nextPage();
+                          }
+                        : null,
+                    icon: const Icon(Icons.chevron_right)),
+              ],
+            ),
+            Expanded(
+              child: chatsAsync.when(
+                data: (data) {
+                  if (data.data.isEmpty) {
+                    return const Center(
+                      child: Text('NO COMMENTS'),
+                    );
+                  }
+
+                  return _buildList(data);
+                },
+                error: (error, stackTrace) {
+                  return _buildError(error);
+                },
+                loading: () {
+                  return const LoadingOverlay();
+                },
+              ),
+            ),
+          ]),
         ),
-      ]),
+      ),
     );
   }
 

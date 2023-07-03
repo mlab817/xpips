@@ -53,37 +53,37 @@ ThemeData darkTheme(DarkThemeRef ref) {
       titleLarge: GoogleFonts.bebasNeue().copyWith(
         fontSize: 18,
       ),
-      titleMedium: TextStyle(
+      titleMedium: const TextStyle(
         fontSize: 16,
       ),
-      titleSmall: TextStyle(
+      titleSmall: const TextStyle(
         fontSize: 14,
       ),
-      headlineLarge: TextStyle(
+      headlineLarge: const TextStyle(
         fontSize: 12,
       ),
-      headlineMedium: TextStyle(
+      headlineMedium: const TextStyle(
         fontSize: 10,
       ),
-      headlineSmall: TextStyle(
+      headlineSmall: const TextStyle(
         fontSize: 9,
       ),
-      bodyLarge: TextStyle(
+      bodyLarge: const TextStyle(
         fontSize: 11,
       ),
-      bodyMedium: TextStyle(
+      bodyMedium: const TextStyle(
         fontSize: 9,
       ),
-      bodySmall: TextStyle(
+      bodySmall: const TextStyle(
         fontSize: 8,
       ),
-      labelLarge: TextStyle(
+      labelLarge: const TextStyle(
         fontSize: 11,
       ),
-      labelMedium: TextStyle(
+      labelMedium: const TextStyle(
         fontSize: 9,
       ),
-      labelSmall: TextStyle(
+      labelSmall: const TextStyle(
         fontSize: 8,
       ),
     ),

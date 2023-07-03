@@ -6,7 +6,6 @@ import 'package:retrofit/retrofit.dart';
 import '../../application/config.dart';
 import '../../data/requests/requests.dart';
 import '../../data/responses/responses.dart';
-import '../../domain/models/evaluation_report.dart';
 import '../../domain/models/models.dart';
 import '../requests/login_request.dart';
 import '../responses/user_response.dart';
