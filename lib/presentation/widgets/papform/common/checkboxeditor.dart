@@ -1,10 +1,9 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pips/presentation/widgets/papform/common/editbutton.dart';
 
-import '../../../../domain/models/fullproject.dart';
-import '../../../../domain/models/option.dart';
+import '../../../../presentation/widgets/papform/common/editbutton.dart';
+import '../../../../domain/entities/models.dart';
 import '../../../controllers/patchproject_controller.dart';
 
 class CheckboxEditor extends ConsumerStatefulWidget {
@@ -31,6 +30,19 @@ class CheckboxEditor extends ConsumerStatefulWidget {
 
 class _CheckboxEditorState extends ConsumerState<CheckboxEditor> {
   void _edit() {
+    showDialog(
+        context: context,
+        builder: (builder) {
+          return Dialog(
+            child: CheckboxForm(
+              fieldLabel: widget.fieldLabel,
+              options: widget.options,
+              oldValue: widget.oldValue,
+              onSubmit: widget.onSubmit,
+            ),
+          );
+        });
+
     //
     Navigator.of(context).push(
       MaterialPageRoute(
@@ -64,6 +76,7 @@ class _CheckboxEditorState extends ConsumerState<CheckboxEditor> {
             ? null
             : EditButton(
                 onPressed: widget.enabled ? () => _edit() : null,
+                enabled: widget.enabled,
               ),
         enabled: widget.enabled,
       ),
@@ -146,33 +159,62 @@ class _CheckboxFormState extends ConsumerState<CheckboxForm> {
           ),
         ],
       ),
-      body: ListView.builder(
-          itemCount: widget.options.length,
-          itemBuilder: (context, index) {
-            final option = widget.options[index];
-
-            return CheckboxListTile.adaptive(
-              value: newValue
-                  .where((element) => option.value == element.value)
-                  .isNotEmpty,
-              subtitle:
-                  option.description != null ? Text(option.description!) : null,
-              activeColor: Theme.of(context).primaryColor,
-              controlAffinity: ListTileControlAffinity.leading,
-              onChanged: (bool? value) {
+      body: Column(
+        children: [
+          CheckboxListTile.adaptive(
+            value: widget.options.length == newValue.length,
+            title: const Text('CHECK ALL'),
+            activeColor: Theme.of(context).primaryColor,
+            onChanged: (bool? value) {
+              if (value ?? false) {
+                //
                 setState(() {
-                  if (value ?? false) {
-                    newValue.add(option);
-                  } else {
-                    newValue.remove(option);
-                  }
+                  newValue = widget.options;
                 });
-              },
-              title: Text(
-                option.label,
-              ),
-            );
-          }),
+              } else {
+                setState(() {
+                  // clear
+                  newValue = [];
+                });
+              }
+            },
+            controlAffinity: ListTileControlAffinity.leading,
+          ),
+          const Divider(),
+          Expanded(
+            child: ListView.builder(
+                physics: const ClampingScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: widget.options.length,
+                itemBuilder: (context, index) {
+                  final option = widget.options[index];
+
+                  return CheckboxListTile.adaptive(
+                    value: newValue
+                        .where((element) => option.value == element.value)
+                        .isNotEmpty,
+                    subtitle: option.description != null
+                        ? Text(option.description!)
+                        : null,
+                    activeColor: Theme.of(context).primaryColor,
+                    controlAffinity: ListTileControlAffinity.leading,
+                    onChanged: (bool? value) {
+                      setState(() {
+                        if (value ?? false) {
+                          newValue.add(option);
+                        } else {
+                          newValue.remove(option);
+                        }
+                      });
+                    },
+                    title: Text(
+                      option.label,
+                    ),
+                  );
+                }),
+          ),
+        ],
+      ),
     );
   }
 }

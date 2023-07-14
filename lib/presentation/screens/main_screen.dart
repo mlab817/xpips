@@ -7,7 +7,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pips/presentation/controllers/theme_controller.dart';
 
 import '../../application/app_router.dart';
-import '../../domain/models/notifications.dart';
+import '../../domain/entities/models.dart';
 import '../controllers/notificationsstream_controller.dart';
 import '../widgets/logout_button.dart';
 
@@ -73,7 +73,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
         routes: const [
           HomeRoute(),
           ArchiveRoute(),
-          ChatRoute(),
+          CommentsRoute(),
           NotificationsRoute(),
           SettingsRoute(),
         ],

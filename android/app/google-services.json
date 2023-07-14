@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "595239640103",
+    "project_id": "pips-demo-app",
+    "storage_bucket": "pips-demo-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:595239640103:android:c7bb1588af9ae0644bc202",
+        "android_client_info": {
+          "package_name": "com.mlab817.pips"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "595239640103-u4mo2ub7bgi6haskjs2keef4avpo7ihd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyANco1rLG0x8PvdOhqu9YtLhTKFZd5kDcs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "595239640103-u4mo2ub7bgi6haskjs2keef4avpo7ihd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

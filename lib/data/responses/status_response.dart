@@ -1,7 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../domain/models/fs_investment.dart';
-import '../../domain/models/regional_investment.dart';
+import '../../domain/entities/models.dart';
 
 part 'status_response.g.dart';
 

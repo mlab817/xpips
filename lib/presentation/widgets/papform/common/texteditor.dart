@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pips/presentation/widgets/papform/common/editbutton.dart';
 
 import '../../../../presentation/controllers/patchproject_controller.dart';
-import '../../../../domain/models/fullproject.dart';
+import '../../../../domain/entities/models.dart';
 
 class TextEditor extends ConsumerStatefulWidget {
   const TextEditor({
@@ -66,6 +66,7 @@ class _TextEditor extends ConsumerState<TextEditor> {
             ? null
             : EditButton(
                 onPressed: widget.enabled ? () => _edit() : null,
+                enabled: widget.enabled,
               ),
         onTap: widget.project.readonly
             ? null

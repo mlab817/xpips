@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pips/domain/models/models.dart';
+import 'package:pips/domain/entities/models.dart';
 
 import '../data/requests/newproject_request.dart';
 import '../data/requests/updateprofile_request.dart';

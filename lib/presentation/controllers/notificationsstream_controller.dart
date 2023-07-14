@@ -1,6 +1,6 @@
 import 'package:dart_pusher_channels/dart_pusher_channels.dart';
 import 'package:pips/data/data_sources/pusher_client.dart';
-import 'package:pips/domain/models/models.dart';
+import 'package:pips/domain/entities/models.dart';
 import 'package:pips/presentation/controllers/currentuser_controller.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

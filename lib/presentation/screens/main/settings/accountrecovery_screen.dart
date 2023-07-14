@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pips/presentation/controllers/controllers.dart';
+import 'package:universal_io/io.dart';
 
 class AccountRecoveryScreen extends ConsumerStatefulWidget {
   const AccountRecoveryScreen({Key? key}) : super(key: key);
@@ -16,6 +17,11 @@ class _AccountRecoveryScreenState extends ConsumerState<AccountRecoveryScreen> {
     final email = ref.watch(authControllerProvider)?.email;
 
     return Scaffold(
+      appBar: Platform.isAndroid
+          ? AppBar(
+              title: const Text('Account Recovery'),
+            )
+          : null,
       body: Column(children: [
         ListTile(
           title: const Text(

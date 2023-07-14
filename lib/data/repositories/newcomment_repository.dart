@@ -1,6 +1,7 @@
 import 'package:pips/data/data_sources/app_service_client.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../application/functions.dart';
 import '../../application/providers/appserviceclient_provider.dart';
 import '../requests/comment_request.dart';
 import '../responses/newcomment_response.dart';
@@ -26,7 +27,11 @@ class NewCommentRepositoryImplementer implements NewCommentRepository {
   @override
   Future<NewCommentResponse> addComment(
       String uuid, CommentRequest request) async {
-    return client.addComment(uuid, request);
+    try {
+      return await client.addComment(uuid, request);
+    } catch (e) {
+      throw formatError(e);
+    }
   }
 }
 

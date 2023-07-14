@@ -8,7 +8,7 @@ import '../../application/app_router.dart';
 import '../../application/config.dart';
 import '../../application/functions.dart';
 import '../../data/repositories/repositories.dart';
-import '../../domain/models/models.dart';
+import '../../domain/entities/models.dart';
 import '../controllers/controllers.dart';
 import 'loading_dialog.dart';
 
@@ -151,6 +151,7 @@ class _ProjectListTileState extends ConsumerState<ProjectListTile> {
               ),
               Expanded(
                 child: SingleChildScrollView(
+                  physics: const ClampingScrollPhysics(),
                   child: Column(
                     // mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -272,77 +273,7 @@ class _ProjectListTileState extends ConsumerState<ProjectListTile> {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    if (widget.project.readonly)
-                      Padding(
-                        padding: const EdgeInsets.only(right: 8.0),
-                        child: FilledButton.icon(
-                          style: ButtonStyle(
-                              backgroundColor: MaterialStateColor.resolveWith(
-                            (states) => Theme.of(context).colorScheme.tertiary,
-                          )),
-                          onPressed: _project.permissions.duplicate
-                              ? () {
-                                  _handleDuplicate();
-                                }
-                              : null,
-                          icon: const Icon(Icons.copy),
-                          label: const Text('Duplicate'),
-                        ),
-                      ),
-                    const Spacer(),
-                    if (!widget.project.readonly)
-                      Padding(
-                        padding: const EdgeInsets.only(right: 8.0),
-                        child: FilledButton.icon(
-                          onPressed: _project.permissions.delete
-                              ? () {
-                                  _confirmDelete();
-                                }
-                              : null,
-                          icon: const Icon(Icons.delete),
-                          label: const Text('Delete'),
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateColor.resolveWith(
-                                (states) =>
-                                    Theme.of(context).colorScheme.error),
-                          ),
-                        ),
-                      ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 8.0),
-                      child: FilledButton.icon(
-                        onPressed: _openInNewWindow,
-                        icon: const Icon(Icons.picture_as_pdf),
-                        label: const Text('PDF'),
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateColor.resolveWith(
-                              (states) =>
-                                  Theme.of(context).colorScheme.secondary),
-                        ),
-                      ),
-                    ),
-                    FilledButton.icon(
-                      onPressed: _project.permissions.update
-                          ? () {
-                              AutoRouter.of(context).push(PapViewRoute(
-                                uuid: _project.uuid,
-                              ));
-                            }
-                          : null,
-                      icon: widget.project.readonly
-                          ? const Icon(Icons.visibility)
-                          : const Icon(Icons.edit),
-                      label: widget.project.readonly
-                          ? const Text('View')
-                          : const Text('Edit'),
-                    ),
-                  ],
-                ),
-              )
+              _buildActions(),
             ],
           ),
         );
@@ -445,6 +376,144 @@ class _ProjectListTileState extends ConsumerState<ProjectListTile> {
           ),
         ),
         onTap: _showDialog,
+      ),
+    );
+  }
+
+  Widget _buildActions() {
+    double screenWidth = MediaQuery.sizeOf(context).width;
+
+    print(screenWidth);
+
+    bool isSmall = screenWidth <= 500;
+
+    print(isSmall);
+
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: isSmall
+                ? IconButton(
+                    onPressed: () {
+                      AutoRouter.of(context)
+                          .push(ProjectCommentsRoute(uuid: _project.uuid));
+                    },
+                    icon: const Icon(Icons.chat_bubble),
+                  )
+                : FilledButton.icon(
+                    style: ButtonStyle(
+                        backgroundColor: MaterialStateColor.resolveWith(
+                      (states) => Theme.of(context).colorScheme.tertiary,
+                    )),
+                    onPressed: () {
+                      AutoRouter.of(context)
+                          .push(ProjectCommentsRoute(uuid: _project.uuid));
+                    },
+                    icon: const Icon(Icons.chat_bubble),
+                    label: const Text('COMMENTS'),
+                  ),
+          ),
+          if (widget.project.readonly)
+            Padding(
+              padding: const EdgeInsets.only(right: 8.0),
+              child: isSmall
+                  ? IconButton(
+                      onPressed: _project.permissions.duplicate
+                          ? _handleDuplicate
+                          : null,
+                      icon: const Icon(Icons.copy),
+                    )
+                  : FilledButton.icon(
+                      style: ButtonStyle(
+                          backgroundColor: MaterialStateColor.resolveWith(
+                        (states) => Theme.of(context).colorScheme.tertiary,
+                      )),
+                      onPressed: _project.permissions.duplicate
+                          ? _handleDuplicate
+                          : null,
+                      icon: const Icon(Icons.copy),
+                      label: const Text('COPY'),
+                    ),
+            ),
+          if (!widget.project.readonly)
+            Padding(
+              padding: const EdgeInsets.only(right: 8.0),
+              child: isSmall
+                  ? IconButton(
+                      onPressed: _project.permissions.delete
+                          ? () {
+                              _confirmDelete();
+                            }
+                          : null,
+                      icon: const Icon(Icons.delete),
+                    )
+                  : FilledButton.icon(
+                      onPressed: _project.permissions.delete
+                          ? () {
+                              _confirmDelete();
+                            }
+                          : null,
+                      icon: const Icon(Icons.delete),
+                      label: const Text('Delete'),
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateColor.resolveWith(
+                            (states) => Theme.of(context).colorScheme.error),
+                      ),
+                    ),
+            ),
+          Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: isSmall
+                ? IconButton(
+                    onPressed: _openInNewWindow,
+                    icon: const Icon(Icons.picture_as_pdf))
+                : FilledButton.icon(
+                    onPressed: _openInNewWindow,
+                    icon: const Icon(Icons.picture_as_pdf),
+                    label: const Text('PDF'),
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateColor.resolveWith(
+                          (states) => Theme.of(context).colorScheme.secondary),
+                    ),
+                  ),
+          ),
+          isSmall
+              ? IconButton(
+                  onPressed: (widget.project.readonly
+                          ? widget.project.permissions.view
+                          : widget.project.permissions.update)
+                      ? () {
+                          AutoRouter.of(context).push(PapViewRoute(
+                            uuid: _project.uuid,
+                          ));
+                        }
+                      : null,
+                  icon: widget.project.readonly
+                      ? const Icon(Icons.visibility)
+                      : const Icon(Icons.edit),
+                )
+              : FilledButton.icon(
+                  onPressed: (widget.project.readonly
+                          ? widget.project.permissions.view
+                          : widget.project.permissions.update)
+                      ? () {
+                          AutoRouter.of(context).push(PapViewRoute(
+                            uuid: _project.uuid,
+                          ));
+                        }
+                      : null,
+                  icon: widget.project.readonly
+                      ? const Icon(Icons.visibility)
+                      : const Icon(Icons.edit),
+                  label: widget.project.readonly
+                      ? const Text('VIEW')
+                      : const Text('EDIT'),
+                ),
+        ],
       ),
     );
   }

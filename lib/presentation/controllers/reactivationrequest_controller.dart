@@ -55,15 +55,14 @@ Future<ReactivationResponse> requestReactivation(
 
 @Riverpod(keepAlive: true)
 class RequestReactivationController extends _$RequestReactivationController {
-  Future<ReactivationResponse> submit() async {
+  Future<ReactivationResponse> submit(ReactivationRequest request) async {
     final repo = ref.watch(authRepositoryProvider);
-    final payload = ref.watch(reactivationRequestControllerProvider);
 
     state = const AsyncLoading();
 
-    state = await AsyncValue.guard(() => repo.requestReactivation(payload));
+    state = await AsyncValue.guard(() => repo.requestReactivation(request));
 
-    return repo.requestReactivation(payload);
+    return repo.requestReactivation(request);
   }
 
   //

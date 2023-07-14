@@ -5,7 +5,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../data/repositories/notifications_repository.dart';
 import '../../data/requests/notifications_request.dart';
 import '../../data/responses/notifications_response.dart';
-import '../../domain/models/notifications.dart';
+import '../../domain/entities/notifications.dart';
 
 part 'notifications_controller.g.dart';
 
@@ -29,11 +29,11 @@ class NotificationsRequestController extends _$NotificationsRequestController {
   }
 
   void previousPage() {
-    state = state.copyWith(page: state.page-1);
+    state = state.copyWith(page: state.page - 1);
   }
 
   void nextPage() {
-    state = state.copyWith(page: state.page+1);
+    state = state.copyWith(page: state.page + 1);
   }
 }
 

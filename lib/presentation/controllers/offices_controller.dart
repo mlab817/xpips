@@ -5,7 +5,7 @@ import 'package:pips/data/responses/offices_response.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../data/repositories/offices_repository.dart';
-import '../../domain/models/office.dart';
+import '../../domain/entities/models.dart';
 
 part 'offices_controller.g.dart';
 

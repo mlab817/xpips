@@ -1,17 +1,19 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pips/application/providers/projects_provider.dart';
 
+import '../../../presentation/widgets/homehelpdialog.dart';
 import '../../../application/app_router.dart';
 import '../../../application/providers/searchhistory_provider.dart';
-import '../../../domain/models/models.dart';
+import '../../../domain/entities/models.dart';
+import '../../../presentation/widgets/empty.dart';
 import '../../controllers/deadline_controller.dart';
 import '../../controllers/home_controller.dart';
 import '../../controllers/homesearch_controller.dart';
 import '../../controllers/options_controller.dart';
 import '../../controllers/pipolstatus_controller.dart';
 import '../../controllers/updatingperiod_controller.dart';
+import '../../widgets/homebottomsheet.dart';
 import '../../widgets/loading_dialog.dart';
 import '../../widgets/project_list_tile.dart';
 
@@ -34,7 +36,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       showDragHandle: true,
       enableDrag: true,
       context: context,
-      builder: (context) => const ProjectRequestBottomSheet(),
+      builder: (context) => const HomeBottomSheet(),
     );
   }
 
@@ -50,6 +52,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     });
   }
 
+  void _showHelp() {
+    // TODO: replace with user guide link
+    showDialog(
+        context: context,
+        builder: (context) {
+          return const Dialog(
+            child: HomeHelpScreen(),
+          );
+        });
+    // AutoRouter.of(context).push(const HomeHelpRoute());
+  }
+
   @override
   void dispose() {
     super.dispose();
@@ -63,7 +77,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     double width = size.width;
 
     final menuAsync = ref.watch(pipsStatusControllerProvider);
-    final pipolAsync = ref.watch(pipolStatusControllerProvider);
 
     final projectsRequest = ref.watch(projectsRequestControllerProvider);
 
@@ -223,7 +236,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           AutoRouter.of(context).push(const NewPapRoute());
                         },
                         icon: const Icon(Icons.edit),
-                        label: const Text('New'),
+                        label: const Text('NEW'),
                       ),
                     ),
                     IconButton(
@@ -315,6 +328,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ),
                 ),
               ),
+              const Divider(),
               // PIPOL STATUS MENU
               Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -418,63 +432,67 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: Row(
         children: [
+          _buildRefreshButton(),
           const Spacer(),
-          DropdownButton<String>(
-              icon: const Icon(Icons.sort),
-              items: const [
-                DropdownMenuItem(
-                  value: 'title',
-                  child: Text('Title'),
-                ),
-                DropdownMenuItem(
-                  value: 'office_id',
-                  child: Text('Office'),
-                ),
-                DropdownMenuItem(
-                  value: 'updated_at',
-                  child: Text('Date Last Updated'),
-                ),
-              ],
-              value: ref.watch(projectsRequestControllerProvider).sort,
-              hint: const Text('Sort by'),
-              onChanged: (String? value) {
-                ref
-                    .read(projectsRequestControllerProvider.notifier)
-                    .update(sort: value);
-              }),
+          _buildSortButton(),
           const SizedBox(
             width: 10,
           ),
-          IconButton(
-            onPressed: () {
-              ref.invalidate(homeScreenControllerProvider);
-            },
-            icon: const Icon(
-              Icons.refresh,
-            ),
-          ),
-          IconButton(
-              onPressed: currentPage == 1
-                  ? null
-                  : () {
-                      ref
-                          .read(projectsRequestControllerProvider.notifier)
-                          .previousPage();
-                    },
-              icon: const Icon(Icons.chevron_left)),
+          _buildPreviousPageButton(currentPage),
           _buildPageSelector(),
-          IconButton(
-              onPressed: currentPage == lastPage
-                  ? null
-                  : () {
-                      ref
-                          .read(projectsRequestControllerProvider.notifier)
-                          .nextPage();
-                    },
-              icon: const Icon(Icons.chevron_right)),
+          _buildNextPageButton(currentPage, lastPage),
+          IconButton(onPressed: _showHelp, icon: const Icon(Icons.help)),
         ],
       ),
     );
+  }
+
+  Widget _buildSortButton() {
+    return DropdownButton<String>(
+        icon: const Icon(Icons.sort),
+        items: const [
+          DropdownMenuItem(
+            value: 'title',
+            child: Text('Title'),
+          ),
+          DropdownMenuItem(
+            value: 'office_id',
+            child: Text('Office'),
+          ),
+          DropdownMenuItem(
+            value: 'updated_at',
+            child: Text('Date Last Updated'),
+          ),
+        ],
+        value: ref.watch(projectsRequestControllerProvider).sort,
+        hint: const Text('Sort by'),
+        onChanged: (String? value) {
+          ref
+              .read(projectsRequestControllerProvider.notifier)
+              .update(sort: value);
+        });
+  }
+
+  Widget _buildPreviousPageButton(int currentPage) {
+    return IconButton(
+        onPressed: currentPage == 1
+            ? null
+            : () {
+                ref
+                    .read(projectsRequestControllerProvider.notifier)
+                    .previousPage();
+              },
+        icon: const Icon(Icons.chevron_left));
+  }
+
+  Widget _buildNextPageButton(int currentPage, int lastPage) {
+    return IconButton(
+        onPressed: currentPage == lastPage
+            ? null
+            : () {
+                ref.read(projectsRequestControllerProvider.notifier).nextPage();
+              },
+        icon: const Icon(Icons.chevron_right));
   }
 
   // this should be replaceable by the project details screen
@@ -485,9 +503,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       child: projectsAsync.when(
         data: (data) {
           if (data.data.isEmpty) {
-            return const Center(
-              child: Text('NO PROJECTS.'),
-            );
+            return const Empty();
           }
 
           if (projectsAsync.isRefreshing) {
@@ -542,6 +558,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             1;
 
     return DropdownButton(
+        iconSize: 0.0,
         value: currentPage,
         focusColor: Colors.transparent,
         underline: Container(),
@@ -570,396 +587,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       ),
     );
   }
-}
 
-class ProjectRequestBottomSheet extends ConsumerStatefulWidget {
-  const ProjectRequestBottomSheet({super.key});
-
-  @override
-  ConsumerState<ProjectRequestBottomSheet> createState() =>
-      _ProjectRequestBottomSheetState();
-}
-
-class _ProjectRequestBottomSheetState
-    extends ConsumerState<ProjectRequestBottomSheet> {
-  @override
-  Widget build(BuildContext context) {
-    final optionsAsync = ref.watch(optionsControllerProvider);
-
-    // state of selections
-    var selection = ref.watch(projectsRequestControllerProvider);
-
-    return Scaffold(
-      appBar: AppBar(
-        scrolledUnderElevation: 0.0,
-        title: const Text('APPLY FILTERS'),
-        automaticallyImplyLeading: false,
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: const Text('DISMISS'),
-          ),
-        ],
+  Widget _buildRefreshButton() {
+    return IconButton(
+      onPressed: () {
+        ref.invalidate(homeScreenControllerProvider);
+      },
+      icon: const Icon(
+        Icons.refresh,
       ),
-      body: optionsAsync.when(
-          data: (data) {
-            return SizedBox(
-              width: double.infinity,
-              child: SingleChildScrollView(
-                physics: const ClampingScrollPhysics(),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Text(
-                        'OFFICES',
-                        textAlign: TextAlign.start,
-                      ),
-                    ),
-                    Wrap(
-                      children: data.offices?.map((office) {
-                            return Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Checkbox(
-                                    value: selection.offices
-                                            ?.contains(office.value) ??
-                                        false,
-                                    onChanged: (bool? value) {
-                                      final updatedSelection = ref
-                                              .watch(
-                                                  projectsRequestControllerProvider)
-                                              .offices
-                                              ?.toList() ??
-                                          [];
-
-                                      if (value != null && value) {
-                                        updatedSelection.add(office.value);
-                                      } else {
-                                        updatedSelection.remove(office.value);
-                                      }
-                                      //
-                                      ref
-                                          .read(
-                                              projectsRequestControllerProvider
-                                                  .notifier)
-                                          .update(offices: updatedSelection);
-                                    }),
-                                Text(office.label),
-                              ],
-                            );
-                          }).toList() ??
-                          [],
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Text(
-                        'TYPE',
-                        textAlign: TextAlign.start,
-                      ),
-                    ),
-                    Wrap(
-                      children: data.types?.map((type) {
-                            return Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Checkbox(
-                                  value:
-                                      selection.types?.contains(type.value) ??
-                                          false,
-                                  onChanged: (bool? value) {
-                                    print('value: $value');
-
-                                    final updatedSelection = ref
-                                            .watch(
-                                                projectsRequestControllerProvider)
-                                            .offices
-                                            ?.toList() ??
-                                        [];
-
-                                    if (value != null && value) {
-                                      updatedSelection.add(type.value);
-                                    } else {
-                                      updatedSelection.remove(type.value);
-                                    }
-                                    //
-                                    ref
-                                        .read(projectsRequestControllerProvider
-                                            .notifier)
-                                        .update(types: updatedSelection);
-                                  },
-                                ),
-                                Text(type.label),
-                              ],
-                            );
-                          }).toList() ??
-                          [],
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Text(
-                        'SPATIAL COVERAGE',
-                        textAlign: TextAlign.start,
-                      ),
-                    ),
-                    Wrap(
-                      children: data.spatialCoverages?.map((spatialCoverage) {
-                            return Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Checkbox(
-                                    value: selection.spatialCoverages
-                                            ?.contains(spatialCoverage.value) ??
-                                        false,
-                                    onChanged: (bool? value) {
-                                      final updatedSelection = ref
-                                              .watch(
-                                                  projectsRequestControllerProvider)
-                                              .spatialCoverages
-                                              ?.toList() ??
-                                          [];
-
-                                      if (value != null && value) {
-                                        updatedSelection
-                                            .add(spatialCoverage.value);
-                                      } else {
-                                        updatedSelection
-                                            .remove(spatialCoverage.value);
-                                      }
-                                      //
-                                      ref
-                                          .read(
-                                              projectsRequestControllerProvider
-                                                  .notifier)
-                                          .update(
-                                              spatialCoverages:
-                                                  updatedSelection);
-                                    }),
-                                Text(spatialCoverage.label),
-                              ],
-                            );
-                          }).toList() ??
-                          [],
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Text(
-                        'PROGRAMMING DOCUMENTS',
-                        textAlign: TextAlign.start,
-                      ),
-                    ),
-                    Wrap(
-                      children: [
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Checkbox(
-                              tristate: true,
-                              value: ref
-                                  .watch(projectsRequestControllerProvider)
-                                  .pip,
-                              onChanged: (bool? value) {
-                                ref
-                                    .read(projectsRequestControllerProvider
-                                        .notifier)
-                                    .update(pip: value);
-                              },
-                            ),
-                            const Text('PIP'),
-                          ],
-                        ),
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Checkbox(
-                              tristate: true,
-                              value: ref
-                                  .watch(projectsRequestControllerProvider)
-                                  .cip,
-                              onChanged: (bool? value) {
-                                ref
-                                    .read(projectsRequestControllerProvider
-                                        .notifier)
-                                    .update(cip: value);
-                              },
-                            ),
-                            const Text('CIP'),
-                          ],
-                        ),
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Checkbox(
-                              tristate: true,
-                              value: ref
-                                  .watch(projectsRequestControllerProvider)
-                                  .trip,
-                              onChanged: (bool? value) {
-                                ref
-                                    .read(projectsRequestControllerProvider
-                                        .notifier)
-                                    .update(trip: value);
-                              },
-                            ),
-                            const Text('TRIP'),
-                          ],
-                        ),
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Checkbox(
-                              tristate: true,
-                              value: ref
-                                  .watch(projectsRequestControllerProvider)
-                                  .rdip,
-                              onChanged: (bool? value) {
-                                ref
-                                    .read(projectsRequestControllerProvider
-                                        .notifier)
-                                    .update(rdip: value);
-                              },
-                            ),
-                            const Text('RDIP'),
-                          ],
-                        ),
-                      ],
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Text(
-                        'MAIN FUNDING SOURCE',
-                        textAlign: TextAlign.start,
-                      ),
-                    ),
-                    Wrap(
-                      children: data.fundingSources?.map((fundingSource) {
-                            return Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Checkbox(
-                                  value: ref
-                                          .watch(
-                                              projectsRequestControllerProvider)
-                                          .fundingSources
-                                          ?.contains(fundingSource.value) ??
-                                      false,
-                                  onChanged: (bool? value) {
-                                    final updatedSelection = ref
-                                            .watch(
-                                                projectsRequestControllerProvider)
-                                            .fundingSources
-                                            ?.toList() ??
-                                        [];
-
-                                    if (value != null && value) {
-                                      updatedSelection.add(fundingSource.value);
-                                    } else {
-                                      updatedSelection
-                                          .remove(fundingSource.value);
-                                    }
-                                    //
-                                    ref
-                                        .read(projectsRequestControllerProvider
-                                            .notifier)
-                                        .update(
-                                            fundingSources: updatedSelection);
-                                  },
-                                ),
-                                Text(fundingSource.label),
-                              ],
-                            );
-                          }).toList() ??
-                          [],
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Text(
-                        'PAP STATUS',
-                        textAlign: TextAlign.start,
-                      ),
-                    ),
-                    Wrap(
-                      children: data.projectStatuses?.map((projectStatus) {
-                            return Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Checkbox(
-                                  value: ref
-                                          .watch(
-                                              projectsRequestControllerProvider)
-                                          .projectStatuses
-                                          ?.contains(projectStatus.value) ??
-                                      false,
-                                  onChanged: (bool? value) {
-                                    final updatedSelection = ref
-                                            .watch(
-                                                projectsRequestControllerProvider)
-                                            .projectStatuses
-                                            ?.toList() ??
-                                        [];
-
-                                    if (value != null && value) {
-                                      updatedSelection.add(projectStatus.value);
-                                    } else {
-                                      updatedSelection
-                                          .remove(projectStatus.value);
-                                    }
-
-                                    ref
-                                        .read(projectsRequestControllerProvider
-                                            .notifier)
-                                        .update(
-                                            projectStatuses: updatedSelection);
-                                  },
-                                ),
-                                Text(projectStatus.label),
-                              ],
-                            );
-                          }).toList() ??
-                          [],
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-          error: (error, _) {
-            return Center(
-              child: Column(
-                children: [
-                  Text(error.toString()),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  FilledButton(
-                    onPressed: () {
-                      ref.invalidate(optionsControllerProvider);
-                    },
-                    child: const Text('TRY AGAIN'),
-                  ),
-                ],
-              ),
-            );
-          },
-          loading: () => const LoadingOverlay()),
+      tooltip: 'Reload page',
     );
   }
 }

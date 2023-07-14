@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:pips/domain/models/models.dart';
+import 'package:pips/domain/entities/models.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'newcommentstream_controller.g.dart';

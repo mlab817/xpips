@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../domain/models/pipsstatus.dart';
+import '../../domain/entities/pipsstatus.dart';
 
 part 'pipsstatus_response.freezed.dart';
 part 'pipsstatus_response.g.dart';

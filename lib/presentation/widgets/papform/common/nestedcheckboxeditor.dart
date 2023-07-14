@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pips/presentation/widgets/papform/common/editbutton.dart';
 
-import '../../../../domain/models/fullproject.dart';
-import '../../../../domain/models/option.dart';
+import '../../../../domain/entities/models.dart';
 import '../../../controllers/patchproject_controller.dart';
 
 class NestedCheckboxEditor extends ConsumerStatefulWidget {
@@ -62,6 +61,7 @@ class _NestedCheckboxEditorState extends ConsumerState<NestedCheckboxEditor> {
         onTap: () => _edit(),
         trailing: EditButton(
           onPressed: widget.enabled ? () => _edit() : null,
+          enabled: widget.enabled,
         ),
         enabled: widget.enabled,
       ),

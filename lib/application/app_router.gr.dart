@@ -27,18 +27,6 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const SignupScreen(),
       );
     },
-    CommentsRoute.name: (routeData) {
-      final pathParams = routeData.inheritedPathParams;
-      final args = routeData.argsAs<CommentsRouteArgs>(
-          orElse: () => CommentsRouteArgs(uuid: pathParams.getString('uuid')));
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: CommentsScreen(
-          key: args.key,
-          uuid: args.uuid,
-        ),
-      );
-    },
     RequestReactivationRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -55,12 +43,6 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const LoginScreen(),
-      );
-    },
-    ChatRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const ChatScreen(),
       );
     },
     SettingsRoute.name: (routeData) {
@@ -87,6 +69,16 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const HomeScreen(),
       );
     },
+    PapEvaluationRoute.name: (routeData) {
+      final args = routeData.argsAs<PapEvaluationRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: PapEvaluationScreen(
+          key: args.key,
+          project: args.project,
+        ),
+      );
+    },
     MainRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -111,13 +103,28 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const SplashScreen(),
       );
     },
-    PapEvaluationRoute.name: (routeData) {
-      final args = routeData.argsAs<PapEvaluationRouteArgs>();
+    HomeHelpRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: PapEvaluationScreen(
+        child: const HomeHelpScreen(),
+      );
+    },
+    CommentsRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const CommentsScreen(),
+      );
+    },
+    ProjectCommentsRoute.name: (routeData) {
+      final pathParams = routeData.inheritedPathParams;
+      final args = routeData.argsAs<ProjectCommentsRouteArgs>(
+          orElse: () =>
+              ProjectCommentsRouteArgs(uuid: pathParams.getString('uuid')));
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: ProjectCommentsScreen(
           key: args.key,
-          project: args.project,
+          uuid: args.uuid,
         ),
       );
     },
@@ -150,45 +157,6 @@ class SignupRoute extends PageRouteInfo<void> {
   static const String name = 'SignupRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [CommentsScreen]
-class CommentsRoute extends PageRouteInfo<CommentsRouteArgs> {
-  CommentsRoute({
-    Key? key,
-    required String uuid,
-    List<PageRouteInfo>? children,
-  }) : super(
-          CommentsRoute.name,
-          args: CommentsRouteArgs(
-            key: key,
-            uuid: uuid,
-          ),
-          rawPathParams: {'uuid': uuid},
-          initialChildren: children,
-        );
-
-  static const String name = 'CommentsRoute';
-
-  static const PageInfo<CommentsRouteArgs> page =
-      PageInfo<CommentsRouteArgs>(name);
-}
-
-class CommentsRouteArgs {
-  const CommentsRouteArgs({
-    this.key,
-    required this.uuid,
-  });
-
-  final Key? key;
-
-  final String uuid;
-
-  @override
-  String toString() {
-    return 'CommentsRouteArgs{key: $key, uuid: $uuid}';
-  }
 }
 
 /// generated route for
@@ -229,20 +197,6 @@ class LoginRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'LoginRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [ChatScreen]
-class ChatRoute extends PageRouteInfo<void> {
-  const ChatRoute({List<PageRouteInfo>? children})
-      : super(
-          ChatRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'ChatRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
@@ -301,6 +255,44 @@ class HomeRoute extends PageRouteInfo<void> {
   static const String name = 'HomeRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [PapEvaluationScreen]
+class PapEvaluationRoute extends PageRouteInfo<PapEvaluationRouteArgs> {
+  PapEvaluationRoute({
+    Key? key,
+    required FullProject project,
+    List<PageRouteInfo>? children,
+  }) : super(
+          PapEvaluationRoute.name,
+          args: PapEvaluationRouteArgs(
+            key: key,
+            project: project,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'PapEvaluationRoute';
+
+  static const PageInfo<PapEvaluationRouteArgs> page =
+      PageInfo<PapEvaluationRouteArgs>(name);
+}
+
+class PapEvaluationRouteArgs {
+  const PapEvaluationRouteArgs({
+    this.key,
+    required this.project,
+  });
+
+  final Key? key;
+
+  final FullProject project;
+
+  @override
+  String toString() {
+    return 'PapEvaluationRouteArgs{key: $key, project: $project}';
+  }
 }
 
 /// generated route for
@@ -371,39 +363,68 @@ class SplashRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [PapEvaluationScreen]
-class PapEvaluationRoute extends PageRouteInfo<PapEvaluationRouteArgs> {
-  PapEvaluationRoute({
-    Key? key,
-    required FullProject project,
-    List<PageRouteInfo>? children,
-  }) : super(
-          PapEvaluationRoute.name,
-          args: PapEvaluationRouteArgs(
-            key: key,
-            project: project,
-          ),
+/// [HomeHelpScreen]
+class HomeHelpRoute extends PageRouteInfo<void> {
+  const HomeHelpRoute({List<PageRouteInfo>? children})
+      : super(
+          HomeHelpRoute.name,
           initialChildren: children,
         );
 
-  static const String name = 'PapEvaluationRoute';
+  static const String name = 'HomeHelpRoute';
 
-  static const PageInfo<PapEvaluationRouteArgs> page =
-      PageInfo<PapEvaluationRouteArgs>(name);
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
-class PapEvaluationRouteArgs {
-  const PapEvaluationRouteArgs({
+/// generated route for
+/// [CommentsScreen]
+class CommentsRoute extends PageRouteInfo<void> {
+  const CommentsRoute({List<PageRouteInfo>? children})
+      : super(
+          CommentsRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'CommentsRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [ProjectCommentsScreen]
+class ProjectCommentsRoute extends PageRouteInfo<ProjectCommentsRouteArgs> {
+  ProjectCommentsRoute({
+    Key? key,
+    required String uuid,
+    List<PageRouteInfo>? children,
+  }) : super(
+          ProjectCommentsRoute.name,
+          args: ProjectCommentsRouteArgs(
+            key: key,
+            uuid: uuid,
+          ),
+          rawPathParams: {'uuid': uuid},
+          initialChildren: children,
+        );
+
+  static const String name = 'ProjectCommentsRoute';
+
+  static const PageInfo<ProjectCommentsRouteArgs> page =
+      PageInfo<ProjectCommentsRouteArgs>(name);
+}
+
+class ProjectCommentsRouteArgs {
+  const ProjectCommentsRouteArgs({
     this.key,
-    required this.project,
+    required this.uuid,
   });
 
   final Key? key;
 
-  final FullProject project;
+  final String uuid;
 
   @override
   String toString() {
-    return 'PapEvaluationRouteArgs{key: $key, project: $project}';
+    return 'ProjectCommentsRouteArgs{key: $key, uuid: $uuid}';
   }
 }

@@ -2,7 +2,7 @@ import 'package:pips/data/repositories/repositories.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../data/responses/patchproject_response.dart';
-import '../../domain/models/cost_schedule.dart';
+import '../../domain/entities/models.dart';
 
 part 'patchproject_controller.g.dart';
 

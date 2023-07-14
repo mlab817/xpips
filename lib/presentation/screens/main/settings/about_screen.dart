@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pips/application/providers/appversion_provider.dart';
+import 'package:universal_io/io.dart';
 
 class AboutScreen extends ConsumerStatefulWidget {
   const AboutScreen({Key? key}) : super(key: key);
@@ -13,6 +14,11 @@ class _AboutScreenState extends ConsumerState<AboutScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: Platform.isAndroid
+          ? AppBar(
+              title: const Text('About'),
+            )
+          : null,
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(8.0),

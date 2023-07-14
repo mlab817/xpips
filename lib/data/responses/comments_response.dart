@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:pips/domain/models/comment.dart';
+import 'package:pips/domain/entities/comment.dart';
 
 part 'comments_response.freezed.dart';
 part 'comments_response.g.dart';

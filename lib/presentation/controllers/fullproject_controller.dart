@@ -2,7 +2,7 @@ import 'package:pips/data/responses/uploadattachment_response.dart';
 import 'package:pips/presentation/controllers/controllers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../domain/models/models.dart';
+import '../../domain/entities/models.dart';
 
 part 'fullproject_controller.g.dart';
 

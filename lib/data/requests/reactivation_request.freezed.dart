@@ -107,8 +107,9 @@ class __$$_ReactivationRequestCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_ReactivationRequest implements _ReactivationRequest {
-  _$_ReactivationRequest({required this.email, required this.authorization});
+class _$_ReactivationRequest extends _ReactivationRequest {
+  _$_ReactivationRequest({required this.email, required this.authorization})
+      : super._();
 
   factory _$_ReactivationRequest.fromJson(Map<String, dynamic> json) =>
       _$$_ReactivationRequestFromJson(json);
@@ -152,10 +153,11 @@ class _$_ReactivationRequest implements _ReactivationRequest {
   }
 }
 
-abstract class _ReactivationRequest implements ReactivationRequest {
+abstract class _ReactivationRequest extends ReactivationRequest {
   factory _ReactivationRequest(
       {required final String email,
       required final String authorization}) = _$_ReactivationRequest;
+  _ReactivationRequest._() : super._();
 
   factory _ReactivationRequest.fromJson(Map<String, dynamic> json) =
       _$_ReactivationRequest.fromJson;

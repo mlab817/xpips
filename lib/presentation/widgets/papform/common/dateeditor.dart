@@ -4,7 +4,7 @@ import 'package:pips/application/providers/dateformatter_provider.dart';
 import 'package:pips/presentation/widgets/papform/common/editbutton.dart';
 
 import '../../../../presentation/controllers/patchproject_controller.dart';
-import '../../../../domain/models/fullproject.dart';
+import '../../../../domain/entities/models.dart';
 
 class DateEditor extends ConsumerStatefulWidget {
   const DateEditor({
@@ -66,6 +66,7 @@ class _RadioEditor extends ConsumerState<DateEditor> {
             ? null
             : EditButton(
                 onPressed: widget.enabled ? () => _edit() : null,
+                enabled: widget.enabled,
               ),
         enabled: widget.enabled,
         onTap: () => _edit(),

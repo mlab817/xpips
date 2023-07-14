@@ -4,16 +4,15 @@ import 'dart:convert';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../application/functions.dart';
 import '../../application/providers/appserviceclient_provider.dart';
 import '../../application/providers/sharedpreferences.dart';
 import '../../data/data_sources/app_service_client.dart';
 import '../../data/requests/requests.dart';
-import '../../domain/models/user.dart';
+import '../../domain/entities/user.dart';
+import '../requests/fcm_request.dart';
 import '../requests/login_request.dart';
-import '../responses/login_response.dart';
-import '../responses/reactivation_response.dart';
-import '../responses/signup_response.dart';
-import '../responses/updateprofile_response.dart';
+import '../responses/responses.dart';
 
 part 'auth_repository.g.dart';
 
@@ -35,6 +34,12 @@ abstract class AuthRepository {
   Future<ReactivationResponse> requestReactivation(ReactivationRequest request);
 
   Future<UpdateProfileResponse> updateProfile(UpdateProfileRequest request);
+
+  Future<void> updateFcmToken(FcmRequest request);
+
+  Future<ForgotPasswordResponse> forgotPassword(String email);
+
+  Future<ValidateEmailResponse> validateEmail(String email);
 }
 
 class AuthRepositoryImplementer implements AuthRepository {
@@ -46,7 +51,11 @@ class AuthRepositoryImplementer implements AuthRepository {
 
   @override
   Future<LoginResponse> login(LoginRequest input) async {
-    return await client.login(input);
+    try {
+      return await client.login(input);
+    } catch (e) {
+      throw (formatError(e));
+    }
   }
 
   @override
@@ -70,24 +79,63 @@ class AuthRepositoryImplementer implements AuthRepository {
 
   @override
   Future<SignupResponse> signup(SignupRequest request) async {
-    return client.signup(request);
+    try {
+      return await client.signup(request);
+    } catch (e) {
+      throw formatError(e);
+    }
   }
 
   @override
   Future<ReactivationResponse> requestReactivation(
       ReactivationRequest request) async {
-    return client.requestReactivation(request);
+    try {
+      return await client.requestReactivation(request);
+    } catch (e) {
+      throw formatError(e);
+    }
   }
 
   @override
   Future<UpdateProfileResponse> updateProfile(
       UpdateProfileRequest request) async {
-    return client.updateProfile(request);
+    try {
+      return await client.updateProfile(request);
+    } catch (e) {
+      throw formatError(e);
+    }
   }
 
   @override
   void setUser(User user) {
     sharedPreferences.setString('CURRENT_USER', jsonEncode(user));
+  }
+
+  @override
+  Future<void> updateFcmToken(FcmRequest request) async {
+    try {
+      return await client.updateFcmToken(request);
+    } catch (e) {
+      throw formatError(e);
+    }
+  }
+
+  @override
+  Future<ForgotPasswordResponse> forgotPassword(String email) async {
+    try {
+      return await client.forgotPassword(email);
+    } catch (e) {
+      throw formatError(e);
+    }
+  }
+
+  @override
+  Future<ValidateEmailResponse> validateEmail(String email) async {
+    try {
+      return await client.validateEmail(email);
+    } catch (e) {
+      throw formatError(e);
+    }
   }
 }
 

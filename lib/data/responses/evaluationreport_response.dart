@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../domain/models/evaluation_report.dart';
+import '../../domain/entities/models.dart';
 
 part 'evaluationreport_response.freezed.dart';
 part 'evaluationreport_response.g.dart';

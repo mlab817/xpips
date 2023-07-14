@@ -7,7 +7,7 @@ import '../../data/responses/createproject_response.dart';
 
 part 'postproject_controller.g.dart';
 
-@Riverpod(keepAlive: true)
+@riverpod
 class PostProjectController extends _$PostProjectController {
   Future<CreateProjectResponse> submit() async {
     final repository = ref.watch(projectRepositoryProvider);

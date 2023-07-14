@@ -1,8 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:pips/domain/models/simple_project.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../domain/models/option.dart';
+import '../../domain/entities/models.dart';
 
 part 'simpleproject_controller.freezed.dart';
 part 'simpleproject_controller.g.dart';
@@ -25,7 +24,7 @@ class SimpleProjectState with _$SimpleProjectState {
   SimpleProjectState._();
 }
 
-@Riverpod(keepAlive: true)
+@riverpod
 class SimpleProjectControllerState extends _$SimpleProjectControllerState {
   void update({
     String? title,
@@ -46,12 +45,16 @@ class SimpleProjectControllerState extends _$SimpleProjectControllerState {
     state = state.copyWith(project: updatedProject);
   }
 
+  void reset() {
+    state = SimpleProjectState(project: SimpleProject.initial());
+  }
+
   @override
   SimpleProjectState build() =>
       SimpleProjectState(project: SimpleProject.initial());
 }
 
-@Riverpod(keepAlive: true)
+@riverpod
 SimpleProject simpleProject(SimpleProjectRef ref) {
   return ref.watch(simpleProjectControllerStateProvider).project;
 }

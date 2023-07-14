@@ -1,7 +1,8 @@
 import 'package:pips/data/data_sources/app_service_client.dart';
-import 'package:pips/domain/models/form_options.dart';
+import 'package:pips/domain/entities/form_options.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../application/functions.dart';
 import '../../application/providers/appserviceclient_provider.dart';
 import '../responses/options_response.dart';
 
@@ -20,9 +21,13 @@ class OptionsRepositoryImplementer implements OptionsRepository {
 
   @override
   Future<FormOptions> get() async {
-    final OptionsResponse optionsResponse = await client.getOptions();
+    try {
+      final OptionsResponse optionsResponse = await client.getOptions();
 
-    return optionsResponse.data;
+      return optionsResponse.data;
+    } catch (e) {
+      throw formatError(e);
+    }
     // print('opening box');
 
     // final box = await Hive.openBox<FormOptions>('form_options');

@@ -13,3 +13,4 @@ export 'upload_request.dart';
 export 'users_request.dart';
 export 'chats_request.dart';
 export 'newproject_request.dart';
+export 'uploadavatar_request.dart';

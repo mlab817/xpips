@@ -2,7 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pips/application/providers/numberformatter_provider.dart';
-import 'package:pips/domain/models/models.dart';
+import 'package:pips/domain/entities/models.dart';
 import 'package:pips/presentation/controllers/controllers.dart';
 import 'package:pips/presentation/widgets/loading_dialog.dart';
 

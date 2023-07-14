@@ -1,7 +1,8 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../application/functions.dart';
 import '../../application/providers/appserviceclient_provider.dart';
-import '../../domain/models/notifications.dart';
+import '../../domain/entities/notifications.dart';
 import '../data_sources/app_service_client.dart';
 import '../requests/notifications_request.dart';
 import '../responses/notifications_response.dart';
@@ -23,12 +24,20 @@ class NotificationsRepositoryImplementer implements NotificationsRepository {
 
   @override
   Future<NotificationsResponse> getAll(NotificationsRequest input) async {
-    return await client.listNotifications(input);
+    try {
+      return await client.listNotifications(input);
+    } catch (e) {
+      throw formatError(e);
+    }
   }
 
   @override
   Future<Notifications> markNotificationAsRead(String id) async {
-    return await client.markNotificationAsRead(id);
+    try {
+      return await client.markNotificationAsRead(id);
+    } catch (e) {
+      throw formatError(e);
+    }
   }
 }
 

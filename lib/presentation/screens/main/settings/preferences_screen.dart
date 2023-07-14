@@ -1,10 +1,13 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:pips/application/providers/onesignal_provider.dart';
+import 'package:pips/data/repositories/repositories.dart';
+import 'package:pips/data/requests/fcm_request.dart';
 import 'package:pips/presentation/controllers/pushnotifications_controller.dart';
 import 'package:pips/presentation/controllers/theme_controller.dart';
+import 'package:universal_io/io.dart';
 
 import '../../../../application/providers/theme_provider.dart';
 
@@ -16,9 +19,41 @@ class PreferencesScreen extends ConsumerStatefulWidget {
 }
 
 class _PreferencesScreenState extends ConsumerState<PreferencesScreen> {
+  String? _fcmToken;
+
+  Future<void> _getFcmToken() async {
+    try {
+      final fcmToken = await FirebaseMessaging.instance.getToken();
+      // ref
+      //     .read(pushNotificationsControllerProvider.notifier)
+      //     .toggle();
+
+      print("fcmToken: $fcmToken");
+
+      setState(() {
+        _fcmToken = fcmToken;
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.toString())));
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    Future.delayed(Duration.zero, _getFcmToken);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: Platform.isAndroid
+          ? AppBar(
+              title: const Text('Preferences'),
+            )
+          : null,
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Card(
@@ -30,13 +65,15 @@ class _PreferencesScreenState extends ConsumerState<PreferencesScreen> {
                 subtitle: const Text(
                     'Receive push notifications even when you are not using the app. Android only'),
                 value: ref.watch(pushNotificationsControllerProvider),
-                onChanged: (bool value) {
-                  ref.read(oneSignalControllerProvider);
+                onChanged: _fcmToken != null
+                    ? (bool value) async {
+                        final authRepository =
+                            ref.watch(authRepositoryProvider);
 
-                  ref
-                      .read(pushNotificationsControllerProvider.notifier)
-                      .toggle();
-                },
+                        await authRepository
+                            .updateFcmToken(FcmRequest(fcmToken: _fcmToken!));
+                      }
+                    : null,
               ),
               const Padding(
                 padding: EdgeInsets.all(16.0),

@@ -6,7 +6,8 @@ import 'package:retrofit/retrofit.dart';
 import '../../application/config.dart';
 import '../../data/requests/requests.dart';
 import '../../data/responses/responses.dart';
-import '../../domain/models/models.dart';
+import '../../domain/entities/models.dart';
+import '../requests/fcm_request.dart';
 import '../requests/login_request.dart';
 import '../responses/user_response.dart';
 
@@ -96,7 +97,8 @@ abstract class AppServiceClient {
   Future<void> uploadAvatar(@Part(name: 'avatar') File request);
 
   @POST('/update-password')
-  Future<void> updatePassword(@Body() UpdatePasswordRequest request);
+  Future<UpdatePasswordResponse> updatePassword(
+      @Body() UpdatePasswordRequest request);
 
   @GET('/pipol-statuses')
   Future<PipolStatusResponse> getPipolStatuses();
@@ -166,13 +168,25 @@ abstract class AppServiceClient {
     @Body() required EvaluationReport request,
   });
 
-  @PUT('evaluation-reports/{id}')
+  @PUT('/evaluation-reports/{id}')
   Future<EvaluationReportResponse> putEvaluation({
     @Path('uuid') required int id,
     @Body() required EvaluationReport request,
   });
 
-  @DELETE('evaluation-reports/{id}')
+  @DELETE('/evaluation-reports/{id}')
   Future<EvaluationReportResponse> deleteEvaluation(
       {@Path('uuid') required int id});
+
+  @POST('/update-fcm-token')
+  Future<void> updateFcmToken(@Body() FcmRequest request);
+
+  @POST('/projects/{uuid}/submit-for-review')
+  Future<ProjectResponse> submitForReview(@Path('uuid') String uuid);
+
+  @POST('/forgot-password')
+  Future<ForgotPasswordResponse> forgotPassword(@Field('email') String email);
+
+  @POST('/validate-email')
+  Future<ValidateEmailResponse> validateEmail(@Field('email') String email);
 }

@@ -1,5 +1,5 @@
-
 import 'package:auto_route/auto_route.dart';
+import 'package:dart_pusher_channels/dart_pusher_channels.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -19,7 +19,7 @@ import '../../application/extensions.dart';
 import '../../application/providers/numberformatter_provider.dart';
 import '../../data/repositories/repositories.dart';
 import '../../data/responses/responses.dart';
-import '../../domain/models/models.dart';
+import '../../domain/entities/models.dart';
 import '../../presentation/controllers/controllers.dart';
 import '../widgets/papform/common/switcheditor.dart';
 import '../widgets/papform/common/dateeditor.dart';
@@ -141,6 +141,8 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
               ?.project
               .updatingPeriod
               ?.value) {
+        if (!mounted) return;
+
         showDialog(
             context: context,
             builder: (context) {
@@ -188,6 +190,106 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
     });
   }
 
+  Future<void> _handleDelete() async {
+    // todo: handle confirm delete
+    await showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Confirm Delete'),
+            content: const Text(
+                'Deleted PAPs cannot be restored. If you wish to go back to this PAP later, drop it instead. If you still wish to proceed, tap Confirm button below.'),
+            actions: [
+              ElevatedButton(
+                onPressed: () {
+                  // TODO: handle drop
+                },
+                child: const Text('DROP'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text('CANCEL'),
+              ),
+              FilledButton(
+                onPressed: () async {
+                  try {
+                    await ref
+                        .read(projectRepositoryProvider)
+                        .delete(widget.uuid);
+                  } catch (error) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(error.toString())));
+                  } finally {
+                    Navigator.pop(context);
+                  }
+                },
+                child: const Text('CONFIRM'),
+              ),
+            ],
+          );
+        });
+  }
+
+  void _handleSubmitForReview() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Confirm Submission'),
+            content: const Text(
+              'Once you submit this PAP for review of the Secretariat, you will NOT be able to edit it anymore. Are you sure you want to continue?',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('NO, I WANT TO GO BACK'),
+              ),
+              FilledButton(
+                onPressed: () async {
+                  // pop this dialog
+                  // Navigator.pop(context);
+                  print('submit for review triggered');
+
+                  //
+                  try {
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return const Dialog(
+                            backgroundColor: Colors.transparent,
+                            child: LoadingOverlay(),
+                          );
+                        });
+
+                    final response = await ref
+                        .read(projectRepositoryProvider)
+                        .submitForReview(widget.uuid);
+
+                    ref.invalidate(futureProjectProvider(uuid: widget.uuid));
+
+                    // TODO: do something about the response
+                  } catch (error) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(error.toString())));
+                  } finally {
+                    Future.delayed(const Duration(milliseconds: 1000), () {
+                      Navigator.of(context)
+                        ..pop()
+                        ..pop();
+                    });
+                  }
+                },
+                child: const Text('YES, SUBMIT FOR REVIEW'),
+              ),
+            ],
+          );
+        });
+  }
+
   @override
   void dispose() {
     _scrollController.dispose();
@@ -230,106 +332,75 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
       }
     });
 
-    ref.watch(realTimePapUpdatesStreamProvider(uuid: widget.uuid));
+    ref.listen(realTimePapUpdatesStreamProvider(uuid: widget.uuid),
+        (previous, next) {
+      if (next.hasValue) {
+        final ChannelReadEvent event = next.value!;
+
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(event.data)));
+      }
+    });
+
+    double screenWidth = MediaQuery.sizeOf(context).width;
+
+    bool isSmall = screenWidth <= 500;
 
     return Scaffold(
       appBar: projectProfileAsync.when(
           data: (data) {
             return AppBar(
-              automaticallyImplyLeading: false,
-              leading: IconButton(
-                onPressed: () {
-                  AutoRouter.of(context).push(const HomeRoute());
-                },
-                icon: const Icon(Icons.arrow_back),
-              ),
-              title: RichText(
-                text: TextSpan(
-                  style: Theme.of(context).textTheme.titleLarge?.apply(
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                  children: [
-                    TextSpan(text: data.project.title ?? 'NO TITLE'),
-                    if (data.project.readonly)
-                      const TextSpan(text: ' [READONLY]')
-                  ],
-                ),
-              ),
-              // scrolledUnderElevation: 0.0,
+              // automaticallyImplyLeading: false,
+              leading: const AutoLeadingButton(),
+              title: Text(data.project.title ?? 'NO TITLE'),
               actions: [
                 Padding(
                   padding: const EdgeInsets.only(right: 8.0),
-                  child: FilledButton.icon(
-                    onPressed: () {
-                      // reload the project
-                      ref.invalidate(futureProjectProvider(uuid: widget.uuid));
-                    },
-                    icon: const Icon(Icons.refresh),
-                    label: const Text('RELOAD'),
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateColor.resolveWith(
-                        (states) => Theme.of(context).colorScheme.secondary,
-                      ),
-                    ),
-                  ),
+                  child: isSmall
+                      ? IconButton(
+                          onPressed: () {
+                            // reload the project
+                            ref.invalidate(
+                                futureProjectProvider(uuid: widget.uuid));
+                          },
+                          icon: const Icon(Icons.refresh),
+                        )
+                      : FilledButton.icon(
+                          onPressed: () {
+                            // reload the project
+                            ref.invalidate(
+                                futureProjectProvider(uuid: widget.uuid));
+                          },
+                          icon: const Icon(Icons.refresh),
+                          label: const Text('RELOAD'),
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateColor.resolveWith(
+                              (states) =>
+                                  Theme.of(context).colorScheme.secondary,
+                            ),
+                          ),
+                        ),
                 ),
                 if (!data.project.outdated)
                   Padding(
                     padding: const EdgeInsets.only(right: 8.0),
-                    child: FilledButton.icon(
-                        onPressed: data.project.permissions.delete
-                            ? () async {
-                                // todo: handle confirm delete
-                                await showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return AlertDialog(
-                                        title: const Text('Confirm Delete'),
-                                        content: const Text(
-                                            'Deleted PAPs cannot be restored. If you wish to go back to this PAP later, drop it instead. If you still wish to proceed, tap Confirm button below.'),
-                                        actions: [
-                                          ElevatedButton(
-                                            onPressed: () {
-                                              // TODO: handle drop
-                                            },
-                                            child: const Text('DROP'),
-                                          ),
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.pop(context);
-                                            },
-                                            child: const Text('CANCEL'),
-                                          ),
-                                          FilledButton(
-                                            onPressed: () async {
-                                              // TODO: handle deletion
-                                              try {
-                                                await ref
-                                                    .read(
-                                                        projectRepositoryProvider)
-                                                    .delete(widget.uuid);
-                                              } catch (error) {
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(SnackBar(
-                                                        content: Text(
-                                                            error.toString())));
-                                              } finally {
-                                                Navigator.pop(context);
-                                              }
-                                            },
-                                            child: const Text('CONFIRM'),
-                                          ),
-                                        ],
-                                      );
-                                    });
-                              }
-                            : null,
-                        icon: const Icon(Icons.delete),
-                        label: const Text(AppStrings.delete),
-                        style: ButtonStyle(
-                            backgroundColor: MaterialStateColor.resolveWith(
-                          (states) => Theme.of(context).colorScheme.error,
-                        ))),
+                    child: isSmall
+                        ? IconButton(
+                            onPressed: data.project.permissions.delete
+                                ? _handleDelete
+                                : null,
+                            icon: const Icon(Icons.delete),
+                          )
+                        : FilledButton.icon(
+                            onPressed: data.project.permissions.delete
+                                ? _handleDelete
+                                : null,
+                            icon: const Icon(Icons.delete),
+                            label: const Text(AppStrings.delete),
+                            style: ButtonStyle(
+                                backgroundColor: MaterialStateColor.resolveWith(
+                              (states) => Theme.of(context).colorScheme.error,
+                            ))),
                   ),
                 if (!data.project.outdated)
                   Tooltip(
@@ -337,65 +408,54 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                         'Ensure that all fields have been filled up and are consistent.',
                     child: Padding(
                       padding: const EdgeInsets.only(right: 8.0),
-                      child: FilledButton.icon(
-                        icon: const Icon(CupertinoIcons.share),
-                        onPressed: data.project.permissions.submitForReview
-                            ? () {
-                                showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return AlertDialog(
-                                        title: const Text('Confirm Submission'),
-                                        content: const Text(
-                                          'Once you submit this PAP for review of the Secretariat, you will NOT be able to edit it anymore. Are you sure you want to continue?',
-                                        ),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () {
-                                              //
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: const Text(
-                                                'NO, I WANT TO GO BACK'),
-                                          ),
-                                          FilledButton(
-                                            onPressed: () {
-                                              //
-                                            },
-                                            child: const Text(
-                                                'YES, SUBMIT FOR REVIEW'),
-                                          ),
-                                        ],
-                                      );
-                                    });
-                              }
-                            : null,
-                        label: const Text('SUBMIT FOR REVIEW'),
-                      ),
+                      child: isSmall
+                          ? IconButton(
+                              icon: const Icon(CupertinoIcons.share),
+                              onPressed:
+                                  data.project.permissions.submitForReview
+                                      ? _handleSubmitForReview
+                                      : null,
+                            )
+                          : FilledButton.icon(
+                              icon: const Icon(CupertinoIcons.share),
+                              onPressed:
+                                  data.project.permissions.submitForReview
+                                      ? _handleSubmitForReview
+                                      : null,
+                              label: const Text('SUBMIT FOR REVIEW'),
+                            ),
                     ),
                   ),
                 if (data.project.outdated)
                   Padding(
                     padding: const EdgeInsets.only(right: 8.0),
-                    child: FilledButton.icon(
-                      onPressed: data.project.permissions.duplicate
-                          ? _confirmDuplicate
-                          : null,
-                      icon: const Icon(Icons.copy),
-                      label: const Text('DUPLICATE'),
-                    ),
+                    child: isSmall
+                        ? IconButton(
+                            onPressed: data.project.permissions.duplicate
+                                ? _confirmDuplicate
+                                : null,
+                            icon: const Icon(Icons.copy),
+                          )
+                        : FilledButton.icon(
+                            onPressed: data.project.permissions.duplicate
+                                ? _confirmDuplicate
+                                : null,
+                            icon: const Icon(Icons.copy),
+                            label: const Text('DUPLICATE'),
+                          ),
                   ),
                 // todo: check if  user has permission to evaluate and if project is endorsed/finalized
                 if (data.project.permissions.evaluate)
                   FilledButton(
-                      onPressed: data.project.permissions.evaluate
-                          ? () {
-                              AutoRouter.of(context).push(PapEvaluationRoute(
-                                project: projectProfileAsync.value!.project,
-                              ));
-                            }
-                          : null,
-                      child: const Text('EVALUATE')),
+                    onPressed: data.project.permissions.evaluate
+                        ? () {
+                            AutoRouter.of(context).push(PapEvaluationRoute(
+                              project: projectProfileAsync.value!.project,
+                            ));
+                          }
+                        : null,
+                    child: const Text('EVALUATE'),
+                  ),
               ],
             );
           },
@@ -439,14 +499,20 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
     return asyncValue.when(data: (data) {
       return Badge(
         label: Text(data.length.toString()),
-        child: FloatingActionButton.extended(
-          label: const Text('Comments'),
-          isExtended: _isExtended,
-          onPressed: () {
-            // expand messenger like
-            AutoRouter.of(context).push(CommentsRoute(uuid: widget.uuid));
-          },
-          icon: const Icon(Icons.chat_bubble),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 150),
+          width: _isExtended ? 120 : 56,
+          height: 56,
+          child: FloatingActionButton.extended(
+            label: const Text('Comments'),
+            isExtended: _isExtended,
+            onPressed: () {
+              // expand messenger like
+              AutoRouter.of(context)
+                  .push(ProjectCommentsRoute(uuid: widget.uuid));
+            },
+            icon: const Icon(Icons.chat_bubble),
+          ),
         ),
       );
     }, error: (error, stacktrace) {
@@ -471,7 +537,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         // General Information
         SliverStickyHeader(
           header: const SliverStickyHeaderComponent(
-              title: AppStrings.generalInformation),
+              icon: Icons.info_outline, title: AppStrings.generalInformation),
           sliver: SliverList(
             delegate: SliverChildListDelegate(
               [
@@ -598,6 +664,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         // Implementing Offices/Units
         SliverStickyHeader(
           header: const SliverStickyHeaderComponent(
+              icon: Icons.location_city_outlined,
               title: 'Implementing Offices/Units'),
           sliver: SliverList(
             delegate: SliverChildListDelegate([
@@ -648,6 +715,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         // Spatial Coverage
         SliverStickyHeader(
           header: const SliverStickyHeaderComponent(
+            icon: Icons.location_on_outlined,
             title: 'Spatial Coverage',
           ),
           sliver: SliverList(
@@ -718,7 +786,10 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         ),
         // Level of Approval
         SliverStickyHeader(
-          header: const SliverStickyHeaderComponent(title: 'Level of Approval'),
+          header: const SliverStickyHeaderComponent(
+            icon: Icons.approval_outlined,
+            title: 'Level of Approval',
+          ),
           sliver: SliverList(
             delegate: SliverChildListDelegate([
               SwitchEditor(
@@ -794,6 +865,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         // Project for Inclusion in Which Programming Document
         SliverStickyHeader(
           header: const SliverStickyHeaderComponent(
+              icon: Icons.checklist_outlined,
               title: 'Project for Inclusion in Which Programming Document'),
           sliver: SliverList(
             delegate: SliverChildListDelegate([
@@ -954,6 +1026,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         // PDP chapters
         SliverStickyHeader(
           header: const SliverStickyHeaderComponent(
+            icon: Icons.gamepad,
             title: 'Philippine Development Plan (PDP) Chapter',
           ),
           sliver: SliverList(
@@ -1011,11 +1084,16 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         ),
         SliverStickyHeader(
           header: const SliverStickyHeaderComponent(
-            title: 'Main Infrastructure Sector/Subsector',
+            icon: Icons.gamepad,
+            title: 'Main Infrastructure Sector/Subsector [TRIP ONLY]',
           ),
           sliver: SliverList(
             delegate: SliverChildListDelegate([
               UpdateInfraSectors(
+                enabled: ref
+                        .watch(fullProjectControllerProvider(widget.uuid))
+                        .trip ??
+                    false,
                 project: project,
                 oldValue: project.infrastructureSectors,
                 options: options.infrastructureSectors ?? [],
@@ -1091,6 +1169,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         ),
         SliverStickyHeader(
           header: const SliverStickyHeaderComponent(
+            icon: Icons.gamepad,
             title: 'Expected Outputs/Deliverables',
           ),
           sliver: SliverList(
@@ -1117,6 +1196,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         ),
         SliverStickyHeader(
           header: const SliverStickyHeaderComponent(
+            icon: Icons.gamepad,
             title: '8-Point Socioeconomic Agenda',
           ),
           sliver: SliverList(
@@ -1147,6 +1227,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         ),
         SliverStickyHeader(
           header: const SliverStickyHeaderComponent(
+            icon: Icons.gamepad,
             title: 'Sustainable Development Goals',
           ),
           sliver: SliverList(
@@ -1178,6 +1259,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         ),
         SliverStickyHeader(
           header: const SliverStickyHeaderComponent(
+            icon: Icons.gamepad,
             title: 'Level of GAD Responsiveness [CIP Only]',
           ),
           sliver: SliverList(
@@ -1207,6 +1289,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         ),
         SliverStickyHeader(
           header: const SliverStickyHeaderComponent(
+            icon: Icons.gamepad,
             title: 'Project Preparation Details [CIP Only]',
           ),
           sliver: SliverList(
@@ -1288,6 +1371,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         ),
         SliverStickyHeader(
           header: const SliverStickyHeaderComponent(
+            icon: Icons.gamepad,
             title: 'Pre-construction Costs [CIP Only]',
           ),
           sliver: SliverList(
@@ -1427,6 +1511,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         ),
         SliverStickyHeader(
           header: const SliverStickyHeaderComponent(
+            icon: Icons.gamepad,
             title: 'Employment Generation',
           ),
           sliver: SliverList(
@@ -1483,6 +1568,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         ),
         SliverStickyHeader(
           header: const SliverStickyHeaderComponent(
+            icon: Icons.gamepad,
             title: 'Funding Source and Mode of Implementation',
           ),
           sliver: SliverList(
@@ -1593,6 +1679,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         ),
         SliverStickyHeader(
           header: const SliverStickyHeaderComponent(
+            icon: Icons.gamepad,
             title: 'Investment Cost per Funding Source',
           ),
           sliver: SliverList(
@@ -1606,13 +1693,13 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         ),
         SliverStickyHeader(
           header: const SliverStickyHeaderComponent(
+            icon: Icons.gamepad,
             title: 'Investment Cost per Region',
           ),
           sliver: SliverList(
             delegate: SliverChildListDelegate(
               [
                 _buildRegionalTable(project, options),
-                // TODO: only enable if current regions < all regions
                 if (!project.readonly) _buildAddRegion(project),
               ],
             ),
@@ -1620,6 +1707,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         ),
         SliverStickyHeader(
           header: const SliverStickyHeaderComponent(
+            icon: Icons.gamepad,
             title: 'Physical and Financial Status',
           ),
           sliver: SliverList(
@@ -1629,8 +1717,6 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
                 fieldLabel: 'Category',
                 oldValue: project.category,
                 onSubmit: (Option newValue) async {
-                  // TODO: implement Category
-
                   //
                   await _handleSubmit(
                     fieldKey: 'category_id',
@@ -1750,6 +1836,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         ),
         SliverStickyHeader(
           header: const SliverStickyHeaderComponent(
+            icon: Icons.gamepad,
             title: 'Implementation Period',
           ),
           sliver: SliverList(
@@ -1797,6 +1884,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         ),
         SliverStickyHeader(
           header: const SliverStickyHeaderComponent(
+            icon: Icons.gamepad,
             title: 'Financial Accomplishments',
           ),
           sliver: SliverList(
@@ -1807,6 +1895,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         ),
         SliverStickyHeader(
           header: SliverStickyHeaderComponent(
+              icon: Icons.gamepad,
               title: 'Supporting Documents [PDF Only]',
               actions: [
                 TextButton(
@@ -1877,6 +1966,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         ),
         SliverStickyHeader(
           header: const SliverStickyHeaderComponent(
+            icon: Icons.gamepad,
             title: 'Contact Information',
           ),
           sliver: SliverList(
@@ -1906,6 +1996,7 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
         ),
         SliverStickyHeader(
           header: const SliverStickyHeaderComponent(
+            icon: Icons.gamepad,
             title: 'Notes',
           ),
           sliver: SliverList(
@@ -1935,8 +2026,10 @@ class _PapViewScreenState extends ConsumerState<PapViewScreen> {
           ),
         ),
         SliverStickyHeader(
-          header: const SliverStickyHeaderComponent(
+          header: SliverStickyHeaderComponent(
+            icon: Icons.gamepad,
             title: 'SECRETARIAT ONLY',
+            color: Theme.of(context).colorScheme.error,
           ),
           sliver: SliverList(
             delegate: SliverChildListDelegate(

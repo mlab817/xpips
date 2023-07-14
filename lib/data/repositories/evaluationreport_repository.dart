@@ -1,7 +1,8 @@
 import 'package:pips/application/providers/appserviceclient_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../domain/models/evaluation_report.dart';
+import '../../application/functions.dart';
+import '../../domain/entities/evaluation_report.dart';
 import '../data_sources/app_service_client.dart';
 import '../responses/evaluationreport_response.dart';
 
@@ -29,24 +30,40 @@ class EvaluationReportRepositoryImplementer
 
   @override
   Future<EvaluationReportResponse> deleteEvaluation(int id) async {
-    return await client.deleteEvaluation(id: id);
+    try {
+      return await client.deleteEvaluation(id: id);
+    } catch (e) {
+      throw formatError(e);
+    }
   }
 
   @override
   Future<EvaluationReportResponse> getEvaluation(String uuid) async {
-    return await client.getEvaluation(uuid: uuid);
+    try {
+      return await client.getEvaluation(uuid: uuid);
+    } catch (e) {
+      throw formatError(e);
+    }
   }
 
   @override
   Future<EvaluationReportResponse> postEvaluation(
       String uuid, EvaluationReport request) async {
-    return await client.postEvaluation(uuid: uuid, request: request);
+    try {
+      return await client.postEvaluation(uuid: uuid, request: request);
+    } catch (e) {
+      throw formatError(e);
+    }
   }
 
   @override
   Future<EvaluationReportResponse> putEvaluation(
       int id, EvaluationReport request) async {
-    return await client.putEvaluation(id: id, request: request);
+    try {
+      return await client.putEvaluation(id: id, request: request);
+    } catch (e) {
+      throw formatError(e);
+    }
   }
 }
 

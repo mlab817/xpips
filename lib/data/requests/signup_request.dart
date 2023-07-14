@@ -34,3 +34,19 @@ class SignupRequest with _$SignupRequest {
     );
   }
 }
+
+extension SignupRequestValidStatus on SignupRequest {
+  bool get isValid => _isValid();
+
+  bool _isValid() {
+    return username.isNotEmpty &&
+        password.isNotEmpty &&
+        firstName.isNotEmpty &&
+        lastName.isNotEmpty &&
+        position.isNotEmpty &&
+        email.isNotEmpty &&
+        contactNumber.isNotEmpty &&
+        officeId != null &&
+        authorization != null;
+  }
+}

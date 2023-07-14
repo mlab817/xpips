@@ -4,8 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../data/repositories/upload_repository.dart';
-import '../../../../domain/models/fullproject.dart';
-import '../../../../domain/models/option.dart';
+import '../../../../domain/entities/models.dart';
 import '../../../controllers/fullproject_controller.dart';
 
 class ProjectAttachment extends ConsumerStatefulWidget {

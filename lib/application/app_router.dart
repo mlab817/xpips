@@ -1,10 +1,11 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:pips/presentation/widgets/homehelpdialog.dart';
 
-import '../domain/models/models.dart';
+import '../domain/entities/models.dart';
 import '../presentation/screens/main/archive_screen.dart';
-import '../presentation/screens/main/chat_screen.dart';
-import '../presentation/screens/comments_screen.dart';
+import '../presentation/screens/main/comments_screen.dart';
+import '../presentation/screens/project_comments_screen.dart';
 import '../presentation/screens/forgotpassword_screen.dart';
 import '../presentation/screens/main/home_screen.dart';
 import '../presentation/screens/login_screen.dart';
@@ -49,8 +50,8 @@ class AppRouter extends _$AppRouter implements AutoRouteGuard {
               page: ArchiveRoute.page,
             ),
             AutoRoute(
-              path: 'chats',
-              page: ChatRoute.page,
+              path: 'comments',
+              page: CommentsRoute.page,
             ),
             AutoRoute(
               path: 'notifications',
@@ -75,12 +76,16 @@ class AppRouter extends _$AppRouter implements AutoRouteGuard {
           page: PapEvaluationRoute.page,
         ),
         AutoRoute(
-          path: '/comments/:uuid', // '/project/:uuid',
-          page: CommentsRoute.page,
+          path: '/project/:uuid/comments', // '/project/:uuid',
+          page: ProjectCommentsRoute.page,
         ),
         AutoRoute(
           path: '/request-reactivation',
           page: RequestReactivationRoute.page,
+        ),
+        AutoRoute(
+          path: '/home-help',
+          page: HomeHelpRoute.page,
         ),
       ];
 
@@ -90,6 +95,8 @@ class AppRouter extends _$AppRouter implements AutoRouteGuard {
       LoginRoute.name,
       SplashRoute.name,
       SignupRoute.name,
+      ForgotPasswordRoute.name,
+      RequestReactivationRoute.name,
     ];
 
     if (isAuthenticated || publicRoutes.contains(resolver.route.name)) {

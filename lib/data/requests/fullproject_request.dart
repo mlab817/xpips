@@ -1,10 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../domain/models/financial_accomplishment.dart';
-import '../../domain/models/fs_investment.dart';
-import '../../domain/models/fullproject.dart';
-import '../../domain/models/option.dart';
-import '../../domain/models/regional_investment.dart';
+import '../../domain/entities/models.dart';
 
 part 'fullproject_request.g.dart';
 

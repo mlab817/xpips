@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../domain/models/option.dart';
+import '../../domain/entities/models.dart';
 
 part 'uploadattachment_response.g.dart';
 

@@ -1,12 +1,16 @@
 import 'dart:async';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pips/data/data_sources/app_service_client.dart';
 import 'package:pips/data/requests/updatepassword_request.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../application/providers/appserviceclient_provider.dart';
+import '../../data/responses/updatepassword_response.dart';
 
-class UpdatePasswordController extends Notifier<UpdatePasswordRequest> {
+part 'updatepassword_controller.g.dart';
+
+@riverpod
+class UpdatePasswordController extends _$UpdatePasswordController {
   void update({
     String? currentPassword,
     String? password,
@@ -26,29 +30,8 @@ class UpdatePasswordController extends Notifier<UpdatePasswordRequest> {
   }
 }
 
-final updatePasswordRequestControllerProvider =
-    NotifierProvider<UpdatePasswordController, UpdatePasswordRequest>(() {
-  return UpdatePasswordController();
-});
-
-class UpdatePasswordSubmitController extends AsyncNotifier<void> {
-  Future<void> submit() async {
-    final repository = ref.watch(updatePasswordRepositoryProvider);
-    final request = ref.watch(updatePasswordRequestControllerProvider);
-
-    state = const AsyncLoading();
-
-    state = await AsyncValue.guard(() => repository.submit(request));
-  }
-
-  @override
-  FutureOr<void> build() {
-    // nothing to do
-  }
-}
-
 abstract class UpdatePasswordRepository {
-  Future<void> submit(UpdatePasswordRequest request);
+  Future<UpdatePasswordResponse> submit(UpdatePasswordRequest request);
 }
 
 class UpdatePasswordRepositoryImplementer implements UpdatePasswordRepository {
@@ -57,8 +40,8 @@ class UpdatePasswordRepositoryImplementer implements UpdatePasswordRepository {
   UpdatePasswordRepositoryImplementer({required this.client});
 
   @override
-  Future<void> submit(UpdatePasswordRequest request) async {
-    return client.updatePassword(request);
+  Future<UpdatePasswordResponse> submit(UpdatePasswordRequest request) async {
+    return await client.updatePassword(request);
   }
 }
 
@@ -67,9 +50,4 @@ final updatePasswordRepositoryProvider =
   final client = ref.watch(appServiceClientProvider);
 
   return UpdatePasswordRepositoryImplementer(client: client);
-});
-
-final updatePasswordSubmitControllerProvider =
-    AsyncNotifierProvider<UpdatePasswordSubmitController, void>(() {
-  return UpdatePasswordSubmitController();
 });

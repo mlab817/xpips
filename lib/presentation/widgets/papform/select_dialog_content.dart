@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../domain/models/option.dart';
+import '../../../domain/entities/models.dart';
 
 class SelectDialogContent extends StatefulWidget {
   const SelectDialogContent({

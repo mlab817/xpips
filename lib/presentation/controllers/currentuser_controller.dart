@@ -6,7 +6,7 @@ import 'package:pips/application/providers/sharedpreferences.dart';
 import 'package:pips/data/responses/user_response.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../domain/models/models.dart';
+import '../../domain/entities/models.dart';
 
 part 'currentuser_controller.g.dart';
 

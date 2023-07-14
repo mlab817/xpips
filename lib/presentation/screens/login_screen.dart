@@ -3,11 +3,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pips/presentation/widgets/loading_dialog.dart';
 
 import '../../../application/extensions.dart';
 import '../../../application/providers/bearertoken_provider.dart';
 import '../../../application/app_router.dart';
 import '../../../presentation/controllers/controllers.dart';
+import '../widgets/logo.dart';
 
 @RoutePage()
 class LoginScreen extends ConsumerStatefulWidget {
@@ -21,6 +23,27 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   bool _obscuredText = true;
+
+  Future<void> _handleLogin() async {
+    if (_formKey.currentState!.validate()) {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return const Dialog(
+              backgroundColor: Colors.transparent,
+              child: LoadingOverlay(),
+            );
+          });
+
+      try {
+        await ref.read(loginProvider.notifier).login();
+      } catch (error) {
+        // handle error
+      } finally {
+        Navigator.pop(context);
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,33 +88,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       // DA logo with PIPS complying to style guide
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: SizedBox(
-                          height: 110,
-                          width: 125,
-                          child: Stack(
-                            children: [
-                              Positioned(
-                                bottom: 0,
-                                right: 0,
-                                child: ClipOval(
-                                  child: Image.asset(
-                                    'assets/logo.png',
-                                    width: 64,
-                                    height: 64,
-                                  ),
-                                ),
-                              ),
-                              Image.asset(
-                                'assets/da.png',
-                                height: 80,
-                                width: 80,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
+                      const Logo(),
                       const SizedBox(
                         height: 10,
                       ),
@@ -180,22 +177,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           SizedBox(
                             width: 150,
                             child: FilledButton(
-                              onPressed: () {
-                                ref.read(loginProvider.notifier).login();
-                              },
-                              child: ref.watch(loginProvider).isLoading
-                                  ? const SizedBox(
-                                      height: 20,
-                                      width: 20,
-                                      child: CircularProgressIndicator(
-                                        color: Colors.white,
-                                      ),
-                                    )
-                                  : const Text('LOGIN'),
+                              onPressed: _handleLogin,
+                              child: const Text('LOGIN'),
                             ),
-                          ),
-                          const SizedBox(
-                            height: 60,
                           ),
                         ],
                       ),

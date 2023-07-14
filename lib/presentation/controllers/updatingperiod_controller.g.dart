@@ -6,7 +6,7 @@ part of 'updatingperiod_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$updatingPeriodHash() => r'eae3c80300b520f8c000a04bd8fcdc72396a5378';
+String _$updatingPeriodHash() => r'644ccacf146593871420b2c3fb0a39fe97398e04';
 
 /// See also [updatingPeriod].
 @ProviderFor(updatingPeriod)

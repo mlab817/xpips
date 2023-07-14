@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../domain/models/form_options.dart';
+import '../../domain/entities/form_options.dart';
 
 part 'options_response.freezed.dart';
 part 'options_response.g.dart';

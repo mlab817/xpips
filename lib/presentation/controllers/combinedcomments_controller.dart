@@ -6,7 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../data/responses/comment_response.dart';
-import '../../domain/models/models.dart';
+import '../../domain/entities/models.dart';
 import 'controllers.dart';
 
 part 'combinedcomments_controller.g.dart';
@@ -35,7 +35,7 @@ Stream<List<Comment>> combinedComments(CombinedCommentsRef ref,
   // }
   // yield comments;
 
-// ignore: avoid_manual_providers_as_generated_provider_dependency
+  // ignore: avoid_manual_providers_as_generated_provider_dependency
   var simulatedCommentsStream = ref.watch(
       realTimeCommentsStreamProvider(uuid: uuid)
           .stream); // TODO: stream is deprecated, make sure to change it

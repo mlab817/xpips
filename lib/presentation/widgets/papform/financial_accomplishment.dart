@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pips/data/repositories/repositories.dart';
-import 'package:pips/domain/models/models.dart';
+import 'package:pips/domain/entities/models.dart';
 import 'package:pips/presentation/controllers/controllers.dart';
 
 class FinancialAccomplishmentForm extends ConsumerStatefulWidget {

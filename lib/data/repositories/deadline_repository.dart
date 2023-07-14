@@ -1,6 +1,7 @@
 import 'package:pips/application/providers/appserviceclient_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../application/functions.dart';
 import '../data_sources/app_service_client.dart';
 import '../responses/deadline_response.dart';
 
@@ -12,10 +13,15 @@ class DeadlineRepository {
 
   DeadlineRepository({required this.client});
 
-  Future<DeadlineResponse> get() async => client.deadline();
+  Future<DeadlineResponse> get() async {
+    try {
+      return await client.deadline();
+    } catch (e) {
+      throw formatError(e);
+    }
+  }
 }
 
 @Riverpod(keepAlive: true)
-DeadlineRepository deadlineRepository(DeadlineRepositoryRef ref) {
-  return DeadlineRepository(client: ref.watch(appServiceClientProvider));
-}
+DeadlineRepository deadlineRepository(DeadlineRepositoryRef ref) =>
+    DeadlineRepository(client: ref.watch(appServiceClientProvider));

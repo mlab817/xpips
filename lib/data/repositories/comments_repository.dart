@@ -1,6 +1,7 @@
-import 'package:pips/data/data_sources/app_service_client.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../application/functions.dart';
+import '../../data/data_sources/app_service_client.dart';
 import '../../application/providers/appserviceclient_provider.dart';
 import '../responses/comments_response.dart';
 
@@ -17,7 +18,11 @@ class CommentsRepositoryImplementer implements CommentsRepository {
 
   @override
   Future<CommentsResponse> showComments(String uuid) async {
-    return client.showComments(uuid);
+    try {
+      return await client.showComments(uuid);
+    } catch (e) {
+      throw formatError(e);
+    }
   }
 }
 

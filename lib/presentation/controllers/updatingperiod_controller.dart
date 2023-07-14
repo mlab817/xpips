@@ -11,8 +11,6 @@ Future<UpdatingPeriodResponse> updatingPeriod(UpdatingPeriodRef ref) async {
 
   final response = await repository.get();
 
-  print(response);
-
   return response;
 }
 

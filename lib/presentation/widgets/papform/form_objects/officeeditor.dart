@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pips/presentation/widgets/papform/common/editbutton.dart';
 
-import '../../../../domain/models/office.dart';
+import '../../../../domain/entities/models.dart';
 import '../../../../presentation/controllers/patchproject_controller.dart';
-import '../../../../domain/models/fullproject.dart';
 
 class OfficeEditor extends ConsumerStatefulWidget {
   const OfficeEditor({
@@ -66,6 +65,7 @@ class _RadioEditor extends ConsumerState<OfficeEditor> {
             ? null
             : EditButton(
                 onPressed: widget.enabled ? () => _edit() : null,
+                enabled: widget.enabled,
               ),
         onTap: widget.project.readonly ? null : () => _edit(),
       ),

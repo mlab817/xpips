@@ -7,7 +7,8 @@ import '../../data/data_sources/pusher_client.dart';
 part 'realtimepapupdates_controller.g.dart';
 
 @Riverpod(keepAlive: true)
-Stream<ChannelReadEvent> realTimePapUpdatesStream(RealTimePapUpdatesStreamRef ref,
+Stream<ChannelReadEvent> realTimePapUpdatesStream(
+    RealTimePapUpdatesStreamRef ref,
     {required String uuid}) {
   final PusherChannelsClient client = ref.watch(pusherClientProvider);
 

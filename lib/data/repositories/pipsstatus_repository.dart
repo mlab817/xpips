@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pips/data/data_sources/app_service_client.dart';
 
+import '../../application/functions.dart';
 import '../../application/providers/appserviceclient_provider.dart';
 import '../responses/pipsstatus_response.dart';
 
@@ -15,7 +16,11 @@ class PipsStatusRepositoryImplementer implements PipsStatusRepository {
 
   @override
   Future<PipsStatusResponse> getAll() async {
-    return await client.getPipsStatuses();
+    try {
+      return await client.getPipsStatuses();
+    } catch (e) {
+      throw formatError(e);
+    }
   }
 }
 

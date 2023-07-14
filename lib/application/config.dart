@@ -4,14 +4,12 @@ part 'config.g.dart';
 
 class Config {
   final String _domain = 'pipsv2.test'; // 'pips.da.gov.ph';
-  final String _oneSignalAppId = 'f601fb30-7df7-437e-a51f-be3f72997245';
 
   String get domain => _domain;
-  String get baseUrl => 'https://$domain';
-  String get baseApiUrl => 'https://pipsv2.test';
-  String get wsAuthUrl => "$baseUrl/api/broadcasting/auth";
+  String get baseUrl => 'https://$_domain';
+  String get baseApiUrl => 'https://$_domain/api';
+  String get wsAuthUrl => "$baseApiUrl/broadcasting/auth";
   String get generatePdfBaseUrl => "$baseUrl/generate-pdf";
-  String get oneSignalAppId => _oneSignalAppId;
 
   static const String apiUrl = 'https://pipsv2.test/api';
 }

@@ -1,24 +1,24 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pips/presentation/widgets/empty.dart';
 
 import '../../../../application/providers/dateformatter_provider.dart';
-import '../../../../domain/models/chatroom.dart';
+import '../../../../domain/entities/models.dart';
 import '../../../../data/responses/responses.dart';
 import '../../../../presentation/controllers/controllers.dart';
 import '../../../../presentation/widgets/loading_dialog.dart';
-import '../../../../presentation/widgets/logout_button.dart';
 import '../../../application/app_router.dart';
 
 @RoutePage()
-class ChatScreen extends ConsumerStatefulWidget {
-  const ChatScreen({Key? key}) : super(key: key);
+class CommentsScreen extends ConsumerStatefulWidget {
+  const CommentsScreen({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<ChatScreen> createState() => _ChatScreenState();
+  ConsumerState<CommentsScreen> createState() => _ChatScreenState();
 }
 
-class _ChatScreenState extends ConsumerState<ChatScreen> {
+class _ChatScreenState extends ConsumerState<CommentsScreen> {
   @override
   Widget build(BuildContext context) {
     final chatsAsync = ref.watch(chatRoomsProvider);
@@ -38,6 +38,13 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           child: Column(children: [
             Row(
               children: [
+                IconButton(
+                  tooltip: 'Reload data',
+                  onPressed: () {
+                    ref.invalidate(chatRoomsProvider);
+                  },
+                  icon: const Icon(Icons.refresh),
+                ),
                 Expanded(
                   child: TextField(
                     decoration: const InputDecoration(
@@ -85,9 +92,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
               child: chatsAsync.when(
                 data: (data) {
                   if (data.data.isEmpty) {
-                    return const Center(
-                      child: Text('NO COMMENTS'),
-                    );
+                    return const Empty();
                   }
 
                   return _buildList(data);
@@ -139,7 +144,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
             onTap: () {
               // ref.read(selectedProjectProvider.notifier).update(project);
 
-              AutoRouter.of(context).push(PapViewRoute(uuid: chat.uuid));
+              AutoRouter.of(context)
+                  .push(ProjectCommentsRoute(uuid: chat.uuid));
             },
           );
         });

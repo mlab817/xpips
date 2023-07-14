@@ -22,14 +22,14 @@ class SettingsScreen extends ConsumerStatefulWidget {
 class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   final PageController _pageController = PageController();
 
-  int _currentIndex = 0;
+  int? _currentIndex;
 
-  final List<String> _menu = [
-    'Update Profile',
-    'Update Password',
-    'Account Recovery',
-    'Preferences',
-    'About',
+  final List<Menu> _menuItems = [
+    Menu(title: 'Update Profile', screen: const UpdateProfileScreen()),
+    Menu(title: 'Update Password', screen: const UpdatePasswordScreen()),
+    Menu(title: 'Account Recovery', screen: const AccountRecoveryScreen()),
+    Menu(title: 'Preferences', screen: const PreferencesScreen()),
+    Menu(title: 'About', screen: const AboutScreen()),
   ];
 
   final _screens = [
@@ -48,6 +48,42 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     'About',
   ];
 
+  void _confirmLogout() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Confirm'),
+            content: const Text('Are you sure you want to logout?'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context, false);
+                },
+                child: const Text('Cancel'),
+              ),
+              FilledButton(
+                onPressed: () {
+                  ref.read(authControllerProvider.notifier).logout();
+
+                  AutoRouter.of(context).replace(const LoginRoute());
+                },
+                child: const Text('Confirm'),
+              ),
+            ],
+          );
+        });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (!Platform.isAndroid) {
+      _currentIndex = 0;
+    }
+  }
+
   @override
   void dispose() {
     super.dispose();
@@ -57,85 +93,19 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (Platform.isAndroid) {
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text('SETTINGS'),
+        ),
+        body: Column(
+          children: _buildMenu(),
+        ),
+      );
+    }
+
     return Scaffold(
-      drawer: Platform.isAndroid
-          ? Drawer(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ListView.builder(
-                    physics: const ClampingScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: _menu.length,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        dense: true,
-                        title: Text(_menu[index]),
-                        onTap: () {
-                          setState(() {
-                            _currentIndex = index;
-                          });
-
-                          Navigator.of(context).pop();
-                        },
-                        selected: index == _currentIndex,
-                        selectedTileColor:
-                            Theme.of(context).primaryColor.withOpacity(0.2),
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(50),
-                            bottomRight: Radius.circular(50),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                  // logout button
-                  Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: FilledButton(
-                        onPressed: () {
-                          showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  title: const Text('Confirm'),
-                                  content: const Text(
-                                      'Are you sure you want to logout?'),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.pop(context, false);
-                                      },
-                                      child: const Text('Cancel'),
-                                    ),
-                                    FilledButton(
-                                      onPressed: () {
-                                        ref
-                                            .read(
-                                                authControllerProvider.notifier)
-                                            .logout();
-
-                                        AutoRouter.of(context)
-                                            .replace(const LoginRoute());
-                                      },
-                                      child: const Text('Confirm'),
-                                    ),
-                                  ],
-                                );
-                              });
-                        },
-                        child: const Text('Logout'),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            )
-          : null,
+      drawer: _buildDrawer(),
       body: Card(
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -148,6 +118,19 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     );
   }
 
+  Widget? _buildDrawer() {
+    return Platform.isAndroid
+        ? Drawer(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: _buildMenu(),
+            ),
+          )
+        : null;
+  }
+
   Widget _buildSideMenu() {
     return ConstrainedBox(
       constraints: const BoxConstraints(
@@ -157,33 +140,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
-        children: [
-          ListView.builder(
-            shrinkWrap: true,
-            itemCount: _menu.length,
-            itemBuilder: (context, index) {
-              return ListTile(
-                dense: true,
-                title: Text(_menu[index]),
-                onTap: () {
-                  setState(() {
-                    _currentIndex = index;
-                  });
-                },
-                selected: index == _currentIndex,
-                selectedTileColor:
-                    Theme.of(context).primaryColor.withOpacity(0.2),
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(50),
-                    bottomRight: Radius.circular(50),
-                  ),
-                ),
-              );
-            },
-          ),
-          _buildLogoutButton(),
-        ],
+        children: _buildMenu(),
       ),
     );
   }
@@ -193,51 +150,76 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: FilledButton(
-          onPressed: () {
-            showDialog(
-                context: context,
-                builder: (context) {
-                  return AlertDialog(
-                    title: const Text('Confirm'),
-                    content: const Text('Are you sure you want to logout?'),
-                    actions: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pop(context, false);
-                        },
-                        child: const Text('Cancel'),
-                      ),
-                      FilledButton(
-                        onPressed: () {
-                          ref.read(authControllerProvider.notifier).logout();
-
-                          AutoRouter.of(context).replace(const LoginRoute());
-                        },
-                        child: const Text('Confirm'),
-                      ),
-                    ],
-                  );
-                });
-          },
-          child: const Text('Logout'),
+          onPressed: _confirmLogout,
+          child: const Text('LOGOUT'),
         ),
       ),
     );
   }
 
+  List<Widget> _buildMenu() {
+    return [
+      ListView.builder(
+        shrinkWrap: true,
+        itemCount: _menuItems.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+            dense: true,
+            title: Text(_menuItems[index].title),
+            onTap: () {
+              // depending on the size of the screen, either toggle through screens
+              // or navigate to route
+              if (Platform.isAndroid) {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => _menuItems[index].screen));
+              } else {
+                setState(() {
+                  _currentIndex = index;
+                });
+              }
+            },
+            selected: index == _currentIndex,
+            selectedTileColor: Theme.of(context).primaryColor.withOpacity(0.2),
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                topRight: Radius.circular(50),
+                bottomRight: Radius.circular(50),
+              ),
+            ),
+          );
+        },
+      ),
+      _buildLogoutButton()
+    ];
+  }
+
   Widget _buildContent() {
+    // _currentIndex is null, return an empty container
+    if (_currentIndex == null) return Container();
+
     return Expanded(
       child: Column(
         children: [
           AppBar(
-            title: Text(_titles[_currentIndex]),
+            title: Text(_titles[_currentIndex!]),
             automaticallyImplyLeading: false,
           ),
           Expanded(
-            child: _screens[_currentIndex],
+            child: _screens[_currentIndex!],
           ),
         ],
       ),
     );
   }
+}
+
+class Menu {
+  String title;
+
+  Widget screen;
+
+  Menu({
+    required this.title,
+    required this.screen,
+  });
 }

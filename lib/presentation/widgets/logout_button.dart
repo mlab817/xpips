@@ -43,10 +43,8 @@ class LogoutButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // TODO: implement build
     return IconButton(
       onPressed: () {
-        // TODO: handle logout
         _handleLogout(context, ref);
       },
       icon: const Icon(Icons.exit_to_app),

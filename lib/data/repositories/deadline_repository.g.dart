@@ -7,7 +7,7 @@ part of 'deadline_repository.dart';
 // **************************************************************************
 
 String _$deadlineRepositoryHash() =>
-    r'671991549569ef81cc36059e1d75daede322c6e6';
+    r'40a987a4ef491a1e2d67c634e1cfcb67b4f9384c';
 
 /// See also [deadlineRepository].
 @ProviderFor(deadlineRepository)

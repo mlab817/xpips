@@ -1,6 +1,7 @@
 import 'package:pips/data/data_sources/app_service_client.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../application/functions.dart';
 import '../../application/providers/appserviceclient_provider.dart';
 import '../responses/offices_response.dart';
 
@@ -17,7 +18,11 @@ class OfficesRepositoryImplementer implements OfficesRepository {
 
   @override
   Future<OfficesResponse> get() async {
-    return client.getOffices();
+    try {
+      return await client.getOffices();
+    } catch (e) {
+      throw formatError(e);
+    }
   }
 }
 

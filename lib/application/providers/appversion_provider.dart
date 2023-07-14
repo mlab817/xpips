@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
-import '../../domain/models/models.dart';
+import '../../domain/entities/models.dart';
 
 final appVersionProvider = FutureProvider<AppVersion>((ref) async {
   try {

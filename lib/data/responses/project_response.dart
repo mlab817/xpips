@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:pips/domain/models/fullproject.dart';
+import 'package:pips/domain/entities/fullproject.dart';
 
 part 'project_response.freezed.dart';
 part 'project_response.g.dart';

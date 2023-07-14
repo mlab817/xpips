@@ -1,9 +1,11 @@
-import 'dart:io';
-
 import 'package:flutter/foundation.dart';
+import 'package:universal_io/io.dart';
+
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pips/firebase_options.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:window_size/window_size.dart';
 
@@ -18,7 +20,7 @@ void main() async {
   // set window size for desktop
   if (!kIsWeb && (Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
     setWindowTitle('Public Investment Program System');
-    setWindowMinSize(const Size(320, 600));
+    setWindowMinSize(const Size(360, 600));
     setWindowMaxSize(Size.infinite);
   }
 
@@ -29,6 +31,11 @@ void main() async {
   ]);
 
   HttpOverrides.global = MyHttpOverrides();
+
+  if (Platform.isAndroid) {
+    await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform);
+  }
 
   final sharedPrefs = await SharedPreferences.getInstance();
 

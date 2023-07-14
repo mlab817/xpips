@@ -7,11 +7,11 @@ part of 'postproject_controller.dart';
 // **************************************************************************
 
 String _$postProjectControllerHash() =>
-    r'd8cdcd5e0032740bf8c5e1397187ed1780346f4f';
+    r'c1fa502faa0d917713227761c622be68672769a1';
 
 /// See also [PostProjectController].
 @ProviderFor(PostProjectController)
-final postProjectControllerProvider = AsyncNotifierProvider<
+final postProjectControllerProvider = AutoDisposeAsyncNotifierProvider<
     PostProjectController, CreateProjectResponse>.internal(
   PostProjectController.new,
   name: r'postProjectControllerProvider',
@@ -22,5 +22,6 @@ final postProjectControllerProvider = AsyncNotifierProvider<
   allTransitiveDependencies: null,
 );
 
-typedef _$PostProjectController = AsyncNotifier<CreateProjectResponse>;
+typedef _$PostProjectController
+    = AutoDisposeAsyncNotifier<CreateProjectResponse>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions

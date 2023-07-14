@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../presentation/controllers/patchproject_controller.dart';
-import '../../../../domain/models/fullproject.dart';
+import '../../../../domain/entities/models.dart';
+import '../../clear_button.dart';
 import 'editbutton.dart';
 
 class SwitchEditor extends ConsumerStatefulWidget {
@@ -64,6 +65,7 @@ class _RadioEditor extends ConsumerState<SwitchEditor> {
             ? null
             : EditButton(
                 onPressed: () => _edit(),
+                enabled: widget.enabled,
               ),
         enabled: widget.enabled,
         onTap: widget.enabled ? () => _edit() : null,

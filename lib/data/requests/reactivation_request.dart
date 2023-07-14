@@ -12,4 +12,12 @@ class ReactivationRequest with _$ReactivationRequest {
 
   factory ReactivationRequest.fromJson(Map<String, dynamic> json) =>
       _$ReactivationRequestFromJson(json);
+
+  bool get isValid => _isValid();
+
+  bool _isValid() {
+    return email.isNotEmpty && authorization.isNotEmpty;
+  }
+
+  ReactivationRequest._();
 }

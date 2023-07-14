@@ -7,7 +7,7 @@ part of 'updatingperiod_repository.dart';
 // **************************************************************************
 
 String _$updatingPeriodRepositoryHash() =>
-    r'19ebf229eb5c5d411423c13288b1afab7976b2f5';
+    r'a6c24401f722bf0c94e19f74d99e09a8254bf2b0';
 
 /// See also [updatingPeriodRepository].
 @ProviderFor(updatingPeriodRepository)

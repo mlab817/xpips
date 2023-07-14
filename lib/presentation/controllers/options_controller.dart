@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:pips/domain/models/form_options.dart';
+import 'package:pips/domain/entities/models.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../data/repositories/options_repository.dart';

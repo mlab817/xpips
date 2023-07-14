@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../domain/models/chatroom.dart';
+import '../../domain/entities/models.dart';
 
 part 'chatroom_response.freezed.dart';
 part 'chatroom_response.g.dart';

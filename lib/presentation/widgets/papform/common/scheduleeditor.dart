@@ -3,8 +3,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pips/application/providers/numberformatter_provider.dart';
 import 'package:pips/presentation/widgets/papform/common/editbutton.dart';
+import 'package:pips/presentation/widgets/responsive_container.dart';
 
-import '../../../../domain/models/models.dart';
+import '../../../../domain/entities/models.dart';
+import 'numericeditor.dart';
 
 class ScheduleEditor extends ConsumerStatefulWidget {
   const ScheduleEditor({
@@ -46,9 +48,12 @@ class _ScheduleEditorState extends ConsumerState<ScheduleEditor> {
         title: Text(widget.title),
         enabled: widget.enabled,
         trailing: widget.enabled
-            ? EditButton(onPressed: () {
-                _edit();
-              })
+            ? EditButton(
+                onPressed: () {
+                  _edit();
+                },
+                enabled: widget.enabled,
+              )
             : null,
         subtitle: SizedBox(
           width: double.infinity,
@@ -279,70 +284,115 @@ class _CostScheduleFormState extends ConsumerState<CostScheduleForm> {
               child: const Text('UPDATE')),
         ],
       ),
-      body: Column(children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: TextFormField(
-            controller: y1,
-            decoration: const InputDecoration(labelText: 'FY 2023'),
-            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: TextFormField(
-            controller: y2,
-            decoration: const InputDecoration(labelText: 'FY 2024'),
-            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: TextFormField(
-            controller: y3,
-            decoration: const InputDecoration(labelText: 'FY 2025'),
-            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: TextFormField(
-            controller: y4,
-            decoration: const InputDecoration(labelText: 'FY 2026'),
-            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: TextFormField(
-            controller: y5,
-            decoration: const InputDecoration(labelText: 'FY 2027'),
-            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: TextFormField(
-            controller: y6,
-            decoration: const InputDecoration(labelText: 'FY 2028'),
-            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: ClipRRect(
-            borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(5.0), bottom: Radius.circular(5.0)),
-            child: Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(16.0),
-              decoration: BoxDecoration(
-                color: Theme.of(context).focusColor,
+      body: ResponsiveContainer(children: [
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextFormField(
+              controller: y1,
+              decoration: const InputDecoration(
+                labelText: 'FY 2023',
               ),
-              child: Text(
-                ref.watch(numberFormatterProvider).format(
-                      newValue.total,
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly,
+                NumericTextFormatter(),
+              ],
+              textAlign: TextAlign.end,
+            ),
+          ),
+        ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextFormField(
+              controller: y2,
+              decoration: const InputDecoration(labelText: 'FY 2024'),
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly,
+                NumericTextFormatter(),
+              ],
+              textAlign: TextAlign.end,
+            ),
+          ),
+        ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextFormField(
+              controller: y3,
+              decoration: const InputDecoration(labelText: 'FY 2025'),
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly,
+                NumericTextFormatter(),
+              ],
+              textAlign: TextAlign.end,
+            ),
+          ),
+        ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextFormField(
+              controller: y4,
+              decoration: const InputDecoration(labelText: 'FY 2026'),
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly,
+                NumericTextFormatter(),
+              ],
+              textAlign: TextAlign.end,
+            ),
+          ),
+        ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextFormField(
+              controller: y5,
+              decoration: const InputDecoration(labelText: 'FY 2027'),
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly,
+                NumericTextFormatter(),
+              ],
+              textAlign: TextAlign.end,
+            ),
+          ),
+        ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextFormField(
+              controller: y6,
+              decoration: const InputDecoration(labelText: 'FY 2028'),
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly,
+                NumericTextFormatter(),
+              ],
+              textAlign: TextAlign.end,
+            ),
+          ),
+        ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ClipRRect(
+              borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(5.0), bottom: Radius.circular(5.0)),
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(12.0),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).focusColor,
+                ),
+                child: Column(
+                  children: [
+                    const Text('Total'),
+                    Text(
+                      ref.watch(numberFormatterProvider).format(
+                            newValue.total,
+                          ),
                     ),
+                  ],
+                ),
               ),
             ),
           ),

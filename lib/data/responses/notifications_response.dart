@@ -1,7 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../domain/models/meta.dart';
-import '../../domain/models/notifications.dart';
+import '../../domain/entities/models.dart';
 
 part 'notifications_response.g.dart';
 

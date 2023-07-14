@@ -2,7 +2,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../data/repositories/evaluationreport_repository.dart';
 import '../../data/responses/evaluationreport_response.dart';
-import '../../domain/models/evaluation_report.dart';
+import '../../domain/entities/evaluation_report.dart';
 
 part 'evaluationreport_controller.g.dart';
 

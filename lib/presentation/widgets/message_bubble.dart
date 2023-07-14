@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../application/providers/dateformatter_provider.dart';
-import '../../domain/models/models.dart';
+import '../../domain/entities/models.dart';
 import '../../presentation/controllers/currentuser_controller.dart';
 
 class MessageBubble extends ConsumerStatefulWidget {

@@ -1,9 +1,8 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../application/functions.dart';
 import '../../application/providers/appserviceclient_provider.dart';
-import '../../domain/models/cost_schedule.dart';
-import '../../domain/models/fs_investment.dart';
-import '../../domain/models/regional_investment.dart';
+import '../../domain/entities/models.dart';
 import '../data_sources/app_service_client.dart';
 import '../requests/requests.dart';
 import '../responses/responses.dart';
@@ -72,6 +71,8 @@ abstract class ProjectRepository {
   Future<ProjectsResponse> search(String query);
 
   Future<ProjectsResponse> getArchived(ArchiveRequest input);
+
+  Future<ProjectResponse> submitForReview(String uuid);
 }
 
 class ProjectRepositoryImplementer implements ProjectRepository {
@@ -81,92 +82,169 @@ class ProjectRepositoryImplementer implements ProjectRepository {
 
   @override
   Future<ProjectsResponse> getAll(ProjectsRequest input) async {
-    return await client.getAllProjects(input);
+    try {
+      return await client.getAllProjects(input);
+    } catch (e) {
+      throw formatError(e);
+    }
   }
 
   @override
   Future<ProjectResponse> get(String uuid) async {
-    return client.getProject(uuid);
+    try {
+      return await client.getProject(uuid);
+    } catch (e) {
+      throw formatError(e);
+    }
   }
 
   @override
   Future<DeleteProjectResponse> delete(String uuid) async {
-    return client.deleteProject(uuid);
+    try {
+      return await client.deleteProject(uuid);
+    } catch (e) {
+      throw formatError(e);
+    }
   }
 
   @override
   Future<CreateProjectResponse> post(NewProjectRequest request) async {
-    return await client.createProject(request);
+    try {
+      return await client.createProject(request);
+    } catch (e) {
+      throw formatError(e);
+    }
   }
 
   @override
   Future<UpdateProjectResponse> update(
       String uuid, FullProjectRequest request) async {
-    return await client.updateProject(uuid, request);
+    try {
+      return await client.updateProject(uuid, request);
+    } catch (e) {
+      throw formatError(e);
+    }
   }
 
   @override
   Future<PatchProjectResponse> patch(
       String uuid, Map<String, dynamic> payload) async {
-    return await client.patchProject(uuid, payload);
+    try {
+      return await client.patchProject(uuid, payload);
+    } catch (e) {
+      throw formatError(e);
+    }
   }
 
   @override
   Future<UpdateFinancialAccomplishmentResponse> updateFa(
       String uuid, Map<String, dynamic> payload) async {
-    return await client.updateFinancialAccomplishment(uuid, payload);
+    try {
+      return await client.updateFinancialAccomplishment(uuid, payload);
+    } catch (e) {
+      throw formatError(e);
+    }
   }
 
   @override
   Future<StatusResponse> updateFs(String uuid, CostSchedule payload) async {
-    return await client.updateFs(uuid, payload);
+    try {
+      return await client.updateFs(uuid, payload);
+    } catch (e) {
+      throw formatError(e);
+    }
   }
 
   @override
   Future<StatusResponse> updateRap(String uuid, CostSchedule payload) async {
-    return await client.updateRap(uuid, payload);
+    try {
+      return await client.updateRap(uuid, payload);
+    } catch (e) {
+      throw formatError(e);
+    }
   }
 
   @override
   Future<StatusResponse> updateRow(String uuid, CostSchedule payload) async {
-    return await client.updateRow(uuid, payload);
+    try {
+      return await client.updateRow(uuid, payload);
+    } catch (e) {
+      throw formatError(e);
+    }
   }
 
   @override
   Future<RegionalInvestmentResponse> updateRegionalInvestment(
       String uuid, RegionalInvestment payload) async {
-    return await client.updateRegionalInvestment(uuid, payload);
+    try {
+      return await client.updateRegionalInvestment(uuid, payload);
+    } catch (e) {
+      throw formatError(e);
+    }
   }
 
   @override
   Future<FsInvestmentResponse> updateFsInvestment(
       String uuid, FsInvestment payload) async {
-    return await client.updateFsInvestment(uuid, payload);
+    try {
+      return await client.updateFsInvestment(uuid, payload);
+    } catch (e) {
+      throw formatError(e);
+    }
   }
 
   @override
   Future<void> removeRegionalInvestment(int id) async {
-    return await client.removeRegionalInvestment(id);
+    try {
+      return await client.removeRegionalInvestment(id);
+    } catch (e) {
+      throw formatError(e);
+    }
   }
 
   @override
   Future<void> removeFsInvestment(int id) async {
-    return await client.removeFsInvestment(id);
+    try {
+      return await client.removeFsInvestment(id);
+    } catch (e) {
+      throw formatError(e);
+    }
   }
 
   @override
   Future<ProjectResponse> duplicate(String uuid) async {
-    return await client.clone(uuid);
+    try {
+      return await client.clone(uuid);
+    } catch (e) {
+      throw formatError(e);
+    }
   }
 
   @override
   Future<ProjectsResponse> search(String query) async {
-    return await client.search(query);
+    try {
+      return await client.search(query);
+    } catch (e) {
+      throw formatError(e);
+    }
   }
 
   @override
   Future<ProjectsResponse> getArchived(ArchiveRequest input) async {
-    return await client.getArchived(input);
+    try {
+      return await client.getArchived(input);
+    } catch (e) {
+      throw formatError(e);
+    }
+  }
+
+  @override
+  Future<ProjectResponse> submitForReview(String uuid) async {
+    try {
+      return await client.submitForReview(uuid);
+    } catch (e) {
+      throw formatError(e);
+    }
   }
 }
 

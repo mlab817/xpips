@@ -1,8 +1,9 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pips/presentation/widgets/papform/common/editbutton.dart';
 
-import '../../../../domain/models/models.dart';
+import '../../../../domain/entities/models.dart';
 import '../../../controllers/patchproject_controller.dart';
 
 class UpdateInfraSectors extends ConsumerWidget {
@@ -12,12 +13,14 @@ class UpdateInfraSectors extends ConsumerWidget {
     required this.oldValue,
     required this.options,
     required this.onSubmit,
+    required this.enabled,
   }) : super(key: key);
 
   final FullProject project;
   final List<Option> oldValue;
   final List<Option> options;
   final Function(List<Option> newValue) onSubmit;
+  final bool enabled;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -31,9 +34,17 @@ class UpdateInfraSectors extends ConsumerWidget {
         subtitle: oldValue.isNotEmpty
             ? _buildList(oldValue)
             : const Text('NO ITEM(S) SELECTED'),
-        onTap: () {
-          _selectInfraSectors(context);
-        },
+        trailing: EditButton(
+          onPressed: () {
+            _selectInfraSectors(context);
+          },
+          enabled: enabled,
+        ),
+        onTap: enabled
+            ? () {
+                _selectInfraSectors(context);
+              }
+            : null,
       ),
     );
   }
@@ -137,6 +148,7 @@ class _InfraSectorFormState extends ConsumerState<InfraSectorForm> {
                   CheckboxListTile.adaptive(
                     activeColor: Theme.of(context).primaryColor,
                     value: newValue.contains(widget.options[index]),
+                    controlAffinity: ListTileControlAffinity.leading,
                     title: Text(option.label),
                     onChanged: (bool? value) {
                       // if value is false, remove from list else add
@@ -155,6 +167,7 @@ class _InfraSectorFormState extends ConsumerState<InfraSectorForm> {
                         return CheckboxListTile.adaptive(
                           activeColor: Theme.of(context).primaryColor,
                           value: newValue.contains(optionChild),
+                          controlAffinity: ListTileControlAffinity.leading,
                           title: Padding(
                             padding: const EdgeInsets.only(left: 30.0),
                             child: Text(optionChild.label),
@@ -179,8 +192,17 @@ class _InfraSectorFormState extends ConsumerState<InfraSectorForm> {
 
             return CheckboxListTile.adaptive(
               value: newValue.contains(widget.options[index]),
+              controlAffinity: ListTileControlAffinity.leading,
               onChanged: (bool? value) {
-                //
+                if (value ?? false) {
+                  setState(() {
+                    newValue.add(widget.options[index]);
+                  });
+                } else {
+                  setState(() {
+                    newValue.remove(widget.options[index]);
+                  });
+                }
               },
             );
           }),

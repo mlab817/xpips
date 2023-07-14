@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:pips/application/providers/sharedpreferences.dart';
-import 'package:pips/domain/models/user.dart';
+import '../../application/providers/sharedpreferences.dart';
+import '../../domain/entities/models.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'user_controller.g.dart';

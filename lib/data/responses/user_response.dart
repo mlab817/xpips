@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../domain/models/user.dart';
+import '../../domain/entities/models.dart';
 
 part 'user_response.g.dart';
 

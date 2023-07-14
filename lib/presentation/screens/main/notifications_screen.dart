@@ -1,6 +1,8 @@
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pips/presentation/widgets/empty.dart';
+import 'package:universal_io/io.dart';
 
 import '../../../../application/functions.dart';
 import '../../../../data/responses/notifications_response.dart';
@@ -35,6 +37,17 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
         title: const Text(AppStrings.notifications),
         scrolledUnderElevation: 0.0,
         automaticallyImplyLeading: false,
+        actions: [
+          if (Platform.isAndroid) _buildRefreshButton(),
+          if (Platform.isAndroid)
+            IconButton(
+              icon: const Icon(Icons.search),
+              onPressed: () {
+                showSearch(
+                    context: context, delegate: _NotificationsSearchDelegate());
+              },
+            ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -46,6 +59,10 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                 data: (data) {
                   if (valueAsync.isRefreshing) {
                     return const LoadingOverlay();
+                  }
+
+                  if (data.data.isEmpty) {
+                    return const Empty();
                   }
 
                   return _buildList(data, ref);
@@ -63,41 +80,16 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
 
   Widget _buildPaginationControls() {
     final currentPage =
-        ref.watch(notificationsProvider).value?.meta.pagination.current;
+        ref.watch(notificationsProvider).value?.meta.pagination.current ?? 1;
     final lastPage =
-        ref.watch(notificationsProvider).value?.meta.pagination.last;
+        ref.watch(notificationsProvider).value?.meta.pagination.last ?? 1;
 
     return Row(
       children: [
-        Expanded(
-          child: TextField(
-            decoration: const InputDecoration(
-              prefixIcon: Icon(Icons.search),
-              hintText: 'Type and press enter to search',
-              fillColor: Colors.transparent,
-              hoverColor: Colors.transparent,
-              focusColor: Colors.transparent,
-              border: InputBorder.none,
-              focusedBorder: InputBorder.none,
-              enabledBorder: InputBorder.none,
-            ),
-            onSubmitted: (String value) {
-              ref
-                  .read(notificationsRequestControllerProvider.notifier)
-                  .update(q: value);
-            },
-          ),
-        ),
+        if (!Platform.isAndroid) _buildRefreshButton(),
+        if (!Platform.isAndroid) _buildSearch(),
         const Spacer(),
-        _buildStatusSwitcher(),
-        IconButton(
-          onPressed: () {
-            ref.invalidate(notificationsProvider);
-          },
-          icon: const Icon(
-            Icons.refresh,
-          ),
-        ),
+        if (!Platform.isAndroid) _buildStatusSwitcher(),
         IconButton(
             onPressed: currentPage == 1
                 ? null
@@ -118,6 +110,40 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                   },
             icon: const Icon(Icons.chevron_right)),
       ],
+    );
+  }
+
+  Widget _buildSearch() {
+    return Expanded(
+      child: TextField(
+        decoration: const InputDecoration(
+          prefixIcon: Icon(Icons.search),
+          hintText: 'Type and press enter to search',
+          fillColor: Colors.transparent,
+          hoverColor: Colors.transparent,
+          focusColor: Colors.transparent,
+          border: InputBorder.none,
+          focusedBorder: InputBorder.none,
+          enabledBorder: InputBorder.none,
+        ),
+        onSubmitted: (String value) {
+          ref
+              .read(notificationsRequestControllerProvider.notifier)
+              .update(q: value);
+        },
+      ),
+    );
+  }
+
+  Widget _buildRefreshButton() {
+    return IconButton(
+      onPressed: () {
+        ref.invalidate(notificationsProvider);
+      },
+      icon: const Icon(
+        Icons.refresh,
+      ),
+      tooltip: 'Reload page',
     );
   }
 
@@ -217,7 +243,19 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
             Icons.mark_email_unread,
             size: 36,
           ),
-          content: Text(notification.data.message),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                notification.data.subject,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(
+                height: 8,
+              ),
+              Text(notification.data.message),
+            ],
+          ),
           actions: [
             TextButton(
               onPressed: () {
@@ -271,5 +309,28 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
       // pop mark as read dialog
       Navigator.of(context).pop();
     }
+  }
+}
+
+// TODO: Implement search delegate for mobile
+class _NotificationsSearchDelegate extends SearchDelegate {
+  @override
+  List<Widget>? buildActions(BuildContext context) {
+    return null;
+  }
+
+  @override
+  Widget? buildLeading(BuildContext context) {
+    return Container();
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    return Container();
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    return Container();
   }
 }
